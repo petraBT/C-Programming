@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="sortsearch">
+	<title>Sorting and Searching</title>
+	<introduction>
+		<p>In this chapter, we will dive into the topics of searching and sorting through lists of data. Maybe we want to find a certain record in our data, or see how many records meet a certain criteria? There are many different ways that an array can be searched or sorted, and we will touch on a few of the common and popular methods.</p>
+    </introduction>
+
+	<section xml:id="sortsearch-linear">
+		<title>Linear Search</title>
+		<p>There are many reasons for wanting to sort and/or search lists of data:</p>
+		<ul>
+		    <li>Look for a student record in a list of records</li>
+		    <li>Print alphabetically sorted list of names</li>
+		    <li>Sort data values in ascending/descending order</li>
+		    <li>And many more!</li>
+		</ul>
+		<p>We'll start by introducing a very simple algorithm, called <term>linear search</term>, to search for a specific item in a list of items.</p>
+		<codecast href="1518608621712"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li><idx><h>search</h><h>linear</h></idx>Linear search goes through an array element by element and checks if the element matches the search argument</li>
+				    <li>If the element is found, break the <c>while</c> loop by using a flag variable to indicate something has been "found"</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-sortsearch-1">
+				<statement>
+					<p>Quick review question: Which of the following is the correct way to declare and initialize a string?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><pre>char name[] = "cool_file_name";</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>char name[50]; name = "cool_file_name";</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>char name[] = "cool_file_name";</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>char = "cool_file_name"[50];</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-sortsearch-2">
+				<statement>
+					<p>More review: Is there anything wrong with the following:</p>
+					<program language="c"><input>
+						char name[10];
+						. . . 
+						strcpy(name, "TodayIsMonday");
+					</input></program>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>This will overwrite memory cells that have not been reserved for name.</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>It should be <pre>strcpy("name", TodayIsMonday);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>It should be <pre>strcpy(“TodayIsMonday”, name);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                      <p>No, nothing wrong.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-sortsearch-3">
+				<statement>
+					<p>Even more review: What is the result of the following:</p>
+					<pre>strcmp("my_apple", "my_banana");</pre>
+					<p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
+					<cmecode startPoint="engs20p_strings1" height="300"></cmecode>
+			   </statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>a negative number</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>the letter 'b'</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>a positive number</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>zero</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>the letter 'a'</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-sortsearch-4">
+				<statement>
+					<p>Final review question (I promise!): Suppose a string has been declared as follows:</p>
+					<pre>char food[30];</pre>
+					<p>You want the user to enter their favorite food and store the response in the string food. What is the correct command to do so?</p>
+					<p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
+					<cmecode startPoint="engs20p_strings2" height="300"></cmecode>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><pre>scanf("%s", &amp;food);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>scanf("%s", food[0]);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>scanf("%s", food);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>scanf("%s", *food);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="sortsearch-bisection">
+		<title>Bisection Search</title>
+		<p>As you have seen, <term>Linear Search</term> (also called sequential search) is a very simple algorithm, for which the data to be searched can be in any order. But<ellipsis/> the algorithm is not very efficient. Imagine looking for a name in a phone book that hasn't been sorted alphabetically<ellipsis/> </p>
+		<p><idx><h>search</h><h>bisection</h></idx>If your data is sorted, then there is a much more efficient algorithm called <term>Bisection Search</term> that you can use to look for an item in your list.</p>
+		<codecast href="1518610736869"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Requires that the list is in sorted order</li>
+		            <li>Splits list in half, compares which half the element will be in</li>
+		            <li>Continues to halve the list until the item is found</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-sortsearch-5">
+				<statement>
+					<p>Which of the following is the correct sequence of instructions to swap the values of two variables a and b (you may use an additional variable c if you wish)?</p>
+					<p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
+					<cmecode startPoint="engs20p_sorting1" height="300"></cmecode>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><pre>c=a; a=b; b=c;</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>c=b; a=c; b=a;</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>a=b; b=c; c=a;</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>a=b; b=a;</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="sortsearch-linear-practice">
+		<title>Linear Search Practice</title>
+		<activity xml:id="activity-22-3-1-Linear_Search_Practice">
+			<statement>
+				<p>You are conducting a linguistic study and are interested in finding words that contain the letter 't' or 'T' in the first half of the word (including the middle letter if there is one). Specifically, if the first half of the word does contain a 't' or a 'T', your program's output should be a 1, if the first half does not contain the letter 't' or 'T', but the second half does, then your program should output a 2. Otherwise (if there is no 't' or 'T' in the word at all), your program's output should be -1. You may assume that the word entered does not have more than 50 letters.</p>
+				<p>Here are some examples: </p>
+				<console>
+					<prompt>Input: </prompt> 
+					<input>apple</input>
+					<output>Output: -1</output>
+
+					<prompt>Input: </prompt>
+					<input>raincoat</input>
+					<output>Output: 2</output>
+
+					<prompt>Input: </prompt>
+					<input>enter</input>
+					<output>Output: 1</output>
+
+					<prompt>Input: </prompt>
+					<input>Taylor</input>
+					<output>Output: 1</output>
+				</console>
+				<cmecode startPoint="engs20p_NlinearSearchPractice" addOn="&amp;nocheck=true" height="600"></cmecode>
+				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="sortsearch-bubble">
+		<title>Bubble Sort</title>
+		<p><idx><h>sort</h><h>bubble</h></idx>Have you ever needed to sort a pile of papers into alphabetical order? There are many different ways to do so and you yourself may have a preferred method. But could you teach that method to a computer? A sorting algorithm is just that: it is an algorithm that puts elements of a list in a certain order. Most of the time we'll want to sort data numerically (from smallest to largest or from largest to smallest) or alphabetically. In order to sort small amounts of data efficiency isn't really all that important, but when lists get long then it is important to pay attention to the efficiency of the algorithms. That's why there are many different sorting algorithms that have been invented and we'll just scratch the surface and study some of the simple (and not very efficient) ones.</p>
+
+		<p>Most sorting algorithms have names that somewhat refer to how they function. Some of the simple algorithms include the so-called <em>Selection Sort</em> and <em>Insertion Sort</em>, some more efficient algorithms include <em>Quick Sort</em> and <em>Merge Sort</em>. And then there is the <em>Bubble Sort</em> category which is very easy to implement and understand (and not all that efficient). We will learn about Bubble Sort first and then also implement Selection Sort and Insertion Sort in class.</p>
+		<codecast href="1518612236861"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Bubble Sort uses two nested loops</li>
+		            <li>Compares neighboring elements and swaps if needed</li>
+		            <li>After the outer loop finishes execution, the list will be sorted</li>
+		       </ul>
+		    </p>
+		</aside>
+		<p>The animation below might help you visualize how bubble sort functions.</p>
+		<p>ADAMSAPPLET style="width:50%; height:150px; margin-left:auto; margin-right:auto;" data-program="sorters" data-types="bub-uno" data-size="20" data-duplicates="2" data-order="319,locked" ENDADAMSAPPLET</p>
+		<reading-questions>
+			<exercise xml:id="quiz-sortsearch-6">
+				<statement>
+					<p>From where does "Bubble Sort" get its name?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>Largest elements bubble gradually to the top</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>Named after Edgar D. Bubble</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>It was invented by the same person who invented gum</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>No reason</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-sortsearch-7">
+				<statement>
+					<p>Complete the following C program so that it correctly sorts the given array from smallest to largest using bubble sort. In particular, you need to complete the function <c>bubbleSort()</c> below which handles the sorting. Everything else has been done for you already.</p>
+					<cmecode startPoint="engs20p_sorting3" height="700"></cmecode>
+					<p><em>When your program performs correctly you'll be given a keyword to enter in Canvas.</em></p>
+				</statement>
+			</exercise>
+			<exercise xml:id="quiz-sortsearch-8">
+				<statement>
+					<p>Suppose that you have made the following declarations:</p>
+					<program language="c"><input>
+						int num[] = {5,3,7,9,2,4,6}; 
+						int index[] = {2,3,4,5,6,7,1};
+					</input></program>
+					<p>What is <c>index[3]</c>? <em>Choose one:</em> 1 / 2 / 3 / 4 / 5</p>
+					<p>What is <c>num[index[3]]</c>? <em>Choose one:</em> 2 / 3 / 4 / 5 / 6 / 7 / 9</p>
+					<p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
+					<cmecode startPoint="engs20p_sorting2" height="300"></cmecode>
+					<p><em>Enter your two answers, separated by a comma, i.e.</em> <em>8, 1</em></p>
+				</statement>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="sortsearch-selection">
+		<title>Selection Sort</title>
+		<p><idx><h>sort</h><h>selection</h></idx>Selection Sort is one of the simplest sorting techniques. Suppose you wanted to sort from smallest to largest. Here are the steps:</p>
+		<ul>
+			<li>Search through the list for the smallest element.</li>
+		  	<li>Swap the smallest element with the first element.</li>
+		  	<li>Continue/repeat with the reduced list (since the first element is already in its correct place).</li>
+		</ul>
+		<p>The following visualization might help more clearly describe this process:</p>
+		<p>ADAMSAPPLET style="width:50%; height:150px; margin-left:auto; margin-right:auto;" data-program="sorters" data-types="sel-uno-bac" data-size="20" data-duplicates="1" data-order="319,locked" ENDADAMSAPPLET</p>
+		<activity xml:id="activity-22-5-1-Selection_Sort_Practice">
+			<statement>
+				<p>Please implement the selection sort algorithm to sort the given array of numbers. Use a function to which you pass the unsorted array as well as its number of elements, and which sorts the array 'in place', meaning that the unsorted array is replaced by the sorted array (rather than creating a sorted copy). You can use the given function printArray() to check whether your algorithm performed correctly.</p>
+				<cmecode startPoint="engs20p_NselectionSortPractice" addOn="&amp;nocheck=true" height="500"></cmecode>
+				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="sortsearch-insertiion">
+		<title>Insertion Sort</title>
+		<p><idx><h>sort</h><h>insertion</h></idx><term>Insertion Sort</term> is another simple sorting technique that works similarly to how you might sort a set of playing cards in your hand. By going through the list element by element, the list is modified slowly so as to consist of a sorted portion and a remaining unsorted portion. When a new element from the unsorted portion is considered it is inserted (hence the name of the algorithm!) into the correct location amongst the sorted part of the list.</p> 
+		<p>Since room needs to be made in the sorted portion for the element to be inserted, one way to do so is to successively swap the new element with elements from the sorted list, until the correct location has been found.</p>
+		<p>This is demonstrated in the following code window - feel free to play around!</p>
+		<cmecode startPoint="engs20p_NinsertionSort" addOn="&amp;nocheck=true" height="700"></cmecode>
+		<p>The following visualization of insertion sort might also help more clearly describe this process:</p>
+		<p>ADAMSAPPLET style="width:50%; height:150px; margin-left:auto; margin-right:auto;" data-program="sorters" data-types="ins-exh" data-size="20" data-duplicates="2" data-order="319,locked" ENDADAMSAPPLET</p>
+		<p>We will later look at an implementation of insertion sort that creates a sorted copy of the original list, leaving the original list in place unsorted. In this scenario, insertion sort works by taking elements from the unsorted list one by one and inserting them in their correct position into the new sorted list.</p>
+		<p>Inserting elements into an array at a particular location is not a very fun process: it may require shifting large numbers of array elements over to make room for the new element. We'll therefore wait on the implementation of this algorithm until we get to <term>linked lists</term>, which make this step much easier.</p>
+
+	</section>
+
+	<section xml:id="sortsearch-sort-practice">
+		<title>Sorting Practice</title>
+		<p>In the problem below you may use any sorting technique you wish to use!</p>
+		<activity>
+			<p>You are still conducting linguistic research! This time, you'd like to find out how many letters occur multiple times in a given word. To do so, you will read a word from the input and then sort the letters of the word alphabetically (by their ASCII codes). Next, you go through the letters of the word and compare a letter with the one following it. If these equal each other, you increase a counter by 1, making sure to next skip ahead far enough so that letters that occur more than twice are not counted again. You may assume that the word you read from the input has no more than 50 letters.</p>
+			<p>Here are some examples:</p>
+			<console>
+				<prompt>Input: </prompt> 
+				<input>apple</input>
+				<output>Output: 1</output>
+
+				<prompt>Input: </prompt>
+				<input>keeper</input>
+				<output>Output: 1</output>
+
+				<prompt>Input: </prompt>
+				<input>erroneousnesses</input>
+				<output>Output: 5</output>
+
+				<prompt>Input: </prompt>
+				<input>Taylor</input>
+				<output>Output: 0</output>
+			</console>
+			<cmecode startPoint="engs20p_NsortPractice" addOn="&amp;nocheck=true" height="500"></cmecode>
+		</activity>
+	</section>
+
+	<section xml:id="sortsearch-parallel-arrays">
+		<title>Sorting Parallel Arrays</title>
+		<p><idx>parallel arrays</idx>Often it is useful to store related information about a person or an object in several parallel arrays. For example, we might want to store for each student their name, id, age and gpa. We could then have four arrays for these pieces of information, and for a given index, <c>i</c>, <c>name[i]</c>, <c>id[i]</c>, <c>age[i]</c>, <c>gpa[i]</c> all make up one student's record.</p>
+		<p>If we now wanted to sort these student records by id then we'd have to perform all of the array element swaps simultaneously on all four arrays in order to keep records together. This would not be practical or efficient. Take a look at the below example:</p>
+		<image source="images/parallelArrays1.png" width="100%"/>
+		<p>Suppose we are using bubble sort in order to sort these student records by id. While Petra's record is in the correct location, we'll have to swap Alex' and Simon's records during the bubble sort process. In order to keep each student record intact we'd thus not only have to swap <c>id[2]</c> and <c>id[1]</c> but also simultaneously swap <c>name[2]</c> with <c>name[1]</c>, <c>age[2]</c> with <c>age[1]</c> and <c>gpa[2]</c> with <c>gpa[1]</c>. That's a lot of swaps! This will slow down the sorting process quite a bit. It's also super confusing. And imagine you wanted to add in additional information to a student record, such as the student's phone number...</p>
+		<p>Instead, it is more efficient to sort an array of indices - a so-called sort array - and use this array to address data as well as perform all of the swaps on this sort array only. Take a look:</p>
+		<image source="images/parallelArrays2.png" width="100%"/>		
+		<p><idx>sort array</idx><idx><h>sort</h><h>parallel arrays</h></idx>When sorting by id, in the bubble sort algorithm, we now compare <c>id[sort[i]]</c> with <c>id[sort[i+1]]</c> instead of <c>id[i]</c> with <c>id[i+1]</c>. If necessary, rather than swapping the data, we swap <c>sort[i]</c> and <c>sort[i+1]</c>. In the above illustration for example, we simply swapped <c>sort[1]</c> with <c>sort[2]</c>. Now <c>id[sort[1]] = id[2]</c> is Alex' id, and <c>id[sort[2]] = id[1]</c> is Simon's id so that <c>id[sort[0]]</c>, <c>id[sort[1]]</c> and <c>id[sort[2]]</c> are in the correct order with respect to each other without ever changing anything within the arrays that hold the data. The only array that is altered during the sorting process is the array <c>sort</c>.</p>
+	</section>
+
+	<section xml:id="sortsearch-arrays">
+		<title>Sort Arrays</title>
+		<activity xml:id="activity-22-9-1-Sort_Arrays-no-output">
+			<p>Suppose you have declared two arrays:</p>
+			<program language="c"><input>
+				int numbers[]={5, -1, 8, 4, 0, -10};
+				int sort[6];
+			</input></program>
+			<p>What values should you place in your sort array so the following loop prints out the list of numbers, sorted from smallest to largest?</p>
+			<program language="c"><input>
+				for (i=0; i&lt;6; i++) {
+				  printf("%d, ", numbers[sort[i]]);
+				}
+			</input></program>
+			<p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+            <response/>
+		</activity>
+	</section>
+
+	<section xml:id="sortsearch-implementing">
+		<title>Implementing Sort Arrays</title>
+		<subsection>
+			<title>Printing</title>
+			<p><idx><h>sort array</h><h>print</h></idx>When printing out arrays the order of whose elements is given by a sort array, it is important to not only pass the array itself to the printing routine but also include the sort array (how else would the routine be able to know the correct order).</p>
+			<activity xml:id="activity-22-10-1-Implementing_Sort_Arrays_Printing">
+				<statement>
+					<p>Please write a function <c>printArray()</c>, to which you pass the number of elements in your list to be sorted as well as the list and the sort array. The function should print the list in the order defined by the sort array. </p>
+					<cmecode startPoint="engs20p_NsortArrayPrinting" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Sorting</title>
+			<p><idx><h>sort array</h><h>sorting</h></idx>When sorting arrays using a sort array, when your code finds values whose locations should be swapped, instead of swapping the values in the array, swap their respective elements of the sort array.</p>
+			<activity xml:id="activity-22-10-2-Implementing_Sort_Arrays_Sorting">
+				<statement>
+					<p>Please implement the function <c>sortArray()</c>, to which you pass the number of elements in your list to be sorted, the unsorted array as well as a sort array, and which sorts the array, using bubble sort, by making changes only to the sort array.</p>
+					<cmecode startPoint="engs20p_NsortArrayPractice" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="sortsearch-summary">
+		<title>Summary</title>
+		<p>In this chapter, we covered the following topics:</p>
+		<ul>
+			<li>Linear and bisection search methods</li>
+			<li>Bubble, selection, and insertion sort methods</li>
+			<li>Sorting records of data (parallel arrays)</li>
+			<li>Sort arrays</li>
+		</ul>
+	</section>
+</chapter>

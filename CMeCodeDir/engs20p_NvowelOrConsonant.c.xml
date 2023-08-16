@@ -1,0 +1,14 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+int main(void) {
+    char c;
+    printf("Please enter a letter: ");
+    scanf("%c", &amp;c);
+    
+/* please write your code here */
+
+    
+    return(0);
+}
+</cme>

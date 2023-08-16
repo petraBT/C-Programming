@@ -1,0 +1,18 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+int main(void)
+{
+    int N, i, fact;
+    
+    
+    for (N=1; N&lt;=10; N++) 
+        fact = 1;
+        for (i=1; i&lt;=N; i++)
+            fact = fact*i;
+    
+        printf("%d! = %d\n", N, fact);
+    
+    return(0);
+}
+</cme>

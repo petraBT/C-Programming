@@ -1,0 +1,14 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+int main(void) 
+{
+    int age;
+    
+    printf("How old are you? Please enter your age: ");
+    scanf("%d", &amp;age);
+    printf("You are %d years old.\n", age);
+
+    return(0);
+}
+</cme>

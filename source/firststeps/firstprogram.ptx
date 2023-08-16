@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="firstprogram">
+    <title>A First C-Program: Structure, Printing, Repetition</title>
+    <introduction>
+        <p>We start this chapter by jumping right into coding and writing our first C-programs. We'll learn how to display messages to the computer screen in order to communicate with the user. We'll learn how to find mistakes in our code, and we'll even take a look at some simple repetition (also known as <q>looping</q>). In the process we'll take a look at the main structure of a C-program. Here are all the topics we'll cover:
+        <ul>
+            <li> A first C-program </li>
+            <li> Displaying messages on the screen ("printing") </li>
+            <li> Printing multiple lines</li>
+            <li> Syntax errors </li>
+            <li> Repetition (looping)</li>
+            <li> Simple looping errors </li>
+            <li> Comments</li>
+        </ul>
+        </p>
+    </introduction>
+
+    <section xml:id="firstprogram-hello-world">
+        <title><c>Hello, World!</c></title>
+        <p>A <term>Hello World</term> program is a computer program that displays <c>Hello, World!</c> to the user. It is often the very first program students write when they are introduced to a new programming language.</p>
+        <cmecode startPoint="engs20p_NhelloWorld" addOn="&amp;nocheck=true" height="300"></cmecode>
+        <activity>
+            <p>Click on the <q>Run</q> button in the above code window to observe that this C-program indeed outputs <c>Hello, World!</c> to the screen. Now try the following modifications - don't worry, you can always return to the original program by clicking on <q>Start Fresh</q>.
+            <ol>
+                <li>If you haven't already, click <q>Close</q> in the window that displayed the <c>Hello, World!</c> message. Now modify the code so that the computer outputs a greeting to you instead of to the world when you hit <q>Run</q> again. For example, you could output <c>Hello, Petra!</c></li>
+                <li>Delete the semicolon at the end of the <c>printf(...);</c> line. Then click <q>Run</q>. What happens? Put the semicolon back and run the code again to make sure you are back to normal.</li>
+                <li>Misspell <c>printf</c> on purpose. What happens?</li>
+                <li>Create a second <c>printf()</c> line, the first one saying <c>Hello, World!</c>, the second one displaying your personal greeting. What do you notice?</li>
+                <li>Add the two characters <sq>\n</sq> at the end of the first <c>printf()</c> line, just before the closing quotation marks, so that the line now reads:
+                <cd>printf("Hello, World!\n");</cd> Run your code and observe the effect. The backslash <sq><c>\</c></sq> indicates that rather than text to be printed to the screen, a command follows. In this case, the <sq><c>\n</c></sq> is the command to start a new line. Such a command, starting with a backslash, is also called an <term>escape sequence</term>.</li>
+            </ol>
+            </p>
+        </activity>
+    </section>
+
+    <section xml:id="firstprogram-practice">
+        <title>First Practice</title>
+        <activity>
+            <p>Please modify the <q>Hello, World</q> program below so that instead of <c>Hello, World!</c> it displays the following on the screen:</p>
+            <cd>
+                I already know how to:
+                - print text to the screen
+                - start a new line
+                - fix syntax errors
+            </cd>
+            <p>Be sure to print the words exactly as given above (case sensitive!) since otherwise our autograder will not grade your solution as correct.</p>
+        </activity>
+        <cmecode startPoint="engs20p_NAGprinting" height="300"></cmecode>
+        <p>Use the <q>Run</q> button as before to observe how your code is behaving. When you think your program performs correctly please press the <q>check</q> button to see whether it indeed does.</p>
+    </section>
+
+    <section xml:id="firstprogram-special-characters">
+        <title>Printing Special Characters</title>
+        <p>How do you print quotation marks to the screen?</p>
+        <cmecode startPoint="engs20p_NprintingQuotes" addOn="&amp;nocheck=true" height="300"></cmecode>
+        <activity>
+            <p>Try printing <c>Today is "Monday"!</c> to the screen. What happens?</p>
+            <p>What is the correct way to print quotation marks?</p>
+            <hint>
+                Be adventurous and try out various ideas! You can't break anything.
+            </hint>
+            <answer>
+                <ol>
+                    <li><idx><h>quotation marks</h><h>single</h></idx>Single quotes are printed using <c>\'</c></li>
+                    <li><idx><h>quotation marks</h><h>double</h></idx>Double quotes are printed using <c>\"</c></li>
+                </ol>
+            </answer>
+            <solution>
+                <p>Within any string (deliminated by double quotes <c>" "</c>), a double quote needs to be <lq/>escaped<rq/>, that is, preceded by a backslash. Single quotes are actually okay within strings, but it is also okay to escape them. If you'd like to use a single quote within something enclosed by single quotes however, then you need to escape that single quote (but double quotes are okay, surrounded by single quotes). </p>
+            </solution>
+        </activity>
+    </section>
+
+    <section xml:id="firstprogram-repetition">
+        <title>Repetition: A Simple <c>for</c>-Loop</title>
+        <p>Suppose you wanted to print the same line of text five times. Here is one way to do so:</p>
+        <cmecode startPoint="engs20p_Nloop1" addOn="&amp;nocheck=true" height="300"></cmecode>
+        <p>But imagine how many times you'd have to type the same line if you wanted to print it 100 times! Or imagine wanting to make a change to all of those lines, for example wanting two exclamation marks at the end of each output line. Here is a more elegant solution: a so-called <em>loop</em>:</p>
+        <cmecode startPoint="engs20p_Nloop2" addOn="&amp;nocheck=true" height="300"></cmecode>
+        <p>Try it out right now by hitting that <q>Run</q> button!</p>
+        <p>C actually supports multiple types of loops. This one is called a <c>for</c>-loop; we'll learn about the other types of loops later. We will also soon learn more about the use of the rather mysterious-looking <q><c>i</c></q> and the line <q><c>int i;</c></q>. For now, just think of <c>i</c> as something that can hold different values. In this particular example, <c>i</c> takes on values between 1 and 5, and for each value of i between 1 and 5 this loop prints out <c>Hello, World!</c>. That is, <c>Hello, World!</c> is printed exactly 5-times. </p>
+        <activity>
+        <ol>
+            <li>Try it out by clicking on the <q>Run</q> button in the above window and verify that the same line is indeed printed 5-times.</li>
+            <li>Now modify the code so that it prints <c>Hello, World!</c> 10-times.</li>
+        </ol>
+        </activity>
+        <p>You can place multiple statements into your loops:</p>
+        <cmecode startPoint="engs20p_Nloop3" addOn="&amp;nocheck=true&amp;hide_run=true" height="300"></cmecode>
+<!--
+        <activity>
+            <statement>
+                <p>What do you think the above code will print to the screen? Will it print:</p>
+                <ol>
+                    <li><c>Hello World</c> 3-times, then <c>Today is Saturday</c> 3-times?</li>
+                    <li><c>Hello World. Today is Saturday.</c> 3-times ?</li>
+                    <li>Something else?</li>
+                </ol>
+                <p><em>Please paste your answer choice (1/2/3) into the box below, then select <c>Run</c> to submit it:</em></p>
+                <program xml:id="activity-3-4-2-ForLoop-no-output" language="octave" interactive="yes"/>
+            </statement>
+        </activity>
+-->
+        <exercises>
+            <exercise>
+                <title>Study the code</title>
+                <statement>
+                    <p>What do you think the above code will print to the screen? Will it print:</p>
+                </statement>
+                <choices randomize="yes">
+                    <choice>
+                        <statement>
+                            <p><c>Hello World</c> 3-times, then <c>Today is Saturday</c> 3-times?</p>
+                        </statement>
+                        <feedback>
+                            <p>Not quite...</p>
+                        </feedback>
+                    </choice>
+                    <choice correct="yes">
+                        <statement>
+                            <p><c>Hello World. Today is Saturday.</c> 3-times ?</p>
+                        </statement>
+                        <feedback>
+                            <p>Great job!</p>
+                        </feedback>
+                    </choice>
+                    <choice>
+                        <statement>
+                            <p>Something else?</p>
+                        </statement>
+                        <feedback>
+                            <p>Try again...</p>
+                        </feedback>
+                    </choice>
+                </choices>
+            </exercise>
+        </exercises>
+    </section>
+
+    <section xml:id="firstprogram-multiple-repetitions">
+        <title>Multiple Repetitions</title>
+        <p>Give it a try now:</p>
+        <cmecode startPoint="engs20p_Nloop3" addOn="&amp;nocheck=true" height="300"></cmecode>
+        <activity>
+        <p>Can you figure out how to change the code in the window below so that it prints the following:</p>
+        <cd>
+            Hello, World!
+            Hello, World!
+            Hello, World!
+            Today is Saturday.
+            Today is Saturday.
+        </cd>
+        <p>Be sure to print the words exactly as given above since otherwise our autograder will not grade your solution as correct.</p>
+        </activity>
+        <p>Run your code frequently using the <q>Run</q> button to quickly catch potential mistakes before they become huge issues. When you think your programs performs correctly, press the <q>Check</q> button to run the autograder tool.</p>
+        <cmecode startPoint="engs20p_Nloop4" height="300"></cmecode>
+    </section>
+
+    <section xml:id="firstprogram-comments">
+        <title>Putting Comments in your Code</title>
+        <p><idx>comments</idx>It is important to put comments throughout your code, both for purposes of readability of your code and so that you yourself can remember what you were thinking when you wrote the code. There are two ways to do so, both of which are demonstrated in the code below:</p>
+        <cmecode startPoint="engs20p_Ncomments" addOn="&amp;nocheck=true" height="400"></cmecode>
+        <activity>
+            <statement>
+                Try putting a comment inside another comment, so something like <c>/*This is /*comment inside a */ comment */</c>. What happens when you nest a comment inside another comment?
+            </statement>
+            <answer>You cannot nest a comment inside another comment.</answer>
+            <solution>When the compiler finds the start of a comment, indicated by /*, it simply ignores everything (including the potential start of another comment) until it gets to a comment ending symbol */. In the case of nested comments it will therefore not see the beginning of the comment nested inside the other comment and furthermore mistake the ending symbol of the inside comment for that of the outside comment.</solution>
+        </activity>
+    </section>
+
+    <section xml:id="firstprogram-summary">
+        <title>Summary</title>
+        <activity>
+            <statement>
+                <p>Take a moment and think about the following:</p>
+                <ol>
+                   <li>What was your main take-away from today's class?</li>
+                   <response/>
+                   <li>What was the most confusing in today's class?</li>
+                   <response/>
+                </ol>
+            </statement>
+        </activity>
+        <p>
+            Here is what we have learned:
+        </p>
+         <ul>
+            <li>
+                <idx><c>printf()</c></idx>
+                <p><c>printf()</c> is used to display a message to the screen. Example:
+                <program language="c"><input>
+                   printf("This will be displayed on the screen!");
+                </input></program></p>
+            </li>
+            <li>
+                <p><c>\n</c>
+                starts a new line. Example:
+                <program language="c"><input>
+                   printf("Hello!\nMy name is Petra!");
+                </input></program></p>
+            </li>
+            <li>
+                <p>Quotation marks need to be "escaped", as in:
+                <c>\"</c>, <c>\'</c>. Example:
+                <program language="c"><input>
+                   printf("She said: \"Today it\'s Monday!\" ");
+               </input></program></p>
+            </li>
+            <li>
+                <idx><h>loops</h><h><c>for</c></h></idx>
+                <p>Loops are used to repeat instructions multiple times.
+                Example: 
+                <program language="c"><input>
+                    int i;
+                    for (i=0; i&lt;3; i++) {  
+                        printf("Hello! ");
+                        printf("Hi!\n");
+                    }
+                </input></program></p>
+            </li>
+            <li><p>Comments are important throughout your code. Comments can be included in your code by enclosing them in <c>/* ... */</c> or by using <c>//</c>. Example:
+                <program language="c"><input>
+                    int main(void) {
+                        int i; /* This is a comment. */
+                        /* This is also a comment. */
+                        /* A comment
+                           can go over
+                           multiple lines.
+                        */
+                        for (i=0; i&lt;3; i++) {  
+                            printf("Hello! "); // This comment ignores the remainder of the line.
+                            printf("Hi!\n");
+                        }
+                    }
+                </input></program></p>
+            </li>
+        </ul>
+    </section>
+</chapter>

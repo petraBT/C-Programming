@@ -1,0 +1,20 @@
+cd into each source folder in run in there:
+
+for file in `ls *.ptx`
+../conversion/convertRuneToHTML $file
+
+edit *.new opens all conversions in Sublime.
+Scan through all them, just in case, potentilly fix the indenting of the new </activity> tags.
+
+In finder, highlight all files in the folder, control click, select "rename"
+rename extension .ptx to .old
+rename extension .new to .ptx
+
+
+Similarly, 
+
+for file in `ls *.ptx`
+../conversion/convertMultipleChoice $file
+
+edit *.new opens all conversions in Sublime.
+Scan through all of them, and fix the "correct" choice.

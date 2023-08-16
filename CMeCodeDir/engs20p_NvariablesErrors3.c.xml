@@ -1,0 +1,11 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    age = 19;
+    
+    printf("I am %d years old. \n", age);
+    return(0);
+}
+</cme>

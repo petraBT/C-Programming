@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="arraystruct">
+	<title>Arrays of Structures</title>
+	<introduction>
+		<p>Now that we can conveniently store together information about an object in a structure (such as saving student data in a <c>student_t</c> type variable) we can go one step further and store information about multiple items of this type in an array of structures.</p>
+		<p>First we need to clarify the order in which operations are executed in a line of code that contains multiple operations, especially now that we have just introduced some new operators such as the direct and indirect member selection operators <c>.</c> and <c>-&gt;</c>.</p>
+		<p>In this chapter, we will cover the following topics:</p>
+		<ul>
+			<li>Operator precedence</li>
+			<li>Working with arrays of structures</li>
+			<li>Dynamically allocating space for arrays of structures</li>
+		</ul>
+    </introduction>
+
+    <section xml:id="arraystruct-operators">
+    	<title>Operator Precedence</title>
+		<p>We first introduced operator precedence in <xref ref="branching-operator"/>. With the introduction of some new operators comes the necessity to discuss precedence of operators. In a command that involves multiple operations and operators, which get executed first? The direct and indirect member selection operators have high precedence as the following table shows. Operators at the top of the table have highest precedence (get executed before those that are below them in the table).</p>
+		<p>The entry in the <q>Order</q> column indicates how multiple operands are handled with respect to the given operation (remember, the computer can only do one thing at a time...). For example, when comparing two expressions using <c>&lt;</c>, the expression to the left of the less than sign is evaluated before the one on the right. On the other hand, in an assignment statement such as <c>a = b+1;</c> the right-hand side is evaluated first and only then assigned to the variable on the left.</p>
+		<table>
+		  <idx>operator precedence</idx>
+		  <title>
+		    Operator Precedence
+		  </title>
+		  <tabular>
+		    <row>
+		      <cell>
+		        <alert>Operator</alert>
+		      </cell>
+		      <cell>
+		        <alert>Precedence</alert>
+		      </cell>
+		      <cell>
+		        <alert>Order</alert>
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>(..)</c>
+		      </cell>
+		      <cell>
+		        highest
+		      </cell>
+		      <cell>
+		        left to right
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>a[..]</c><nbsp/> <c>f(..)</c><nbsp/> <c>.</c><nbsp/> <c>-&gt;</c>
+		      </cell>
+		      <cell>
+		        <nbsp/> <nbsp/> <nbsp/>|
+		      </cell>
+		      <cell>
+		        left to right
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>i++</c><nbsp/> <c>i--</c>
+		      </cell>
+		      <cell>
+		        <nbsp/> <nbsp/> <nbsp/>|
+		      </cell>
+		      <cell>
+		        right to left
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>++i</c><nbsp/> <c>--i</c><nbsp/> <c>sizeof()</c><nbsp/> <c>!</c><nbsp/> <c>+</c><nbsp/> <c>-</c><nbsp/> <c>&amp;</c><nbsp/> <c>*</c><nbsp/> (unary)
+		      </cell>
+		      <cell>
+		        <nbsp/> <nbsp/> <nbsp/>|
+		      </cell>
+		      <cell>
+		        right to left
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>(int)</c><nbsp/> <c>(float)</c><nbsp/> (casts)
+		      </cell>
+		      <cell>
+		        <nbsp/> <nbsp/> <nbsp/>|
+		      </cell>
+		      <cell>
+		        right to left
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>/</c><nbsp/> <c>%</c>
+		      </cell>
+		      <cell>
+		        <nbsp/> <nbsp/> <nbsp/>|
+		      </cell>
+		      <cell>
+		        left to right
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>+</c><nbsp/> <c>-</c><nbsp/> (binary)
+		      </cell>
+		      <cell>
+		        <nbsp/> <nbsp/> <nbsp/>|
+		      </cell>
+		      <cell>
+		        left to right
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>&lt;</c><nbsp/> <c>&lt;=</c><nbsp/> <c>&gt;=</c><nbsp/> <c>&gt;</c>
+		      </cell>
+		      <cell>
+		        <nbsp/> <nbsp/> <nbsp/>|
+		      </cell>
+		      <cell>
+		        left to right
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>==</c><nbsp/> <c>!=</c>
+		      </cell>
+		      <cell>
+		        <nbsp/> <nbsp/> <nbsp/>|
+		      </cell>
+		      <cell>
+		        left to right
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>&amp;&amp;</c>
+		      </cell>
+		      <cell>
+		        <nbsp/> <nbsp/> <nbsp/>|
+		      </cell>
+		      <cell>
+		        left to right
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>||</c>
+		      </cell>
+		      <cell>
+		        <nbsp/><nbsp/><nbsp/><nbsp/><nbsp/>V
+		      </cell>
+		      <cell>
+		        left to right
+		      </cell>
+		    </row>
+		    <row>
+		      <cell>
+		        <c>=</c><nbsp/> <c>+=</c><nbsp/> <c>-=</c><nbsp/> <c>*=</c><nbsp/> <c>/=</c><nbsp/> <c>%=</c>
+		      </cell>
+		      <cell>
+		        lowest
+		      </cell>
+		      <cell>
+		        right to left
+		      </cell>
+		    </row>
+		  </tabular>
+		</table>
+    </section>
+
+	<section xml:id="arraystruct-structures">
+		<title>Arrays of Structures</title>
+		<p><idx><h>array</h><h>structures</h></idx><idx><h>structures</h><h>arrays</h></idx>We'll now look at storing  multiple structures in an array. As an example you might think of creating a record (structure) for each student in a class, consisting of the student's name, year of birth and GPA. You could then store the information for all students  in a class in an array with each array elements being a student structure. You'd thus have an array of structures.</p>
+		<p>Let's practice! Rather than using student data, in today's class we'd like to store the vertices of a polygon in an array of structures. Each vertex consists of an x- and a y-coordinate. In order to efficiently store these coordinates for a point we'll define a new structure, called <c>point_t</c>, that stores these coordinates for a given point. The code window below already has such a structure defined.</p>
+		<activity xml:id="activity-26-2-1-Array_Structures_Practice">
+			<statement>
+				<p>Let's warm up by quickly writing some functions that serve to assign values to a variable of type <c>point_t</c> and print the coordinates of a variable of type <c>point_t</c>.</p>
+				<p>More specifically:</p>
+				<ul>
+				  	<li>write a function <c>initializePoint()</c> to which you pass a variable of type <c>point_t</c> (by reference) along with two floats, and that assigns the first float to the x-coordinate and the second float to the y-coordinate of the point.</li>
+				  	<li>write a function <c>printPoint()</c> to which you pass a variable of type <c>point_t</c> (by value) and that prints out the coordinates of the variable in the form (x,y).</li>
+				</ul>
+				<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="700"></cmecode>
+				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="arraystruct-triangle">
+		<title>Arrays of Structures: Triangle</title>
+		<p>We can now put multiple points together and store them in an array of points (which is an array of structures). Three points stored together could be viewed as the vertices of a triangle, for example. Four points might give you a quadrilateral, five points a pentagon, etc.</p>
+		<subsection>
+			<title>Declare a Triangle</title>
+			<activity xml:id="activity-26-3-1-Array_Structures_Triangle-no-output">
+				<statement>
+					<p>So let’s declare a triangle. To do so, all we need is an array that holds three points, thus an array with three elements of type <c>point_t</c>. Declare a variable triangle with these features.</p>
+					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
+					<p><em>When you are done, please paste your piece of code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Store Vertices</title>
+			<activity xml:id="activity-26-3-2-Array_Structures_Store_Triangle_Vertices">
+				<statement>
+					<p>Now store the vertices (0,0), (2,0), (1,3) in the variable triangle, using the function <c>initializePoint()</c>.</p>
+					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Print Triangle</title>
+			<activity xml:id="activity-26-3-3-Array_Structures_Print_Triangle">
+				<statement>
+					<p>Write a function <c>printTriangle()</c> to which you pass an array of three points, and which prints out the coordinates of these three points. The function <c>printTriangle()</c> should call the function <c>printPoint()</c>.</p>
+					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="arraystruct-dynamic">
+		<title>Dynamic Arrays of Structures</title>
+		<p>Why stop at triangles? Suppose we wanted to store polygons with variable numbers of vertices.</p>
+		<p>Recall that in order to reserve space in memory (for example for an array whose size only becomes known at run-time of your program) we use the function <c>malloc()</c> whose prototype is</p>
+		<program language="c"><input>
+			void * malloc(size_t size);
+		</input></program>
+		<p>Here, <c>size</c> is the total amount of space you need for your data. For example, if you wanted to store 10 structures of type <c>point_t</c> you'd need space in the amount of 10*sizeof(point_t).</p>
+		<p>Also recall that in order to use <c>malloc()</c> you need to</p>
+		<program language="c"><input>
+			#include &lt;stdlib.h&gt;
+		</input></program>
+		<activity xml:id="activity-26-4-1-Dynamic_Array_Structures">
+			<statement>
+				<p>Write a function <c>createPolygon()</c> to which you can pass an integer and that reserves space in memory for an array of points of that size and returns a pointer to that array. Just to be on the safe side, have this function also initialize all coordinates to (0.0,0.0).</p>
+				<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
+				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="arraystruct-pentagon">
+		<title>Dynamic Arrays of Structures: Pentagon</title>
+		<subsection>
+			<title>Declare Vertices</title>
+			<activity xml:id="activity-26-5-1-Dynamic_Array_Structures_Pentagon">
+				<statement>
+					<p>Use the function <c>createPolygon</c> to create a pentagon (5 vertices) with vertices (0,0), (1,0), (2,1), (1,3), (0,1).</p>
+					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Print Pentagon</title>
+			<activity xml:id="activity-26-5-2-Dynamic_Array_Structures_Print_Pentagon">
+				<statement>
+					<p>Finally... Write a function <c>printPoly()</c> to which you pass a polygon and a number (its number of vertices), and which prints out these vertices.</p>
+					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Don't forget to free()!</title>
+			<activity xml:id="activity-26-5-3-Dynamic_Array_Structures_Free">
+				<statement>
+					<p>One last step, free the allocated memory!</p>
+					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="arraystruct-summary">
+		<title>Summary</title>
+		<p>In this chapter, we covered the following topics:</p>
+		<ul>
+			<li>Operator precedence</li>
+			<li>Arrays of structures</li>
+			<li>Dynamically creating arrays of structures</li>
+			<li>Practice using arrays of structures</li>
+		</ul>
+	</section>
+</chapter>
+

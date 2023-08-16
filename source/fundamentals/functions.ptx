@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="functions">
+	<title>Functions and Recursion</title>
+	<introduction>
+        <p>Functions present a way to organize your code so that you can execute certain parts of your code multiple times or perform recurring tasks with different input parameters. In this chapter, we'll cover the following topics:</p>
+        <ul>
+            <li>Functions with one or more input arguments</li>
+            <li>Returning a value from a function</li>
+            <li>Recursive functions</li>
+        </ul>
+    </introduction>
+
+    <section xml:id="functions-single">
+        <title>Single Functions</title>
+        <p>You have already seen the use of a function in C, namely the <c>main()</c> function! We don't tend to think of <c>main()</c> as a function but it is indeed one.</p>
+        <p><idx>functions</idx>Functions allow you to group a bunch of statements together that can be called upon to execute at any point in your code. Depending on the type of function you write, you can pass information to the function and it can return information back to you.</p>
+        <p>Here is a first example of a function in C:</p>
+        <codecast href="1513365896881"/>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>Writing functions</li>
+                    <li>Calling functions</li>
+                    <li>NEW SYNTAX: the following is the function prototype for a function that takes in two integers, x and y, and returns one integer (this return integer could be anything but we are going to return the sum of x and y).</li>
+               </ul>
+               <c>int sum (int x, int y);</c>
+               <ul>
+                    <li>NEW SYNTAX: the body (that is, the set of instructions to be executed when calling the function) of the function "sum" comes after the main function ends. This is called the function definition and it starts out the same way as the prototype, except for the semi-colon <c>;</c> at the end of the prototype. After that initial line come curly brackets <c>{}</c>, which enclose the (potentially) multi-line body of the function.</li>
+                </ul>
+                <c>int sum (int x, int y){     };</c>
+                <ul>
+                    <li>NEW SYNTAX: to call the new function in the main function, the following is used (and the variable names are arbitrary)</li>
+                </ul>
+                <c>c = sum(a,b)</c>
+            </p>
+        </aside>
+        <reading-questions>
+            <exercise xml:id="quiz-functions-1">
+                <statement>
+                    <p>Please add the correct prototype for the <c>square()</c> function to the program below:</p>
+                    <cmecode startPoint="engs20p_NAGFunctions3" height="400"></cmecode>
+                    <p><em>When your program performs correctly you'll be given a keyword to enter in Canvas.</em></p>
+                </statement>
+            </exercise>
+            <exercise xml:id="quiz-functions-2">
+                <statement>
+                    <p>Write a function <c>divide()</c> that takes two floats as arguments and returns a float, namely the first number divided by the second. Obviously, you shouldn't be dividing by zero...</p>
+                    <p>You may assume that your function is not called with such input.</p>
+                    <cmecode startPoint="engs20p_NAGFunctions4" height="400"></cmecode>
+                    <p><em>When your program performs correctly you'll be given a keyword to enter in Canvas.</em></p>
+                </statement>
+            </exercise>
+        </reading-questions>   
+    </section>
+
+    <section xml:id="functions-multiple">
+        <title>Multiple Functions</title>
+        <p><idx><h>functions</h><h>multiple</h></idx>It is possible (and quite normal) to have multiple functions in your C code! By splitting up your code into functions, debugging can become much easier, your code will be more readable, it will be easier for you to remember what you had in mind, ... but more on that later. For now, let's take a look at an example that involves multiple functions:</p>
+        <codecast href="1513367023244"/>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>You can write multiple functions for your code</li>
+                    <li>List the function prototypes above the main function</li>
+                    <li>Include the function bodies below the main function</li>
+                    <li>Call each function using the same syntax as before</li>
+                </ul>
+            </p>
+        </aside>
+        <reading-questions>
+            <exercise xml:id="quiz-functions-3">
+                <statement>
+                    <p>What are some of the advantages of using functions (choose all that apply)?</p>
+                </statement>
+            <choices randomize="yes">
+               <choice correct="yes">
+                  <statement>
+                     <p>easy modification of code</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice correct="yes">
+                  <statement>
+                     <p>abstraction</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice correct="yes">
+                  <statement>
+                     <p>ability to reuse code without having to copy and paste</p>
+                  </statement>
+                  <feedback>
+                    <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>there are no advantages</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+            </exercise>
+            <exercise xml:id="quiz-functions-4">
+                <statement>
+                    <p>Given the following function definition, which is the correct function call, given that a variable <c>a</c> of type <c>int</c> has been declared?</p>
+                    <program language="c"><input>
+                        int myaddition(int x, int y)
+                        {
+                          return(x+y);
+                        }
+                    </input></program>
+                    <p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
+                    <cmecode startPoint="engs20p_functions1" height="300"></cmecode>
+                </statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>a = myaddition(3,5);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>a = myaddition(3,5)</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>int a = myaddition(3,5)</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>a = myaddition(3.0,5.0);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="functions-practice">
+        <title>Practice Your Functions!</title>
+        <introduction>
+            The best way to get more comfortable with functions is to simply practice writing code. So here we go!
+        </introduction>
+        <subsection>
+            <title>Functions: Your Turn!</title>
+            <activity>
+                <p>Write a C program that converts temperature from Fahrenheit to Celsius or from Celsius to Fahrenheit, depending on user input. Here is a sample session:</p>
+                <console>
+                    <prompt>Please enter a temperature: </prompt>
+                    <input>45 F</input>
+                    <output>45 degrees Fahrenheit correspond to approximately 7.2 degrees Celsius.</output>
+                </console>
+                <p>And another sample session:</p>
+                <console>
+                    <prompt>Please enter a temperature: </prompt>
+                    <input>28 C</input>
+                    <output>28 degrees Celsius correspond to approximately 82.4 degrees Fahrenheit.</output>
+                </console>
+                <p>The overall structure of the program is provided for you below. Your program should use functions for the temperature conversions: one for Fahrenheit to Celsius, and another for Celsius to Fahrenheit.</p>
+                <cmecode startPoint="engs20p_NFunctions5" addOn="&amp;nocheck=true" height="500"></cmecode>
+            </activity>
+        </subsection>
+
+        <subsection>
+            <title>Another One!</title>
+            <activity>
+                <p>Write a function <c>factorial()</c> that accepts an integer as an argument and returns an integer, namely the factorial of the argument. A test program has already been provided for you below; you only need to write the function itself and add the prototype and the function call to the program.</p>
+                <cmecode startPoint="engs20p_NFunctions6" addOn="&amp;nocheck=true" height="500"></cmecode>
+            </activity>
+        </subsection>
+    </section>
+
+    <section xml:id="functions-recursion">
+        <title>Recursion</title>
+        <p><idx><h>functions</h><h>recursion</h></idx>It is possible for a function to call itself! While this might sound like a strange idea, the concept of a function calling itself can make for some really cool features. We call this <term>recursion</term>. Let's take a look at an example. Please pretend to be the computer as you study the code in the below window.</p>
+        <p>What does the function <c>factorial()</c> do? Try to answer this question 'by hand' first, by going through the code in your head for multiple different user inputs. Once you think you have an idea, hit the <code>Run</code>button to see what the computer does. Is this what you thought would happen? Why or why not?</p>
+        <cmecode startPoint="engs20p_NFunctions7" addOn="&amp;nocheck=true&amp;hide_run=true" height="400"></cmecode>
+    </section>
+
+    <section xml:id="function-recursion-practice">
+        <title>Practice Your Recursion!</title>
+        <p>Pick one of the three options below to try!</p>
+        <subsection>
+            <title>Practice 1</title>
+            <activity>
+                <p>Write a function <c>sum()</c> that takes an integer <c>n</c> as an argument and recursively finds the sum of the numbers from 1 through <c>n</c>.</p>
+                <p>The function should return that sum. The function <c>sum()</c> should not use any loops!</p>
+                <p>The main function is already given to you so that you can focus on the recursive function <c>sum()</c>. Example output:</p>
+                <c>
+                    "The sum of the numbers from 1 through 10 equals 55."
+                </c>
+                <cmecode startPoint="engs20p_NRecursion1" height="500"></cmecode>
+            </activity>
+        </subsection>
+
+        <subsection>
+            <title>Practice 2</title>
+            <activity>
+                <p>Write a recursive function <c>sumOfDigits()</c> that computes and returns the sum of the digits of an integer number that's been passed to the function. Your function should not use any loops!</p>
+                <p>The main function is already given to you so that you can focus on the recursive function <c>sumOfDigits()</c>. Example output:</p>
+                <c>
+                    "The sum of the digits of the number 132436 equals 19."
+                </c>
+                <cmecode startPoint="engs20p_NRecursion2" height="500"></cmecode>
+            </activity>
+        </subsection>
+
+        <subsection>
+            <title>Practice 3</title>
+            <activity>
+                <p>Write a recursive function <c>fib()</c> that takes an integer argument <c>n</c> and returns the nth Fibonacci number. Your function should not use any loops! Recall that the first and second Fibonacci numbers are 0 and 1, whereas each subsequent Fibonacci number is the sum of the two previous ones. For example, here are the first 10 Fibonacci numbers:</p>
+                <c>0, 1, 1, 2, 3, 5, 8, 13, 21, 34.</c>
+                <p>The main function is already given to you so that you can focus on the recursive function <c>fib()</c>.</p>
+                <p>Example output:</p>
+                <c>"The 9th Fibonacci number is 21."</c>
+                <cmecode startPoint="engs20p_NRecursion3" height="500"></cmecode>
+            </activity>
+        </subsection>
+    </section>
+
+    <section xml:id="functions-summary">
+        <title>Summary</title>
+        <p>In this chapter, we learned about the following topics:</p>
+        <ul>
+            <li>Writing and calling functions</li>
+            <li>Function prototypes</li>
+            <li>Passing arguments to functions</li>
+            <li>Returning a value from a function</li>
+            <li>Writing recursive functions</li>
+        </ul>
+    </section>
+</chapter>

@@ -1,0 +1,16 @@
+#include <stdio.h>
+void doSomething();
+int main(void){
+    int a = 10;
+    int b[] = {11, 12};
+    
+    doSomething();
+    printf("In main: a = %d, b[0] = %d, b[1] = %d\n", a, b[0], b[1]);
+    return 0;
+}
+
+void doSomething() {
+    int a = 20;
+    int b[] = {21, 22};
+    printf("In function: a = %d, b[0] = %d, b[1] = %d\n", a, b[0], b[1]);
+}

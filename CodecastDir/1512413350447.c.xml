@@ -1,0 +1,33 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+int main(void)
+{
+    // +, -, *, /, % arithmetic operators
+    // &lt;, &gt;, &lt;=, &gt;= comparison operators
+    // != not equal to
+    // == equal to
+    
+    int sunnyEnough;
+    int threshhold = 6;
+    int howSunny;
+    
+    printf("On a scale of 1 to 10, how sunny is it today? ");
+    scanf("%d", &amp;howSunny);
+    printf("You entered %d.\n", howSunny);
+    
+    sunnyEnough = (howSunny &gt;= threshhold);
+    printf("Result of comparison: %d\n", sunnyEnough);
+    
+    if (sunnyEnough) {
+        printf("It is really sunny!\n");
+        printf("Time to go outside!\n");
+    }
+    else {
+        printf("It's not sunny enough :-(\n");
+        printf("I need to stay inside.\n");
+    }
+    
+    return(0);
+}
+</cme>

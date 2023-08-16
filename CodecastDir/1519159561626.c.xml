@@ -1,0 +1,32 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+void printArray(int *, int);
+void squareArray(int *, int);
+int main(void) {
+
+    int array[] = {6, 2, -4, 8, 5, 1};
+    int N = 6;
+    printArray(array, 6);
+    squareArray(array, 6);
+    printArray(array, 6);
+    return 0;
+}
+
+void squareArray(int * ptr, int size) {
+    int i;
+    for (i=0; i&lt;size; i++) {
+        ptr[i] = ptr[i]*ptr[i];
+        // *(ptr+i) = (*(ptr+i))*(*(ptr+i));
+    }
+}
+
+void printArray(int * ptr, int size) {
+    int i;
+    for (i=0; i&lt;size; i++) {
+        // printf("%d ", *(ptr+i));
+        printf("%d ", ptr[i]);
+    }
+    printf("\n");
+}
+</cme>

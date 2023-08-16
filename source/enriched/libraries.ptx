@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="libraries">
+	<title>Libraries</title>
+	<introduction>
+		<p>So far, we have become accustomed to using certain <alert>libraries</alert> in C, such as the standard library and the math library (and remember that we need to indicated their header files<c>&lt;stdio.h&gt;</c> and <c>&lt;math.h&gt;</c> when using functions from these libraries). But, we have yet to discuss libraries in any detail! In this chapter, we will explore what libraries are, how they are incorporated into your compiled code, and we will even write our own library!</p>
+    </introduction>
+
+	<section xml:id="libraries-intro">
+		<title>Intro to Libraries</title>
+		<p>Now that we have created our own data types and functions that allow us to manipulate instances of objects of these new types it is common to package such functions as a <alert>library</alert>. Take as an example our arbitrarily large integers. In order to allow others to use these numbers in their code it would make sense to <q>hide</q> and package up all the work and messiness that goes into creating such a number. You'd probably even want to provide some additional functionality such as adding, subtracting, multiplying, dividing two such number and then hand all that to a user who just wants to be able to work with really large numbers (but has no interest in how you implemented that functionality). That's where libraries come in.</p>
+		<p><idx>libraries</idx>We have actually already encountered libraries in our work, for example the standard input/output library <c>stdio</c>, the standard library <c>stdlib</c> and the math library <c>math</c>. Each such library actually comes with two files, one ending in <c>.h</c> (the so-called <em>header file</em>) and one ending in <c>.o</c> (the so-called <em>object file</em>.</p> 
+		<p>The <alert>header file</alert> contains all of the prototypes of functions from the library (remember, the compiler needs to know about these prototypes so that it can check whether you are using your functions correctly). That's why we need to <c>#include ...</c> the header files of those libraries whose functions we wish to invoke in our code.</p>
+		<p>The <alert>object file</alert> contains the actual library functions in machine language. It's already been translated by the compiler so that when you build your program you don't have to compile the entire library each time around. You can simply <alert>link</alert> the translated code contained in the library object file to your own code (that's what the <alert>linker</alert> does.)</p>
+		<p>So here is an example. Suppose you are writing a C-program <c>coolProgram.c</c> that uses functions from the two libraries <c>stdio</c> and <c>math</c>. In order for the compiler to have access to all of the function prototypes from these libraries, we need to:</p>
+		<program language="c"><input>
+			#include &lt;stdio.h&gt;
+			#include &lt;math.h&gt;
+		</input></program>
+		<p>Once your program compiles without any compiler errors, the compiler produces an object file <c>coolProgram.o</c>, which is your code, translated into machine language. Next, the linker starts its job and finds the object files that contain the input/output functions and math functions used in your program, namely <c>stdio.o</c> and <c>math.o</c>. These object files contain all of these functions already compiled into machine language. The linker then links (packages) these object files together with the object file <c>coolProgram.o</c> of the program you are writing, and if all goes well, an <alert>executable file</alert> results.</p>
+		<activity xml:id="activity-28-1-1-Library_Parts-no-output">
+			<statement>
+			<p>Which of the following are part of a library?</p>
+			<ol>
+				<li>a header file </li>
+				<li>an object file </li>
+				<li>source code</li>
+			</ol>
+			<p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="libraries-components">
+		<title>Library Components</title>
+		<p><idx><h>libraries</h><h>components</h></idx><idx>header file</idx><idx>object file</idx>A library consists of a header file <c>(.h)</c> and an object file <c>(.o)</c>.</p>
+		<activity xml:id="activity-28-2-1-ATOI_Function-no-output">
+			<p>For example, for the standard library <c>stdlib</c>, the header file, which you include via </p>
+			<pre>#include &lt;stdlib.h&gt;</pre>
+			<p>contains prototypes for standard functions like:</p>
+			<program language="c"><input>
+				int abs(int x);
+				void *calloc(size_t nitems, size_t size);
+				void *malloc(size_t size);
+				void free(void *block);
+				int atoi(const char *s);
+			</input></program>
+			<p>The actual object file is part of your C distribution. We never get to see the actual source code.</p>
+			<statement>
+				<p>What do you think the function <c>atoi()</c> does?</p>
+				<p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+			</statement>
+            <response/>
+		</activity>
+	</section>
+
+	<section xml:id="libraries-header">
+		<title>Making Our Own Library - Header File</title>
+		<p>In order to make our own library we need to provide a header file <c>(.h)</c> and an object file <c>(.o)</c>. Let's look at the example of our arbitrarily long integers.</p>
+		<p>The header file, <c>arbitraryintegers.h</c>, would contain the structure type definition and function prototypes:</p>
+		<program language="c"><input>
+			struct digit {
+			  int num;
+			  struct digit *next;
+			};
+
+			typedef struct digit digit_t;
+
+			digit_t * createDigit(int);
+			digit_t * append(digit_t * end, digit_t * newDigptr);
+			void printNumber(digit_t * start);
+			void freeNumber(digit_t * start);
+			digit_t * readNumber(void);
+			digit_t * searchNumber(digit_t * start, int number);
+			digit_t * insertAtFront(digit_t * start,digit_t * newptr);
+			digit_t * reverseNumber(digit_t * start);
+			digit_t * insertIntoSorted(digit_t *start,digit_t *newDig);
+			digit_t * sortedCopy(digit_t *);
+		</input></program>
+	</section>
+
+	<section xml:id="libraries-source">
+		<title>Making Our Own Library - Source File</title>
+		<p>The source file, <c>arbitraryintegers.c</c>, contains the collection of all functions that are to be part of the library (but no <c>main()</c> function!):</p>
+		<program language="c"><input>
+			#include "arbitraryintegers.h"
+			digit_t *createDigit(int dig) {
+			  digit_t *ptr;
+			  ptr = (digit_t *) malloc(sizeof(digit_t));
+			  ptr-&gt;num = dig;
+			  return(ptr);
+			}
+
+			digit_t * append(digit_t * end, digit_t * newDigptr) {
+			  end-&gt;next = newDigptr;
+			  end = end-&gt;next;
+			  return(end);
+			} 
+
+			void printNumber(digit_t *start) {
+			  digit_t * ptr = start;
+			  while (ptr!=NULL) {
+				printf("%d", ptr-&gt;num);
+				ptr = ptr-&gt;next;
+			  }
+			  printf("\n");
+			}
+			. . . 
+		</input></program>
+	</section>
+
+	<section xml:id="libraries-object">
+		<title>Making Our Own Library - Object File</title>
+		<p>One typically compiles the source code to an object. This object file contains machine language for all of the functions in the source file but is by itself not executable (since it contains no <c>main()</c> function!).</p>
+		<p>The library then consists of both the header file and the object file. In our example, this would be </p>
+		<pre> arbitraryintegers.h arbitraryintegers.o </pre>
+		<p>We can now use this library in other programs:</p>
+		<program language="c"><input>
+			#include &lt;stdio.h&gt;
+			#include "arbitraryintegers.h"
+
+			int main(void) {
+			  digit_t *myNumber;
+			  . . . 
+			  myNumber = readNumber();
+			  . . . 
+			}
+		</input></program>
+		<p>Note the use of <c>" "</c> for user-defined libraries instead of <c>&lt; &gt;</c>, which is reserved for built-in libraries.</p>
+	</section>
+
+	<section xml:id="libraries-complex">
+		<title>Create A Complex Number Library</title>
+		<p>Let's give this a try! We'll now create our own library, namely a complex number library (note that C does not come with a complex number data type).</p>
+		<p>A complex number</p>
+		<p>
+		  <me>z = x + iy</me>
+		</p>
+		<p>has a real part x and an imaginary part y. Often, we write z in polar form also as </p>
+		<p>
+		  <me>z = re^{i\phi}</me>
+		</p>
+		<p>where <m>r</m> is the absolute value (also called magnitude) of the complex number and <m>\phi</m> is the argument (also called phase of the number).</p>
+		<p><idx>complex numbers</idx>Again, C does not provide a built-in complex data type (many other languages do), so we must create our own.</p>
+		<activity xml:id="activity-28-6-1-Libraries_Complex_Numbers-no-output">
+			<statement>
+				<p>Please declare a new datatype <c>complex_t</c> that stores the real part "real" and the imaginary part "imag" of a complex number as floats.</p>
+				<p><em>When you are done, please paste your datatype into the code submission box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="libraries-complex-source">
+		<title>Complex Number Library Source File</title>
+		<p>Here are the prototypes of the functions we'd like to create:</p>
+		<program language="c"><input>
+/* Create a complex number from real and imaginary parts */
+complex_t complex(float x, float y);
+
+/* Create a complex number from polar coordinates */
+complex_t polar(float R, float phi);
+
+/* Extract the real part of a complex number */
+float real(complex_t z);
+
+/* Extract the imaginary part of a complex number */
+float imaginary(complex_t z);
+
+/* Finds the complex conjugate */
+complex_t c_conjugate(complex_t z);
+
+/* add two complex numbers */
+complex_t add_c(complex_t z1, complex_t z2);
+
+/* Subtract complex numbers */
+complex_t subtract_c(complex_t z1, complex_t z2);
+
+/* Multiply complex numbers */
+complex_t multiply_c(complex_t z1, complex_t z2);
+
+/* Divide complex numbers */
+complex_t divide_c(complex_t z1, complex_t z2);
+
+/* Complex exponential function, using e^(x+iy) = e^x(cos y + i sin y) */
+complex_t exp_c(complex_t z);
+    
+/* Complex logarithm: log(z) = ln(|z|) + i arg(z) */   
+complex_t log_c(complex_t z);
+
+/* complex square root: take square root of length and half the angle */
+complex_t sqrt_c(complex_t z);
+
+/* Complex absolute value: |z| = (x*x + y*y)^(1/2) */
+float abs_c(complex_t z);
+
+/* argument of a complex number */
+float phase_c(complex_t z);
+
+/* display a complex number to the console */
+void display_c(complex_t z);
+		</input></program>
+		<p>Below is a coding window in which there is room to write all of these functions:</p>
+		<cmecode startPoint="engs20p_NComplexNumberLibFunctions" addOn="&amp;nocheck=true&amp;hide_run=true" height="900"></cmecode>
+	</section>
+
+	<section xml:id="libraries-complex-header">
+		<title>Complex Number Library Header File</title>
+		<p>The header file for the Complex Number Library needs to contain all of the prototypes of our functions but also constants (such as <q>E</q>) as well as the definition of the complex number data type. Here are the contents of the file:</p>
+		<cmecode startPoint="engs20p_NComplexNumberLibHeader" addOn="&amp;nocheck=true&amp;hide_run=true" height="500"></cmecode>
+	</section>
+
+	<section xml:id="libraries-complex-assemble">
+		<title>Assembling the Complex Number Library</title>
+		<p>It's time to write all of the functions in the library! With your group, please decide which function you'd like to work on first. In order to make sure that we can get all functions covered (after all, we would like to have a working library by the end of class today), we'll use a google doc in which we keep track of who is working on what. Access to this google doc is at the bottom of this page.</p>
+		<activity>
+			<p>Please visit today's Google Doc at the bottom of the page to sign up for a function you wish to write. We'll also share our code in this Google Doc.</p>
+			<p>For your convenience, here is a code window for you to test individual functions. Note that you'll have to write your own <c>main()</c> function that tests your code.</p>
+			<cmecode startPoint="engs20p_InClassComplexLibrary" addOn="&amp;nocheck=true" height="900"></cmecode>
+			<p>Access to our class google doc is provided below. Please make sure that you have turned off <q>smart quotes</q> before pasting any code into the below google doc. Smart quotes are those curly pretty-looking quotation marks that'll get our compiler all bent out of shape. To turn off smart quotes in google:
+			<ul>
+				<li>Open any Google doc.</li>
+				<li>Click on "Tools" in the menu bar.</li>
+				<li>Select "Preferences..."</li>
+				<li>Uncheck the box "Use smart quotes".</li>
+			</ul>
+			Note that this choice will affect all of your future Google documents: whenever you hit the quotation mark key on your keyboard, from now on straight marks will appear. This does not affect already existing smart quotes in existing documents - only newly typed quotes are affected. As soon as you turn smart quotes back on by checking the "Use smart quotes" box, smart quotes will be enabled again.</p>
+			<p><gdoc href="2PACX-1vTUzPTohvQ8JDX4psjndEhhMeWLPFL5LD9K0emeskBgGawHhQSvLww6gW8SBFUMpdhtYt8I6eAds3gG"/></p>
+		</activity>
+	</section>
+
+	<section xml:id="libraries-complex-test">
+		<title>Testing Our Complex Number Library</title>
+		<p>Here is the source code for the complex number library we have just written:</p>
+		<program xml:id="Source_Code_Complex_Library-no-output" interactive="yes" language="c"/>
+		<p>I'll now walk you through all of the required steps to compile the library to an object file and to then use this library in a test program. To make things easier, this is all demonstrated on the next few pages via our Linux server coding windows. But you could just as easily follow all of the described steps by logging onto the server. You'd first have to save the files <c>complexlib.c</c>, <c>complexlib.h</c> and <c>testComplex.c</c> in one directory on the server.</p>
+		<subsection>
+			<title>Test Programs</title>
+			<activity>
+				<p>Here is a quick program to test some functionality of our library. You'll have to work on the server in order to compile the library and link it to the test program. I'll walk you through this below. Add more tests here!</p>
+				<program language="c"><input>
+/* Program to test our complex number library
+* 
+*  testComplex.c
+* 
+* compile this program to an object file using
+*     gcc -c -o testComplex.o testComplex.c
+*
+* then link this object file with the complex number library
+*     gcc -o testComplex testComplex.o complexlib.o -lm
+*
+*/
+
+#include &lt;stdio.h&gt;
+#include "complexlib.h"
+
+int main(void) {
+	complex_t z,w;
+	
+	z = complex(2,3);
+	w = complex(-4,-6.5);
+	
+	display_c(z);
+	printf(" + ");
+	display_c(w);
+	printf(" = ");
+	display_c(add_c(z,w));
+	printf("\n");
+
+    return(0);
+}	
+				</input></program>
+<!--				<cmecode startPoint="engs20p_NComplexNumberLibTest" addOn="&amp;nocheck=true&amp;hide_run=true" height="400"></cmecode> -->
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="libraries-compile-library">
+		<title>Compile the Library to an Object File</title>
+		<p>In the code window below, inside the workspace folder (which is inside <c>engs20</c>), you can find three files:</p>
+		<ul>
+			<li><c>complexlib.c</c> (our complex number library)</li>
+			<li><c>complexlib.h</c> (header file)</li>
+			<li><c>testComplex.c</c> (test file, which includes main)</li>
+		</ul>
+		<activity>
+			<p>Compile the library to an object file:</p>
+			<pre>gcc -c -o complexlib.o complexlib.c</pre>
+			<ul>
+				<li>The <c>-c</c> flag instructs <c>gcc</c> to compile only, without linking and making an executable program.</li>
+				<li>The <c>-o</c> flag allows to specify the name of the output file "complexlib.o".</li>
+			</ul>
+			<p>Note that <c>complexlib.o</c> is not an executable program (it has no <c>main()</c> for starters). It is simply the translation of our library into machine language.</p>
+			<server startPoint="engs20p_gccPractice1" height="500"/>
+		</activity>
+	</section>		
+
+	<section xml:id="libraries-compile-object">
+		<title>Compile to an Object File</title>
+		<activity>
+			<p>Next, compile <c>testComplex.c</c> to an object file:</p>
+			<pre>gcc -c -o testComplex.o testComplex.c</pre>
+			<p>Notice again, that <c>testComplex.o</c> is not an executable file (even though it has a <c>main()</c> function). But it hasn't been linked together with our library yet and thus can't execute any library functions.</p>
+			<server startPoint="engs20p_gccPractice2" height="500"/>
+		</activity>
+	</section>
+
+	<section xml:id="libraries-executable"> 
+		<title>Make an Executable Program</title>
+		<activity>
+			<p>Finally, link it all together and make an executable program:</p>
+			<pre>gcc -o testComplex testComplex.o complexlib.o -lm</pre>
+			<ul>
+				<li>Without the <c>-c</c> flag, <c>gcc</c> creates an executable file.</li>
+				<li>The <c>-o</c> flag specifies the name of the output file "testComplex".</li>
+				<li>All of the object files that are to be linked together are listed.</li>
+				<li>The <c>-lm</c> flag forces the inclusion of the mathematics library.</li>
+			</ul>
+			<p>Running the executable program:</p>
+			<pre>./testComplex</pre>
+			<ul>
+				<li><c>./</c> indicates that the executable is located in the current directory. This is how you typically run programs under Linux. On the <c>engs20</c> servers you don't have to type this part.</li>
+			</ul>
+			<server startPoint="engs20p_gccPractice3" height="500"/>
+		</activity>
+	</section>
+
+	<section xml:id="libraries-summary">
+		<title>Summary</title>
+		<p>In this chapter, we learned about the following topics:</p>
+		<ul>
+			<li>Libraries and their components</li>
+			<li>Library source code</li>
+			<li>Header and object files</li>
+			<li>Practice creating our own library for complex numbers</li>
+		</ul>
+	</section>
+</chapter>

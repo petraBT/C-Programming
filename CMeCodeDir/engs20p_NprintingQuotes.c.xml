@@ -1,0 +1,12 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    /* Please add your code here to 
+       find out about printing quotation marks. */
+
+
+    return(0);
+}
+</cme>

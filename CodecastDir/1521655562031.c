@@ -1,0 +1,21 @@
+#include <stdio.h>
+int main(void) {
+    char c;
+    int i;
+    float f;
+    char charArray[3];
+    int intArray[3];
+    float floatArray[3];
+    
+    printf("%zu\n", sizeof(char));
+    printf("%zu\n", sizeof(int));
+    printf("%zu\n", sizeof(float));
+    printf("%zu\n", sizeof(c));
+    printf("%zu\n", sizeof(i));
+    printf("%zu\n", sizeof(f));
+    printf("%zu\n", sizeof(charArray));
+    printf("%zu\n", sizeof(intArray));
+    printf("%zu\n", sizeof(floatArray));
+   
+    return 0;
+}

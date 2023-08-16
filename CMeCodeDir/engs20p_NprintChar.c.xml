@@ -1,0 +1,12 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+int main(void) 
+{
+    char letter;
+    letter = 'a';
+    printf("The letter is %c.\n", letter);
+    
+    return(0);
+}
+</cme>

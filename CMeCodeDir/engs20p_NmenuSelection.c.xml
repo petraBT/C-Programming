@@ -1,0 +1,62 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+   char again, ch, jnk;
+
+/* First attempt */
+   again = 'y';
+   do {
+      printf("S[o]rt list\n");
+      printf("Sea[r]ch list\n");
+      printf("Sa[v]e list\n\n");
+
+      printf("Enter choice (o,r,v) : ");
+      scanf("%c", &amp;ch);
+
+      printf("You selected option %c\n", ch);
+
+      printf("Again? Press 'n' to quit, 'y' to continue:");
+      scanf("%c", &amp;again);
+   } while (again != 'n');
+
+/* Second attempt */
+/*   again = 'y';
+   do {
+     printf("S[o]rt list\n");
+     printf("Sea[r]ch list\n");
+     printf("Sa[v]e list\n\n");
+
+     printf("Enter choice (o,r,v) [v]: ");
+     scanf("%c%c", &amp;ch, &amp;jnk);
+
+     printf("You selected option %c\n", ch);
+
+     printf("Again? Press 'n' to quit, 'y' to continue [y]:");
+     scanf("%c%c", &amp;again, &amp;jnk);
+   } while (again != 'n');
+*/
+/* Third attempt */
+/*   again = 'y';
+   do {
+     printf("S[o]rt list\n");
+     printf("Sea[r]ch list\n");
+     printf("Sa[v]e list\n\n");
+
+     printf("Enter choice (o,r,v) [v]: ");
+     scanf("%c", &amp;ch);
+     if (ch == '\n') ch = 'v';
+     else scanf("%c", &amp;jnk);
+
+     printf("You selected option %c\n", ch);
+
+     printf("Again? Press 'n' to quit, 'y' to continue [y]:");
+     scanf("%c", &amp;again);
+     if (again == '\n') ch = 'y';
+     else scanf("%c", &amp;jnk);
+   } while (again != 'n');
+*/
+   return(0);
+}
+</cme>

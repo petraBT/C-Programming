@@ -1,0 +1,22 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    
+    int age = 5;
+    
+    if (age&lt;1)
+        printf("Infant\n");
+    else if (age&lt;3)
+        printf("Toddler\n");
+    else if (age&lt;13)
+        printf("Child\n");
+    else if (age&lt;18)
+        printf("Teen\n");
+    else
+        printf("Adult\n");
+    
+    return(0);
+}
+</cme>

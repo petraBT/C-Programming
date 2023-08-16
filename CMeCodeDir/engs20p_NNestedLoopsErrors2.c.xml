@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+int main(void)
+{
+    int i;
+    
+    for (i=0; i&lt;3; i++) {
+        for (i=0; i&lt;8; i++)
+            printf("*");
+        printf("\n");
+    }
+    printf("\n");
+    return(0);
+}
+</cme>

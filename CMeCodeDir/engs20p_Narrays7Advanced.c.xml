@@ -1,0 +1,19 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+#define NUM 100
+
+// prototypes here
+
+int main(void){
+    char array[NUM];
+    int length;
+    
+    enterPhrase(array, &amp;length);
+    printPhrase(array, length);
+
+  return 0;  
+}
+
+// function definitions here
+</cme>

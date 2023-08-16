@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+/* prototypes here */
+
+int main(void) {
+    int list[] = {5, -1, 8, 4, 0, -10}; // sample list - feel free to change!
+    int sort[]={0, 1, 2, 3, 4, 5}; // change this - play with different orders
+    int n=6; 
+
+    printArray(n, list, sort);
+}
+
+
+void printArray(...)
+{
+ 
+}

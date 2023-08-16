@@ -1,0 +1,14 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    int i; 
+    
+    for (i = 1; i&lt;=5; i++) {
+        printf("Hello, World!\n");
+    }
+    
+    return(0);
+}
+</cme>

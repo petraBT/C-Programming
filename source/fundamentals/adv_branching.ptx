@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="adv-branching">
+	<title>Advanced Branching</title>
+	<introduction>
+		<p>In this chapter, we'll cover the following topics:</p>
+		<ul>
+			<li>A different type of branching statement: the <c>switch()</c> statement</li>
+			<li>Using <c>for</c> and <c>if</c> together</li>
+			<li>A loop inside a loop (so-called nested loops</li>
+			<li>Common errors with branching</li>
+		</ul>
+    </introduction>
+
+    <section xml:id="adv-branching-switch">
+    	<title>The <c>switch()</c> Statement</title>
+    	<p><idx><c>switch()</c></idx>The <c>switch()</c> statement is a selection control structure that allows one of several alternatives to be executed, depending on the value a variable takes. To be more precise,  a <c>switch()</c> statement allows a variable to be compared to a list of values. Each value is called a case. If the variable equals a value from the list then the instructions following that particular case are executed.</p>
+    	<p>Let's take a look at an example:</p>
+		<cmecode startPoint="engs20p_Nswitch1" addOn="&amp;nocheck=true" height="500"></cmecode>
+		<subsection>
+			<title><c>switch()</c> Statement Practice</title>
+			<activity xml:id="activity-10-1-1-switch_Statement_Practice">
+				<statement>
+					<p>Please complete the program below so that it prints out the correct month, depending on the value of the variable <q>month</q>. For example, if <c>month=3</c>, the program should print</p>
+					<pre>We are in the month of March.</pre>
+					<p>Your program should use a <c>switch()</c> statement.</p>
+					<cmecode startPoint="engs20p_Nswitch2" addOn="&amp;nocheck=true" height="600"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="adv-branching-for-if">
+		<title><c>for</c> and <c>if</c> together</title>
+		<p><idx><h>nesting</h><h><c>for</c> and <c>if</c></h></idx>You can nest an <c>if</c> statement inside a loop or a loop inside an <c>if</c> statement.</p>
+		<p>Take a look at the following example which prints out those numbers between 0 and 29 that are divisible by 3. Make sure to try to understand how the code accomplishes this task.</p>
+		<cmecode startPoint="engs20p_Nbranching11" addOn="&amp;nocheck=true" height="300"></cmecode>
+		<investigation>
+			<statement>
+				<p>Is there a difference between the two following scenarios, if the same statements are used within each element?</p>
+				<ul>
+					<li>Nesting an <c>if</c> statement within a loop</li>
+					<li>Nesting a loop within an <c>if</c> statement</li>
+				</ul>
+			</statement>
+			<answer>
+				<p>Yes! They can produce quite different results!</p>
+			</answer>
+			<solution>
+				<p>Here is just one example of how the same statements placed in different orders can produce vastly different results:</p>
+				<ol>
+					<li><program language="c"><input>
+						int i = 0;
+						int a = 5;
+						for (i=0; i&lt;11; i++){
+						  if (a&lt;i){
+						    printf("%d ", i);
+						  }
+						}
+					</input></program></li>
+					<li><program language="c"><input>
+						int i = 0;
+						int a = 5;
+						if (a&lt;i){
+						  for (i=0; i&lt;11; i++){
+						    printf("%d ", i);
+						  }
+						}
+					</input></program></li>
+				</ol>
+				<p>The first example program will output "6 7 8 9 10", whereas the second example program will have no output. Try it out yourself to see! So, of course, order does matter when coding, and it is important to be mindful of the potential errors you can encounter if reversing the order of certain statement, such as above!</p>
+			</solution>
+		</investigation>
+	</section>
+
+	<section xml:id="adv-branching-nested">
+		<title>Nested Loops</title>
+		<p><idx><h>nesting</h><h>loops</h></idx>You can also nest one loop inside another loop.</p>
+		<activity>
+			<cmecode startPoint="engs20p_NNestedLoops1" addOn="&amp;nocheck=true&amp;hide_run=true" height="300"></cmecode>
+			<p>What does this print? Be sure to read through the code and pretend you are the computer in order to determine what will happen. Do not simply run the code (that's why there is no <c>Run</c> button). Get out a piece of paper and trace through the code.</p>
+		</activity>
+	</section>
+
+	<section xml:id="adv-branching-practice">
+		<title>Practice Your Advanced Branching!</title>
+		<subsection>
+			<title>Practice 1</title>
+			<activity>
+				<p>Okay, you can try this out now. Does the the output of the program agree with what you thought would happen? If not, do you see why? Do you have questions?</p>
+				<cmecode startPoint="engs20p_NNestedLoops1" addOn="&amp;nocheck=true" height="300"></cmecode>
+			</activity>
+		</subsection>
+		<subsection>
+			<title>Practice 2</title>
+			<activity>
+				<p>Let's try this again with another example. Again, do not simply run the code but rather trace through the code as if you were the computer. What is the output of the following program?</p>
+				<cmecode startPoint="engs20p_NNestedLoops3" addOn="&amp;nocheck=true&amp;hide_run=true" height="300"></cmecode>
+			</activity>
+		</subsection>
+	</section>
+	<section xml:id="adv-branching-practice2">
+		<title>Continue to Practice Your Advanced Branching!</title>
+		<subsection>
+			<title>Practice 3</title>
+			<activity>
+				<p>Okay, time to try it out. Take a look at the output of the program. Is this what you came up with? If not, do you understand the difference? Please ask questions if anything is unclear.</p>
+				<cmecode startPoint="engs20p_NNestedLoops3" addOn="&amp;nocheck=true" height="300"></cmecode>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Practice 4</title>
+			<p>Your turn!</p>
+			<activity xml:id="activity-10-4-4-Adv_Branching_Practice_4">
+				<statement>
+					<p>Below is a program that calculates the factorial of a number, for example, when N=5, N! = 5*4*3*2*1 = 120.</p>
+					<p>Modify this program so that it prints a list of the factorials from 1! to 10!, that is something like:</p>
+					<pre>
+						1! = 1
+						2! = 2
+						3! = 6
+						4! = 24
+						5! = 120
+						6! = 720
+						...
+					</pre>
+					<p><em>Your program should use nested loops to accomplish this task.</em></p>
+					<cmecode startPoint="engs20p_NNestedLoops2" addOn="&amp;nocheck=true" height="400"></cmecode>
+					<p><em>When you are done, please put your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+    </section>
+	<section xml:id="adv-branching-errors">
+		<title>Common Errors With Branching</title>
+		<subsection>
+			<title>Practice 5</title>
+			<activity>
+				<p>What's wrong here? Why is this not printing a list of factorials? Can you fix it?</p>
+				<cmecode startPoint="engs20p_NNestedLoopsErrors" addOn="&amp;nocheck=true" height="300"></cmecode>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Practice 6</title>
+			<activity>
+				<p>What's wrong with this now?</p>
+				<p>You'd like to print out a rectangle of stars that is 8 stars wide and 3 stars tall, just as in the output below:</p>
+				<pre>
+					********
+					********
+					********
+				</pre>
+				<p>Something is wrong with your code however. Can you fix it?</p>
+				<cmecode startPoint="engs20p_NNestedLoopsErrors2" addOn="&amp;nocheck=true" height="300"></cmecode>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Practice 7</title>
+			<activity>
+				<p>What's wrong with this code? Why is it not printing the equation you expect?</p>
+				<cmecode startPoint="engs20p_NswitchErrors" addOn="&amp;nocheck=true" height="500"></cmecode>
+				<p>What is wrong here?</p>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="adv-branching-summary">
+		<title>Summary</title>
+		<p>Today, we learned about:</p>
+		<ul>
+			<li> Syntax of the <c>switch()</c> statement</li>
+		  	<li>
+		  		<p>You can nest loops inside loops. Just make sure to:
+		  			<ul>
+		  				<li>Use a new loop counter for each loop</li>
+		      			<li>Remember your curly braces</li>
+		    		</ul>
+		    	</p>
+		    </li>
+		  	<li>You can nest if statements inside loops or loops inside if statements.</li>
+		</ul>
+	</section>
+</chapter>

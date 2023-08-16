@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="array">
+	<title>Arrays</title>
+	<introduction>
+		<p>With our current knowledge, if we wish to store someone's name in the computer's memory we'd have to create a variable for each character in the name in order to do so. For example, to store all of the letters in <q>Petra</q> we'd need five variables of type <c>char</c> to store the individual letters, such as <c>char letter1 = 'P'</c>, <c>char letter2 = 'e'</c>, ... , <c>char letter5 = 'a'</c>. This is not exactly convenient and there is a better way to do so, using a so-called <c>array</c>. An array is a collection of items of the same datatype that you can access via one variable name. We'll start by learning about one-dimensional arrays which can also be thought of as lists. In this chapter, we'll focus on such one-dimensional arrays and practice working with them. Specifically, we'll learn about:</p>
+		<ul>
+			<li>Arrays of various data types</li>
+			<li>Initializing arrays</li>
+			<li>Computations involving arrays</li>
+			<li>Arrays of ints, floats, chars</li>
+			<li>Finding the largest number in an array </li>
+			<li>Finding the average of numbers in an array</li>
+		</ul>
+    </introduction>
+
+	<section xml:id="array-integer">
+		<title>Arrays of Integers</title>
+		<p>Up to this point we have been using <em>singular data types,</em> such as</p>
+		<pre>int i, j, k;</pre>
+		<pre>float x, y, z;</pre>
+		<pre>double u, v, w;</pre>
+		<p>Often situations arise in which it is more natural to store a <alert>collection of values</alert> together in a <em><alert>single variable</alert> </em>.</p>
+		<p><idx><h>array</h><h>integer</h></idx>We will first focus on storing integers in an array. For example, we may wish to store all students' grades on an exam or the coordinates for an object or the values of a function at regular intervals, etc.</p>
+		<p>An <alert>array</alert> (think of a collection of data items of the <alert>same type</alert>) is just what we need to accomplish this efficiently.</p>
+		<codecast href="1518460628953"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Declaring arrays of integers</li>
+		            <li>Assigning values to arrays</li>
+		            <li><idx><h>array</h><h>declare</h></idx>NEW SYNTAX: <c>int array[3];</c> creates a variable named array and reserves space to hold three integers</li>
+		            <li><idx><h>array</h><h>initialize</h></idx>NEW SYNTAX: <c>array[0] = 16;</c> initializes the first entry in the array with the value "16"</li>
+		            <li>Arrays in C are zero-based</li>
+		        </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-array-1">
+				<statement>
+					<p>How much space is reserved with the following declaration:</p>
+					<pre>int numbers[10];</pre>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>space for 10 integers</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>space for 1 integer</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>space for 9 integers</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>space for 11 integers</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>space for 12 integers</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+		<p>Now that we know how to create these arrays, how do we actually use them? </p>
+		<p><nbsp/></p>
+		<codecast href="1521653766713"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Arrays and <c>for</c>-loops</li>
+		            <li>Reading values from the user input into an array</li>
+		            <li>NEW SYNTAX: you can fill the array using a <c>for</c>-loop, where you use the following line to fill each array element</li>
+		       </ul>
+		       <c>scanf("%d", &amp;array[i]);</c>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-array-2">
+				<statement>
+					<p>After the declaration</p>
+					<pre>int num[50];</pre>
+					<p>what is the value of <c>num[5]</c>?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>random</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>5</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>0</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>4</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>6</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="array-other">
+		<title>Arrays of Other Data Types</title>
+		<p><idx><h>array</h><h>other data types</h></idx>Arrays are not limited to just holding integers, rather they can hold other data types as well, such as floats. The only limitation is that all data stored in a given array must be of the same data type, so all could be integers or all could be floats or all could be characters, etc.</p>
+		<codecast href="1521654285802"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Arrays can hold other types of data, such as floats</li>
+		            <li>For example, declare the array as <c>float array[3]</c></li>
+		            <li>To fill the float array using <c>scanf()</c>, be sure to use <c>%f</c> as your format specifier</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-array-3">
+				<statement>
+					<p>Which declaration reserves space for 10 floats?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><pre>float num[10];</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>float(10) num;</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>float num(10);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>float[10] num;</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="array-initialize">
+		<title>Initializing Arrays</title>
+		<p><idx><h>array</h><h>initialize</h></idx>We must initialize any variable before using it. The same holds true for arrays. The various methods are discussed in the Codecast below.</p>
+		<codecast href="1521654868124"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Various methods to initialize arrays</li>
+		        </ul>
+		    </p>
+		    <p><c>int yourGrades[4] = {100, 99,100, 94};</c></p>
+		    <p><c>int badGrades[] = {2, 5, 3, 1};</c></p>
+            <p>
+	           <ul>
+		            <li>Using a <c>for</c>-loop as previously discussed</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-array-4">
+				<statement>
+					<p>Which of the following is correct?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><pre>int num[] = {1, 2, 3, 4, 5};</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>int num = {1, 2, 3, 4, 5};</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>num[4] = int{1,2, 3, 4, 5};</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>num[4]=int{1};</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-array-5">
+				<statement>
+					<p>Please declare and initialize an array of five integers and store the values 2, 7, 4, 9, -5 in the array (in this order). You should name your array "arr" and not modify any of the code to print out the array's contents. Be sure to declare any additional variables needed.</p>
+					<cmecode startPoint="engs20p_arrays1" height="300"></cmecode>
+					<p><em>When your program performs correctly you'll be given a keyword to enter in Canvas.</em></p>
+				</statement>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="array-practice">
+		<title>Array Practice</title>
+		<p>Time to practice working with arrays. Remember that practice (which automatically includes making lots of mistakes) is the best way to learn. Please pick and solve at least one of the following problems. If you get done early be sure to move on to one of the other problems!</p>
+		<subsection>
+			<title>Option 1</title>
+			<activity xml:id="activity-17-4-1-Array_Practice_1">
+				<statement>
+					<p>Write a program that does the following: Declare an array of 10 integer values and have the user enter 10 integers which you save in the array (you should use a loop here). Next, print out all 10 values the user has entered. </p>
+					<p> For example, if the user entered <em>45, -34, 5, 0, 1, 100, -55, ...</em> then the output should be:</p>
+					<pre>
+					1. 45
+					2. -34
+					3. 5
+					4. 0
+					5. 1
+					6. 100
+					7. -55
+					...</pre>
+					<p><em>Challenge: Write the program so that the number '10' above could be easily replaced with any other integer value (for example 15, or 20, etc), by changing only one value in your program. Hint: use </em> #define<em><nbsp/>.</em>
+					</p>
+					<cmecode startPoint="engs20p_Narrays5" addOn="&amp;nocheck=true" height="400"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Option 2</title>
+			<activity xml:id="activity-17-4-2-Array_Practice_2">
+				<statement>
+					<p>Write a program that declares an array of 100 floats. Fill this array with the square roots of the numbers 1 - 100 and print the result in the following form:</p>
+					<pre>
+					The square root of 1 equals 1.00000.
+					The square root of 2 equals 1.41421.
+					The square root of 3 equal 1.732051.
+					...</pre>
+					<p><alert>Note:</alert> In order to be able to use the square root function, <c>sqrt()</c>, you need to include the header file for the mathematics library using the command</p>
+					<pre>#include &lt;math.h&gt;</pre>
+					<p>at the top of your program where the other <c>#include</c> directives are located.</p>
+					<cmecode startPoint="engs20p_Narrays6" addOn="&amp;nocheck=true" height="400"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Option 3</title>
+			<activity xml:id="activity-17-4-3-Array_Practice_3">
+				<statement>
+					<p>Write a program that prompts the user to type in a sentence, and that reads the sentence, character by character, and stores it in an array of characters. Stop reading, when the array is full or the character read is <c>\n</c>. Next, print out the sentence in reverse.</p>
+					<p>Here is a sample output:</p>
+					<console>
+						<prompt>Enter a sentence: </prompt>
+						<input>I love programming.</input>
+						<output>Reverse: .gnimmargorp evol I</output>
+					</console>
+					<cmecode startPoint="engs20p_Narrays7" addOn="&amp;nocheck=true" height="400"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="array-advanced">
+		<title>Advanced Array Practice</title>
+		<p>More practice? Yes! I don't have to remind you that practice makes perfect, right? Please pick and solve at least one of the following problems:</p>
+		<subsection>
+			<title>Option 1</title>
+			<activity xml:id="activity-17-5-1-Adv_Array_Practice_1">
+				<statement>
+					<p>Write a program that prompts the user to enter the weight of a letter and that tells the user the postage necessary to mail this letter with the US Postal Service.</p>
+					<p>Here is a sample output:</p>
+					<console>
+						<prompt>How much does your letter weigh (in ounces): </prompt>
+						<input>5.5</input>
+						<output>The postage is 203 cents.</output>
+					</console>
+					<p>Note: You can start with the code given below. Postage is calculated based on the next higher weight in the chart.</p>
+					<cmecode startPoint="engs20p_Narrays8" addOn="&amp;nocheck=true" height="400"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Option 2</title>
+			<activity xml:id="activity-17-5-2-Adv_Array_Practice_2">
+				<statement>
+					<p>Write a C-program that finds the largest integer stored in an array of integers. You can write your code so that the array values are entered by the user, or you may simply hardcore an integer array for test purposes as is done below.</p>
+					<cmecode startPoint="engs20p_Narrays9" addOn="&amp;nocheck=true" height="400"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Option 3</title>
+			<activity xml:id="activity-17-5-3-Adv_Array_Practice_3">
+				<statement>
+					<p>Write a C program that finds the average of integer numbers stored in an array. You may have the user enter the array values, or you can simply hard-code the array for testing purposes as is done below.</p>
+					<cmecode startPoint="engs20p_Narrays10" addOn="&amp;nocheck=true" height="400"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="array-summary">
+		<title>Summary</title>
+		<p>In this chapter, we covered the following topics:</p>
+		<ul>
+			<li>Arrays of various data types</li>
+			<li>Initializing arrays</li>
+			<li>Computations involving arrays</li>
+			<li>Arrays of ints, floats, chars</li>
+			<li>Finding the largest number in an array </li>
+			<li>Finding the average of numbers in an array</li>
+		</ul>
+	</section>
+</chapter>

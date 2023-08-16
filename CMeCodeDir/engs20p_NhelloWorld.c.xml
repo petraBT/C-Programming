@@ -1,0 +1,11 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    
+    printf("Hello, World!");
+    
+    return(0);
+}
+</cme>

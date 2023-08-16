@@ -1,0 +1,14 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+int main(void)
+{
+    int month = 3;
+    
+    printf("\nWe are in the month of ");
+    
+    /* Please complete this code. */
+    
+    return(0);
+}
+</cme>

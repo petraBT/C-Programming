@@ -1,0 +1,21 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+   
+/* prototypes here... */
+   
+int main (void) {   
+   int *numbers;   
+   int size;
+   
+   /* Have user enter size... */
+
+   numbers = (int *) malloc(...);   
+   userInput(size, numbers);
+   printArray(size, numbers);
+
+   free(numbers);
+   return(0);   
+}
+</cme>

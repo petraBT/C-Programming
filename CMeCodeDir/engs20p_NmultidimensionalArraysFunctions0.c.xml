@@ -1,0 +1,37 @@
+<?xml version='1.0'?>
+<cme>
+#define NROWS 3
+#define NCOLS 4
+#include &lt;stdio.h&gt;
+void zeroArray(int array[][NCOLS]);
+void printArray(int array[][NCOLS]);
+int main(void) {
+    int matrix[NROWS][NCOLS];
+    int i,j;
+   
+    printArray(matrix);
+    zeroArray(matrix);
+    printf("\n");
+    printArray(matrix);
+    return 0;
+}
+
+void zeroArray(int array[][NCOLS]) {
+    int i,j;
+    for (i=0; i&lt;NROWS; i++) {
+        for (j=0; j&lt;NCOLS; j++) {
+            array[i][j]=0;
+        }
+    }
+}
+
+void printArray(int array[][NCOLS]) {
+    int i,j;
+    for (i=0; i&lt;NROWS; i++) {
+        for (j=0; j&lt;NCOLS; j++) {
+            printf("%d ", array[i][j]);
+        }
+        printf("\n");
+    }
+}
+</cme>

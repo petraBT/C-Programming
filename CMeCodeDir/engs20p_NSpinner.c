@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main(void)
+{
+   char letter;
+   unsigned long i;
+   unsigned long num = 100000;
+
+   printf("\n Processing data... ");
+
+   for (i=0; i<num; i++) {
+      switch (i%4) {
+         case 0: letter = '/'; break;
+         case 1: letter = '-'; break;
+         case 2: letter = '\\'; break;
+         case 3: letter = '|'; break;
+      }
+      printf("%c\b",letter);
+      fflush(stdout);
+   }
+
+   printf("\b   \n done.\n");
+   return(0);
+}

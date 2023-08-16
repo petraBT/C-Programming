@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+int main(void) 
+{
+    int i;
+    int mult;
+    
+    printf("Which multiplication table would you like to print?\n");
+    printf("Please enter a number: ");
+    scanf("%d", &amp;mult);
+    printf("Here is the x%d multiplication table:\n", mult);
+    
+    for (i=1; i&lt;=10; i++) {
+        printf("%d x %d = %d\n", i, mult, i*mult);
+    }
+    
+    return(0);
+}
+</cme>

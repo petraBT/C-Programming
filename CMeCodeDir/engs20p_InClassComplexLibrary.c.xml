@@ -1,0 +1,25 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+
+#define E 2.71828
+
+typedef struct {
+    float real;
+    float imag;
+} complex_t;
+
+/* prototypes */
+
+int main(void) 
+{
+/* test your function here */
+
+
+
+}
+
+
+/* your function */
+</cme>

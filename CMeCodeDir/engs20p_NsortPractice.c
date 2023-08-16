@@ -1,0 +1,27 @@
+#define WORDLEN 51
+#include <stdio.h>
+
+int countMultiple(char word[]);
+void sortLetters(char word[]);
+
+int main(void) {
+    char word[WORDLEN];
+    int result;
+    
+    printf("Please enter a word to study: ");
+    scanf("%s", word);
+    sortLetters(word);
+    result = countMultiple(word);
+    printf("There are %d multiples in the word.\n", result);
+    return 0;
+}
+
+/* This function sorts the letters in the word */
+void sortLetters(char word[]) {
+
+}
+
+/* This function counts multiples */
+int countMultiple(char word[]) {
+
+}

@@ -1,0 +1,12 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+   char firstName[] = "Petra";
+   char lastName[] = "Bonfert-Taylor";
+   
+   printf("My name is %s %s.\n", firstName, lastName);
+   return 0;
+}
+</cme>

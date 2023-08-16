@@ -1,0 +1,22 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+/* Don't forget your prototype. */
+
+int main(void) {
+  int num;
+  
+/* Insert your code here.
+ * Be sure to initialize num
+ * and print its value before
+ * and after the function call. */
+  
+  return(0);
+}
+
+void increasebyone(int *a)
+{
+      *a = *a + 1;
+}
+</cme>

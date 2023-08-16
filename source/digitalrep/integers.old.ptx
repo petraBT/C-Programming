@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="integers">
+  <title>Integers and Binary</title>
+  <introduction>
+    <p>Now that we have been introduced to variables and some common data types in C, such as <c>int</c>, <c>float</c> and <c>char</c>, it is important to get a glimpse into how variables are stored in computer memory. After all, the only thing a computer, at the very basic level understands is on and off (or 1 and 0). Given that insight, how is  it possible to store an integer such as 20 using only zeros and ones? Or how about a decimal number such as 3.1415? Or a character such as <sq>E</sq>? In this chapter, we will learn about binary numbers, and how they are used to represent all data in the computer's memory. We will learn the different conventions for representing positive and negative numbers in binary. We will also take a look at hexadecimal numbers (pretty much as a short-hand to binary), and how we can convert between all these different number representations.</p>
+  </introduction>
+
+  <section xml:id="integers-intro">
+    <title>Digital Representation of Integers</title>
+    <p><idx>division</idx>Previously, we learned that in C, the computer thinks that <c>5/2=2</c>. But why is this the case?</p>
+    <p>More specifically, we noticed the following division behaviors in C:</p>
+    <ul>
+      <li><pre>5/2 = 2</pre></li>
+          <li><pre>5.0/2 = 2.5</pre></li>
+          <li><pre>5/2.0 = 2.5</pre></li>
+          <li><pre>5.0/2.0 = 2.5</pre></li>
+    </ul>
+    <activity>
+      <statement>
+        <p>Why is this behavior with division happening?</p>
+        <p><em>Please enter your answer into the box below.</em></p>
+      </statement>
+    </activity>
+    <activity xml:id="activity-5-1-1-DivisionBehavior">
+      <statement>
+        <p>Why is this behavior with division happening?</p>
+        <p><em>Please enter your answer into the box below.</em></p>
+      </statement>
+      <response/>
+    </activity>
+
+    <p>This will make much more sense to you once you understand how numbers are actually stored inside the computer.</p>
+    </section>
+
+    <section xml:id="integers-positive">
+      <title>Storing Positive Integers</title>
+      <p><idx><h>digital representation</h><h>integers</h></idx>Computers speak in binary, which is how integers are stored in memory.</p>
+      <p>Let's start by reviewing binary numbers:</p>
+      <aside>
+          <title>Video Description</title>
+          <p>
+             <ul>
+               <li>Computers only speak in binary</li>
+               <li>Binary can only include 0s and 1s</li>
+               <li>8 bits = 1 byte</li>
+               <li>Binary is a base-2 system</li>
+             </ul>
+          </p>
+      </aside>
+      <figure>
+        <idx>binary</idx>
+        <video xml:id="rWcrLz4sfPs" youtube="rWcrLz4sfPs" play-at="select"/>
+      </figure>
+      <investigation>
+        <statement>
+          <p>What is the decimal value of <c>01000001</c>?</p>
+        </statement>
+        <answer>
+          <p>65</p>
+        </answer>
+        <solution>
+          <p>Remember from the video above that binary is base-2, with the least significant bit as the right-most digit, which has a place value of <m>2^0</m>. Moving left, the the place values are <m>2^1</m>, <m>2^2</m>, <m>2^3</m>, etc. Only those digits that are <q>1</q> contribute their place value to the number, so for this binary number, we interpret it as <me>(0 × 2^7) + (1 × 2^6) + (0 × 2^5) + (0 × 2^4) + (0 × 2^3) + (0 × 2^2) + (0 × 2^1) + (1 × 2^0) = 64 + 1 = 65</me></p>
+        </solution>
+      </investigation>
+
+      <p>Computers "speak" in binary (base-2) only, which includes only 1s and 0s.</p>
+      <ul>
+        <li><term>Bit</term>: one <em>b</em>inary dig<em>it</em> (0 or 1)</li>
+        <li><term>Byte</term>: number of bits used to represent a character, almost always 8 bits</li>
+        <li><term>Word</term>: natural unit of memory for a given computer design; unit of data that can pass across the bus to or from main memory at one time</li>
+      </ul>
+      <p>For example, in the 8-digit binary number <c>01100110</c>, the left-most bit is the <em>M</em>ost <em>S</em>ignificant <em>B</em>it, and the right-most bit is the <em>L</em>east <em>S</em>ignificant <em>B</em>it.</p>
+      <p>In decimal (base-10), the number <c>135</c> can be represented as:</p>
+      <me>135 = 1\cdot 10^2 \; + \; 3\cdot 10^1 \; + \; 5\cdot 10^0</me>
+      <p>where <m>10^2</m> is the "hundreds" place, <m>10^1</m> is the "tens" place, and <m>10^0</m> is the "ones" place.</p>
+      <p>Instead of base-10, what if we have base-<em>b</em>?</p>
+      <me>(number)_b = a_nb^n + a_{n-1}b^{n-1} + ... + a_0b^0</me>
+      <ul>
+        <li><m>b</m>: base (binary: 2, decimal: 10, ...)</li>
+        <li><m>a_k</m>: digits (binary: 0-1, decimal: 0-9, in general 0-(b-1))</li>
+        <li><m>n</m>: position of "most significant digit" (MSD)</li>
+      </ul>
+      <p>Special case: base <m>b = 2</m> (binary) -- note: in binary there are only two different digits: 0 and 1</p>
+      <image source="images/Binary.png" width="70%"/>
+      <p>Note: Digits have different weights (place values)</p>
+      <image source="images/PlaceValues.png" width="70%"/>
+      <reading-questions>
+        <exercise label="quiz-integers-1">
+          <statement>
+            <p>Find the decimal value of each of the following binary numbers:</p>
+            <ol>
+              <li><c>00110001</c> <var width="8"/> </li>
+              <li><c>11111110</c> <var width="8"/> </li>
+              <li><c>10011001</c> <var width="8"/> </li>
+            </ol>
+          </statement>
+          <setup>
+              <var>
+                    <condition number="49">
+                        <feedback>
+                            <p>Correct!</p>
+                        </feedback>
+                    </condition>
+                    <condition string=".*">
+                        <feedback>
+                            <p>Incorrect. Be sure to review the video before you try again!</p>
+                        </feedback>
+                    </condition>
+              </var>
+              <var>
+                    <condition number="254">
+                        <feedback>
+                            <p>Correct!</p>
+                        </feedback>
+                    </condition>
+                    <condition string=".*">
+                        <feedback>
+                            <p>Incorrect. Be sure to review the video before you try again!</p>
+                        </feedback>
+                    </condition>
+              </var>
+              <var>
+                    <condition number="153">
+                        <feedback>
+                            <p>Correct!</p>
+                        </feedback>
+                    </condition>
+                    <condition string=".*">
+                        <feedback>
+                            <p>Incorrect. Be sure to review the video before you try again!</p>
+                        </feedback>
+                    </condition>
+              </var>
+           </setup>
+      </exercise>
+       <exercise label="quiz-integers-2">
+          <statement>
+            <p>How many bits are there in one byte? <var width="8"/></p>
+          </statement>
+            <setup>
+                <var>
+                    <condition number="8">
+                        <feedback>
+                            <p>Correct! There are 8 bits in one byte.</p>
+                        </feedback>
+                    </condition>
+                    <condition string=".*">
+                        <feedback>
+                            <p>Incorrect. Be sure to review the video before you try again!</p>
+                        </feedback>
+                    </condition>
+                </var>
+            </setup>
+        </exercise>
+      </reading-questions>
+      <p>Next, we'll learn how to convert between different binary and decimal representations:</p>
+      <aside>
+          <title>Video Description</title>
+          <p>
+             <ul>
+               <li>How to convert from decimal to binary</li>
+               <li>By repeatedly dividing by 2, the remainder (0 or 1) represents digits of the binary number</li>
+               <li>The remainders are written from right-to-left</li>
+               <li>The same method works for any other base as well</li>
+             </ul>
+          </p>
+      </aside>
+      <video xml:id="PTUCVHbSYQY" youtube="PTUCVHbSYQY" play-at="select"/>
+      <investigation>
+        <statement>
+          <p>What is the remainder when dividing 50 by 3?</p>
+        </statement>
+        <answer>
+          <p>2</p>
+        </answer>
+        <solution>
+          <p>3x16 = 48, meaning that 3 can go into 50 sixteen times. The remainder, or leftover amount, is then 50-48=2.</p>
+        </solution>
+      </investigation>
+
+      <p>How do we convert from one base to another?</p>
+      <p>In particular, how do we find the binary representation (base-2) of a decimal number (base-10)?</p>
+      <p>Example: What is <em>135 decimal</em> in binary or <em>base-2</em>?</p>
+      <p><em>Hint: The easiest way to do this is to divide the number by 2 repeatedly and keep track of the remainder.</em></p>
+      <pre>
+        135    /2       = 67 R1     * 2^0
+         67    /2       = 33 R1     * 2^1
+         33    /2       = 16 R1     * 2^2
+         16    /2       =  8 R0     * 2^3
+          8    /2       =  4 R0     * 2^4
+          4    /2       =  2 R0     * 2^5
+          2    /2       =  1 R0     * 2^6
+          1    /2       =  0 R1     * 2^7
+
+         135              -> 1000 0111
+      </pre>
+      <p>Does it work?          128 + 4 + 2 + 1 =   135</p>
+      <p>and... does this work for any base?</p>
+      <p>Example: what does the algorithm say <em>135</em> is in... base-10?</p>
+      <pre>
+        135    /10      = 13 R5     * 10^0    LSD
+         13    /10      =  1 R3     * 10^1
+          1    /10      =  0 R1     * 10^2    MSD
+
+         135              -> 135
+      </pre>
+      <p>Not very surprising...</p>
+      <p>There are other ways to find the binary representation of a number.</p>
+      <p>Recall the binary place values:</p>
+      <image source="images/BinaryPlaceValues.png" width="70%"/>
+      <p>So...</p>
+      <pre>
+        135 = 1 * 128 + 7
+          7 = 0 * 64 + 0 * 32 + 0 * 16 + 0 * 8 + 1 * 4 + 3
+          3 = 1 * 2 + 1
+          1 = 1 * 1
+        135 = 1 * 128 + 0 * 64 + 0 * 32 + 0 * 16 + 0 * 8 + 1 * 4 + 1 * 2 + 1 * 1
+      </pre>
+      <p>Thus <em>135</em> is 10000111 in binary.</p>
+      <reading-questions>
+        <exercise xml:id="quiz-integers-3">
+          <statement>
+            <p>What is the remainder when dividing 36 by 15? <var width="8"/></p>
+          </statement>
+          <setup>
+              <var>
+                    <condition number="6">
+                        <feedback>
+                            <p>Correct!</p>
+                        </feedback>
+                    </condition>
+                    <condition string=".*">
+                        <feedback>
+                            <p>Incorrect. Be sure to review the video before you try again!</p>
+                        </feedback>
+                    </condition>
+              </var>
+          </setup>
+        </exercise>
+        <exercise xml:id="quiz-integers-4">
+          <statement>
+            <p>Find the 8-bit binary representation of the decimal number 222: <var width="16"/></p>
+          </statement>
+          <setup>
+              <var>
+                    <condition number="11011110">
+                        <feedback>
+                            <p>Correct!</p>
+                        </feedback>
+                    </condition>
+                    <condition string=".*">
+                        <feedback>
+                            <p>Incorrect. Be sure to review the video before you try again!</p>
+                        </feedback>
+                    </condition>
+              </var>
+          </setup>
+
+        </exercise>
+       </reading-questions>
+    </section>
+
+    <section xml:id="integers-negative">
+      <title>Storing Negative Integers</title>
+      <p>Now we know how positive integers can be stored in the computer. How about negative integers? There actually are several different options. The following video describes the <term>signed magnitude</term> representation of negative numbers:</p>
+      <aside>
+          <title>Video Description</title>
+          <p>
+             <ul>
+               <li><idx><h>binary</h><h>signed magnitude</h></idx>In signed magnitude representation the most significant bit is interpreted as a sign (negative or positive)</li>
+               <li>0 is negative, 1 is positive</li>
+               <li>In an 8-bit number, only 7 bits remain for the magnitude of the number</li>
+               <li>Binary adding does not work in a straight-forward manner in this representation</li>
+             </ul>
+          </p>
+      </aside>
+        <video xml:id="UqfbrVH9EAA" youtube="UqfbrVH9EAA" play-at="select"/>
+        <investigation>
+          <statement>
+            <p>Does the binary number <c>10000001</c> represent the <em>same</em> decimal number in both unsigned binary and signed magnitude binary?</p>
+          </statement>
+          <hint>
+            <p>Try converting the binary number to decimal, following the rules of each binary representation method.</p>
+          </hint>
+          <answer>
+            <p>No, they are different decimal numbers!</p>
+          </answer>
+          <solution>
+            <p>In unsigned binary, <c>10000001</c> represents <me>(1 × 2^7) + (0 × 2^6) + (0 × 2^5) + (0 × 2^4) + (0 × 2^3) + (0 × 2^2) + (0 × 2^1) + (1 × 2^0) = 128 + 1 = 129</me></p>
+            <p>In signed magnitude binary, <c>10000001</c> represents <me>-1 * [(0 × 2^6) + (0 × 2^5) + (0 × 2^4) + (0 × 2^3) + (0 × 2^2) + (0 × 2^1) + (1 × 2^0)] = -1 * (1) = -1</me> since the most significant bit (the left-most bit) is "1", which denotes a negative number in this binary representation. Thus, that one binary number represents 129 in binary and -1 in signed magnitude, which are definitely different!</p>
+          </solution>
+        </investigation>
+
+        <p>We have been representing positive integers as binary numbers, what about negative integers?</p>
+        <p>Several strategies are possible:</p>
+        <p>The most obvious is known as <term>signed magnitude</term>, which uses the most significant bit (MSB) for the sign: <c>0</c> for <c>+</c> and <c>1</c> for <c>-</c>.</p>
+        <p>For an 8-bit binary number:</p>
+        <image source="images/SignedMagnitude.png" width="70%"/>
+        <p>This allows for a range from -127 to 127 to be represented.</p>
+        <p>For an n-bit binary number: <m>-(2^{n-1}-1)</m> to <m>(2^{n-1}-1)</m></p>
+        <subsection>
+          <title>Adding in Binary</title>
+          <p>How do you add binary numbers?</p>
+          <p>Recall addition in the <term>decimal system</term>:</p>
+          <pre>
+                                  1
+                  79              79      
+               + 106           + 106
+               ______   -->    ______   
+                 185             185
+          </pre>
+          <p>Notice how we "carry" the one from the ones digits (shown on the right above)? We add similarly in binary, following these rules:</p>
+          <pre>
+             1 + 0 = 01
+             1 + 1 = 10
+          </pre>
+          <p>Here's an example of adding in binary (with "carrying" the ones shown on the right again):</p>
+          <pre>
+                                      1  111
+                 01001111             01001111     
+               + 01101010           + 01101010
+               ___________   -->    ___________   
+                 10111001             10111001
+          </pre>
+          <p>We can check that this binary addition aligns with decimal addition, as 79 + 106 = 185 (as shown above).</p>
+        </subsection>
+        <subsection>
+          <title>Adding in Signed Magnitude</title>
+          <p>How about adding numbers in binary when using the signed magnitude representation of integers?</p>
+          <p>Adding two positive numbers:</p>
+          <pre>
+              00001101   (13 decimal)
+            + 01100100   (100 decimal)
+            ___________  
+              01110001   (113 decimal)
+          </pre>
+          <p>Adding a positive and a negative number:</p>
+          <pre>
+              00001101   (13 decimal)
+            + 11100100   (-100 decimal)
+            ___________  
+              11110001   (-113 decimal)
+          </pre>
+          <p>Addition does not work with signed magnitude numbers!</p>
+        </subsection>
+
+        <reading-questions>
+          <exercise xml:id="quiz-integers-5">
+            <statement>
+              <p>What is the 8-bit representation of the decimal number -63, if the signed magnitude representation is used?</p>
+            </statement>
+          </exercise>
+        </reading-questions>
+
+        <subsection>
+          <title>Binary Two's Complement</title>
+          <p>We noticed in the last video that arithmetic is not straight forward in the signed magnitude representation of negative numbers. We therefore introduce a different way to store negative integers, namely the <term>binary two's complement</term> representation. While this representation may seem cumbersome at first, the point is really to fix the problems we observed with binary addition when negative numbers are involved. The binary two's complement representation allows for the same process to be used in adding integers internally inside the computer, regardless of whether the numbers are positive or negative. This process is typically hard-wired in the computer's processor which makes for super fast execution time.</p>
+          <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                 <li>Addition works in binary 2's compliment</li>
+                 <li><idx><h>binary</h><h>two's complement</h></idx>To represent negative integers, find the binary of the magnitude first, then swap all 0s and 1s and finally add 1</li>
+                 <li>Calculating the range of numbers that can be represented</li>
+               </ul>
+            </p>
+        </aside>
+        <video xml:id="feIY5ElGvL0" youtube="feIY5ElGvL0" play-at="select"/>
+        <p>Addition does not work with signed magnitude numbers.</p>
+        <p>Solution: use an alternative for representing signed integers known as <term>binary 2's complement</term>.</p>
+        <p>Idea: Store negative integers in such a way that when summed with its complement (positive number) the result is zero.</p>
+        <p>Rules for writing the 2's complement of a number:</p>
+        <ol>
+          <li>Write down the <em>binary representation</em> of the <em>magnitude</em></li>
+          <li><em>Positive integers</em> stay the <em>same</em></li>
+          <li>
+            <p><em>Negative integers:</em>
+            <ol>
+              <li>Change all <c>0s</c> to <c>1s</c> and all <c>1s</c> to <c>0s</c></li>
+              <li>Add 1</li>
+            </ol>
+            </p>
+          </li>
+        </ol>
+      </subsection>
+      <subsection>
+        <title>2's Complement Example</title>
+        <p>Decimal:</p>
+        <pre>
+             13
+        +  -100
+        ________
+            -87
+        </pre>
+        <p>Step 1: magnitude</p>
+        <pre>
+        13    -->  00001101
+        -100  -->  01100100
+        </pre>
+        <p>Steps 2 and 3a: binary complement</p>
+        <pre>
+        00001101  -->  stays the same
+        01100100  -->  10011011
+        </pre>
+        <p>Steps 2 and 3b: add 1</p>
+        <pre>
+        00001101  -->  stays the same
+        10011011  -->  10011100
+        </pre>
+        <p>Add!</p>
+        <pre>
+          00001101  
+        + 10011011 
+        ___________
+          10101001
+        </pre>
+        <p>Did it work? Is this the 2's complement of -87?</p>
+        <p>We need a way to decode a 2's complement number...</p>
+      </subsection>
+      <subsection>
+        <title>Decoding 2's Complement Numbers</title>
+        <image source="images/TwosComplement.png" width="70%"/>
+        <ol>
+          <li>All 2's complement numbers that are negative have MSB 'set' (negative) -- shown in blue</li>
+          <li>Add values of the places which are zero: (64 + 16 + 4 + 2)  -- shown in pink</li>
+          <li>Add one to the result</li>
+        </ol>
+        <p>So the binary 2's complement number 10101001 is:</p>
+        <p>-(64 + 16 + 4 + 2 + 1) = -87</p>
+        <p>So, addition with 2's complement integers works!</p>
+        <p>Whats the range of numbers you can represent when using the binary 2's complement?</p>
+        <p><em>8-bit</em> 2's complement numbers range: -128 to 127</p>
+        <p><em>n-bit</em> 2's complement numbers: <m>-(2^{n-1})</m> to <m>(2^{n-1}-1)</m></p>
+        <p>Food for thought: why is <m>2^{n-1}</m> not represented in 2's complement?</p>
+      </subsection>
+
+      <reading-questions>
+        <exercise xml:id="quiz-integers-6">
+          <statement>
+            <p>What is the 8-bit binary 2's complement representation of the number 63 (careful: this is a positive number... what do positive numbers look like in 2's complement?)</p>
+          </statement>
+        </exercise>
+        <exercise xml:id="quiz-integers-7">
+          <statement>
+            <p>What is the 8-bit binary 2's complement representation of the number -63</p>
+          </statement>
+        </exercise>
+      </reading-questions>
+      <subsection>
+        <title>Counting in Binary Two's Complement</title>
+        <p>Finally, let's take a look at what happens when counting beyond the largest possible number in binary 2's complement. </p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                 <li>What happens when you exceed the binary range?</li>
+                 <li>The decimal representation becomes negative!</li>
+               </ul>
+            </p>
+        </aside>
+        <video xml:id="_6IdQgAivpvk" youtube="6IdQgAivpvk" play-at="select"/>
+        <p>More food for thought: start at 0, keep adding 1. What happens?</p>
+        <pre>
+          Decimal     Binary Two's Complement
+             0              00000000
+             1              00000001
+             2              00000010
+             3              00000011
+             .                  .
+             .                  .
+             .                  .
+           126              01111110
+           127              01111111
+                 +1 ?????
+        </pre>
+        <p>What is the decimal value of this 2's complement number?</p>
+        <pre>
+                     1111111     &lt;-- carrying the ones
+            127      01111111
+          +   1    + 00000001
+          ______   ___________ 
+            ???      10000000
+        </pre>
+        <ol>
+          <li>MSB is 'set', so the number is negative</li>
+          <li>Add values of the places which are zero: 64 + 32 + 16 + 8 + 4 + 2 + 1 = 127</li>
+          <li>Add 1 to the result</li>
+        </ol>
+        <p>Thus, the result is -128.</p>
+      </subsection>
+      <reading-questions>
+        <exercise xml:id="quiz-integers-8">
+          <statement>
+            <p>What is the decimal value of the 8-bit binary 2's complement number <c>10101010</c>?</p>
+          </statement>
+        </exercise>
+      </reading-questions>
+    </section>
+
+    <section xml:id="integers-hex">
+      <title>Hexadecimal Numbers</title>
+      <p>And finally, a brief excursion into hexadecimal numbers:</p>
+      <aside>
+          <title>Video Description</title>
+          <p>
+             <ul>
+               <li><idx>hexadecimal</idx>Hexadecimal is base-16 and it is shorter to write in hexadecimal than binary</li>
+               <li>It is very easy to convert between hexadecimal and binary</li>
+               <li>Hexadecimal digits are 0-9, A-F (10-15)</li>
+               <li>Hexadecimal numbers are preceded by <c>0x</c></li>
+               <li>Converting between base-2, -10, and -16</li>
+             </ul>
+          </p>
+      </aside>
+        <video xml:id="zeXIB23dnCU" youtube="zeXIB23dnCU" play-at="select"/>
+        <activity>
+          <p>Please convert the decimal number 20,000 into hexadecimal.</p>
+          <answer><c>0x4E20</c></answer>
+        </activity>
+        <p><term>Binary</term> is the native number system of the computer, but it is often convenient for us to talk in the <term>hexadecimal</term> number system (HEX), that is, in <term>base-16</term>.</p>
+        <p>HEX digits: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F (0-15)</p>
+        <p>Example: <c>0xAC</c> means "A" * <m>16^1</m> + "C" * <m>16^0</m> = 10 * 16 + 12 * 1 = 172 in decimal</p>
+        <p><em>The "0x" indicates that what follows is in hex</em></p>
+        <p>Another example: <c>0x57</c> means 5 * <m>16^1</m> + 7 * <m>16^0</m> = 87 in decimal</p>
+        <subsection>
+          <title>Why Use Hexadecimal?</title>
+          <p>Binary numbers can be REALLY long (used in memory location addressing for example.)</p>
+          <ul>
+            <li>Need: easy shorthand for binary</li>
+            <li>
+              <p>Solution: HEX
+                <ul>
+                  <li>Condense 4 bits (binary digits) into 1 hexadecimal digit</li>
+                  <li>Example: 1011 binary = 11 decimal = B hexadecimal</li>
+                </ul>
+              </p>
+            </li>
+            <li>2-byte words (16 bits) can then be written as four HEX digits</li>
+          </ul>
+          <p>We want powers of 2 (binary) for easy conversion.</p>
+          <p>Alternative?</p>
+          <ul>
+            <li>Octal (digits 0-7)</li>
+            <li>Condenses 3 bits into one</li>
+          </ul>
+        </subsection>
+        <subsection>
+          <title>Decimal to Hexadecimal</title>
+          <p>We already know how this works: keep dividing by 16, record the remainders in reverse order!</p>
+          <pre>
+            23,597    /16       = 1,474  R13 (D)     * 16^0   LSD
+             1,474    /16       = 92     R2          * 16^1    |
+                92    /16       = 5      R12 (C)     * 16^2    V
+                 5    /16       = 0      R5          * 16^3   MSD
+
+            23,597              ->       0x5C2D
+          </pre>
+        </subsection>
+        <subsection>
+          <title>Binary to Hexadecimal and Decimal</title>
+          <p>We can go directly from binary to decimal, or via hex.</p>
+          <p>Example: 16-bit binary integer</p>
+          <pre>
+            0101   1100   0010   1101    = 23,597    Decimal
+              5    C (12)   2    D (13)  = 0x5C2D    HEX
+            16^3   16^2   16^1   16^0                (HEX place values)
+          </pre>
+          <p><m>5 \times 16^3 + 12 \times 16^2 + 2 \times 16^1 + 13 \times 16^0</m></p>
+          <p><m>= 5 \times 4096 + 12 \times 256 + 2 \times 16 + 13 \times 1</m></p>
+          <p><m>= 20,480 + 3072 + 32 + 13</m></p>
+          <p><m>= 23,597</m> Decimal</p>
+          <p>Remember: precede hexadecimal number with <c>0x</c> in order to avoid confusion with decimal number <c>0x5C2D</c></p>
+          <p><nbsp/></p>
+          <p><term>Hexadecimal to decimal: best done via binary!</term></p>
+          <p><c>0x15A9</c> 2-byte hexadecimal (base-16) number</p>
+          <p>Hex-to-binary: each hex digit is 4 binary digits</p>
+          <pre>
+                            1    5    10   9
+            0x15A9        0001 0101 1010 1001
+          </pre>
+          <p><em>MSB is 0, so decimal value is the same for unsigned, signed-magnitude, and 2's complement representations</em></p>
+          <p>Binary-to-decimal:</p>
+          <p>=5545</p>
+        </subsection>
+        <subsection>
+          <title>Another Example</title>
+          <p><c>0xB5A9</c> 2-byte hexadecimal (base-16) number</p>
+          <p>Hex-to-binary:</p>
+          <pre>
+                        11    5   10    9
+            0xB5A9     1011 0101 1010 1001
+          </pre>
+          <p><em>Now MSB is 1, so decimal value depends on which representation we use...</em></p>
+          <p>Binary-to-decimal:</p>
+          <p>Unsigned: <m>2^{15} + 2^{13} + 2^{12} + 2^{10} + 2^8 + 2^7 + 2^5 + 2^3 + 2^0 = 46,505</m></p>
+          <p>Signed magnitude: <m>-(2^{13} + 2^{12} + 2^{10} + 2^8 + 2^7 + 2^5 + 2^3 + 2^0) = -13,737</m></p>
+          <p>2's complement: <m>-(2^{14} + 2^{11} + 2^9 + 2^6 + 2^4 + 2^2 + 2^1 + 1) = -19,031</m></p>
+        </subsection>
+    </section>
+
+    <section xml:id="integers-summary">
+      <title>Summary</title>
+      <p>In this chapter we covered the following topics:</p>
+      <ul>
+        <li>Binary numbers</li>
+        <li>Converting between base-10 and base-2</li>
+        <li>Digital representation of negative numbers</li>
+        <li>
+            <p>Three ways a binary number can be interpreted:
+                <ul>
+                    <li>Unsigned integer</li>
+                    <li>Signed magnitude representation</li>
+                    <li>Binary 2's complement representation</li>
+                </ul>
+            </p>          
+        </li>
+        <li>Hexadecimal as short-hand for binary</li>
+      </ul>
+    </section>
+  </chapter>

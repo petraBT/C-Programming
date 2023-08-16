@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="branching">
+	<title>Branching</title>
+	<introduction>
+		<p>In this chapter, we'll cover the following topics:</p>
+		<ul>
+			<li>Making decisions at run-time of your code using <c>if</c> statements</li>
+			<li><c>if</c> statements with an "otherwise" condition: <c>if - else</c> statements</li>
+			<li>Logic statements</li>
+			<li>Relation and equality statements</li>
+			<li><c>if - else if - else</c> statements</li>
+			<li>Explore how logical operators and expressions work in C (and in coding, more generally). It turns out, our English language often makes certain assumptions when it comes to logic with which we are all familiar. But when talking to the computer we need to be more explicit so that our logic gets interpreted correctly.</li>
+			<li>How to represent a true/false value in C using tools we have already discovered</li>
+			<li>While we may want to know if our logical expression is true, we also may want to know if it is NOT true. We will take a look at how we can easily negate our logical expressions, so we will know if something is NOT true.</li> 
+		</ul>
+    </introduction>
+
+    <section xml:id="branching-if">
+    	<title><c>if</c> Statements</title>
+		<p>
+			<idx><h>branching</h><h><c>if</c></h></idx>
+			We are ready for a really important and powerful new concept: the ability to create computer instructions that are executed only if certain conditions are met. Let's take a look.
+		</p>
+		<codecast href="1512409155010"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Branching using the <c>if</c> statement is introduced</li>
+		            <li>Branching can be used to execute code only in the case that some condition is true (or false)</li>
+		            <li>NEW SYNTAX: <c>if (something is true)</c><c>{ do this };</c> will check if the statement in parenthesis is true, and if so, will execute the statement(s) within curly brackets</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+            <exercise xml:id="quiz-branching-1">
+                <statement>
+                    <p>Which of the following shows the correct syntax for an <c>if</c> statement?</p>
+                </statement>
+              <choices randomize="yes">
+                <choice correct="yes">
+                    <statement>
+                        <c>if (cloudy) printf("It's not sunny :-(");</c>
+                    </statement>
+                    <feedback>
+                        <p>Correct</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <c>printf("It's not sunny :-(") if (cloudy);</c>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <c>if (cloudy) printf("It's not sunny :-(")</c>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <c>if cloudy printf("It's not sunny :-(");</c>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+            </choices>
+            <hint>
+                <p>Review the video if you are stumped.</p>
+            </hint>
+            </exercise>
+        </reading-questions>
+    </section>
+
+	<section xml:id="branching-if-else">
+		<title><c>if - else</c> Statements</title>
+		<p>
+			<idx><h>branching</h><h><c>if - else</c></h></idx>
+			Next, we'll see how to perform another action in case the condition is not met.
+		</p>
+		<codecast href="1512409742275"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>The <c>if-else</c> statement is introduced</li>
+		            <li>If the condition for the <c>if</c> statement is not met, then the code in the <c>else</c> statement will be executed instead</li>
+		            <li>NEW SYNTAX: <c>if (something is true)</c><c>{do this};</c> <c>else {do this};</c></li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+            <exercise xml:id="quiz-branching-2">
+                <statement>
+                    <p>What is the output of the following piece of code, assuming that n is a variable of type int that has the value 1:</p>
+                    <program language="c"><input>
+                    	if (n) printf("You win!");
+                    	else printf("Ooops!");
+                    </input></program>
+                </statement>
+              <choices randomize="yes">
+                <choice correct="yes">
+                    <statement>
+                        <p>You win!</p>
+                    </statement>
+                    <feedback>
+                        <p>Correct</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>Ooops!</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>You win! Ooops!</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>This does not generate any output.</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+            </choices>
+            <hint>
+                <p>Watch out for little details such as the semicolon at the end of the statement or the parentheses surrounding the condition.</p>
+            </hint>
+            </exercise>
+        </reading-questions>
+    </section>
+
+	<section xml:id="branching-operators">
+		<title>Relational and Equality Operators</title>
+		<p>We have already learned about several operators for numbers:</p>
+		<ul>
+			<li><idx>arithmetic</idx>  <c>+</c>, <c>-</c>, <c>*</c> addition, subtraction, and multiplication (integers and floats)</li>
+		  	<li><c>/</c> integer division for integers and floating point division for floats</li>
+		  	<li><c>%</c> remainder (modulus) of an integer division</li>
+		</ul>
+		<p>Next, we'll learn about relational and equality operators that serve to compare the values of two quantities:</p>
+		<ul>
+			<li>
+				<idx><h>calculations</h><h>relational operators</h></idx>
+		    	<c>&lt;</c>, <c>&gt;</c> less than and greater than operators
+		    </li>
+		  	<li><c>&lt;=</c>, <c>&gt;=</c> less than or equal to, greater than or equal to</li>
+		  	<li><c>!=</c> not equal to</li>
+		  	<li>
+		  		<idx><h>calculations</h><h>equality operators</h></idx>
+		  		<c>==</c> equal to (note the double equal sign; the single equal sign <c>=</c> has already been 'used up' for our assignment operator)
+		  	</li>
+		</ul>
+		<investigation>
+			<statement>
+				<p>Which of the following variables would C interpret as "true"? For example, if each variable was placed in the following code's <c>if</c> statement as "variable", would the program output "True" or "False"?</p>
+				<ol>
+					<li><pre>int a = -1</pre></li>
+					<li><pre>char b = 'b'</pre></li>
+					<li><pre>float c = 0.0</pre></li>
+					<li><pre>int d = 4000</pre></li>
+				</ol>
+				<program language="c"><input>
+					if (variable){
+					  printf("True")
+					}
+					else{
+					  printf("False")
+					}
+				</input></program>
+			</statement>
+			<answer>
+				<p>C will interpret the variables <c>a</c>, <c>b</c>, and <c>d</c> as "True", and the variable <c>c</c> as "False"</p>
+			</answer>
+			<solution>
+				<p>In C, any nonzero integer or float is interpreted as true, as well as any character.</p>
+			</solution>
+		</investigation>
+		<p>A true logical relation evaluates to 1, whereas a false relation evaluates to 0. Examples:</p>
+		<ul>
+			<li>Suppose x has the value 3.5. Then <c>(x &lt;= 5.0)</c> evaluates to 1.</li>
+		    <li>Suppose next that x has the value 7. Then <c>(x &lt;= 5.0)</c> evaluates to 0.</li>
+		    <li><c>(age == 30)</c> evaluates to 1 if indeed age has the value 30, otherwise it evaluates to 0.</li>
+		</ul>
+		<p>Note: Instead of <c>(x &lt;= 5.0)</c> you could also write <c>(5.0 &gt;= x)</c>, and instead of <c>(age == 30)</c> you could just as well write <c>(30 == age)</c>.</p>
+		<investigation>
+			<statement>
+				<p>Does the following statement, which is comparing two characters, evaluate to <em>true</em> or <em>false</em>, according to C?</p>
+				<pre>('A' &gt; 'a')</pre>
+				<p> </p>
+			</statement>
+			<answer>
+				<p>False</p>
+			</answer>
+			<solution>
+				<p>Recall that characters are really stored as their ASCII codes in memory. Therefore, when comparing characters, C really compares their ASCII codes. In this case, we have 'A'=65 and 'a'=97. Sure enough, 65 is not greater than 97, so the above statement evaluates to <em>false</em>.</p>
+			</solution>
+		</investigation>
+		<p>Let's look at an example.</p>
+		<codecast href="1512413350447"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Logic expressions resulting from comparing variable values</li>
+		            <li>Producing true/false relations</li>
+		            <li>Using <c>if-else</c> based on true/false values of logic statements</li>
+		            <li>Example: an <c>if</c> statement can include a logic statement such as <c>(x>5)</c>, and it will then execute code if this logic statement evaluates to true</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+            <exercise xml:id="quiz-branching-3">
+                <statement>
+                    <p>You are writing a C program that calculates the price of a rental car, depending on how many miles the user wants to drive. If the user drives less than 50 miles then the price of the car is a flat fee of $40. If on the other hand the user drives 50 or more miles, then the cost is computed as $0.70 per mile plus a handling fee of $5.</p>
+                    <p>Please complete the following C program: After the user has entered the number of miles they wish to drive, the program should output the price of the rental car in dollars (with two decimal places).</p>
+                    <cmecode startPoint="engs20p_NAGbranching4" height="300"></cmecode>
+                    <p><em>When your program performs correctly you'll be given a keyword to enter in Canvas.</em></p>
+                </statement>
+            </exercise>
+        </reading-questions>
+	</section>
+
+	<section xml:id="branching-if-else-practice">
+		<title><c>if - else</c> Statement Practice</title>
+		<p>You are staying at a youth hostel that has the funniest pricing policy:</p>
+  		<p>In order to encourage people to arrive early they charge more, the later you arrive on your day of check-in. You can arrive at any time between noon and midnight on the day of check-in, but the later you arrive, the more expensive the night will be.</p>
+	  	<activity xml:id="activity-9-4-1-if_else_Statement_Practice">
+	  		<statement>
+		  		<p>Write a C-program that reads from the user the hour of arrival (between 0 - meaning noon - and 12 - meaning midnight) and that then outputs the price to pay for the night.</p>
+		  		<p>The cost for the night is a $10 base fee plus $5 for every hour you arrive past noon. So if you arrive at noon, the total cost is only $10, if you arrive at 1pm, the price goes up to $15, etc. Thankfully the total price is capped at $57, so even if you arrive at 11pm, the price will be $57.</p>
+				<cmecode startPoint="engs20p_Nbranching5" addOn="&amp;nocheck=true" height="500"></cmecode>
+				<p><em>When you are done, please paste the lines of code you added to make this program work into the box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="branching-advanced">
+		<title><c>if - else-if - else</c> Statements</title>
+		<p>What if there are more than two cases, amongst which we'd like to distinguish?</p>
+		<p>Take a look at the following example:</p>
+		<figure>
+			<idx><h>branching</h><h><c>if - else-if - else</c></h></idx>
+			<cmecode startPoint="engs20p_Nbranching6" addOn="&amp;nocheck=true" height="300"></cmecode>
+		</figure>
+		<reading-questions>
+            <exercise xml:id="quiz-branching-4">
+                <statement>
+                	<p>Complete the following C program: After the user has entered a number, assign a score (use the variable "score" which has already been defined for this purpose) to the user input as follows: If the user enters a number less than 10 the score should be -1, if the user enters a number greater than 20 the score should be 1,  and if the user enters a number between 10 and 20 the score should be 0. Then print the user's score to the screen.</p>
+                	<cmecode startPoint="engs20p_selection1" height="400"></cmecode>
+                	<p><em>When your program performs correctly you'll be given a keyword to enter in Canvas.</em></p>
+                </statement>
+            </exercise>
+        </reading-questions>
+	</section>
+
+	<section xml:id="branching-multiple">
+		<title>Combining Multiple Logic Statements</title>
+		<introduction>Sometimes you may want to check whether several statements are true at the same time, or whether at least one of several statements is true, or whether something is not true, etc. We'll take a look at how do do this in C now. </introduction>
+		<p><idx><h>logic</h><h><c>AND</c></h></idx>The way to write the logical <c>AND</c> in C is with two ampersand signs: <c>&amp;&amp;</c></p>
+		<cmecode startPoint="engs20p_Nbranching8" addOn="&amp;nocheck=true" height="300"></cmecode>
+		<p><idx><h>logic</h><h><c>OR</c></h></idx>The way to write the logical <c>OR</c> in C is with two vertical bars: <c>||</c></p>
+		<cmecode startPoint="engs20p_Nbranching9" addOn="&amp;nocheck=true" height="300"></cmecode>
+		<p><idx><h>logic</h><h><c>NOT</c></h></idx>The way to negate a condition in C is to put an exclamation mark in front of it: <c>!(...)</c></p>
+		<cmecode startPoint="engs20p_Nbranching10" addOn="&amp;nocheck=true" height="300"></cmecode>
+		<investigation>
+			<statement>
+				<p>Zero is the value which C interprets as false. How could you use a logical operator so that C would interpret anything <em>except</em> zero as false, such as in an <c>if</c> statement?</p>
+			</statement>
+			<answer>
+				<p>Use an exclamation mark to negate a condition.</p>
+			</answer>
+			<solution>
+				<p>By using an exclamation mark in front of the condition in our <c>if</c> statement, C will interpret the condition as the opposite of whatever it normally would be. For example, if our simple <c>if</c> statement was as follows:</p>
+				<program language="c"><input>
+					int var; /*see below for our example values of var*/
+					if (!var){
+					  print("True");
+					}else{
+					  printf("False");
+					}
+				</input></program>
+				<p>then, if <c>var = 0</c> which is originally false, <c>!var</c> would be true.</p> 
+				<p>Similarly, if <c>var = 1</c> which is originally true, <c>!var</c> would thus be false.</p>
+			</solution>
+		</investigation>
+	</section>
+
+	<section xml:id="branching-practice">
+		<title>Practice Your Logic Statements!</title>
+		<subsection>
+			<title>Days of the Month</title>
+			<activity>
+				<p>You'd like to print the ordinal day of the month (i.e. 1st, 2nd, 3rd) in the following form based on the cardinal input provided (i.e. 1, 2, 3).</p>
+				<pre>"Today is the 2nd day of the month."</pre>
+				<pre>"Today is the 21st day of the month."</pre>
+				<p>Complete the following C-program so that it will accomplish this task.</p>
+				<cmecode startPoint="engs20p_Nbranching7" addOn="&amp;nocheck=true" height="400"></cmecode>
+			</activity>
+		</subsection>
+		<subsection>
+			<title>Constant or Vowel?</title>
+			<activity xml:id="activity-9-7-2-Constant_or_Vowel-no-output">
+				<statement>
+					<p>Write a C program that reads from the user input a letter and that prints out whether this letter is a vowel or a consonant.</p>
+					<p>For example, if the user input is 'b', the program's output should be:</p>
+					<pre>"The letter b is a consonant."</pre>
+					<p>If, on the other hand, the user input is 'E', for example, then the program's output should be:</p>
+					<pre>"The letter E is a vowel."</pre>
+					<cmecode startPoint="engs20p_NvowelOrConsonant" addOn="&amp;nocheck=true" height="400"></cmecode>
+					<p><em>When you are done, please put your code you added into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="branching-evaluating">
+		<title>Evaluating Logic Statements</title>
+		<p><idx><h>logic</h><h>evaluate</h></idx>Now that we can write more complicated logical expressions involving multiple operators, in what order do these get evaluated?</p> 
+		<activity>
+	        <statement>
+				<p>Take a look at the program below for example. What is its output? Try to figure this out first by only thinking about the program and not yet running it. </p>
+				<cmecode startPoint="engs20p_NlogicPrecedence" addOn="&amp;nocheck=true&amp;hide_run=true" height="300"></cmecode>
+				<p>What do you think the output will be?</p>
+			</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>"Huh??? False???"</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>"True"</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>"True Huh??? False???"</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+		</activity>
+	</section>
+
+	<section xml:id="branching-operator">
+        <title>Operator Precedence</title>     
+        <p>Now that we know several logic and arithmetic operators, we need
+        to know the order in which the computer will evaluate a more complex
+        expression.</p>
+        <p>More advanced operator precedences are introduced in <xref ref="arraystruct-operators"/>.</p> 
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>Logic expressions are evaluated from left to right</li>
+                    <li>There is a hierarchy of precedence in C operators</li>
+                    <li><idx>operator precedence</idx><idx><h>logic</h><h>precedence</h></idx>For example, unary operators, such as <c>+</c> and <c>-</c> take precedence over equality operators, such as <c>==</c> and <c>!=</c></li>
+               </ul>
+            </p>
+        </aside>
+        <video xml:id="_5jKIQbbs0zc" youtube="5jKIQbbs0zc" play-at="select"/>
+        <reading-questions>
+            <exercise xml:id="quiz-logic-1">
+                <statement>
+                    <p>Suppose that variables a, b, and c of type int have been declared and assigned the values:</p>
+                    <pre>a=3</pre>
+                    <pre>b=4</pre>
+                    <pre>c=5</pre>
+                    <p>What is the value of the logic expression:</p>
+                    <pre>(a + b &gt; c) &amp;&amp; (c - b == a)</pre>
+                    <p> </p>
+                </statement>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="branching-flag">
+        <title>The Idea of a Flag</title>
+        <p>
+            <idx>boolean behavior (true/false)</idx>
+            <idx>flag</idx>
+            Despite the fact that the C-programming language does not have a boolean data type, we can simulate boolean (true/false) behavior using an integer-type variable. This is often called a flag.
+        </p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>Idea of a flag variable</li>
+                    <li>Symbolizing true/false in code</li>
+                    <li>For example: use an integer variable with value of 1 to symbolize true and a value of 0 to symbolize false</li>
+               </ul>
+            </p>
+        </aside>
+        <video xml:id="kkx3IMBgND0" youtube="kkx3IMBgND0" play-at="select"/>
+        <investigation>
+            <statement>
+                <p>What are some scenarios where it would be useful to have a true/false variable? Any past activities come to mind?</p>
+            </statement>
+        </investigation>
+        <reading-questions>
+            <exercise xml:id="quiz-logic-2">
+                <statement>
+                    <p>What is the value of the variable d once the following code has been executed:</p>
+                    <program langauge="c"><input>
+                        int d, num;
+                        num = 17;
+                        d = ((17%3)==0);
+                    </input></program>
+                </statement>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="branching-logic">
+        <title>Logical Expressions in English</title>
+        <p><idx><h>logic</h><h>expressions</h></idx>We use logical expressions in our language every day. But the way we do so
+        may not translate readily into computer-speak without some extra attention. Remember:
+        computers aren't humans. They cannot interpret what we might mean. They can
+        only follow predefined rules.</p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>How to translate logical statements in English to logical expressions that the computer will interpret in the intended way</li>
+                    <li>For example: in English, "x and y are greater than z" would translate to C as <c>(x>z)&amp;&amp;(y>z)</c></li>
+               </ul>
+            </p>
+        </aside>
+        <video xml:id="lwn2e3QqUqQ" youtube="lwn2e3QqUqQ" play-at="select"/>
+        <reading-questions>
+            <exercise xml:id="quiz-logic-3">
+                <statement>
+                    <p>Which of the following is the correct logical expression that corresponds to the statement that <em>"Neither A nor B is negative"</em>?</p>
+                </statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>!(A&lt;0 || B&lt;0)</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>!(A||B)&lt;0</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>!A||!B&lt;0</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>A&lt;0 || B&lt;0</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="branching-negate">
+        <title>Negating Logical Expressions</title>
+        <p>
+            <idx><h>logic</h><h>negate</h></idx> 
+            <idx><h>logic</h><h>De Morgan's laws</h></idx>
+            <idx><h>logic</h><h>truth tables</h></idx>   
+            Sometimes you might want to check whether a certain logical expression is NOT true, rather than finding out whether it is true. There are several ways to do so.
+        </p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>Negating logical expressions</li>
+                    <li>Truth tables</li>
+                    <li>De Morgan's laws:</li>
+                    <li>Law 1:</li>
+                </ul> 
+                !(A &amp;&amp; B) == !A || !B
+                <ul>
+                    <li>Law 2:</li>
+                </ul>
+                !(A || B) == !A &amp;&amp; !B
+            </p>
+        </aside>
+        <video xml:id="eR49ZU8Y4Ag" youtube="eR49ZU8Y4Ag" play-at="select"/>
+        <reading-questions>
+            <exercise xml:id="quiz-logic-4">
+                <statement>
+                    <p>Which of the following is equivalent to <c>!(A&lt;0 || B&lt;0)</c>?</p>
+                </statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>A&gt;=0 &amp;&amp; B&gt;=0</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>A&gt;=0 || B&gt;=0</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>!A&lt;0 || !B&lt;0</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>!A&lt;0 &amp;&amp; !B&lt;0</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+            </exercise>
+        </reading-questions>
+    </section>
+
+	<section xml:id="branching-summary">
+		<title>Summary</title>
+		<p>Various ways to use branching statements in C:</p>
+		<ul>
+			<li><program language="c"><input>
+				if (condition){
+				  statement;
+				}
+			</input></program></li>
+			<li><program language="c"><input>
+				if (condition){
+				  statement1;
+				  statement2;
+				  ...
+				}
+			</input></program></li>
+			<li><program language="c"><input>
+				if (condition){
+				  statement(s);
+				} else {
+				  statement(s);
+				}
+			</input></program></li>
+			<li><program language="c"><input>
+				if (condition){
+				  statement(s);
+				} else if (other condition){
+				  statement(s);
+				} else if (yet another condition){
+				  statements(s);
+				} else {
+				  statement(s);
+				}
+			</input></program></li>
+  			<li>There can be as many <c>if-else</c> cases as you would like.</li>
+  			<li>The final <c>else</c> statement can be omitted if that makes sense.</li>
+		</ul>
+		<p>Several conditions can be combined with logic operators:</p>
+		<ul>
+			<li><c>&amp;&amp;</c> is the logical AND</li>
+			<li><c>||</c> is the logical OR</li>
+			<li><c>!</c> is the logical NOT</li>
+			<li>DeMorgan 1: <c>!(A &amp;&amp; B) == (!A) || (!B)</c></li>
+			<li>DeMorgan 2: <c>!(A || B) == (!A) &amp;&amp; (!B)</c></li>
+		</ul>
+		<p>Relational and equality operators are:</p>
+		<ul>
+			<li><c>&lt;</c> less than</li>
+			<li><c>&gt;</c> greater than</li>
+			<li><c>&lt;=</c> less than or equal</li>
+			<li><c>&gt;=</c> greater than or equal</li>
+			<li><c>==</c> equal</li>
+			<li><c>!=</c> not equal</li>
+		</ul>
+		<p>A few extra topics when it comes to branching and logic expressions in coding: </p>
+		<ul>
+			<li>Operator precedence in logic expressions</li>
+            <li>Using a "flag" variable to represent true/false</li>
+            <li>Translating logical expressions from English to C</li>
+            <li>Negating logical expressions</li>
+        </ul>
+	</section>
+</chapter>

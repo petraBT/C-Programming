@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="pointers">
+	<title>Pointers</title>
+	<introduction>
+		<p>In this chapter, we will look more closely at the way variables are stored in memory (and found by your code) and how to use this information to potentially simplify our code, especially with functions! This understanding will allow us to modify variables within functions whose scope does not seem to include the function (the trick will be to tell the function the variable's address, thereby enabling your code in the function to access the memory location that holds the variable's value). We will also look at design and testing methods to help outline our coding processes.</p> 
+    </introduction>
+
+	<section xml:id="pointers-address">
+		<title>The Address of a Variable</title>
+		<p><idx><h>memory</h><h>address</h></idx>Let's learn about the address of a variable (the location where it is stored in memory) and why this is an important piece of information to have in the C programming language.</p>
+		<codecast href="1519072828031"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li><idx><h>pointer</h><h>address</h></idx><idx><h>variables</h><h>address</h></idx>The address of a variable has a datatype that depends on the datatype of the variable itself. For example, the address of an <c>int</c> has datatype <c>int *</c> (also called integer pointer). Example: <c>int *addr;</c> declares a pointer named "addr"</li>
+		            <li>Use <c>&amp;</c> to get the address of a variable. Example: <c>*addr = &amp;myVar</c> stores the address of <c>myVar</c> in <c>*addr</c></li>
+		            <li>To print an address, use <c>%p</c> as the format specifier</li>
+		       </ul>
+		    </p>
+		</aside>
+		<p><nbsp/></p>
+		<p><nbsp/></p>
+		<p><nbsp/></p>
+		<p><nbsp/></p>
+		<p><nbsp/></p>
+	</section>
+
+	<section xml:id="pointers-dereference">
+		<title>Dereferencing a Pointer</title>
+		<p><idx><h>pointer</h><h>dereference</h></idx>We will now explore how the concept of pointers (addresses) can be used to modify the value of a variable inside a function, despite the fact that the variable's scope does not extend to that function.</p>
+		<codecast href="1519142414918"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Passing variables to functions "by reference" (via their address)</li>
+		           	<li>To change a variable's value whose address is stored in <c>var</c>, use <c>*var = *var + 10;</c>, which (for example) would add 10 to the value of original variable passed to the function by reference</li>
+		           	<li><idx><h>functions</h><h>pointers</h></idx>Passing a variable to a function by reference allows the variable to be used and updated in the function</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-pointers-1">
+				<statement>
+					<p>You want to write a function that increases the integer value stored in a variable num by one. Given the following function definition, what is the correct function call? Assume that a variable num of type int has been declared and initialized.</p>
+					<program language="c"><input>
+						void increasebyone(int *a)
+						{
+						  *a = *a + 1;
+						}
+					</input></program>
+					<p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
+					<cmecode startPoint="engs20p_functions2" height="400"></cmecode>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><pre>increasebyone(&amp;num);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>increasebyone(*num);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>increasebyone(num);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>num = increasebyone(&amp;num);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-pointers-2">
+				<statement>
+					<p>What does the following piece of code do?</p>
+					<program language="c"><input>
+						float num = 5.0;
+						float *pointer;
+
+						pointer = &amp;num;
+						*pointer = *pointer + 1.0;
+						printf("%f", *pointer);
+					</input></program>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>This code prints out the number 6.000000 to the default output.</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>This code prints out the address of the variable pointer to the default output.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>This code prints out the number 5.000000 to the default output.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>This code prints the address of the variable num to the default output.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="pointers-example">
+		<title>Pointer Example</title>
+		<p>Here is an example of how to use pointers in order to have a function modify a variable outside of its scope.</p>
+		<codecast href="1519143375455"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Instead of having a function return a value to a variable outside the function, the function can return nothing (i.e. void function) and update the variable by dereferencing the pointer</li>
+		            <li>For example, <c>*resultptr = z;</c> will update the value of the variable whose address is <c>resultptr</c> with the value in <c>z</c></li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-pointers-3">
+				<statement>
+					<p>Challenge: Please write a function that converts a time given in minutes to hours and minutes. For example, 162 minutes should be converted to 2 hours and 42 minutes, whereas 59 minutes should be 0 hours and 59 minutes. The prototype and main function have been written already; all you have to do is write the function.</p>
+					<cmecode startPoint="engs20p_functions4" height="600"></cmecode>
+					<p><em>When your program performs correctly you'll be given a keyword to enter in Canvas.</em></p>
+				</statement>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="pointers-intro-frac-calc">
+		<title>Intro to the Fraction Calculator</title>
+		<p><idx>fraction calculator</idx>Today, we will all be jointly working on a fraction calculator, that is a calculator that can solve simple fraction problems such as <alert>adding, subtracting, multiplying and dividing fractions</alert>.</p>
+		<p>When tackling a bigger programming challenge such as this it's important to plan ahead!</p>
+		<p>Here is a first (rather coarse) breakdown of our Fraction Calculator:</p>
+		<ol>
+			<li>Get a fraction problem from the user</li>
+			<li>Compute the result</li>
+			<li>Display the result</li>
+			<li>Continue (y/n)?</li>
+		</ol>
+		<activity>
+			<statement>
+				<p>How can we further break down "Get a fraction problem from the user"?</p>
+			</statement>
+			<answer>
+				<p>Here is one way to break it into smaller pieces:</p>
+				<ol>
+					<li>Get a fraction</li>
+					<li>Get an operator</li>
+					<li>Get a fraction</li>
+				</ol>
+			</answer>
+		</activity>
+		<activity>
+			<p>How can we further break down "Get a fraction"?</p>
+		</activity>
+	</section>
+
+	<section xml:id="pointers-design">
+		<title>Top-Down Design</title>
+		<p><idx><h>design</h><h>top-down</h></idx>Top-Down Design is a method for solving problems in which the problem is <alert>broken down into smaller sub-problems</alert>, which are solved (perhaps by breaking into sub-sub-problems...) to derive a solution to the main problem.</p>
+		<p><alert>This is the technique you should use for any problem!</alert></p>
+		<p><alert>Functions</alert> are ideal for this purpose and reinforce this type of solution strategy.</p>
+		<investigation>
+			<statement>
+				<p>How can implementing a top-down design method while coding potentially lead to an easier debugging process?</p>
+			</statement>
+			<answer>
+				<p>While there could be many reasons, one benefit of the top-down design method is that by working in smaller, more tangible pieces of code, it can be easier to see if a certain task is functioning correctly. Once you see that your small bits of code (e.g. functions) are working as planned, then after linking them together, you are more likely to have a successful code than if you blindly wrote it all with no intermediate testing.</p>
+			</answer>
+		</investigation>
+	</section>
+
+	<section xml:id="pointers-bottom-up-testing">
+		<title>Bottom-Up Testing</title>
+		<p><idx><h>testing</h><h>bottom-up</h></idx>When working on a small sub-sub-problem of a big program via a function it is important to test the function extensively before making it part of the bigger program.</p>
+		<p>To do so, one simply writes a so-called <alert>driver</alert>, that is, a main function whose purpose it is to call your new function in order to check whether if works correctly.</p>
+		<p>Suppose, for example, you are writing the function <c>simplify()</c> that simplifies a fraction. Here is a sample driver to test this function:</p>
+		<program language="c"><input>
+	        int main(void) {
+        	  int numer = 50;
+        	  int denom = 10;
+        	  printf("original: %d/%d\n", numer, denom);
+        	  simplify(&amp;numer, &amp;denom);
+        	  printf("simplified: %d/%d\n", numer, denom);
+	        }
+		</input></program>
+		<p>There is no point in making this fancy: you'll discard it later!</p>
+		<investigation>
+			<statement>
+				<p>What should your driver do to the function you are testing?</p>
+			</statement>
+			<answer>
+				<p>Provide it with some test inputs!</p>
+			</answer>
+			<solution>
+				<p>Using your driver, you'll want to ensure that given certain inputs, your function outputs expected results. Whether you pass an integer, some floats, an array, or potentially nothing (if it's a <c>void</c> function), the return value(s) or output from the function should match what you expect. If not, you will know something needs fixing...</p>
+			</solution>
+		</investigation>
+	</section>
+	
+	<section xml:id="pointers-top-down-testing">
+		<title>Top-Down Testing</title>
+		<p>Sometimes you might want to test the flow of control of a program, but you haven't written all of your functions yet.</p>
+		<p><idx><h>testing</h><h>top-down</h></idx>In this situation we use something called a <alert>stub</alert>. A stub is a skeleton function that consists of header info (comments), tracing messages (<c>printf()</c>) and assignment of output parameters (but not necessarily the actual values).</p>
+		<p>Example:</p>
+		<p>Suppose you wanted to check the flow of our fraction calculator, but you haven't written the <c>simplify()</c> function yet. So here is what you could write instead of your simplify function:</p>
+		<program language="c"><input>
+			/* *********************** STUB *************************
+			* given a fraction numer/denom determine a simplified
+			* fraction and return as output parameters
+			****************************************************** */
+			int simplify(int *numer, int *denom) {
+			  printf("Entering simplify() with %d/%d\n", *numer, *denom);
+			  *numer = *numer; /* not really neccessary, is it */
+			  *denom = *denom;
+			  printf("Exiting simplify() with %d/%d\n", *numer, *denom);
+			  return 0;
+			}
+		</input></program>
+		<p>Eventually you'll replace this stub with the real function.</p>
+	</section>
+
+	<section xml:id="pointers-frac-calc">
+		<title>The Fraction Calculator</title>
+		<idx>fraction calculator</idx>
+		<p>We'll use a Google Doc to share all of the pieces of code that different groups are writing. Please follow the link given below.</p>
+		<p>We'll furthermore be working on the Thayer School servers for this problem, although you are welcome to use the code window provided below for some code development and testing.</p>
+		<p>Here are the prototypes for the fraction calculator:</p>
+		<program language="c"><input>
+			void getFraction(int *num, int *denom);
+			void getOp(char *operation);
+			void simplify(int *num, int *denom);
+			void addFractions(int n1, int d1, int n2, int d2, int *num, int *denom);
+			void multiplyFractions(int n1, int d1, int n2, int d2, int *num, int *denom);
+			int computeResult(int n1, int d1, char op, int n2, int d2, int *num, int *denom);
+			void printEverything(int n1, int d1, char op, int n2, int d2, int num, int denom);
+		</input></program>
+		<cmecode startPoint="engs20p_NFractionCalc" addOn="&amp;nocheck=true" height="800"></cmecode>
+		<p>Please sign in with your group in the Google Doc below. Once your group is finished, please paste it into the correct location of the Google Doc for the whole class to see.</p>
+		<p><gdoc href="2PACX-1vRHOzA_rVxopDiPiCLmGd-g6LGkMLB_HG727AmhDHy4r__SCfaTU7v2wMUAxYXV7GGi2QRt13xD4CRC"/></p>
+	</section>
+
+	<section xml:id="pointers-arrays">
+		<title>Arrays and Pointers</title>
+		<p><idx><h>pointer</h><h>array</h></idx><idx><h>array</h><h>address</h></idx>Given an array variable such as <c>int myArray[6];</c> what exactly does the variable <c>myArray</c> itself store (if we don't add in the brackets to refer to a specific element)? It turns out, <c>myArray</c> holds the <alert>address of the zeroth element of the array</alert>! That is, <c>myArray</c> is a pointer of type <em>int</em>. So:</p>
+		<pre>myArray == &amp;myArray[0]</pre>
+		<p><idx><h>pointer</h><h>arithmetic</h></idx>But it gets even better than that: The computer can do arithmetic, giving us the ability to easily find the address of <c>myArray[1]</c> or <c>myArray[2]</c>, for example:</p>
+		<pre>myArray + 1 == &amp;myArray[1]</pre>
+		<pre>myArray + 2 == &amp;myArray[2]</pre>
+		<p>This is called <alert>pointer arithmetic.</alert> So by adding 1 to the address <c>myArray</c>, the computer automatically locates the address of the next array element, <c>&amp;myArray[1]</c>.</p>
+		<p>Watch the video to find out more.</p>
+		<codecast href="1519145309501"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>The array variable itself holds the address of the zeroth element of the array</li>
+					<li>Adding "1" to the pointer of an array will update the address to the next element of the array</li>
+					<li>i.e. <c>*array = 3</c>, <c>*(array+1)=10</c> will update the first (the zeroth, truthfully speaking) number in the array as 3 and the next as 10</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-arithmetic-1">
+				<statement>
+					<p>Let's start with a review question!</p>
+					<p>What is the output of the following program:</p>
+					<program language="c"><input>
+						#include &lt;stdio.h&gt;
+						void swap (char *x, char *y); 
+						int main(void) {
+						  char c = 'P';
+						  char d = 'T';
+						  printf("%c%c ", c, d);
+						  swap(&amp;c, &amp;d);
+						  printf("%c%c", c, d);
+						  return 0;
+						}
+						void swap (char *x, char *y) {
+						  char temp;
+						  temp = *x;
+						  *x = *y;
+						  *y = temp;
+						}
+					</input></program>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>PT TP</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>PT xy</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>PT PT</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>PT yx</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>None of the above</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-arithmetic-2">
+				<statement>
+					<p>Suppose you have declared an array of integers by typing</p>
+					<pre>int numbers[] = {5, -1, 7, 10, 0, -11};</pre>
+					<p>What is <c> *(numbers+4)</c>?</p>
+					<p>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</p>
+					<cmecode startPoint="engs20p_pointers1" height="300"></cmecode>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>0</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>-1</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>7</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>-11</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>10</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>5</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>None of the above</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-arithmetic-3">
+				<statement>
+					<p>Suppose you have declared an array of integers by typing</p>
+					<pre>int numbers[] = {5, -1, 7, 10, 0, -11};</pre>
+					<p>What is <c>*numbers+4</c>? Notice that the only difference to the previous question is the omission of parenthesis.</p>
+					<p>You really need to think about this first before just trying it out. Really! Anyway, here is the code window for you to try out some code.</p>
+					<cmecode startPoint="engs20p_pointers2" height="300"></cmecode>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>9</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>5</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>7</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>4</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>0</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>-1</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-arithmetic-4">
+				<statement>
+					<p>Suppose (again...) you have declared an array of integers by typing</p>
+					<pre>int numbers[] = {5, -1, 7, 10, 0, -11};</pre>
+					<p>What is numbers[10]?</p>
+					</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>Random and depends on what is at that memory location</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>5</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>This will cause a crash of your program</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The compiler sets this to zero</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>-11</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+           </choices>
+ 			</exercise>
+			<exercise xml:id="quiz-arithmetic-5">
+				<statement>
+					<p>Suppose (for the last time) you have declared an array of integers by typing</p>
+					<pre>int numbers[] = {5, -1, 7, 10, 0, -11};</pre>
+					<p>You have furthermore declared a pointer via</p>
+					<pre>int *ptr;</pre>
+					<p>and initialized it via</p>
+					<pre>ptr = numbers + 2;</pre>
+					<p>What is <c>*(++ptr)</c>?</p>
+					<p><em>You want to try this out, right? Remember... Think first!</em></p>
+					<cmecode startPoint="engs20p_pointers3" height="300"></cmecode>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>10</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>-11</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>5</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>0</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>-1</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>7</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="pointers-functions">
+		<title>Passing Arrays to Functions</title>
+		<p><idx><h>array</h><h>pass-to-functions</h></idx>In the following video you will learn how to pass arrays to functions so that within the function you can use as well as modify values stored in the array.</p>
+		<codecast href="1519159561626"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>When passing arrays to functions, an <c>&amp;</c> is not needed, since the name of the array is already a pointer to its first element</li>
+					<li>Arrays can then be modified and used in functions using their pointer name in the function, such as <c>ptr[i]</c></li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-arrayfunction-1">
+				<statement>
+					<p>Suppose an array of integers has been declared using the declaration</p>
+					<pre>int num[50];</pre>
+					<p>Next, <em>x</em> integers are stored in this array (where x is no larger than 50). The array is to be passed to a function sum which is to add up the x integers stored in the array. What should you be passing to the function sum?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>The number x of integers stored in the array and a pointer to the first element of num.</p>
+               </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>A pointer to the first element of num.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>num[0]</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The 50 elements of num, stored as individual integers.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-arrayfunction-2">
+				<statement>
+					<p>Suppose a function sum has been defined as follows:</p>
+					<program language="c"><input>
+						int sum(int n, int array[])
+						{
+			              int i;
+			              int result = 0;
+			              for (i=0; i&lt;n; i++)
+			                result += array[i];
+			              return(result);
+						}
+					</input></program>
+					<p>Suppose furthermore that in your main function an array num has been declared and initialized with the following:</p>
+					<program language="c"><input>
+						int num[]={4,2,7,5,8,9,4,2,4,6};
+					</input></program>
+					<p>What is the correct function call of <c>sum()</c>, using this array?</p>
+					<p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
+					<cmecode startPoint="engs20p_functions4" height="600"></cmecode>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><pre>sum(10, num);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>sum(10, num[0]);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>sum(10, array[0]);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>sum(10, *num);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>sum(10, array);</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="pointers-functions-practice">
+		<title>Practice Passing Arrays to Functions</title>
+		<p>Time to practice! Please pick and solve at least one of the following problems. If you get done early please pick another problem!</p>
+		<subsection>
+			<title>Option 1</title>
+			<activity xml:id="activity-19-11-1-Passing_Arrays_To_Functions_1">
+				<statement>
+					<p>Write a program that does the following: Declare an array of 10 integer values and pass the array to a function in which you have the user enter 10 integers which you save in the array (you should use a loop here). Next, use a second function to print out all 10 values the user has entered.</p>
+					<p>For example, if the user entered 45, -34, 5, 0, 1, 100, -55,... then the output should be:</p>
+					<pre>
+						1. 45
+						2. -34
+						3. 5
+						4. 0
+						5. 1
+						6. 100
+						7. -55
+						...
+					</pre>
+					<p>Does this problem look familiar? You have worked on this before, just not using functions. Below is the code we wrote previously for this problem.</p>
+					<cmecode startPoint="engs20p_Narrays5Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Option 2</title>
+			<activity xml:id="activity-19-11-2-Passing_Arrays_To_Functions_2">
+				<statement>
+					<p>Write a program that declares an array of 100 floats. Then call a function, to which you pass the array, which fills the array with the square roots of the numbers 1 - 100. Next, call another function to print the numbers stored in the array in the following form:</p>
+					<pre>
+						The square root of 1 equals 1.00000.
+						The square root of 2 equals 1.41421.
+						The square root of 3 equal 1.732051.
+						...
+					</pre>
+					<p>Note: In order to be able to use the square root function (<c>sqrt()</c>), you need to include the header file for the mathematics library using the command</p>
+					<pre>#include &lt;math.h&gt;</pre>
+					<p>at the top of your program where the other <c>#include</c> directives are located.</p>
+					<p>Does this problem look familiar? You have worked on this before, just not using functions. Below is the code we wrote previously for this problem.</p>
+					<cmecode startPoint="engs20p_Narrays6Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Option 3</title>
+			<activity xml:id="activity-19-11-3-Passing_Arrays_To_Functions_3">
+				<statement>
+					<p>Write a program that prompts the user to type in a sentence, and that reads the sentence, character by character, and stores it in an array of characters. Stop reading, when the array is full or the character read is <c>\n</c>. Next, print out the sentence in reverse. Your program should use two functions: one function to read from the user input the relevant sentence, and another function to print the sentence in reverse. You'll also need to think about passing along the length of the sentence entered by the user.</p>
+					<p>Here is a sample output:</p>
+					<console>
+						<prompt>Enter a sentence: </prompt> 
+						<input>I love programming.</input>
+						<output>Reverse: .gnimmargorp evol I</output>
+					</console>
+					<p>Does this problem look familiar? You have worked on this before, just not using functions. Below is the code we wrote previously for this problem.
+					</p>
+					<cmecode startPoint="engs20p_Narrays7Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="pointers-arithmetic">
+		<title>Arrays, Functions, and Pointer Arithmetic</title>
+		<p>More practice! Remember: practice makes perfect. Please pick and solve at least one of the following problems:</p>
+		<subsection>
+			<title>Option 1</title>
+			<activity xml:id="activity-19-12-1-Option_1">
+				<statement>
+				<p>Write a program that prompts the user to enter the weight of a letter and that tells the user the postage necessary to mail this letter with the US Postal Service.</p>
+				<p>Here is a sample output:</p>
+				<console>
+					<prompt>How much does your letter weigh (in ounces): </prompt>
+					<input>5.5</input>
+					<output>The postage is 203 cents.</output>
+				</console>
+				<p>Note: You can start with the code given below. Postage is calculated based on the next higher weight in the chart.</p>
+				<p>Your program should use a function, to which you pass the two relevant arrays along with their sizes, as well as the weight entered by the user, and which returns the corresponding postage. The final version of your program should <alert>use pointer arithmetic</alert>.</p>
+				<p>Does this problem look familiar? You have worked on this before, just not using functions or pointer arithmetic. Below is the code we wrote previously for this problem.</p>
+				<cmecode startPoint="engs20p_Narrays8Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
+				<p><em>When you are done, please put your code into the code submission box below:</em></p>
+			</statement>
+    			<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Option 2</title>
+			<activity xml:id="activity-19-12-2-Option_2">
+				<statement>
+				<p>Write a C-program that finds the largest integer stored in an array of integers. You can write your code so that the array values are entered by the user (use a function for this), or you may simply hardcode an integer array for test purposes. For the main task you should definitely use a function, to which you pass the array as well as its size, and which returns the largest integer stored in the array. Your function should not access any array elements using <c>[]</c>, but rather you should <alert>use pointer arithmetic</alert>.</p>
+				<p>Does this problem look familiar? You have worked on this before, just not using functions or pointer arithmetic. Below is the code we wrote previously for this problem.</p>
+				<cmecode startPoint="engs20p_Narrays9Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
+				<p><em>When you are done, please put your code into the code submission box below:</em></p>
+			</statement>
+    			<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Option 3</title>
+			<activity xml:id="activity-19-12-3-Option_3">
+				<statement>
+				<p>Write a C program that finds the average of integer numbers stored in an array. You may have the user enter the array values via a function, or you can simply hard-code the array for testing purposes. For the main task you should definitely use a function to which you pass the array as well as its size, and which returns the average of the numbers stored in the array. Your function should <alert>use pointer arithmetic</alert>.</p>
+				<p>Does this problem look familiar? You have worked on this before, just not using functions or pointer arithmetic. Below is the code we wrote previously for this problem.</p>
+				<cmecode startPoint="engs20p_Narrays10Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
+				<p><em>When you are done, please put your code into the code submission box below:</em></p>
+			</statement>
+    			<response/>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="pointers-summary">
+		<title>Summary</title>
+		<p>In this chapter we studied pointers (addresses of variables) and how they can help with writing better code. We covered:</p>
+		<ul>
+			<li>The address of a variable</li>
+			<li>Dereferencing a pointer</li>
+			<li>Arrays and pointers</li>
+			<li>Passing arrays to functions</li>
+			<li>Arrays don't know their own sizes</li>
+			<li>Using pointer arithmetic to access array elements</li>
+		</ul>
+		<p>Pointers make it possible to break up a large problem into many small sub-problems. Summary of designing and testing methods discussed in this chapter:</p>
+		<ul>
+			<li>Top-Down Design is used to break down larger problems into manageable pieces.</li>
+			<li>Bottom-Up Testing is used to test the individual pieces.</li>
+			<li>Top-Down Testing is used to check the flow of your program.</li>
+		</ul>
+	</section>
+</chapter>

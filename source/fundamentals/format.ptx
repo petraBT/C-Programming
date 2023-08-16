@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="format">
+	<title>Formatted Input/Output and Program Style</title>
+	<introduction>
+        <p>In this chapter, we will take a closer look at how to format your code's output. Maybe you only want floats to print with two digits past the decimal point? Maybe you would like to print a column of number in a right-justified manner? Or you'd like your numbers to be left-justified when they print? Many stylistic options exist in C to produce a clean and neat output, and we will explore all the various options!</p>
+        <p>Similarly, the way in which you style your code itself (indentations, line breaks, variable names, etc) will greatly affect how easily others will be able to understand it, as well as how quickly you will be able to remember what you did when looking back at a piece of your own code. We will look at some best practices to guide your stylistic choices while coding.</p>
+    </introduction>
+
+    <section xml:id="format-io">
+        <title>Formatted Input and Output</title>
+        <p>We have already seen and used the <c>printf()</c> and the <c>scanf()</c> statements. 
+        Both have additional options that come in handy when trying to produce nicely
+        formatted output.</p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>Each data type comes with its own format specifier, for example <c>%d</c> for integers, <c>%f</c> for floating point numbers and <c>%c</c> for individual characters. We will get to know other format specifiers as we discover other data types.</li>
+                    <li>Each format specifier in the format string must correspond to a variable of the same data type in a <c>printf()</c> statement.</li>
+                    <li><idx>escape sequences</idx>Escape sequences start with a backslash <c>\</c> and are used to send special formatting instructions to the computer within a format string. For example, when used within a <c>printf()</c> statement, <c>\n</c> is used to start a new line in the output, <c>\b</c> creates a backspace (moves the cursor one space to the left) and <c>\"</c> renders a double quotation mark.</li>
+               </ul>
+            </p>
+        </aside>
+        <figure>
+            <idx><h>format</h><h>specifiers</h><h>other</h></idx>
+            <video xml:id="gr7DLw5i-1E" youtube="gr7DLw5i-1E" play-at="select"/>
+        </figure>
+        <reading-questions>
+            <exercise xml:id="quiz-format-1">
+                <statement>
+                    <p>How do you print the sentence <em>She said "yes" to my suggestion.</em> using the <c>printf()</c> command? Feel free to use the window below to try out some commands.</p>
+                    <cmecode startPoint="engs20p_basicIO1play" height="300"></cmecode>
+                </statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>printf("She said \"yes\" to my suggestion.");</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>printf("She said "yes" to my suggestion.");</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>printf("She said ""yes"" to my suggestion.");</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>printf("She said 'yes' to my suggestion.");</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+            </exercise>
+            <exercise xml:id="quiz-format-2">
+                <statement>
+                    <p>What happens when you don’t have enough variables to match the number of format specifiers in your format string? For example, what happens when you type:</p>
+                    <program language="c"><input>
+                        int age = 34;
+                        printf("I am %d years old and weight %f pounds.", age);
+                    </input></program>
+                    <p>Feel free to quickly write a program to try this out.</p>
+                    <cmecode startPoint="engs20p_basicIO5play" height="300"></cmecode>
+                </statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>The compiler will give a warning, but the program will run and print something.</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The program will compile but crash at runtime.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The compiler automatically substitutes the correct value for the missing variable.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The compiler will abort with an error message.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+            </exercise>
+        </reading-questions>
+        <p>Sometimes it is useful to use additional formatting options that are
+        available for format specifiers in order to control the output more precisely.</p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+                <ul>
+                    <li>Output using format specifiers can be formatted, using the syntax: </li>
+                </ul>
+                %[flag][width][.precision][type_mod]type
+                <ul>
+                    <li>Parameters in brackets [] are optional.</li>
+                    <li><idx><h>format</h><h>flag</h></idx>The <c>[flag]</c> can take on values such as <c>-</c>, <c>+</c>, <c>0</c> etc. For example, <c>-</c> (as in <c>%-d</c>) will cause the numerical output to be left-justified.</li>
+                    <li><idx><h>format</h><h>precision</h></idx>The <c>[.precision]</c> option can be used to specify, for a floating point number, the number of digits after the decimal point to be displayed. For example, <c>%.3f</c> will print three digits after the decimal point.</li>
+                    <li><idx><h>format</h><h>width</h></idx>The <c>[width]</c> option can be used to prescribe the number of spaces that the printed number will take up. The <c>[flag]</c> can determine how these numbers appear (i.e. left-justified).</li>
+               </ul>
+            </p>
+        </aside>
+        <video xml:id="YdY0a4e3Xmg" youtube="YdY0a4e3Xmg" play-at="select"/>
+        <reading-questions>
+            <exercise xml:id="quiz-format-3">
+                <statement>
+                    <p>What is the output of</p>
+                    <c>printf("a = %05d\n", 35);</c>
+                    <p>You should first think about this and try to figure out the answer by hand. Then feel free to use the window below to write a program to verify your answer. This time you have to write the entire program by yourself (hint: get started by copying and pasting from a previous program.)</p>
+                    <cmecode startPoint="engs20p_basicIO3play" height="300"></cmecode>
+                </statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>a = 00035</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>35</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>00035</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>a = 0535</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+            </exercise>
+            <exercise xml:id="quiz-format-4">
+                <statement>
+                    <p>What happens when you use the format specifier <c>%f</c> to print out an integer? (feel free to write a short C program to try this out).</p>
+                    <cmecode startPoint="engs20p_basicIO4play" height="300"></cmecode>
+                    </statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>The compiler will give a warning and output will most likely be incorrect.</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>No answer text provided.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The compiler will notice and abort the compilation with an error message.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The integer is automatically converted to a float and printed out correctly.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="format-scanf">
+        <title>Understanding <c>scanf()</c></title>
+        <p>Next, let's understand the <c>scanf()</c> function in more detail.</p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>The <c>scanf()</c> function is used to scan user input</li>
+                    <li>NEW SYNTAX: the following will scan for a user-inputted integer and store it in the already-declared variable named "input"</li>
+               </ul>
+               scanf("%d", &amp;input);
+            </p>
+        </aside>
+        <figure>
+            <idx><c>scanf()</c></idx>
+            <video xml:id="_5pfi_e7VyOc" youtube="5pfi_e7VyOc" play-at="select"/>
+        </figure>
+        <reading-questions>
+            <exercise xml:id="quiz-format-5">
+                <statement>
+                    <p>What is the correct way to have the user input an integer and store it in the variable <em>age</em>?</p>
+                    <p>Feel free to use the window below to try out some commands.</p>
+                    <cmecode startPoint="engs20p_basicIO2play" height="300"></cmecode>
+                </statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>scanf("%d", &amp;age);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>scanf("%d", age);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>scanf("%age", &amp;d);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>scanf("&amp;age");</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="format-style">
+        <title>Program Style</title>
+        <p><idx><h>program</h><h>style</h></idx>Style, which is how you format your source code, is an important consideration when writing computer programs. In the following Codecast, we will explore ways to craft easy-to-read code and why style is so important. Considerations such as indentation, where to place line breaks, grouping pieces of code together, choice of variable names, where to place comments are all part of coding style.</p>
+        <codecast href="1513367750109"/>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>Best practices for the style of your code</li>
+                    <li>i.e. consistent spacing, line breaks, indentation, and variable-naming conventions</li>
+               </ul>
+            </p>
+        </aside>
+        <investigation>
+            <statement>
+                <p>Time for some reflection:</p>
+                <p>Do you think your current style when coding is clean and easy-to-read, such as the example shown in the Codecast above, or do you think there's some room for improvement?</p>
+            </statement>
+            <answer>
+                <p>Either way, think about the example from the Codecast when you work on your next coding assignments. Great style will become increasingly important as the complexity of your code increases!</p>
+            </answer>
+        </investigation>
+        <p><nbsp/></p>
+        <p><nbsp/></p>
+    </section>
+
+    <section xml:id="format-summary">
+        <title>Summary</title>
+        <p>In this chapter, we covered the following topics:</p>
+        <ul>
+            <li>Format specifiers in format strings, for example <c>%d</c>, <c>%f</c>, <c>%c</c> along with optional parameters</li>
+            <li>Formatted output, i.e. width, precision, etc.</li>
+            <li>The <c>scanf()</c> function in detail</li>
+            <li>Styling your code itself</li>
+        </ul>
+    </section>
+</chapter>

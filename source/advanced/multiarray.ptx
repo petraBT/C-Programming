@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="multiarray">
+	<title>Multidimensional Arrays</title>
+	<introduction>
+		<p><idx>multidimensional array</idx>Sometimes we may wish to store data that is more complex than a simple list. For example, in order to analyze your home improvement weatherization efforts you might be interested in recording the temperature in you room on a grid of <m>(x,y)</m> coordinates. For such purposes C (and other programming languages) offers the concept of a multidimensional array. A two-dimensional array, for example, would have a certain number of rows and columns, compared to a one-dimensional array which just has elements in a single row. In this chapter, we will explore the possibilities that multidimensional arrays introduce to our code and practice using them in various scenarios.</p>
+    </introduction>
+
+	<section xml:id="multiarray-strings">
+		<title>Arrays of Strings</title>	
+		<p>Recall that in C, a string is a NULL-terminated array of characters. Therefore, if we wanted to store multiple strings in an array, we'd need an array of strings, which is an array of arrays! This is also called a two-dimensional array.</p>
+		<p>Such an array of strings is declared as follows:</p>
+		<pre>
+			char name[NRECS][STRLEN];
+		</pre>
+		<p>Here, <c>name</c> is the name of the array, <c>NRECS</c> the number of strings to store, and <c>STRLEN</c> a bound on the length of the strings to be stored (remember to leave room for the NULL-terminator). </p>
+		<table>
+		  <idx>array of strings</idx> 
+		  <title>
+		    An Array of Strings
+		  </title>
+		  <tabular top="major" left="major" right="major">
+		  	<col width="10%" right="medium"/>
+		  	<col width="10%" right="medium"/>
+		  	<col width="10%" right="medium"/>
+		  	<col width="10%" right="medium"/>
+		  	<col width="10%" right="medium"/>
+		  	<col width="10%" right="medium"/>
+		  	<col width="10%" right="medium"/>
+		  	<col width="10%" right="medium"/>
+		  	<col width="10%" right="medium"/>
+		  	<col width="10%" />
+		    <row valign="top" bottom="medium">
+		      <cell>
+		        <c>P</c>
+		      </cell>
+		      <cell>
+		        <c>e</c>
+		      </cell>
+		      <cell>
+		        <c>t</c>
+		      </cell>
+		      <cell>
+		        <c>r</c>
+		      </cell>
+		      <cell>
+		        <c>a</c>
+		      </cell>
+		      <cell>
+		        <c>\0</c>
+		      </cell>
+		      <cell>
+		        <c></c>
+		      </cell>
+		      <cell>
+		        <c></c>
+		      </cell>
+		      <cell>
+		        <c></c>
+		      </cell>
+		      <cell>
+		        <c></c>
+		      </cell>
+		    </row>
+		    <row valign="top" bottom="medium">
+		      <cell>
+		        <c>A</c>
+		      </cell>
+		      <cell>
+		        <c>l</c>
+		      </cell>
+		      <cell>
+		        <c>e</c>
+		      </cell>
+		      <cell>
+		        <c>x</c>
+		      </cell>
+		      <cell>
+		        <c>\0</c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		    </row>
+		    <row valign="top" bottom="medium">
+		      <cell>
+		        <c>C</c>
+		      </cell>
+		      <cell>
+		        <c>h</c>
+		      </cell>
+		      <cell>
+		        <c>o</c>
+		      </cell>
+		      <cell>
+		        <c>c</c>
+		      </cell>
+		      <cell>
+		        <c>o</c>
+		      </cell>
+		      <cell>
+		        <c>l</c>
+		      </cell>
+		      <cell>
+		        <c>a</c>
+		      </cell>
+		      <cell>
+		        <c>t</c>
+		      </cell>
+		      <cell>
+		        <c>e</c>
+		      </cell>
+		      <cell>
+		        <c>\0</c>
+		      </cell>
+		    </row>
+		    <row valign="top" bottom="medium">
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		    </row>
+		    <row valign="top" bottom="major">
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		      <cell>
+		        <c> </c>
+		      </cell>
+		    </row>
+
+		  </tabular>
+		</table>
+		<p>The above sample table has <c>STRLEN=10</c> and <c>NRECS=5</c>.</p>
+		<p>You could <c>#define</c> <c>NRECS</c> and <c>STRLEN</c> at the top of your program if you wish, so that you could easily change these constants. For example:</p>
+		<program language="c"><input>
+			#define NRECS 100
+			#define STRLEN 50
+			char words[NRECS][STRLEN];
+		</input></program>
+		<p>declares an array of strings that can hold 100 strings of maximum length 50 characters (including the NULL-terminator). You could also simply write </p>
+		<program language="c"><input>
+			char words[100][50];
+		</input></program>
+		<p>The following video shows how to work with arrays of strings.</p>
+		<codecast href="1522698798801"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>To store one word we need a string, which is a one-dimensional array. Thus to store multiple words we need either multiple one-dimensional arrays or one two-dimensional array</li>
+		            <li>Multidimensional arrays can be initialized using loops</li>
+		            <li>NEW SYNTAX: the following line declares an array of strings, with [NRECS] = number of records and [STRLEN] = max. string length</li>
+		       </ul>
+		       <c>char name[NRECS][STRLEN];</c>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-multiarray-1">
+				<statement>
+					<p>Suppose you have declared an “array of strings” using the command</p>
+					<pre>char name[100][30];</pre>
+					<p>If you wanted to store the name “Taylor” in the topmost position of this array, how would you do so?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><pre>strcpy(name[0], "Taylor");</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>name = "Taylor";</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>name[0] = "Taylor";</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>strcpy(name[0][0], "Taylor");</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="multiarray-matrices">
+		<title>Matrices</title>
+		<p><idx>matrices</idx>Just like we can have a 2-dimensional array of characters (or array of strings), it is also possible to have multidimensional arrays of other datatypes. Here is an example of a 2-dimensional array of integers (also known as a matrix):</p>
+		<program language="c"><input>
+			int matrix[2][3];
+		</input></program>
+		<p>This declares (reserves space for) a 2-dimensional array of integers by the name of matrix, which has 2 rows and 3 columns. More generally, the following code could be used to declare a 2-dimensional array of integers with <c>NROWS</c> rows and <c>NCOLS</c> columns:</p>
+		<program language="c"><input>
+			int numbers[NROWS][NCOLS];
+		</input></program> 
+		<p>This of course assumes that somewhere in your code you have told the computer what values <c>NROWS</c> and <c>NCOLS</c> take, for example via</p>
+		<program language="c"><input>
+			#define NROWS 3
+			#define NCOLS 2
+		</input></program>
+		<p>at the top of your code.</p>
+		<p>The following video illustrates how to work with 2-dimensional arrays.</p>
+		<codecast href="1519416840248"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>A two-dimensional array of integers is a matrix!</li>
+		            <li>When using <c>scanf()</c> to allow the user to enter values into your array, don't forget about the <c>&amp;</c>!</li>
+		            <li>NEW SYNTAX: the following line reads an integer from the user entry and stores it into the matrix element at location <m>(row,col)</m></li> 
+		       </ul>
+		       scanf("%d", &amp;matrix[row][col])
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-multiarray-2">
+				<statement>
+					<p>Suppose that integers are stored using 4 bytes, and you are declaring a variable matrix using</p>
+					<pre>int matrix[7][9];</pre>
+					<p>How much space (in bytes) is reserved in memory by this declaration? Please enter just a number, do not enter the word 'bytes'.</p>
+				</statement>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="multiarray-initialize">
+		<title>Initializing Multidimensional Arrays</title>
+		<p><idx><h>multidimensional array</h><h>initialize</h></idx>It is possible to initialize a multidimensional array during declaration time. In fact, there are multiple ways to do so. The following four ways are actually all equivalent and all initialize a 2-dimensional array with the same values:</p>
+		<program language="c"><input>
+		    int matrix1[NROWS][NCOLS] = {{1,2}, {3,4}, {5,6}, {7,8} };
+      int matrix2[NROWS][NCOLS] = { {1,2},
+                                    {3,4},
+                                    {5,6},
+                                    {7,8}};
+      int matrix3[][NCOLS] = {{1,2}, {3,4}, {5,6}, {7,8} };
+      int matrix4[][NCOLS] = {1, 2, 3, 4, 5, 6, 7, 8};
+        </input></program>
+        <p>The Codecast below illustrates this further:</p>
+		<codecast href="1522700958321"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Multidimensional arrays can be initialized by enclosing values in (nested) curly brackets: <c>{}</c> </li>
+		            <li>i.e. <c>int matrix[4][2] = {{1,2}, {3,4}, {5,6}, {7,8}};</c></li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-multiarray-3">
+				<statement>
+					<p>Which of the following is correct?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><pre>int matrix[][2] = {5, 2, 7, 5, 3, 2, 8, 6};</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>int matrix[4][] = {5, 2, 7, 5, 3, 2, 8, 6};</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>int matrix = {5, 2, 7, 5, 3, 2, 8, 6};</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><pre>int matrix[][] = {5, 2, 7, 5, 3, 2, 8, 6};</pre></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="multiarray-functions"> 
+		<title>Passing Multidimensional Arrays to Functions</title>
+		<p><idx><h>multidimensional array</h><h>functions</h></idx>In order to pass a two-dimensional array to a function we need to let the computer know the number of columns in the array so that array addressing can be performed correctly. </p>
+		<p>Remember, a two-dimensional array is stored row by row, so as long as we know how many elements are stored in each row (that is, the number of columns), we (and also the computer) can find the start of the second row, the start of the third row, etc. The computer can therefore find the element at location <c>[i][j]</c> by going to row <c>i</c> and then counting off to element <c>j</c> of that row.</p>
+		<p>As you can see in the below code window, if a function is to receive a 2-dimensional array as a parameter then the function definition needs to include the number of columns of the array (but it does not need to be told the number of rows.) Just having this information the computer can perform array addressing correctly.</p>
+		<cmecode startPoint="engs20p_NmultidimensionalArraysFunctions0" addOn="&amp;nocheck=true" height="500"></cmecode>
+	</section>
+
+	<section xml:id="multiarray-practice">
+		<title>Practice Your Multidimensional Arrays!</title>
+		<p>The program below reads a text, word by word, from the file <c>"reverseText.txt"</c>, which is located on our code server. It then stores this text in an array of strings (thus a two-dimensional array of characters) and subsequently prints this text to the screen.</p>
+		<activity xml:id="activity-24-5-1-Practice_Multidimensional_Arrays">
+			<statement>
+				<p>Your first job is to write a function <c>printText()</c>, to which you pass the array of strings as well as the number of words stored in the array, and which prints the text to the screen (thereby making the corresponding lines in the main function redundant: you can delete those lines). </p>
+				<p> You may notice that the text makes no sense. Your second job, therefore, is to print the text in reverse. You only have to reverse the order of the words, not the characters in an individual word. Please use a function <c>printReverseText()</c> for this purpose.</p>
+				<cmecode startPoint="engs20p_NmultidimensionalArraysFunctions1" addOn="&amp;nocheck=true" height="500"></cmecode>
+				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="multiarray-summary">
+		<title>Summary</title>
+		<p>In this chapter, we covered the following topics:</p>
+		<ul>
+			<li>Initializing and using multidimensional arrays</li>
+			<li>Matrices and multidimensional arrays of various data types</li>
+			<li>Passing multidimensional arrays to functions</li>
+		</ul>
+	</section>
+</chapter>

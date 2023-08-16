@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="gettingstarted">
+    <title>Getting Started</title>
+
+    <introduction>
+        <p>Let's jump right on in. This is about C-programming. Learning is by doing. Need to practice. Tools described below.</p>
+    </introduction>
+
+    <section xml:id="gettingstarted-codewindows">
+        <title>Code Windows</title>
+        <p><idx>code windows</idx>Let's jump right on in. Take a look at the window below: we call this a <term>code window</term> since its purpose is for you to practice writing code. You'll soon see that these code windows come in all sorts of forms and shapes. Sometimes I'll give you some code to modify, sometimes I'll give you instructions on what code to write and sometimes I'll simply give you a blank code window in case you wish to try out some code on your own. Give it a try right now:</p>
+        <p>Feel free to press the <c>Run</c> button, make any change you wish, start from scratch using the <c>Start fresh</c> button, play around with the code in the window or anything else. Don't worry: you can't break anything! Just have fun.</p>
+        <cmecodehere>
+/* This is a Code Window.
+   You will practice a lot of coding in such windows.
+   If you press the "Run" button below the code will
+   be executed and a message to you displayed.
+*/
+#include &lt;stdio.h&gt;
+int main(void) {
+    printf("Welcome to C-Programming!");
+}
+        </cmecodehere>
+    </section>
+
+    <section xml:id="gettingstarted-codecasts">
+        <title>Codecasts</title>
+        <p><idx>Codecast</idx><term>Codecasts</term> are basically interactive coding tutorials. Each Codecast explains a C-programming topic and shows some examples. What distinguishes a Codecast from a regular video is that you can pause the playback at any point and modify the code that you see on screen at that time. Not only can you modify the code but you can also try out the effects that these modifications have on your program by compiling and running the modified code. Don't worry! This will soon make more sense to you. </p>
+        <p>This brief video explains how Codecasts work:</p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+                <ul>
+                    <li>The Codecast platform is introduced</li>
+                    <li>Interactive components are demonstrated</li>
+                    <li>Code editing mode is shown</li>
+                </ul>
+            </p>
+        </aside>
+        <figure>
+            <caption>What is a Codecast?</caption>
+            <video xml:id="iaZ5_8obpJU" youtube="iaZ5_8obpJU" play-at="select"/>
+            <!-- <video source="video/CodecastIntro.mp4" width="100%" preview="VideoDir/CodecastIntro.png"/> -->
+        </figure>
+    </section>
+
+    <section xml:id="gettingstarted-submissions">
+        <title>Submissions</title>
+        <p>During class, you will regularly work on coding activities. Oftentimes, there will be opportunities for you to submit your code or responses. Out of class, you will watch videos and work through short examples, many of which contain student response questions. Here is a sneak-peak at what the different submission boxes for code, responses, etc. will look like, so that you know what to expect:</p>
+        <subsection>
+            <title>Code Submissions</title>
+            <p>At the end of coding activities in class, you may be prompted to submit your code. This will be done through a specific in-class response system that we use in class. In case you'd like to keep track of your submissions inside this book we'll provde text submission boxes of the following form for these purposes. Please note that your submissions will be saved on the particular device you use but will not be visible for anyone else or persist when you switch devices or browsers.</p>
+            <activity xml:id="example">
+                <statement>
+                    <p><em>When you are done, please paste your code into the code submission box below.</em></p>
+                </statement>
+                <response/>
+            </activity>
+            <p>Sometimes you will be asked for your entire code and other times you may be asked to only paste in a certain piece of it, so be sure to read the prompt closely. And remember, these in-class submissions show your active participation during class and give us a live view into how the class is doing with the material, so be sure to always submit what you have, even if it doesn't quite work correctly!</p>
+        </subsection>
+        <subsection>
+            <title>Text Submissions</title>
+            <p>In addition to submitting some of your code during class, text responses are sometimes collected as well. For these cases, you will see a very similar submission box as with Code Submissions in class. In case you wish to keep track of your responses here in this book we'll again provdide submission boxes as before:</p>
+            <activity xml:id="example-submission-no-output">
+                <statement>
+                <p><em>Please paste your text submission into the box below.</em></p>
+                </statement>
+                <response/>
+            </activity>
+        </subsection>
+        <subsection>
+            <title>Pre-Class Canvas Quiz Previews</title>
+            <p>Before each class meeting, there are short Canvas quizzes that are accompanied by Codecasts, videos, and other materials. While these questions must be submitted on Canvas to receive credit, the same questions are shown throughout this book in their respective sections, alongside the relative content. While you are able to type in answers in the question boxes, this is only for your personal reference: you can mark down notes to yourself here for when you answer the Canvas quizzes, but <em>you must submit on Canvas to receive credit.</em> Here is what an example quiz preview question looks like:</p>
+            <reading-questions>
+              <exercise xml:id="quiz-example">
+                <title>Check your understanding</title>
+              <statement>
+                  <p>Where do you need to submit your answers to the Canvas quiz questions, which are previewed in the textbook?</p>
+              </statement>
+              <choices randomize="yes">
+                <choice correct="yes">
+                    <statement>
+                        <p>They must be submitted on Canvas</p>
+                    </statement>
+                    <feedback>
+                        <p>Great job!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>They must NOT be submitted on Canvas</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>They must be never be submitted on Canvas</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+            </choices>
+            <hint>
+                <p>Why do you think we call them Canvas quizzes?</p>
+            </hint>
+            </exercise>
+          </reading-questions>
+      </subsection>
+    </section>
+</chapter>

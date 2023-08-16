@@ -1,0 +1,18 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+   int n, sum;
+   n = 2;
+   sum = 0;
+
+   printf("Please enter an integer: ");
+   scanf("%d", &amp;n);
+
+   /* Please write your loop here. */
+
+
+   return(0);
+}
+</cme>

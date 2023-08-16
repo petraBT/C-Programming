@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="files">
+	<title>File I/O</title>
+	<introduction>
+		<p>So far the only way in which we have interacted with our computer programs is through user input, typed in using the keyboard at runtime. But there are other ways in which to make your code react to your own data. For example, you may have a file in which you are storing your grades and which you'd like to use as input to a program that calculates your GPA. We'll learn about working with files in this chapter. Specifically, we will focus on the following topics:</p>
+		<ul>
+			<li>How to write data to a file</li>
+			<li>How to read data from a file</li>
+			<li>How to check whether we have reached the end of a file (read all of the data in the file)</li>
+			<li>How to check whether a file is actually open for reading (yes, you read that right: you have to first get a file ready for reading in order to then read from it).</li>
+		</ul>
+    </introduction>
+
+    <section xml:id="files-intro">
+    	<title>File I/O Overview</title>
+    	<p>So far, the only way in which we have been able to supply data to our code is via interaction with the user at runtime. We call such program use "interactive" <m>-</m> the user supplies input.</p>
+    	<p>Input to a program can also come from a data file and this is sometimes called batch mode <m>-</m> <alert>a data file</alert> provides input to the code.</p>
+    	<p><alert>A data file</alert> <m>-</m> is stored somewhere and accessed by your program. The storage location could be your hard disk, a CD-ROM (remember those?), a flash drive, etc.</p>
+    	<p>In C, there are three steps that are necessary to execute in the following order when attempting to read from or write to a file:</p>
+    	<ol>
+    		<li>Open file</li>
+    		<li>Read/write to/from file</li>
+    		<li>Close file</li>
+    	</ol>
+    	<p>We will now learn about each of these steps in detail.</p>
+    	<investigation>
+    		<statement>
+    			<p>What do you think are some benefits gained from receiving input from a data file as opposed to interactive user input?</p>
+    		</statement>
+    		<answer>
+    			<p>There are many! We'll explore the benefits throughout this chapter and beyond.</p>
+    		</answer>
+    	</investigation>
+	</section>
+
+	<section xml:id="files-read">
+		<title>Reading from a File</title>
+		<p><idx><h>file</h><h><c>fopen()</c></h></idx><idx><h>file</h><h>read</h></idx>This program demonstrates how to open a file, read numbers from the file and then close the file.</p>
+		<p>How do we know how many numbers are stored in the file? In this particular example, we are told that there are 10 numbers stored in the file. Later, we will learn how to figure this information out on our own. Here is what the file looks like:</p>
+		<p>9 <nbsp/>56 <nbsp/>3 <nbsp/>8 <nbsp/>-11 <nbsp/>0 <nbsp/>-45 <nbsp/>55 <nbsp/>2 <nbsp/>78</p>
+		<cmecode startPoint="engs20p_NFileIO0" addOn="&amp;nocheck=true" height="500"></cmecode>
+		<subsection>
+			<title>Your Turn: Calculating the Average of the Numbers Read from the File</title>
+			<p>Now, suppose we wanted to find the average of the numbers read from the same file as above.</p>
+			<activity>
+				<p>Use the code window below to find that average!</p>
+				<cmecode startPoint="engs20p_NFileIO1" addOn="&amp;nocheck=true" height="500"></cmecode>
+			</activity>
+		</subsection>			
+	</section>
+
+	<section xml:id="files-read-practice">
+		<title>Practice Reading from Files</title>
+		<p>Now that you have seen an example of how to read numbers from a file and find their average it's time to practice some more. Pick one of the following options:</p>
+		<subsection>
+			<title>Option 1</title>
+			<activity xml:id="activity-15-4-1-Practice_Reading_From_Files_1">
+				<statement>
+					<p>Modify the program we just wrote so that it also computes the standard deviation of the numbers in the file.</p>
+					<p>Hint: To do so, <nbsp/>you'll first have to find the average (as we did before). Then, you have to <q>reset</q> the file by closing it and re-opening it, then you can read the file again and compute the standard deviation using the following:</p>
+					<ol>
+						<li>For each number you read from the file, subtract the average and square the result.</li>
+						<li>You need to find the average of <alert>those</alert> squared differences.</li>
+						<li>Take the square root of that average squared difference and you are done!</li>
+					</ol>
+					<cmecode startPoint="engs20p_NFileIO2" addOn="&amp;nocheck=true" height="400"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Option 2</title>
+			<activity xml:id="activity-15-4-2-Practice_Reading_From_Files_2">
+				<statement>
+					<p>Modify the program we just wrote so that, instead of finding the average of the numbers in the file, it finds the largest number in the file.</p>
+					<cmecode startPoint="engs20p_NFileIO3" addOn="&amp;nocheck=true" height="400"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Option 3</title>
+			<activity xml:id="activity-15-4-3-Practice_Reading_From_Files_3">
+				<statement>
+					<p>Modify the program we just wrote so that instead of reading numbers, it reads characters from the file <c>my_second_file.txt</c>. Print out the characters you read from the file one next to the other.</p>
+					<p>As before, for now we are telling you how many characters are in the file, namely 9. So that you know what to expect, here is what the contents of the file looks like:</p>
+					<pre>chocolate</pre>
+					<cmecode startPoint="engs20p_NFileIO4" addOn="&amp;nocheck=true" height="400"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="files-read-efficient">
+		<title>More Efficient File Reading</title>
+		<p><idx><h>file</h><h>EOF</h></idx><idx><h>file</h><h><c>fscanf()</c></h></idx>Normally, we won't know how many numbers are in a file before we open it, so how do we know when to stop reading from the file? It turns out, the <c>fscanf()</c> function actually tells us when we reach the end of the file via a return value of EOF. This is so important that I'll say it again: It is the the <alert>return value</alert> of the <c>fscanf()</c> function through which we'll know when the end of the file has been reached. It is <alert>not the value</alert> that was read. This is a super common cause for confusion so be sure to ask lots of questions and make sure you understand the difference. To sum up: Instead of using a <c>for</c> loop to read from the file, from now on we'll simply keep reading until we reach the end of the file, indicated by the return value of <c>EOF</c> of the <c>fscanf()</c> function.</p>
+		<p>Let's look at how this is done. This time, the file simply contains the following numbers:</p>
+		<p>6 <nbsp/>3 <nbsp/>-55 <nbsp/>4 <nbsp/>67 <nbsp/>299 <nbsp/>-4 <nbsp/>-7 <nbsp/>-3</p>
+		<p>Pretend you don't know how many numbers there are in the file.</p>
+		<cmecode startPoint="engs20p_NFileIO5" addOn="&amp;nocheck=true" height="500"></cmecode>
+		<p>Notice how the <c>fscanf()</c> function communicates with us in two ways: Values read from the file are transmitted to us via the variables (with ampersands in front of them) that appear inside the parentheses (in this case we call the variable <c>num</c>). On the other hand, the return value (which we store in the variable <c>result</c> here) signifies whether the end of the file has been reached. When this is the case, the return value equals <c>EOF</c>.</p>
+		<p>It is actually not even necessary to store the return value of the <c>fscanf()</c> function in a separate variable as we see in the even more compact way of writing the code below. But if you are more comfortable in using the extra variable then by all means, please do!</p>
+		<p>Here is a very efficient way to accomplish file reading until the end of the file:</p>
+		<cmecode startPoint="engs20p_NFileIO6" addOn="&amp;nocheck=true" height="500"></cmecode>
+	</section>
+
+	<section xml:id="files-exist">
+		<title>Check Whether a File Exists</title>
+		<p>How do we know whether our file is actually open? What if we misspelled the filename for example? Or what if something went wrong during opening of the file? Or what if the file doesn't even exist (but we thought it did)?</p>
+		<p><idx><h>file</h><h>check if exists</h></idx>We use the fact that <c>fopen()</c> returns a special value if it is not able to open the file for some reason. That special value is a <alert>NULL pointer</alert>.</p>
+		<investigation>
+			<statement>
+				<p>In <xref ref="branching-operators"/>, we learned that C interprets variables with the value of zero as false. Do you think that a null pointer will be interpreted as true or false?</p>
+			</statement>
+			<answer>
+				<p>False</p>
+			</answer>
+			<solution>
+				<p>There are only a few types and values of variables in C that are interpreted as false, and a null pointer is one of them!</p>
+			</solution>
+		</investigation>
+		<cmecode startPoint="engs20p_NFileIO7" addOn="&amp;nocheck=true" height="500"></cmecode>
+		<p>Note that in the case where the file isn't actually open (indicated by <c>fopen()</c> returning a value of <c>NULL</c>) there is no need to close the file. In fact, even attempting to close the file in this case would lead to a runtime error: feel free to try it out!</p>
+	</section>
+
+	<section xml:id="files-read-server">
+		<title>Reading from a File on the Server</title>
+		<p>So far all files to practice reading from have been provided for you via our convenient code windows. But if you wanted to read from a file that you yourself provide we'd reach the limitations of our code windows. Such work has to be done on the Thayer School servers (or with a C compiler installed on your computer). Let's practice file reading on the Thayer School servers. Recall that in order to work on the Thayer School servers you need to be connected to the Dartmouth Secure Network via a VPN connection. If you haven't already, be sure to start VPN.</p>
+		<p>Let's go back to our first file reading example (see the code window below) and make it work on the servers. To do so, we need to save the code on the server: let's call the program <c>fileRead0.c</c>, and we also need to save the data file on the server (that is the file containing the numbers): let's call that file <c>my_first_file.txt</c>. You can put the same numbers into the file that are in the file in the code window or you can pick any other 10 integer numbers and place them into a file.</p>
+		<cmecode startPoint="engs20p_NFileIO0" addOn="&amp;nocheck=true&amp;hide_run=true" height="400"></cmecode>
+		<p>Be sure to save both the source code and the data file inside the same directory. Then, log onto the server, navigate to the directory with these files, compile the source code using the command <c>compile fileRead0.c</c> and then run the code by simply typing <c>fileRead0</c> at the command prompt.</p>
+	</section>
+
+
+	<section xml:id="files-write">
+		<title>Writing to a File</title>
+		<p>So far we have read data from files. It is just as easy to write data to a file. The main differences to reading are:</p>
+		<ul>
+			<li><idx><h>file</h><h>write</h></idx>Use "w" (as in writing) in the <c>fopen()</c> statement instead of "r" (as in reading).</li>
+			<li><idx><h>file</h><h><c>fprintf()</c></h></idx>Use <c>fprintf()</c> to write to the file instead of <c>fscanf()</c> to read from the file.</li>
+		</ul>
+		<p>When writing to a file, the first step is to open the file using:</p>
+		<p><c>fopen(filename, "w");</c></p>
+		<p>Note that if the file does not exist prior to this command then it will be <alert>created</alert>. If it does exist already, then the existing file will be <alert>overwritten</alert> without any warning (you might lose important data this way!!).</p>
+		<p>Another way to write to a file is to open it for <q>appending</q>:</p>
+		<p><c>fopen(filename, "a");</c></p>
+		<p>This appends data to the file at its end (if the file exists) and otherwise creates a new file. Take a look at this example:</p>
+		<cmecode startPoint="engs20p_NFileIO8" addOn="&amp;nocheck=true" height="300"></cmecode>
+	</section>
+
+	<section xml:id="files-summary">
+		<title>Summary</title>
+		<p>In this chapter, we studied the following topics:</p>
+		<ul>
+			<li>How to open a file - either for reading or for writing</li>
+			<li>How to write data to a file</li>
+			<li>How to read data from a file</li>
+			<li>How to check whether we have reached the end of a file</li>
+			<li>How to check whether a file exists / is actually open for reading.</li>
+			<li>How to close a file</li>
+		</ul>
+	</section>
+</chapter>

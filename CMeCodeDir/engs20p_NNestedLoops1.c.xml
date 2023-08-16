@@ -1,0 +1,24 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    int year, month;
+    int month_total;
+    
+    month_total = 0;
+
+    for (year=2010; year &lt;= 2017; year++) {
+       printf("%d:  ", year);
+
+       for (month=1; month &lt;= 12; month++) {
+          printf(" %02d", month);
+          month_total++;
+       }
+       printf("\n");
+    }
+    printf("\n%d total months\n", month_total);
+    
+    return(0);
+}
+</cme>

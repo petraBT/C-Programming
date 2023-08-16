@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+/* insert prototype here */
+
+int main(void) {
+  int a;
+  
+/* insert function call here. */
+  
+  printf("a = %d. ", a);
+  return(0);
+}
+
+int myaddition(int x, int y)
+{
+     return(x+y);
+}
+</cme>

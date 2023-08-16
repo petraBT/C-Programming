@@ -1,0 +1,28 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+int main(void) {
+
+    int myGrades[4];
+    int yourGrades[4] = {100, 99,100, 94};
+    int badGrades[] = {2, 5, 3, 1};
+    int i;
+
+    /* Bad form: Don't do this:
+    int j,k, goodGrades[4] = {100, 100, 100, 100}; 
+    Better:
+    int j, k;
+    int goodGrades[4] = {100, 100, 100, 100};
+    */
+    
+    for (i=0; i&lt;4; i++) {
+        myGrades[i] = 0;
+    }
+    
+    for (i=0; i&lt;4; i++) {
+        printf("My: %d, Your: %d, Bad: %d\n", myGrades[i], yourGrades[i], badGrades[i]);
+    }
+    
+    return 0;
+}
+</cme>

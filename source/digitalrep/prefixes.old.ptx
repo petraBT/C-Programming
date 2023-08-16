@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="prefixes">
+	<title>Prefixes</title>
+	<introduction>
+        <p>Now that we have learned how three common data types (int, float, and char) are stored in memory, we will take a look at the memory itself and learn about some associated vocabulary conventions such as the use of the prefixes kilo, mega, giga, etc.</p>
+<!--        <p>Next, we will explore how logical operators and expressions work in C (and in coding, more generally). It turns out, our English language often makes certain assumptions when it comes to logic with which we are all familiar. But when talking to the computer we need to be more explicit so that our logic gets interpreted correctly.</p>
+        <p>Similarly, we will investigate how we can represent a true/false value in C using tools we have already discovered!</p>
+        <p>While we may want to know if our logical expression is true, we also may want to know if it is NOT true. We will take a look at how we can easily negate our logical expressions, so we will know if something is NOT true.</p> -->
+    </introduction>
+
+    <section xml:id="prefixes-intro">
+        <title>Prefixes</title>
+        <p><idx>byte</idx><idx>prefixes</idx>With different variables using up different amounts of space in memory and with storing (sometimes large amounts of) data comes the need for conventions to talk about the size of different amounts of data.</p>
+        <p>In this video you'll learn about prefixes such as exa, peta, etc.</p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                 <li>Different prefix conventions exist for computers, including the following:</li>
+                 <li>Kilo, Mega, Giga, Tera, Peta, Exa, Zetta, Yotta</li>
+                 <li>Kibi, Mebi, Gibi, Tebi, Pebi, Exbi, Zebi, Yobi</li>
+                 <li>the "Apple Convention"</li>
+                 <li>For example, a kilobyte (KB) is 1024 (<m>2^{10}</m>) bytes, but in Apple Convention, it is 1000 (<m>10^3</m>) bytes</li>
+               </ul>
+            </p>
+        </aside>
+        <video xml:id="HGPItnA7P4U" youtube="HGPItnA7P4U" play-at="select"/>
+        <table>
+          <title>
+            Prefixes
+          </title>
+          <tabular>
+            <row bottom="medium">
+              <cell halign="center" colspan="2" right="medium">
+                <alert>Prefix</alert>
+              </cell>
+              <cell halign="center" colspan="2" right="medium">
+                <alert>Size</alert>
+              </cell>
+              <cell halign="center">
+                <alert>Reference</alert>
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                byte
+              </cell>
+              <cell right="medium">
+                B
+              </cell>
+              <cell halign="right" right="medium">
+                8 bits
+              </cell>
+              <cell halign="center" right="medium">
+                (1)
+              </cell>
+              <cell>
+                1 character (ASCII)
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                Kilo
+              </cell>
+              <cell right="medium">
+                KB
+              </cell>
+              <cell halign="right" right="medium">
+                1024 bytes
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{10})</m>
+              </cell>
+              <cell>
+                1/4 page of text
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                Mega
+              </cell>
+              <cell right="medium">
+                MB
+              </cell>
+              <cell halign="right" right="medium">
+                1,048,576 bytes
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{20})</m>
+              </cell>
+              <cell>
+                1/4 song MP3
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                Giga
+              </cell>
+              <cell right="medium">
+                GB
+              </cell>
+              <cell halign="right" right="medium">
+                1,073,741,824 bytes
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{30})</m>
+              </cell>
+              <cell>
+                Old iPod
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                Tera
+              </cell>
+              <cell right="medium">
+                TB
+              </cell>
+              <cell halign="right" right="medium">
+                1.099<m>\times 10^12</m> bytes
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{40})</m>
+              </cell>
+              <cell>
+                Affordable storage
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                Peta
+              </cell>
+              <cell right="medium">
+                PB
+              </cell>
+              <cell halign="right" right="medium">
+                1.125<m>\times 10^15</m> bytes
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{50})</m>
+              </cell>
+              <cell>
+                SDSC HD
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                Exa
+              </cell>
+              <cell right="medium">
+                EB
+              </cell>
+              <cell halign="right" right="medium">
+                1.153<m>\times 10^18</m> bytes
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{60})</m>
+              </cell>
+              <cell>
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                Zetta
+              </cell>
+              <cell right="medium">
+                ZB
+              </cell>
+              <cell halign="right" right="medium">
+                1.181<m>\times 10^21</m> bytes
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{70})</m>
+              </cell>
+              <cell>
+                0.36 ZB = 1g of DNA
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                Yotta
+              </cell>
+              <cell right="medium">
+                YB
+              </cell>
+              <cell halign="right" right="medium">
+                1.209<m>\times 10^24</m> bytes
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{80})</m>
+              </cell>
+              <cell>
+                Avogadro's Number
+              </cell>
+            </row>
+          </tabular>
+        </table>
+        <p>It was estimated (in 2005) that the total amount of printed material in the world is about 5 EB.</p>
+        <p>Avogadro's Number: number of carbon-12 atoms in 12 grams of carbon-12 ~ <m>6 \times 10^{23}</m> ~ <m>2^{79}</m></p>
+        <p>1 YB = 2.01 * Avogadro's Number</p>
+        <p><em>Note the difference between</em> <m>1000 = 10^3</m> <em>and</em> <m>1024 = 2^{10}</m></p>
+        <p>1999 International Electrotechnical Commission (IEC) Amendment to include new base-2 prefixes:</p>
+        <table>
+          <title>
+            Amended Prefixes
+          </title>
+          <tabular>
+            <row bottom="medium">
+              <cell halign="center" colspan="2" right="medium">
+                <alert>Prefix</alert>
+              </cell>
+              <cell halign="center" right="medium">
+                <alert>Size</alert>
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                kibibyte
+              </cell>
+              <cell right="medium">
+                KiB
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{10})</m> = 1,024 bytes
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                mebibyte
+              </cell>
+              <cell right="medium">
+                MiB
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{20})</m>
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                gibibyte
+              </cell>
+              <cell right="medium">
+                GiB
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{30})</m>
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                tebibyte
+              </cell>
+              <cell right="medium">
+                TiB
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{40})</m>
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                pebibyte
+              </cell>
+              <cell right="medium">
+                PiB
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{50})</m>
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                exibyte
+              </cell>
+              <cell right="medium">
+                EiB
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{60})</m>
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                zebibyte
+              </cell>
+              <cell right="medium">
+                ZiB
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{70})</m>
+              </cell>
+            </row>
+            <row>
+              <cell right="medium">
+                yobibyte
+              </cell>
+              <cell right="medium">
+                YiB
+              </cell>
+              <cell halign="center" right="medium">
+                <m>(2^{80})</m>
+              </cell>
+            </row>
+          </tabular>
+        </table>
+        <p>100 TB ~ 90.9 TiB ~ 10% error</p>
+        <p>2009: Snow Leopard --- 1kB = 1000 bytes</p>
+        <investigation>
+            <statement>
+                <p>What are the potential benefits of each of these prefix conventions? Why do you think there is more than one convention?</p>
+            </statement>
+        </investigation>
+        <reading-questions>
+            <exercise xml:id="quiz-prefix-1">
+                <statement>
+                    <p>Find the difference between 3 Mebibyes and 3 Megabytes (in the Apple convention) and express this difference as a percentage of the 3 Megabytes. What is this percent error, rounded to the nearest whole number? Please enter the percentage number only, not the % sign.</p>
+                </statement>
+                <response/>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="prefixes-summary">
+        <title>Summary</title>
+        <p>In this chapter, we covered the following topics:</p>
+        <ul>
+            <li>Memory prefixes and conventions</li>
+        </ul>
+    </section> 
+</chapter>

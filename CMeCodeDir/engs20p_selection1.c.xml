@@ -1,0 +1,19 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+   float number;
+   int score;
+   number = 1;
+
+   printf("Please enter a number: ");
+   scanf("%f", &amp;number);
+
+   /* Your code here. */
+
+
+    printf("Your score is %d.", score);
+    return(0);
+}
+</cme>

@@ -1,0 +1,15 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    int i; 
+    
+    for (i = 0; i&lt;3; i++) {
+        printf("Hello, World!\n");
+        printf("Today is Saturday.\n");
+    }
+    
+    return(0);
+}
+</cme>

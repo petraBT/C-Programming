@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="floats">
+<title>Floats and Converting</title>
+    <introduction>
+        <p>Previously, we learned how integers are stored in the computer's memory, but what happens if we want to store numbers with digits after the decimal point, such as floats? In this chapter, we will take a look at how these floating point numbers are stored in memory.</p>
+        <p>Next, we will investigate how to switch a number of one datatype to that of another. After all, the integer 5 for example could also be written as the float 5.0. In the computer's memory, the 5 would be stored in binary 2's complement whereas the 5.0 would be stored in a totally different fashion (which we'll learn about in this lesson). We have seen that a number's datatype affects how arithmetic is performed (recall the strange division behavior in C? 5/2 = 2 but 5.0/2.0 = 1.5?) That's why it's necessary to know how to convert the datatype for example from an <c>int</c> to a <c>float</c> in C. This process is called <term>casting</term>.</p>
+        <p>Using floats, we can take on some simple mathematical calculations such as averages, without fear of running into the strange division behavior, such as averages.</p>
+    </introduction>
+
+    <section xml:id="floats-intro">
+        <title>Digital Representation of Floats</title>
+        <p>Recall the funny division behavior we notice in the C programming language when using integers. Feel free to play around in this code window to refresh your memory and experiment in order to analyze this behavior.</p>
+        <cmecode startPoint="engs20p_Ndivision1" addOn="&amp;nocheck=true" height="300"></cmecode>
+        <reading-questions>
+            <exercise xml:id="quiz-floatchar-1">
+                <statement>
+                    <p>Here is a quick review question: Using integer arithmetic, what is the result of 15/4?</p>
+                </statement>
+              <choices randomize="yes">
+                <choice correct="yes">
+                    <statement>
+                        <p>3</p>
+                    </statement>
+                    <feedback>
+                        <p>Correct!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>4</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>3.75</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>0.75</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+            </choices>
+            <hint>
+                <p>In an integer division only the integer part of the result is accounted for.</p>
+            </hint>
+            </exercise>
+
+            <exercise xml:id="quiz-floatchar-2">
+                <statement>
+                    <p>Another quick review question: In the C programming language, what is the result of 19/2.0?</p>
+                </statement>
+              <choices randomize="yes">
+                <choice correct="yes">
+                    <statement>
+                        <p>9.5</p>
+                    </statement>
+                    <feedback>
+                        <p>Correct!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>9</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>10</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>9R1</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+            </choices>
+            <hint>
+                <p>By writing 2.0 instead of 2 in the computation, the data type in which the operation is performed is automatically cast to a floating point which means that the result can also be a floating point number.</p>
+            </hint>
+            </exercise>
+            <exercise xml:id="quiz-floatchar-3">
+                <statement>
+                    <p>And another review question: Suppose that a and b are variables of type <c>int</c>, a has the value 8, b has the value 6. In the C programming language, what is the value of <c>(a+b)/3</c>?</p>
+                </statement>
+              <choices randomize="yes">
+                <choice correct="yes">
+                    <statement>
+                        <p>4</p>
+                    </statement>
+                    <feedback>
+                        <p>Correct!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>5</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>4.6</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>4.67</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+            </choices>
+            <hint>
+                <p>Because of the data types of a and b, an integer division is performed here.</p>
+            </hint>
+            </exercise>
+        </reading-questions>
+        <p>So far we have learned how integers (positive and negative) are stored in the computer's memory. How about decimal numbers, also known as floats?</p>
+        <p>In this next video you'll find out how floats are stored in memory!</p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                 <li>Storing floats in memory</li>
+                 <li><idx><h>digital representation</h><h>floats</h></idx>Floats take up 4 bytes of memory</li>
+                 <li>Double (more precise) take up 8 bytes</li>
+               </ul>
+            </p>
+        </aside>
+        <video xml:id="Gw2Nh9umWnQ" youtube="Gw2Nh9umWnQ" play-at="select"/>
+        <p>How are real numbers (floats) represented/stored in the computer?</p>
+        <p>Example: -5,032.4235</p>
+        <p>Write in scientific notation (decimal):</p>
+        <me>-5.0324235\times 10^3</me>
+        <p>where <c>-</c> is the sign, <c>5.0324235</c> is the "mantissa", and <c>3</c> is the exponent.</p>
+        <p>In binary, this representation takes on the following form:</p>
+        <me>-1.mantissa\times 2^{exp}</me>
+        <p>where <c>number</c> = <c>sign</c>*<c>1.mantissa</c>*<c>2^exponent</c></p>
+        <image source="images/FloatingPoint.png" width="90%"/>
+        <p>Special cases:</p>
+        <ul>
+            <li>Smallest possible exponent --> number = 0</li>
+            <li>Largest possible exponent  --> number = NaN (infinity)</li>
+        </ul>
+        <p><c>Float</c>: range of numbers varies, but ANSI minimum is <m>10^{-37}</m> to <m>10^{37}</m></p>
+        <p><c>Double</c>: often 8 bytes</p>
+        <p><em>Note: can declare</em> <c>long double</c> --- <em>not necessarily different from</em> <c>double</c></p>
+        <reading-questions>
+            <exercise xml:id="quiz-floatchar-5">
+                <statement>
+                    <p>The binary representation of the decimal number 0.75 is 0.11 (which basically stands for <m>2^{-1} + 2^{-2} = \frac{1}{2} + \frac{1}{4} = 0.75</m>). In scientific notation, this binary number would be written as: <me>1.1 * 2^{-1}</me> Suppose now that 0.75 is stored (in the binary representation) as a float. In this representation, choose the correct option for the following components of the float:</p>
+                    <p>
+                        <ul>
+                            <li>sign: <var width="6" /> (choose from positive / negative / zero)</li>
+                            <li>mantissa: <var width="2" /> (choose from 11 / 1 / -1 / -11)</li>
+                            <li>exponent: <var width="2" /> (choose from 11 / 1 / -1 / -11)</li>
+                        </ul>
+                    </p>
+                </statement>
+                <setup>
+                    <var>
+                        <condition string="positive">
+                            <feedback>
+                                <p>Indeed, 0.75 is a positive number.</p>
+                            </feedback>
+                        </condition>
+                        <condition string=".*">
+                            <feedback>
+                                <p>The sign refers to the entire number (not just the mantissa).</p>
+                            </feedback>
+                        </condition>
+                    </var>
+                    <var>
+                        <condition number="1">
+                            <feedback>
+                                <p>Indeed, the mantissa here is just 1 (the 1. part of 1.1 is assumed).</p>
+                            </feedback>
+                        </condition>
+                        <condition string=".*">
+                            <feedback>
+                                <p>The mantissa is the number after the 1., in front of the exponential.</p>
+                            </feedback>
+                        </condition>
+                    </var>
+                    <var>
+                        <condition number="-1">
+                            <feedback>
+                                <p>Indeed, the exponent here is -1.</p>
+                            </feedback>
+                        </condition>
+                        <condition string=".*">
+                            <feedback>
+                                <p>The exponent is the power to which 2 is raised here.</p>
+                            </feedback>
+                        </condition>
+                    </var>
+                </setup>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="floats-int-to-float">
+        <title>Converting Integers to Floats</title>
+        <p><idx><h>casting</h><h>int-to-float</h></idx><term>Casting</term> an integer to a float effectively changes the data type of the stored value from an <c>int</c> to a <c>foat</c>. Whereas the integer 5 is represented in the computer's memory using binary 2's complement for example, when you write (float)5 this resulting number is stored as mantissa and exponent in the way we just learned.</p>
+        <activity>
+            <p>What do you think happens the the value of the number when you cast an <c>int</c> to a <c>float</c>? Are digits beyond the decimal point added on?</p>
+            <cmecode startPoint="engs20p_Ndivision2" addOn="&amp;nocheck=true" height="400"></cmecode>
+            <p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+            <program xml:id="activity-6-2-1-Int-to-Float-no-output" language="octave" interactive="yes"/>
+        </activity>
+        <reading-questions>
+            <exercise xml:id="quiz-floatchar-4">
+                <statement>
+                    <p>Does the datatype of a variable change when you cast or is it just the number itself that is stored differently inside the computer? For example, if <m>a</m> and <m>b</m> are variables of type <c>int</c>, where a has the value 12, b has the value 4, what is the data type of the variable a after the operation <c>((float)a+b)/3</c> is performed?</p>
+                </statement>
+              <choices randomize="yes">
+                <choice correct="yes">
+                    <statement>
+                        <p>int</p>
+                    </statement>
+                    <feedback>
+                        <p>Correct!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>float</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>long</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>floating int</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+            </choices>
+            <hint>
+                <p>Does the data type of a change in this process?</p>
+            </hint>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="floats-float-to-int">
+        <title>Converting Floats to Integers</title>
+        <p><idx><h>casting</h><h>float-to-int</h></idx><term>Casting</term> a float to an integer sets the data type for that stored <c>float</c> as an <c>int</c> now, which means that instead of using mantissa and exponent to store the number, the binary 2's complement is used. What happens if the original float had decimal places after the decimal point? Will they get lost? Will rounding occur? Try it out:</p>
+        <cmecode startPoint="engs20p_Ndivision3" addOn="&amp;nocheck=true" height="300"></cmecode>
+        <activity xml:id="activity-6-3-1-Float-to-Int">
+            <statement>
+                <p>When you cast a <c>float</c> to an <c>int</c>, which of the following happens?</p>
+            </statement>
+            <choices randomize="yes">
+                <choice correct="yes">
+                    <statement>
+                        <p>Decimals are simply cut off.</p>
+                    </statement>
+                    <feedback>
+                        <p>Correct!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>The <c>float</c> is rounded down.</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>The <c>float</c> is rounded up.</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>I can't tell.</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+            </choices>
+            <hint>
+                <p>Just use the code window above to play around. Don't be afraid! You can't break anything!</p>
+            </hint>
+        </activity>
+    </section>
+
+    <section xml:id="floats-average">
+        <title>Averages</title>
+        <p><idx>average</idx>At this point, we have already learned all the tools needed to calculate the average of a set of numbers!</p>
+        <activity xml:id="activity-6-4-1-Averages">
+            <statement>
+            <p>Write a C program that finds the average of integers, entered by the user. First, the user should be asked to enter the number of integers they wish to average, then they should be asked to enter those integers and their average should be calculated.</p>
+            <p>Here is a sample run of your program (with <em>simulated user input</em>):</p>
+            <console>
+                <prompt>How many integers do you wish to average? </prompt>
+                <input>3</input>
+                <prompt>Please enter an integer: </prompt>
+                <input>8</input>
+                <prompt>Please enter an integer: </prompt>
+                <input>12</input>
+                <prompt>Please enter an integer: </prompt>
+                <input>101</input>
+                <output>The average is 40.333333.</output>
+            </console>
+            <p>Recall that the average needs to be of type float, please store it in the variable <c>ave</c> which has already been declared for your convenience.</p>
+            <cmecode startPoint="engs20p_NAGAverage" height="500"></cmecode>
+            <p><em>When you are done, please paste your code into the box below:</em></p>
+        </statement>
+            <response/>
+        </activity>
+    </section>
+
+    <section xml:id="floats-remainder">
+        <title>Remainders</title>
+        <p><idx>remainder</idx>A remainder is the amount that <q>remains</q> after division takes place. The mathematical operation that produces this remainder is called the <term>modulo operation</term>. Note that this is the fractional remainder, not a decimal value, so the result of the modulo operation should always be an integer. For example, the remainder when dividing 29 by 3 is 2 since 3 goes into 29 just 9 times and 29 - 9*3 = 2.</p>
+        <p>Suppose we want to know the remainder of the division of one integer by another. Can we do this with our current programming knowledge?</p>
+        <cmecode startPoint="engs20p_NRemainder" addOn="&amp;nocheck=true" height="300"></cmecode>
+        <investigation>
+            <statement>
+                <p>What is the remainder of 15/6?</p>
+            </statement>
+            <answer>
+                <p>3</p>
+            </answer>
+            <solution>
+                <p>Try it out in the code window above! We can check that the answer is 3, since we can see how many times 6 goes into 15.</p>
+                <p>15-6=9 <m>\rightarrow</m> 9-6=3 <m>\rightarrow</m> 6 doesn't go into 3, so 3 is the remainder.</p>
+            </solution>
+        </investigation>
+    </section>
+
+    <section xml:id="floats-summary">
+        <title>Summary</title>
+        <p>Here is what we covered in this chapter:
+            <ul>
+                <li>Digital representation of floats using mantissa and exponent</li>
+                <li>
+                    <p>Converting (casting) between data types 
+                        <ul>
+                            <li>
+                                <p>Example:
+                                    <ul>
+                                        <li><program language="c"><input>
+                                            int a = 3;
+                                            int b = 4;
+                                            float ave;
+                                            ave = ((float) a)/((float) b);
+                                        </input></program></li>
+                                    </ul>
+                                </p>
+                            </li>
+                        </ul>
+                    </p>
+                </li>
+                <li>
+                    <p>Modulo operation to find the remainder in integer division
+                        <ul>
+                            <li>
+                                <p>Example: 
+                                    <ul>
+                                        <li><program language="c"><input>
+                                            8%5 = 3
+                                        </input></program></li>
+                                    </ul>
+                                </p>
+                            </li>
+                        </ul>
+                    </p>
+                </li>
+            </ul>
+        </p>
+    </section>
+</chapter>

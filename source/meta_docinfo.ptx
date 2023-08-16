@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- The docinfo block is the analogue to the latex preamble -->
+<!-- This is where you can define macros and other book-wide -->
+<!--  settings.                                              -->
+<docinfo xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <!-- the other option is "long" which will produce an -->
+    <!-- entire front matter section with more headings   -->
+    <author-biographies length="short" />
+
+    <!-- A blurb like this should be authored with no markup whatsoever, -->
+    <!-- since it may migrate to unexpected places, like the back cover  -->
+    <!-- of a printed version.  Keep it simple.                          -->
+    <blurb shelf="cs">This is a book written in PreTeXt, to accompany our C-programming class ENGS 20.</blurb>
+
+    <!-- code does not consult managed directories, maybe these move to publisher file? -->
+    <!--
+    <covers front="external/original-front-cover-aata.pdf"
+            back="external/plain-back-cover-aata.pdf"/> -->
+
+<!-- macros for defining latex math shortcuts. It is good practice  -->
+<!-- to define these semantically, so that the macro relates to what-->
+<!-- it defines.                                                    -->
+<macros>
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+</macros>
+
+<!-- If you put any latex-image elements you can include preambles  -->
+<!-- for those in the next element.                                 -->
+<latex-image-preamble>
+  \usepackage{tikz, pgfplots}
+  \usetikzlibrary{positioning,matrix,arrows}
+  \usetikzlibrary{shapes,decorations,shadows,fadings,patterns}
+  \usetikzlibrary{decorations.markings} 
+</latex-image-preamble>
+
+<!-- It is possible to rename elements using the tags below -->
+  <rename element="inlineexercise" xml:lang="en-US">Code Submission</rename>
+  <rename element="example" xml:lang="en-US">Check Your Understanding</rename>
+  <rename element="reading-questions" xml:lang="en-US">Check Your Understanding</rename>
+  <rename element="exercises" xml:lang="en-US">Activity</rename>
+  <rename element="investigation" xml:lang="en-US">Investigate</rename>
+  <rename element="activity" xml:lang="en-US">Activity</rename>
+
+
+
+<!-- Specify the default type of cross reference:           -->
+  <cross-references text="type-global" />
+
+
+<!--
+  In the HTML version there is room for a picture or logo
+  in the upper left corner.  An image of a cover for a
+  physical version is a good choice to go here.  
+-->
+  <document-id>bonfert-taylor-ICP</document-id>
+  <brandlogo url="https://pretextbook.org" source="CProgrammingLogo.png" />
+
+<html>
+    <!-- Expects favicon/favicon-32x32.png, and favicon/favicon-16x16.png -->
+    <favicon/>
+</html>
+
+</docinfo>
+

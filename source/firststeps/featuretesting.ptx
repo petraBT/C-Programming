@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="featuretesting">
+    <title>Interactive Feature Testing</title>
+      <section>
+        <title>Interactive Stuff Testing </title>
+        <listing xml:id="program-codelens-c">
+            <caption>An C program, stepable with CodeLens</caption>
+            <program xml:id="c-hello-world-code-lens" interactive="codelens" language="c">
+                <input>
+                #include &lt;stdio.h&gt;
+
+                int main(void)
+                {
+                    puts("Hello, World!");
+                }
+                </input>
+            </program>
+        </listing>
+
+        <exercise label="coding-exercise-partial-one">
+            <title>Inline Coding Exercise, Partial</title>
+
+            <statement>
+                <p>Similar to above, but we provide a starting point for the exercise.</p>
+            </statement>
+            <program interactive="activecode" language="c">
+                <input>
+                 #include &lt;stdio.h&gt;
+
+                int main(void)
+                {
+                    puts("Hello, World!");
+                }
+                </input>
+            </program>
+            <answer>
+                <p>We're not really sure.  But it would begin as follows:</p>
+                <program language="c">
+                <input>
+                    #include &lt;stdio.h&gt;
+
+                    int main(void)
+                    {
+                        puts("Hello, World!");
+                    }
+                </input>
+                </program>
+            </answer>
+        </exercise>
+
+        <activity xml:id="coding-exercise-partial-two">
+            <title>Activity Coding Exercise</title>
+
+            <statement>
+                <p>Similar to above, but now as a complete Python program inside an <tag>activity</tag>.  This demonstrates the possibility to use any <q>project-like</q> block (<tag>project</tag>, <tag>activity</tag>, <tag>exploration</tag>, <tag>investigation</tag>), but not in the case when structured with <tag>task</tag>.</p>
+            </statement>
+            <program interactive="activecode" language="c">
+                <input>
+                #include &lt;stdio.h&gt;
+
+                int main(void)
+                {
+                    puts("Hello, World!");
+                }
+                </input>
+            </program>
+            <answer>We're still not really sure.</answer>
+        </activity>
+<exercises>
+      <title>Interactive Exercises</title> 
+      <exercise xml:id="matching-derivatives">
+            <title>Matching Problem, Derivatives</title>
+            <idx>matching derivatives</idx>
+            <statement>
+                <p>Match each function with its derivative.</p>
+            </statement>
+            <feedback>
+                <p>Did you compute the derivative of each function in the premises (left column)?</p>
+            </feedback>
+            <matches>
+                <match order="1">
+                    <premise><m>x^3-6x^2+5</m></premise>
+                    <response><m>3x^2-12x</m></response>
+                </match>
+                <match order="3">
+                    <premise><m>x^{-3}</m></premise>
+                    <response><m>-3x^{-4}</m></response>
+                </match>
+                <match order="2">
+                    <premise><m>(x+1)^2</m></premise>
+                    <response><m>2x+2</m></response>
+                </match>
+            </matches>
+        </exercise>
+
+        <exercise label="clickable-text">
+            <title>Clickable Areas, <q>Regular</q> Text</title>
+
+            <statement>
+                <p>Identify (by clicking, or by circling) all of the nouns in this quotation by Eleanor Roosevelt.</p>
+            </statement>
+
+            <areas>
+                <p><q>The <area>future</area> belongs to <area correct="no">those</area> who believe in the <area correct="yes">beauty</area> of <area correct="no">their</area> <area>dreams</area>.</q></p>
+            </areas>
+
+            <feedback>
+                <p>The incorrect words are pronouns.</p>
+            </feedback>
+        </exercise>
+
+
+        <exercise label="clickable-code">
+            <title>Clickable Areas, Code</title>
+
+            <statement>
+                <p>Identify (by clicking, or by circling) all of the assignment statements in this Python function.</p>
+            </statement>
+
+            <areas language="c">
+                <cline><area correct="no">int main(void) {</area></cline>
+                <cline>    <area correct="yes">i = 10;</area></cline>
+                <cline>    while (i > 4) {</cline>
+                <cline>        <area>i = i-1;</area></cline>
+                <cline>    <area correct="no">}</area></cline>
+                <cline>    <area correct="no">printf("%d\n", i);</area></cline>
+            </areas>
+
+            <feedback>
+                <p>Remember, the operator <c>=</c> is used for assignment.</p>
+            </feedback>
+        </exercise>
+
+        <exercise label="short-answer-question">
+            <title>Short Answer</title>
+
+            <statement>
+                <p>This sample book is configured to make some simple questions interactive on a capable platform, by adding a <tag>response</tag> element as a signal.</p>
+            </statement>
+            <response/>
+        </exercise>
+
+        <exercise label="fillin-integer">
+            <title>Fill-In, Integer Answer</title>
+
+            <statement>
+                <p>The game of bowling uses <var width="28"/> pins that you try to knock down. (This answer blank has been set to be very wide.)</p>
+            </statement>
+            <setup>
+                <var>
+                    <condition number="10">
+                        <feedback>
+                            <p>Arranged in a triangle, there are <m>1+2+3+4 = 10</m> pins, a so-called <term>triangular</term> number.</p>
+                        </feedback>
+                    </condition>
+                    <condition number="16">
+                        <feedback>
+                            <p><em>Close</em>! You may have used hexadecimal notation, when you did not really mean to.</p>
+                        </feedback>
+                    </condition>
+                    <condition string=".*">
+                        <feedback>
+                            <p>Incorrect.</p>
+                        </feedback>
+                    </condition>
+                </var>
+            </setup>
+        </exercise>
+
+        <exercise label="fillin-string-integer">
+            <title>Fill-In, String and Number Answers</title>
+
+            <statement>
+                <p>Complete the following line of a Python program so that it will declare an integer variable <c>age</c> with an initial value of <c>5</c>. (These two answer blanks have been set to be very short.)</p>
+                <p><var width="3"/> <c>age = </c> <var width="3"/><c>;</c></p>
+            </statement>
+            <setup>
+                <var>
+                    <condition string="int">
+                        <feedback>
+                            <p>A variable of type <c>int</c> is appropriate for whole number ages.</p>
+                        </feedback>
+                    </condition>
+                    <condition string=".*">
+                        <feedback>
+                            <p>Remember that C uses just the first three letters of the word <q>integer</q> to define an integral type.</p>
+                        </feedback>
+                    </condition>
+                </var>
+                <var>
+                    <condition number="5">
+                        <feedback>
+                            <p>An integer variable may be initialized to a value.</p>
+                        </feedback>
+                    </condition>
+                    <condition string=".*">
+                        <feedback>
+                            <p>Use <c>5</c> as the initial value of the variable.</p>
+                        </feedback>
+                    </condition>
+                </var>
+            </setup>
+        </exercise>
+
+        <exercise label="fillin-case-insensitive">
+            <title>Fill-In, Case-Insensitive Answer</title>
+
+            <statement>
+                <p>The word <var/> is the opposite of <q>yes</q>.  (Try a mixture of upper and lower-case letters.)</p>
+            </statement>
+            <setup>
+                <var case="insensitive">
+                    <!-- Note, no "p" in "feedback" -->
+                    <condition string="no">
+                        <feedback>The correct answers are  no, No, nO, and NO.</feedback>
+                    </condition>
+                    <condition string=".*">
+                        <feedback>Incorrect.</feedback>
+                    </condition>
+                </var>
+            </setup>
+        </exercise>
+
+        <exercise label="fillin-decimal">
+            <title>Fill-In, Decimal Answer</title>
+
+            <statement>
+                <p>The decimal number <var/> is an approximation of <m>\sfrac{1}{3}</m> to within three significant figures.  (<url href="https://en.wikipedia.org/wiki/Significant_figures" visual="en.wikipedia.org/wiki/Significant_figures">Wikipedia</url>).</p>
+            </statement>
+            <setup>
+                <var>
+                    <!-- Note, no "p" in "feedback" -->
+                    <condition number="0.333" tolerance="0.0005">
+                        <feedback>
+                            <p>Any value in the interval <m>0.333\pm 0.0005</m> is correct.</p>
+                        </feedback>
+                    </condition>
+                    <condition string=".*">
+                        <feedback>
+                            <p>Incorrect. Did you provide three <em>significant figures</em>?</p>
+                        </feedback>
+                    </condition>
+                </var>
+            </setup>
+        </exercise>
+
+    </exercises>
+    </section>
+
+    <section xml:id="gettingstarted-replit">
+        <title>Repl.it Testing</title>
+        <p><idx>Repl</idx><alert>Repl.it</alert> is an online coding platform that we are testing this term. Here is an example:</p>
+        <p><a href="https://replit.com/@pbonfert2/Test#main.c" target="_blank"><font color="blue">here</font></a>.</p>
+        <p>When posting questions, make sure to explain your issue in detail, but you may not post your whole code!</p>
+        <p>If you don't see a toolbar on the left side of the screen, click the triangle in the upper-left corner to expand the feed. This bar shows all the questions from your classmates!</p>
+        <p>Note: the first time using this tool, you will need to set up your account.</p>
+        <p><nbsp/></p>
+        <repl startPoint="1-Example-Converting-ints-to-floats"/>
+    </section>
+</chapter>

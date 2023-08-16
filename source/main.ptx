@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- This is the main file of the pretext template book provided -->
+<!-- by the `pretext new book` command.  The main.ptx here always-->
+<!-- starts with <pretext> tags.  In this example, the main file -->
+<!-- just imports other .ptx files which contain content. Open   -->
+<!-- those files to see more pretext features                    -->
+
+<pretext xml:lang="en-US" xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <!-- we first include a file which contains the docinfo element: -->
+  <xi:include href="./meta_docinfo.ptx" />
+
+  <!-- The <book> tags wrap all the content.  Change the @xml:id   -->
+  <!-- to some short (non-spaced) description of your book         -->
+  <book xml:id="engs20-book">
+    <!-- The book needs a title and can have a subtitle  -->
+    <title>Introduction to C-Programming</title>
+    <subtitle>As seen in ENGS 20</subtitle>
+
+    <!-- Now we include files containing each main devision.       -->
+
+    <!-- First a frontmatter for prefaces and such. Maybe comment  -->
+    <!-- out for now and write this when the book is more complete -->
+    <xi:include href="./meta_frontmatter.ptx" />
+
+    <part xml:id="part-firststeps">
+        <title>First Steps in C</title>
+        <xi:include href="./firststeps/gettingstarted.ptx"/>
+        <xi:include href="./firststeps/computershardwaresoftware.ptx"/>
+        <xi:include href="./firststeps/firstprogram.ptx"/>
+        <xi:include href="./firststeps/variables.ptx"/>
+        <!-- <xi:include href="./firststeps/featuretesting.ptx"/> -->
+    </part>
+
+    <part xml:id="part-digitalrep">
+        <title>Digital Representation of Data</title>
+        <xi:include href="digitalrep/integers.ptx"/>
+        <xi:include href="digitalrep/floats.ptx"/>
+        <xi:include href="digitalrep/chars.ptx"/>
+        <xi:include href="digitalrep/prefixes.ptx"/>
+    </part>
+
+    <part xml:id="part-fundamentals">
+        <title>Fundamentals</title>
+        <xi:include href="fundamentals/branching.ptx"/>
+        <xi:include href="fundamentals/adv_branching.ptx"/>
+        <xi:include href="fundamentals/format.ptx"/>
+        <xi:include href="fundamentals/functions.ptx"/>
+        <xi:include href="fundamentals/loops.ptx"/>
+    </part>
+
+    <part xml:id="part-server">
+        <title>Server-Based Coding</title>
+        <xi:include href="servercoding/linux.ptx"/>
+        <xi:include href="servercoding/fileio.ptx"/>
+        <xi:include href="servercoding/debug.ptx"/>
+    </part>
+
+    <part xml:id="part-advanced">
+        <title>Advanced Concepts</title>
+        <xi:include href="advanced/array.ptx"/>
+        <xi:include href="advanced/memory.ptx"/>
+        <xi:include href="advanced/pointers.ptx"/>
+        <xi:include href="advanced/strings.ptx"/>
+        <xi:include href="advanced/malloc.ptx"/>
+        <xi:include href="advanced/sortsearch.ptx"/>
+        <xi:include href="advanced/LA2.ptx"/>
+        <xi:include href="advanced/multiarray.ptx"/>
+    </part>
+
+    <part xml:id="part-enriched">
+        <title>Enriched Concepts</title>
+        <xi:include href="enriched/structures.ptx"/>
+        <xi:include href="enriched/array_structures.ptx"/>
+        <xi:include href="enriched/linked_lists.ptx"/>
+        <xi:include href="enriched/libraries.ptx"/>
+    </part>
+
+    <xi:include href="./meta_backmatter.ptx" />
+
+  </book>
+</pretext>

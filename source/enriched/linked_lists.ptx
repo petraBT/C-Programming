@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="linkedlists">
+	<title>Linked Lists</title>
+	<introduction>
+		<p>So far we have used arrays to store multiple items of the same data type. There are several situations you can imagine in which this is not ideal. Here are two such scenarios:
+			<ul>
+				<li>One problem with this method is that you have to declare the array in question (in your code with a fixed size or at runtime using dynamic memory allocation) and whichever way you do so, by the time you first use the array its length is locked in. Then what are you options if your array is full and you wish to add in another record? The only choice would be to ask for space for a bigger array, copy all of the information over and then add the new record. This is not exactly efficient. </li>
+				<li>Next, imagine that your array contains records that have been sorted by some criterion. Suppose you wanted to add a new record, and it would have to go somewhere in the middle of your array in order to maintain the sorting. You'd then have to move over all of the records that need to come after the new record in order to make room for the new record. Again, this is not a very efficient way to go about things. </li>
+			</ul>
+		</p>
+		<p>This is where linked lists might present a better way to store your data. A linked list provides a linear ordering of records without them having to be physically arranged that way in memory. In other words, rather than using the records' arrangement in memory to determine their ordering, each record keeps track of the location of the record that is to follow it in the linear ordering. This will all become clear shortly.</p>
+		<p>In this chapter, we will cover the following topics:</p>
+		<ul>
+			<li>Linked lists</li>
+			<li>Passing linked lists to functions</li>
+			<li>Simplifying and automating the creation of linked lists</li>
+			<li>Using linked lists to store extremely large numbers</li>
+			<li>Manipulating linked lists (i.e. search, sort, reverse)</li>
+		</ul>
+    </introduction>
+
+	<section xml:id="linkedlists-intro">
+		<title>Intro to Linked Lists</title>
+		<p>So far we have used arrays to store multiple items of the same data type. For example, we could use an array of characters to store the characters 'E', 'N', 'G', 'S', '2', '0' as depicted in the illustration below.</p>
+		<image source="images/linkedLists1.png" width="100%"/>
+		<p>Note that this is simply an illustration for the purpose of creating a conceptual understanding. Above the memory cells are the addresses of the memory locations - these are fictitious of course. In reality, memory addresses look a bit more complicated, for example something like <c>0x7ffcce3fe0a0</c> (which is just hexadecimal for a pretty large number).</p>
+		<p>When the elements of our array are stored right next to each other (as they are in the case of an array) then all the computer needs to find all of these elements is the address of the first element (and its datatype). With that information and the knowledge of how much room each element of this datatype takes up, the computer can calculate the address of subsequent elements and thereby access all of them (while it's the programmers job to keep track of the length of the array).</p>
+		<p>Suppose now that for some reason the elements of the array were not stored right next to each other in memory but rather scattered about as in the following illustration:</p>		
+		<image source="images/linkedLists2.png" width="100%"/>
+		<p>Without knowing <em>all of</em> the locations of the stored elements it would be impossible to know what (and where) the elements of the list are. This is where the idea of a <term>linked list</term> comes in. In a linked list it is the job of each element to keep track of the location of the next element in the list. Thus, if you know where the first element is located you can again traverse the entire list by asking the first element for the address of the second, the second element for the address of the third, and so forth. This idea is depicted in the next image:</p>
+		<image source="images/linkedLists3.png" width="100%"/>
+		<p>It is our job to keep track of the start, that is, the address of the first element of the list (in the image it is stored in a variable named <c>start</c>). Each element knows where the next element is stored, and the last element knows that it is last. This is all the information needed to access the entire list. We'll therefore group together whatever it is we'd like to store along with an additional address field which is there to store the location of the next element. We'll typically use a structure for this purpose as is depicted in the following image:</p>
+		<image source="images/linkedLists4.png" width="100%"/>
+		<p>The following video presents a first example of a linked list. Just as we did previously in class with arrays, we'll be storing coordinates of points in this example, but unlike the arrays we used in class for this purpose, this time around each individual point will be stored at some place assigned to it during run-time, and each point will keep track of the location of the subsequent point in order to maintain the ordering.</p>
+		<p><idx>linked lists</idx>In order to do so, we need to store the address of a point (the next point in the list) as part of (so as a member of) the structure that holds the coordinates of the point. We'll therefore work with the following structure in this example (note that we are switching coordinates to integers just to make the memory view nicer):</p>
+		<program language="c"><input>
+			struct point{
+			  int x;
+			  int y;
+			  struct point * next;
+			};
+		</input></program>
+		<codecast href="1521228105232"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>The structure that holds the data also includes a pointer to the next element</li>
+		            <li>A list must have a first element (we call it "start" here) and you need to remember where this is stored</li>
+		            <li>Once you can access the initial element of the list you can traverse the entire list by going from the first element to the second using the pointer stored in the first element, then from the second to the third using the pointer stored in the second element, all the way to the list's final element (indicated by a NULL pointer in place of the pointer to the next element).</li>
+		            <li>i.e. struct point * start, * ptr; are pointers to the start of the list and the next address in the list</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-linkedlist1-1">
+				<statement>
+					<p>Let's start with a quick review question.</p>
+					<p>Suppose the following declarations have been made:</p>
+					<program language="c"><input>
+						typedef struct {
+					      int x;
+					      int y;
+						} point_t;
+					</input></program>
+					<p>and</p>
+					<program language="c"><input>
+						point_t octagon[8];
+					</input></program>
+					<p>How would you assign the value 20 to the y-coordinate of the last point in the array <em>octagon</em>?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>octagon[7].y = 20;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>octagon[20].y = 7;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>octagon[20]->y = 7;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>octagon[7]->y = 20;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-linkedlist1-2">
+				<statement>
+					<p>Suppose that we have created a linked list of three student records using the structure definition below:</p>
+					<program language="c"><input>
+						struct student {
+					      char    name[50];
+					      int     birthYear;
+					      float   gpa;     
+					      struct student *next;
+						};
+					</input></program>
+					<p>Suppose also that the pointer <c>start</c> of type <c>struct student *</c> points to the first student in the list.</p>
+					<p>How would you print the name and GPA of the first student in the list?</p>
+					</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>printf("%s has a gpa of %f.", start->name, start->gpa);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>printf("%s has a gpa of %f.", *start->name, *start->gpa);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>printf("%s has a gpa of %f.", *start.name, *start.gpa);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>printf("%s has a gpa of %f.", start.name, start.gpa);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="linkedlists-functions">
+		<title>Pass Linked Lists to Functions</title>
+		<p><idx><h>linked lists</h><h>functions</h></idx>In the next video we'll see how to use functions in conjunction with linked lists. In particular, we'll enhance the previous example by moving the part that prints the linked list into a function.</p>
+		<codecast href="1521228847299"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>The start of the linked list is what gets passed to functions</li>
+		            <li>i.e. <c>printPoints(start);</c></li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-linkedlist1-3">
+				<statement>
+					<p>As in the previous question, you have created a linked list of three student records using the structure definition below:</p>
+					<program language="c"><input>
+						struct student {
+					      char    name[50];
+					      int     birthYear;
+					      float   gpa;     
+					      struct student *next;
+						};
+					</input></program>
+					<p>Suppose also that the pointer <c>start</c> of type <c>struct student *</c> points to the first student in the list.</p>
+					<p>How would you print the name and GPA of the <em>second</em> student in the list?</p>
+					</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                    <p><c>printf("%s has a gpa of %f.", start->next->name, start->next->gpa);</c></p> 
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>printf("%s has a gpa of %f.", start.next->name, start.next->gpa);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>printf("%s has a gpa of %f.", start.next.name, start.next.gpa);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>printf("%s has a gpa of %f.", start->next.name, start->next.gpa);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="linkedlists-autolink">
+		<title>Automate the Linking Process</title>
+		<p><idx><h>linked lists</h><h>automate</h></idx>We'll continue working with our linked list of points in the next video. This time we'll learn how to automate the linking process between the points with the help of a function.</p>
+		<codecast href="1521230782513"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Functions can be used to link one point to another point</li>
+		            <li>Functions can be used to add on (append) a new element to an existing list</li>
+		            <li>Whole lists are created by repeatedly appending a new element to the previous end of the list</li>
+		            <li>i.e. call a function, pass to it the current end of the list and the element to be appended, create the link inside the function and return the new end of the list (which is the element that was just added on)</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-linkedlist1-4">
+				<statement>
+					<p>Given the structure definition from the video,</p>
+					<program language="c"><input>
+						struct point{
+						  int x;
+						  int y;
+						  struct point * next;
+						};
+					</input></program>
+					<p>what is the return type of the following function:</p>
+					<program language="c"><input>
+						struct point * append (struct point * end, struct point * newpt) {
+						  end->next = newpt;
+						  return(end->next);
+						} 
+					</input></program>
+					</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>a pointer to an object of type <c>struct student</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>an object of type <c>struct student</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>an integer</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>a student</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="linkedlists-create">
+		<title>Create Linked Lists "On The Fly"</title>
+		<p><idx><h>linked lists</h><h>on-the-fly</h></idx>We are ready to put everything together! Rather than simply storing three points that were already known at compile time, we'll now ask the user to enter the number of points they wish to store and then create space in memory at run-time for each such point. Each newly created point (other than the first one, which is the start of the list), is linked to the list by saving its address at the previous element of the list.</p>
+		<codecast href="1521232711745"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Linked lists can be created with a <c>for</c>-loop and function</li>
+		            <li>The <c>for</c>-loop asks for the values in each element of the list, the function creates the element, and then the pointers are linked</li>
+		            <li><c>malloc()</c> is used to allocate memory for each element</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-linkedlist1-5">
+				<statement>
+					<p>You'd like to print all of the names of students whose records are stored in a linked list. As before, each student record is stored as</p>
+					<program language="c"><input>
+						struct student {
+					      char    name[50];
+					      int     birthYear;
+					      float   gpa;     
+					      struct student *next;
+						};
+					</input></program>
+					<p>You are given the following function in order to print the names of all students in the list:</p>
+					<program language="c"><input>
+						void printNames(struct student *start) {
+						  while (start->next!=NULL) {
+					        printf("%s\n", start->name); 
+					        start = start->next;
+						  }
+						}
+					</input></program>
+					<p>Which of the following is true about the above function?</p>
+					</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>The function doesn't print the name of the last student in the list if the list is nonempty.</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The function is implemented incorrectly because it changes start.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The function will print a random name when the list is empty.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-linkedlist1-6">
+				<statement>
+					<p>Suppose you wanted to delete the third student in a linked list of five student records. Why can’t you just free the space allocated for the third student?</p>
+					</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>By deleting the third student you'd loose access to the remaining students in the list. Instead, you'd need to link the second student to the fourth student in the list (and in order to do so, you need to know where the third student was pointing).</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The compiler won’t let you do that.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>It is impossible to delete a student from a linked list of students. That's why arrays are better than linked lists.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>You need to use the command free instead of simply deleting the student. As long as you use free you are okay.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="linkedlists-large-ints">
+		<title>Arbitrarily Large Integers</title>
+		<activity xml:id="activity-27-5-1-Data_Type_Limits-no-output">
+			<statement>
+			<p>Recall that the data types <c>int</c> and <c>long int</c> have limits on the size of numbers they can store. Why again is this so?</p>
+			<p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+			</statement>
+        	<response/>
+		</activity>
+		<p><idx><h>linked lists</h><h>digits</h></idx>In order to be able to store arbitrarily large integers we'll create a linked list of digits. This will allow us to store as many digits as we'd like (up to the amount of memory available in the computer of course.)</p>
+		<activity xml:id="activity-27-5-2-Linked_List_Large_Ints-no-output">
+			<statement>
+				<p>Define a structure struct digit suitable for this purpose.</p>
+				<p><em>When you are done, please paste your structure into the code submission box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="linkedlists-digits">
+		<title>Create Digits in Memory</title>
+		<p>It's time to create some digits! Remember, each digit can store the actual numerical value to be saved as well as a pointer to the next digit in the number.</p>
+		<activity xml:id="activity-27-6-1-Linked_List_Create_Digits">
+			<statement>
+				<p>Please write the function <c>createDigit()</c> which receives an integer (0-9) as an argument and which creates space in memory for a digit of type <c>digit_t</c>. The function should store the integer passed into it in this newly created digit and then return the address of this digit to the calling function. The function should furthermore initialize the pointer <c>next</c> as the NULL pointer, just to be safe.</p>
+				<cmecode startPoint="engs20p_NLinkedListsNumbers1" addOn="&amp;nocheck=true" height="900"></cmecode>
+				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="linkedlists-append">
+		<title>Append Digits to List</title>
+		<p>Now that we can create new digits in  memory, the next step is to be able to link digits together into a number (= a linked list of digits). We'll take an iterative approach in which we simply keep adding on digits to the current end of our list of numbers.</p>
+		<activity xml:id="activity-27-7-1-Linked_List_Append_To_List">
+			<statement>
+				<p>Please write the function <c>append()</c> which takes two <c>digit_t</c> pointers as arguments:</p>
+				<ul>
+					<li>a pointer to the current last element of the list</li>
+					<li>a pointer to the element that is to be appended to the list</li>
+				</ul>
+				<p>Since by appending a new digit the end of the list will change, the function needs to return a pointer to the new last element of the list. Please also print the (three-digit) number stored in the newly created list and next free the space reserved for all digits.</p>
+				<cmecode startPoint="engs20p_NLinkedListsNumbers2" addOn="&amp;nocheck=true" height="900"></cmecode>
+				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="linkedlists-print">
+		<title>Function to Print a Number</title>
+		<p>So far we have only printed a 3-digit number by dereferencing successively the pointers to the three digits. This is not something that could be generalized to an arbitrarily long number and that's why next our goal is to print an arbitrary number using a function to which we only pass a pointer to the first digit of the number.</p>
+		<activity xml:id="activity-27-8-1-Linked_List_Print_Function">
+			<statement>
+				<p>Let's move the printing of our number into a function. The function should work for arbitrarily long numbers, not just for our 3-digit number. Please write a function <c>printNumber()</c> to which you pass a pointer to the first digit of your number and which prints all of the digits of the number to the screen. The function does not need to return anything.</p>
+				<cmecode startPoint="engs20p_NLinkedListsNumbers3" addOn="&amp;nocheck=true" height="900"></cmecode>
+				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="linkedlists-free">
+		<title>Function to Free a Number</title>
+		<p>Remember: Whenever you reserve space dynamically (at run-time) using a function such as <c>malloc()</c> it is also your responsibility to free the reserved space once you are done using it.</p>
+		<activity xml:id="activity-27-9-1-Linked_List_Free">
+			<statement>
+				<p>Next, let's move the freeing of all allocated space for a number into a function. The function should again work for arbitrarily long numbers, not just for our 3-digit number. Please write a function <c>freeNumber()</c> to which you pass a pointer to the first digit of your number and which frees the space allocated for all of the digits of the number. The function does not need to return anything.</p>
+				<cmecode startPoint="engs20p_NLinkedListsNumbers4" addOn="&amp;nocheck=true" height="900"></cmecode>
+				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="linkedlists-input">
+		<p>To finish our implementation of arbitrarily large integers using linked lists we'll need a way for the user to enter such a number at run-time of the program.</p>
+		<title>Read a Number from Input</title>
+		<activity>
+			<p>Here is a function which reads an arbitrarily long integer from the user input and stores it in a linked list of digits.</p>
+			<cmecode startPoint="engs20p_NLinkedListsNumbers5" addOn="&amp;nocheck=true" height="900"></cmecode>
+		</activity>
+	</section>
+
+	<section xml:id="linkedlists-search">
+		<title>Search a Number for a Digit</title>
+		<p>Now that we can enter, store and free arbitrarily large integers we can also start working with such numbers.</p>
+		<activity>
+			<p>Please write a function <c>searchNumber()</c> which decides whether a given digit can be found in the number. The function should take as inputs a pointer to the beginning of a number-linked-list as well as the digit to be searched for, and it should return a pointer to the first location where the digit was found or else, if the digit was not found, the NULL pointer.</p>
+			<cmecode startPoint="engs20p_NLinkedListsNumbers6" addOn="&amp;nocheck=true" height="900"></cmecode>
+		</activity>
+	</section>
+
+	<section xml:id="linkedlists-reverse">
+		<title>Reverse a Linked List</title>
+		<p><idx><h>linked lists</h><h>reverse</h></idx>In this video we'll continue working on our arbitrarily long integers and examine how to create a backward copy of one such integer.</p>
+		<p>Note that the <c>typedef</c> command does not work properly in the environment in which this lecture is recorded, hence its use is avoided for the purpose of the recordings only.</p>
+		<codecast href="1521831954448"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>A linked list can be reversed by reordering the pointers that connect the list</li>
+		            <li>Check out either the Codecast or printed code for the full and lengthy example!</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-linkedlist2-1">
+				<statement>
+					<p>Given the definition of a linked list of digits as in the video, what does the following function do if called with the address of the first digit of a linked list of digits?</p>
+					<program language="c"><input>
+						void whatAmIDoing(struct digit * start) {
+						  if(start != NULL) {
+						    whatAmIDoing(start->next);
+						    printf("%d", start->num);
+						  }
+						}
+					</input></program>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>It prints the entire number stored in the linked list in reverse order.</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>It prints every other digit of the number stored in the linked list.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>It prints every other digit of the number stored in the linked list, in reverse order.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>It prints the entire number stored in the linked list.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>It produces an endless loop.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-linkedlist2-2">
+				<statement>
+					<p>Given again the definition of a linked list of digits as in the video, the following function <c>reverse()</c> is supposed to reverse a linked list of digits in place, that is, without creating a copy of the list. There is one line missing at the end of the function.</p>
+					<program language="c"><input>
+						struct digit * reverse(struct digit * start) {
+						  struct digit * prev = NULL;
+						  struct digit * current = start;
+						  struct digit * next;
+						  while (current != NULL) {
+						    next = current->next; 
+						    current->next = prev; 
+						    prev = current;
+						    current = next;
+						  }
+						  /*ADD LINE HERE*/
+						}
+					</input></program>
+					<p>What should be added in place of <c>/*ADD LINE HERE*/</c>, so that the function correctly reverses the number?</p>
+					</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>return(prev);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>return(next);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>return(current);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>return(NULL);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="linkedlists-sort">
+		<title>Sort Linked Lists</title>
+		<p><idx><h>linked lists</h><h>sort</h></idx>In this final video on linked lists we'll explore how to create a sorted copy of a linked list, using the <term>insertion sort</term> algorithm.</p>
+		<codecast href="1521834640368"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Sort a linked list by successively inserting digits into their new, sorted, locations using functions and <c>while</c>-loops</li>
+		            <li>Check out either the Codecast or printed code for the full and lengthy example!</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-linkedlist2-3">
+				<statement>
+					<p>We'll learn about libraries next! You have already seen some libraries, amongst them the mathematics library <c>math</c>.</p>
+					<p>Please explore some of the functions in the standard C math library (you'll need to search the internet). In particular, what is the difference between the two functions <c>atan()</c> and <c>atan2()</c>?</p>
+					</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>Both find the inverse tangent, but <c>atan2()</c> is able to place it into the correct quadrant.</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>Both find the inverse tangent, but <c>atan2()</c> squares the result.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>Both find the inverse tangent, but one is in radians, the other in degrees.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>Both find the inverse tangent, but <c>atan2()</c> first multiplies by 2.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="linkedlists-summary">
+		<title>Summary</title>
+		<p>In this chapter, we covered the following topics:</p>
+		<ul>
+			<li>Linked lists</li>
+			<li>Passing linked lists to functions</li>
+			<li>Simplifying and automating the creation of linked lists</li>
+			<li>Using linked lists to store extremely large numbers</li>
+			<li>Manipulating linked lists (i.e. search, sort, reverse)</li>
+		</ul>
+	</section>
+</chapter>

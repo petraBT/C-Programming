@@ -1,0 +1,12 @@
+<?xml version='1.0'?>
+<cme>
+/* Use the function showMyFile("filename") to display your file!*/
+
+#include &lt;stdio.h&gt;  // for printf, scanf
+#include &lt;stdlib.h&gt; // for malloc, free
+#include &lt;string.h&gt; // for strlen, strcpy
+int main(void) {
+    
+    return 0;
+}
+</cme>

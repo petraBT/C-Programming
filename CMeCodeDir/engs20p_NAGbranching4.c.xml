@@ -1,0 +1,19 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+   int miles=0;
+   float price;   /* Please use this variable for your car rental price. */
+
+   printf("Please enter the number of miles you wish to drive: ");
+   scanf("%d", &amp;miles);
+   printf("You entered %d. ", miles);
+
+   /* Your code here. */
+
+    
+
+  return(0);
+}
+</cme>

@@ -1,0 +1,28 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void)
+{
+    /* Complete the code below. Remember to declare any 
+       additional variables needed. */
+    float ave;
+    int N, num, i;
+    
+    printf("How many integers do you wish to average?");
+    scanf("%d", &amp;N);
+ 
+    for (i=0; i&lt;N; i++) {
+        printf("Please enter an integer: ");
+        scanf("%d", &amp;num);
+        
+    }
+    
+ 
+ 
+ 
+    printf("The average is %f.\n", ave);
+
+   return(0);   
+}
+</cme>

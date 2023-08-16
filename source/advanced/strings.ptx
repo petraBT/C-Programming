@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="strings">
+	<title>Strings</title>
+	<introduction>
+		<p>Though we have learned how to scan, store, and print individual characters, we may want to work with (have the user enter, store, print) whole words, phrases, or even sentences. That's where strings come into the picture. A string is basically an array or characters with a special feature.</p>
+		<p>In this chapter, we will learn about <c>strings</c>, their features, and how to use them in our code.</p>
+    </introduction>
+
+	<section xml:id="strings-intro">
+		<title>Declaring and Initializing Strings</title>
+		<p><idx>strings</idx>Suppose you wanted to store a name (for example "Petra") in the computer's memory. Of course you could simply declare five individual characters and assign the letters of the name to them. But that's not very convenient and we already know that an array of characters would be a much better option. We could then simply use a loop to print out all of the characters one-by-one. The only slight issue would be that we'd have to keep track of the length of the name somewhere in order to be able to tell the loop how many times to run. Not a huge deal really, and we are already used to doing so for other arrays.</p>
+		<p>But C actually provides some additional functionality for storing so-called strings that makes it unnecessary to separately keep track of the length of the string. How? An extra character (the null terminator <c>\0</c>) is placed after the last character in the array in order to indicate the end of the string. And so:</p>
+		<p>A string is an array of type char that is terminated with the null character <c>\0</c>. By the way, the null terminator (character) is the character in the ASCII table with ASCII code 0.</p>
+		<p>We have already been using string constants (that cannot be changed), for example:</p>
+		<pre>
+			printf("This is a string constant.\n");
+		</pre>
+		<p>But it is very useful to have variables that can hold strings (for example, filenames). In the following example we use a variable of type string (so really, an array of characters), to hold a first name and a last name. You can see from the example how you can initialize such a variable at <em>declaration time</em>. Sadly things won't be quite as easy elsewhere in our code but more on that later.</p>
+		<cmecode startPoint="engs20p_Nstrings1" addOn="&amp;nocheck=true" height="300"></cmecode>
+		<investigation>
+			<statement>
+				<p>How much space is allocated in memory for the string <c>firstName</c> if each char uses 1 byte?</p>
+			</statement>
+			<answer>
+				<p>6 bytes</p>
+			</answer>
+			<solution>
+				<p>The contents of this string include the name we are storing, "Petra", followed by the null character <c>\0</c> which signifies the termination of the string. Each character uses 1 byte, so together we have 5 bytes for the name plus one for the null character. That adds up to 6 bytes total!</p>
+				<p>Feel free to check this logic using the <c>sizeof()</c> function and the <c>%zu</c> format specifier, as discussed in <xref ref="memory-space"/>.</p>
+			</solution>
+		</investigation>
+	</section>
+
+	<section xml:id="strings-assign">
+		<title>Assign a New Value</title>
+		<p><idx><h>strings</h><h>update</h></idx>Just like the variables we have previously worked with, strings can also be updated after they are initialized.</p>
+		<activity xml:id="activity-20-1-1-New_String_Value-no-output">
+			<p>Can you assign a new string value to <c>firstName</c> in the code? For example, can you use the following line?</p>
+			<pre>firstName = "Alex";</pre>
+			<cmecode startPoint="engs20p_Nstrings1" addOn="&amp;nocheck=true" height="300"></cmecode>
+			<p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+            <response/>
+		</activity>
+		<investigation>
+			<statement>
+				<p>We declare strings as arrays of type <em>char</em>, so is it possible to include numbers within these strings? For example, could we declare the following string?</p>
+				<pre>char firstName[] = "Simon1234";</pre>
+				<p> </p>
+			</statement>
+			<answer>
+				<p>Yes, numbers can be included!</p>
+			</answer>
+			<solution>
+				<p>Numbers are characters too, so they can be included in strings. This logic is not reversible, however, so you cannot include letters within a numerical array (such as an integer array).</p>
+				<p>Try it out above by declaring a string with numbers in it and an integer array with letters in it.</p>
+			</solution>
+		</investigation>
+	</section>
+
+	<section xml:id="strings-library">
+		<title>The String Library</title>
+		<p><idx><h>strings</h><h>library</h></idx><idx><h>libraries</h><h>string</h></idx>We just saw that we cannot update the value of a string with a simple assignment operation (as in <pre>firstName = "Alex"</pre>) in our code. Only during the declaration phase is it possible to initialize using this method (as in <c>char firstName[20] = "Alex";</c>).</p>
+		<p>Thankfully, C comes with a whole library of functions to help in our work with strings, the <alert>C string library</alert>. It provides many useful functions that allow us to work with strings. In order to use functions from this library we need to tell the computer that we'll be doing so with the following line at the top of our code:</p>
+		<pre>#include &lt;string.h&gt;</pre>
+		<p>The following example shows how we can use the string library to update the value of a string within our code:</p>
+		<cmecode startPoint="engs20p_Nstrings2" addOn="&amp;nocheck=true" height="300"></cmecode>
+	</section>
+
+	<section xml:id="strings-practice">
+		<title>Practice Your Strings!</title>
+		<activity xml:id="activity-20-4-1-String_Practice-no-output">
+			<p>Take a look at the code and then hit the <c>Run</c> button. Is that the output you expected? What is going on with the code here?</p>
+			<cmecode startPoint="engs20p_Nstrings3" addOn="&amp;nocheck=true" height="300"></cmecode>
+			<p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+            <response/>
+		</activity>
+	</section>
+
+	<section xml:id="strings-length">
+		<title>String Length</title>
+		<p><idx><h>strings</h><h>length</h></idx>C can find the length of a string for you! Of course, you could do so yourself. This means that strings are fundamentally different from general arrays, in that their length can be determined due to the placement of the null character at the end of each string.</p>
+		<cmecode startPoint="engs20p_Nstrings4" addOn="&amp;nocheck=true" height="300"></cmecode>
+		<investigation>
+			<statement>
+				<p>Without using <c>strlen()</c>, how could you find the length of a string?</p>
+			</statement>
+			<hint>
+				<p>Remember, all strings are terminated by the null character <c>/0</c>.</p>
+			</hint>
+			<answer>
+				<p>Try your solution in the code window above, then compare it to the length provided when using <c>strlen()</c> to ensure your solution works.</p>
+			</answer>
+		</investigation>
+	</section>
+
+	<section xml:id="strings-input">
+		<title>Reading Strings from Input</title>
+		<p><idx><h>strings</h><h>read from input</h></idx><idx><h>format</h><h>specifiers</h><h><c>%s</c></h></idx>The <c>scanf()</c> function can be used to read a string from the user input using the <c>%s</c> format specifier. By default, reading stops when white space (i.e. a space, return, etc.) is encountered. There are many options to modify this behavior so that the reading stops based on different conditions (if interested: Google).</p>
+		<p>The below example shows how to read a two words (a first name and a last name) from the user input and store them in corresponding strings.</p>
+		<cmecode startPoint="engs20p_Nstrings5" addOn="&amp;nocheck=true" height="300"></cmecode>
+		<investigation>
+			<statement>
+				<p>Why is the ampersand character <c>&amp;</c> missing in front of <c>firstName</c> and <c>lastName</c> in the above <c>scanf()</c> statement?</p>
+			</statement>
+			<hint>
+				<p>Remember, a string is really an array of characters (with the null terminator placed at the end). Do you remember what an array variable really stores?.</p>
+			</hint>
+			<answer>
+				<p>The variable firstName (and also the variable lastName), without any brackets placed behind it, stores the address of the zeroth element of the array (so the first letter of the name in this case). Since it is already an address there is no need to place an additional <c>&amp;</c> operator in front of it since that would get you the address of the address!</p>
+			</answer>
+		</investigation>
+
+	</section>
+
+	<section xml:id="strings-print">
+		<title>Printing to Strings</title>
+		<p><idx><h>strings</h><h><c>sprintf()</c></h></idx>Suppose you wanted to store a file name in a string (in order to be able to work with the file) and you had the user enter the name (such as "importantFile") but you then wanted to add the file extension (such as ".txt") to this name. Here is a clever way to create such a custom string: You can actually "print" to a string using the <c>sprintf()</c> function which basically works exactly the same as <c>printf()</c>! Here is the exact format:</p>
+		<pre>sprintf(dest, format_string, print_list);</pre>
+		<p>So in the above example you could use something like <c>sprintf(fileName, "%s.txt", userEntry);</c> to accomplish the creation of the desired file name.</p>
+		<p>Usage of <c>sprintf()</c> requires the standard library and with that the inclusion of this line at the top of your code:</p>
+		<pre>#include &lt;stdlib.h&gt;</pre>
+		<p> </p>
+		<cmecode startPoint="engs20p_Nstrings6" addOn="&amp;nocheck=true" height="300"></cmecode>
+	</section>
+
+	<section xml:id="strings-alphabetize">
+		<title>Alphabetize Strings</title>
+		<p><idx><h>strings</h><h>alphabetize</h></idx>Similar to how we can sort numbers, strings can also be sorted (by alphabet.) The C string library provides help for doing so via the <c>strcmp</c> function. This function compares two strings and returns a negative number, zero or a positive number depending on which of the two strings comes first in the alphabet. </p>
+		<p>Here is how the function works: <c>strcmp</c> compares the two strings character by character. If the first character of two strings is equal, the next character of two strings are compared. This continues until the corresponding characters of the two strings are different or a null character '\0' is reached. Here is the return value of the function:</p>
+		<p><c>strcmp()</c> returns
+		<ul>
+			<li>0 if both strings are identical</li>
+			<li>a negative integer if the ASCII value of the first unmatched character is less than that of the second</li>
+			<li>a positive integer if the ASCII value of the first unmatched character is greater than that of the second</li>
+		</ul>
+		So if you compare "Hello" with "hello", what would <c>strcmp()</c> return? Use the code window below to look at a bunch of examples and really understand the function.</p>
+		<activity>
+			<p>Which strings come first in the alphabet?</p>
+			<cmecode startPoint="engs20p_Nstrings7" addOn="&amp;nocheck=true" height="500"></cmecode>
+		</activity>
+	</section>
+
+	<section xml:id ="strings-summary">
+		<title>Summary</title>
+		<p>Summary:</p>
+		<ul>
+			<li>A string is a null-terminated array of characters</li>
+			<li>Nothing will prevent you from placing a string that is too long into a string variable. It's your responsibility to pay attention!</li>
+			<li>The <c>%s</c> format specifier can be used with <c>printf()</c> and <c>scanf()</c> to print or read strings.</li>
+			<li>
+				<p>The string library provides functionality such as:
+					<ul>
+						<li><c>strcpy</c></li>
+						<li><c>strcmp</c></li>
+						<li><c>strlen</c></li>
+						<li>And many more!</li>
+					</ul>
+				</p>
+			</li>
+			<li>You can also create a string using <c>sprintf()</c>.</li>
+		</ul>
+	</section>
+</chapter>

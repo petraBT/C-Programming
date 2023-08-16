@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This frontmatter division will contain all content before the -->
+<!-- first chapter.  Fill in and comment/uncomment to see how this -->
+<!-- works.                                                        -->
+
+<frontmatter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="meta_frontmatter">
+  <titlepage>
+    <author>
+        <personname>Petra Bonfert-Taylor</personname>
+        <department>Thayer School of Engineering</department>
+        <institution>Dartmouth College</institution>
+        <email>petra.bonfert-taylor@dartmouth.edu</email>
+    </author>
+    <credit>
+        <title>Coding Windows</title>
+        <author>
+            <personname>Benjamin Servoz</personname>
+            <department>Thayer School of Engineering</department>
+            <institution>Dartmouth College</institution>
+            <email>benjamin.servoz@dartmouth.edu</email>
+        </author>
+    </credit>
+    <credit>
+        <title>Special Thanks To</title>
+        <author>
+            <personname>Simon Oster</personname>
+            <department>Thayer School of Engineering</department>
+            <institution>Dartmouth College</institution>
+            <email>simon.e.oster.21@dartmouth.edu</email>
+        </author>
+    </credit>
+    <date><today /></date>
+  </titlepage>
+
+  <colophon xml:id="front-colophon">
+
+  <!--
+    <website>
+      <name><c>my-website.org</c></name>
+      <address>http://pretextbook.org</address>
+    </website>
+  -->
+
+    <copyright>
+      <!-- In addition to specifying the copyright holder, you should  -->
+      <!-- include a license, such as the cc-by-sa license shown below -->
+      <!-- so people reading your book know how they can use it.       -->
+      <holder>Petra Bonfert-Taylor</holder>
+      <year>2021<ndash/>2022</year>
+      <minilicense>Creative Commons BY-SA</minilicense>
+      <!-- <minilicense><image source="../images/by-sa.png" /></minilicense> -->
+      <shortlicense>
+          <!-- <image source="../images/by-sa.png" width="15%"/>  -->
+          This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License.
+          To view a copy of this license, visit
+          <url 
+            href="http://creativecommons.org/licenses/by-sa/4.0/"
+            visual="creativecommons.org/licenses/by-sa/4.0">
+            CreativeCommons.org
+          </url>
+      </shortlicense>
+    </copyright>
+  </colophon>
+
+
+    <!-- A section of its own in HTML, migrates to copyright-page in LaTeX -->
+    <!-- Titles are optional, presumably none for single author,           -->
+    <!-- or for every author, even if we test a mix here                   -->
+    <!--
+    <biography xml:id="author-bio-TWJ">
+        <p>Thomas W. Judson did his undergraduate work in Illinois, his graduate work in Oregon and presently teaches in Texas.</p>
+
+         <p>He likes to ride his bicycle in France, especially in the high Alps and Pyrenees on the roads of the Tour de France.</p>
+    </biography>
+
+    <biography xml:id="author-bio-RAB">
+        <title>About Robert A. Beezer</title>
+        <p>Rob Beezer designed, wrote, and tested the Sage exercises as a contribution to this open source project.</p>
+
+         <p>He also likes to ride his bicycle, and once rode with Tom Judson in the high Alps, in addition to some hiking there, up above the passes the cyclists ride.</p>
+    </biography>
+
+
+
+  <dedication>
+    <p>
+      For ...
+    </p>
+  </dedication>
+
+
+  <acknowledgement>
+    <p>
+      I would like to thank...
+    </p>
+  </acknowledgement>
+  -->
+
+  <preface xml:id="meta_frontmatter-preface">
+    <!-- You should be a little careful about what you put here -->
+    <!-- Avoid elements that should have a number, for example  -->
+    <title>Introduction</title>
+    <p><alert>Welcome to ENGS 20: Introduction to Scientific Computing!</alert></p>
+    <p>From the Dartmouth course catalog:</p>
+    <p><em>This course introduces concepts and techniques for creating computational solutions to problems in engineering and science. The essentials of computer programming are developed using the C and MATLAB languages, with the goal of enabling the student to use the computer effectively in subsequent courses. Programming topics include problem decomposition, control structures, recursion, arrays and other data structures, file I/O, graphics, and code libraries. Applications will be drawn from numerical solution of ordinary differential equations, root finding, matrix operations, searching and sorting, simulation, and data analysis. Good programming style and computational efficiency are emphasized. Although no previous programming experience is assumed, a significant time commitment is required.</em></p>
+    <p><em>Students planning to pursue the engineering sciences major are advised to take ENGS 20. Students considering the computer science major or majors modified with computer science should take COSC 1 and COSC 10.</em></p>
+    <p>This textbook contains the course materials for only the C-programming portion of the class, which generally is covered within the first seven weeks of the class. There are homework assignments, in-class activities, and various other materials in this textbook.</p>
+    <p>The easiest way to know which sections of this book are assigned for homework, or which will be explored during class, is to use the <xref ref="meta_frontmatter-toc" text="title"/>. There, all the sections are grouped into their respective <em>class</em> or <em>pre-class</em>. Be sure to complete all <em>pre-class</em> sections prior to the subsequent class meeting, as these are homework. On the other hand, if searching for a specific topic, the <xref ref="index-page" text="title"/> or the embedded search bar at the top of the page will be of use.</p>
+    <p>In the next chapter, <xref ref="gettingstarted" text="title"/>, the various tools and features of this book will be introduced and explained.</p>
+  </preface>
+
+  <!-- You can have more than one preface. -->
+  <xi:include href="./toc.ptx"/>
+</frontmatter>

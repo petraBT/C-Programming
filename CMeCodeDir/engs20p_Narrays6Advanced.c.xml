@@ -1,0 +1,18 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+
+// prototypes here
+
+int main(void) {
+    float array[100];
+    
+    fillWithSquareRoots(array);
+    printArray(array);
+    
+    return(0);
+}
+
+// function definitions here
+</cme>

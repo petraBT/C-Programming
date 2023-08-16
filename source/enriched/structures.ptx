@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="structures">
+	<title>Structures</title>
+	<introduction>
+		<p>Arrays allow us to group together information of one consistent data type. But what if we wanted to group information of various data types together into one variable? In this chapter, we will take a look at how we can group variables together and define our own data types!</p>
+		<p>Sometimes, it is beneficial to group together certain pieces of data that belong together. An example is a phone book entry that consists of a name and an associated phone number. Of course we could simply store all names in one array and all associated phone numbers in a second array, but it would be more convenient to have one array whose entries consist of records that contain both the name and the associated phone number. This is what <em>structures</em> are made for. They provide a fantastic way to define your own records in a single compact variable.</p>
+    </introduction>
+
+	<section xml:id="structures-intro">
+		<title>Intro to Structures</title>
+		<p>Up to this point we have been using the standard data types provided by C:</p>
+		<pre>
+			int, float, double, char, void
+		</pre>
+		<p>C also provides the capability to define your own data types. In particular, we'll be learning about <q>structures</q>. </p>
+		<p><idx>structures</idx>A <term>structure</term> is simply a <em>collection of items of various data types</em> into one single object.</p>
+		<p>Note that arrays on the other hand have to stick to one data type. Suppose we wanted to store some student data, for example, for each student:</p>
+		<program language="c"><input>
+			char firstName[50];
+			char lastName[50];
+			int birthYear;
+			double aveGrade;
+		</input></program>
+		<p>We could simply create four separate arrays: one that holds the first names, one for last names, etc. Structures make this much easier, however. We can store, in one variable, all of the data for one specific student. We can then simply create one array of students to hold all of the data we are interested in.</p>
+		<p>In the code window below you can see how to define such a <c>struct student</c> data type and how to subsequently use it in your code to declare variables <c>me</c> and <c>you</c> of this data type. You can also see how to initialize such a structure at declaration time and how to access the so-called <term>members</term> of the structure (so <c>firstName</c>, <c>lastName</c>, <c>birthYear</c>, <c>aveGrade</c>) in your code.</p>
+		<cmecode startPoint="engs20p_Nstructures1" addOn="&amp;nocheck=true" height="500"></cmecode>
+	</section>
+
+	<section xml:id="structures-typedef">
+		<title><c>typedef</c></title>
+		<p><idx><c>typedef</c></idx>It is even possible to define a new data type and associate it with our new data structure. The C-command to do so is <c>typedef</c>. The code window below shows the use of <c>typedef</c> in order to assign the name <c>student_t</c> to the more cumbersome student structure <c>struct student</c>. This way we can use the new data type <c>student_t</c> just like any of the C pre-defined data types <c>int, float, double, char, void</c> of which we know so far.</p>
+		<p>Just to remind you that you are dealing with a data type we'll adopt the custom of always ending such a new data type name with <q>_t</q> as exemplified in the name <c>student_t</c> for our new student record data type.</p>
+		<cmecode startPoint="engs20p_Nstructures2" addOn="&amp;nocheck=true" height="500"></cmecode>
+		<subsection>
+			<title>Alternative Method</title>
+			<p>You can actually combine the structure declaration and the <c>typedef</c> into one more straight-forward method. The code window below shows you how to do so. The reason for introducing both the more cumbersome and the more straight-forward methods is that we will actually need the more cumbersome method later when we get to the topic of <q>linked lists</q>. For now I recommend that you go with the straight-forward method.</p>
+			<cmecode startPoint="engs20p_Nstructures3" addOn="&amp;nocheck=true" height="500"></cmecode>
+		</subsection>
+	</section>
+
+	<section xml:id="structures-frac-calc">
+		<title>The Fraction Calculator Using Structures</title>
+		<subsection>
+			<title>Define a New Data Type</title>
+			<p><idx><h>fraction calculator</h><h>using structures</h></idx>Remember our fraction calculator? We'll start rewriting it using structures now.</p>
+			<activity xml:id="activity-25-3-1-Frac_Calc_Define_Datatype">
+				<statement>
+					<p>Let's start by defining a new data type <c>fraction_t</c>, designed to store the numerator and denominator of a fraction (as integers). Try implementing this below:</p>
+					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Declare the Variables</title>
+			<activity xml:id="activity-25-3-2-Frac_Calc_Declare_Variables">
+				<statement>
+					<p>Now that we have our fraction type, let's declare two variables, <c>frac1</c> and <c>frac2</c>, of this type, and make them correspond to the fractions <m>\frac{5}{3}</m> and <m>\frac{-2}{5}</m>.</p>
+					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Print the Fractions</title>
+			<p>Now let's see if we can print out these fractions.</p>
+			<activity xml:id="activity-25-3-3--Frac_Calc_Print_Fractions">
+				<statement>
+					<p>What's the best way to go about that?</p>
+					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Adding Fractions</title>
+			<activity xml:id="activity-25-3-4-Frac_Calc_Adding_Fractions">
+				<statement>
+					<p>Since we are working on a fraction calculator, how would we go about adding these two fractions? Let's store the result in a third variable, result. Can we simply say the following?</p>
+					<pre>result = frac1 + frac2</pre>
+					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Print-Fraction Function</title>
+			<p>You can see that it would be great to write some functions in order to re-use our code.</p>
+			<activity xml:id="activity-25-3-5-Frac_Calc_Print_Fraction_Function">
+				<statement>
+					<p>Let's try to write a function that prints a fraction.</p>
+					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Add-Fractions Function</title>
+			<activity xml:id="activity-25-3-6-Frac_Calc_Add_Fractions_Function">
+				<statement>
+					<p>Now let's try our luck with a function that adds two fractions...</p>
+					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Enter-Fraction Function</title>
+			<activity xml:id="activity-25-3-7-Frac_Calc_Enter_Fraction_Function">
+				<statement>
+					<p>Now we need a function that allows the user to enter a fraction. Be sure to prevent the user from entering a denominator of zero! </p>
+					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Multiplying Fractions</title>
+			<p>Multiplying two fractions is now easy!</p>
+			<activity xml:id="activity-25-3-8_Multiplying_Fractions">
+				<statement>
+					<p>Let's multiply two fractions!</p>
+					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+
+		<subsection>
+			<title>Additional Steps</title>
+			<activity xml:id="activity-25-3-9-Frac_Calc_Additional_Steps">
+				<statement>
+					<p>What else do we need to make our fraction calculator work?</p>
+					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
+					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				</statement>
+				<response/>
+			</activity>
+		</subsection>
+	</section>
+
+	<section xml:id="structures-functions">
+		<title>Passing Structures to Functions</title>
+		<subsection>
+			<title>Passing by Value</title>
+			<p>In the next video we'll learn how to pass structures to functions by value.</p>
+			<p><idx><h>structures</h><h>pass-to-function by value</h></idx>Passing by value means that a copy will be made of the data stored in the structure. We will therefore have access to all of the data stored in the structure variable but we cannot modify it within the function (since all we'd end up doing is modify the copies of the values).</p>
+			<investigation>
+				<statement>
+					<p>Imagine we declare a structure named <c>student</c> in both the <c>main()</c> function and in a new function, and we then pass the structure from the <c>main()</c> function into our new one by value. If we now change a value within the new function's structure, will it affect the original structure?</p>
+				</statement>
+				<answer>
+					<p>No!</p>
+				</answer>
+				<solution>
+					<p>Remember when we discussed what <em>not</em> to name your variables in <xref ref="memory-scope"/>? Just because we named the structures the same thing doesn't mean they are the same! Soon we'll learn how to pass structures by reference...</p>
+				</solution>
+			</investigation>
+			<p>We'll work with the following structure example:</p>
+			<program language="c"><input>
+				struct student{
+				  char firstName[30];
+				  char lastName[30];
+				  int birthYear;
+				  double aveGrade;
+				};
+			</input></program>
+			<p>This stores student data (first and last name, birth year and average grade) in a structure.</p>
+			<p>The following Codecast shows you how to pass a student record to a function in order to print the record. Note that in the video we do not use <c>typedef</c> for the sole reason that sadly, <c>typedef</c> has not (yet) been implemented in the recording software.</p>
+			<codecast href="1521046478311"/>
+			<aside>
+			    <title>Video Description</title>
+			    <p>
+			       <ul>
+			            <li>Structures can be passed to functions</li>
+			            <li>NEW SYNTAX: the following line is a prototype for a function that receives the structure <c>struct student</c> by value and names the received structure <c>var</c> in the function:</li>
+			       </ul>
+			       void function(struct student var);
+			    </p>
+			</aside>
+			<reading-questions>
+				<exercise xml:id="quiz-structfunction-1">
+					<statement>
+						<p>Suppose you have declared a structure to hold student data as in the video:</p>
+						<program language="c"><input>
+							struct student{
+							  char firstName[30];
+							  char lastName[30];
+							  int birthYear;
+							  double aveGrade;
+							};
+						</input></program>
+						<p>Suppose furthermore that you are writing a function compareStudents(), to which you'd like to pass two students of type struct student, and which returns the average grade of the student whose average grade is the lower of the two. Which of the following is the correct function prototype for such a function?</p>
+					</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <c>double compareStudents(struct student stud1, struct student stud2);</c>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <c>struct student compareStudents(struct student stud1, struct student stud2);</c>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <c>double compareStudents(stud1, stud2);</c>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+				</exercise>
+				<exercise xml:id="quiz-structfunction-2">
+					<statement>
+						<p>In the same scenario as in the previous question, where you have declared a structure to hold student data via:</p>
+						<program language="c"><input>
+							struct student{
+							  char firstName[30];
+							  char lastName[30];
+							  int birthYear;
+							  double aveGrade;
+							};
+						</input></program>
+						<p>and are writing a function <c>compareStudents()</c> which compares the average grades of the two student records passed to the function, which of the following correctly finds the lower of the two average grades:</p>
+					</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>
+								<program language="c"><input>
+									double lower;
+									if (stud1.aveGrade&lt;stud2.aveGrade)
+									  lower = stud1.aveGrade;
+									else
+									  lower = stud2.aveGrade;
+								</input></program>
+							</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>
+								<program language="c"><input>
+									double lower;
+									if (aveGrade(stud1)&lt;aveGrade(stud2))
+									  lower = stud1.aveGrade;
+									else
+									  lower = stud2.aveGrade;
+								</input></program>
+							</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>
+								<program language="c"><input>
+									double lower;
+									lower = stud1.aveGrade&lt;stud2.aveGrade;
+								</input></program>
+							</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+				</exercise>
+			</reading-questions>
+		</subsection>
+
+		<subsection>
+			<title>Passing by Reference</title>
+			<p><idx><h>structures</h><h>pass-to-function by reference</h></idx>If we want to be able to modify a structure variable from within a function we need to pass a pointer to this variable to the function - just as we do for regular variables. In other words, we need to pass the variable to the function "by reference". In the next video we'll learn how to do so.</p>
+			<codecast href="1521047452712"/>
+			<aside>
+			    <title>Video Description</title>
+			    <p>
+			       <ul>
+			            <li>Passing a structure pointer follows previously learned methods</li>
+			            <li>The address of the structure is passed to a function, i.e. <c>&amp;variable</c></li>
+			            <li>Pointers can be dereferenced in a function using <c>*</c></li>
+			       </ul>
+			    </p>
+			</aside>
+			<reading-questions>
+				<exercise xml:id="quiz-structfunction-3">
+					<statement>
+						<p>What is wrong with the following piece of code and how would you fix it?</p>
+						<program language="c"><input>
+							struct student{
+							  char firstName[30];
+							  char lastName[30];
+							  int birthYear;
+							  double aveGrade;
+							};
+
+							int main(void) {
+							  struct student me = {"Petra", "Bonfert-Taylor", 2001, 3.8};
+							  struct student * studentptr = &amp;me;
+
+							  *studentptr.birthYear = 1998;
+							  return 0;
+							}
+						</input></program>
+					</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>The second-to-last line of code should be <c>(*studentptr).birthYear = 1998;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The second-to-last line of code should be <c>(&amp;studentptr).birthYear = 1998;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The second-to-last line of code should be <c>(*studentptr.birthYear) = 1998;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>There is nothing wrong with this code.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+				</exercise>
+			</reading-questions>
+		</subsection>
+	</section>
+
+	<section xml:id="structures-pointers">
+		<title>Structures and Pointers</title>
+		<p>When dealing with a pointer to a structure it can get pretty cumbersome to access a member of the structure being pointed to.</p>
+		<p>Suppose again that we have declared a structure as before:</p>
+		<program language="c"><input>
+			struct student{
+			  char firstName[30];
+			  char lastName[30];
+			  int birthYear;
+			  double aveGrade;
+			};
+		</input></program>
+		<p>Suppose furthermore that we have a pointer:</p>
+		<program language="c"><input>
+			struct student * studentptr;
+		</input></program>
+		<p>which points to a particular student's record. In order to access a member (for example birthYear) of this student's record via the pointer we first need to dereference the pointer (*studentptr) and then access the member via the <term>direct member selection operator</term> <c>.</c>:</p>
+		<program language="c"><input>
+			(*studentptr).birthYear
+		</input></program>
+		<p>The parentheses around (*studentptr) are important since without them the computer would attempt to execute the member selection operator first, which would make no sense, given that studentptr is not a structure but rather a pointer to a structure.</p>
+		<p>The <term>indirect member selection operator</term> <c>-&gt;</c> combines these steps into one:
+		</p>
+		<program language="c"><input>
+			studentptr-&gt;birthYear
+		</input></program>
+		<p>and therefore accomplishes the same thing as the above. Watch the video to find out more:</p>
+		<codecast href="1521049225939"/>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li><idx><h>structures</h><h>pointers</h></idx>Instead of using the syntax <c>(*ptr).birthyear</c> to access the member <c>birthyear</c> of the record pointed to by <c>ptr</c>, one could also use the shorthand notation <c>ptr->birthyear</c></li>
+		            <li>Instead of using the syntax <c>&amp;(*ptr).record</c> to access the address of the member of a structure (in order to use <c>sanf()</c>, for example), one could also use the shorthand notation <c>&amp;ptr->record</c></li>
+		            <li>Similarly for storing strings, the same notation works as long as the <c>&amp;</c> is removed (remember that a string is an array of characters whose name already stores the address of the zeroth element)</li>
+		       </ul>
+		    </p>
+		</aside>
+		<reading-questions>
+			<exercise xml:id="quiz-structfunction-4">
+				<statement>
+					<p>Now, what is wrong with the following piece of code and how would you fix it?</p>
+					<program language="c"><input>
+						struct student{
+						  char firstName[30];
+						  char lastName[30];
+						  int birthYear;
+						  double aveGrade;
+						};
+
+						int main(void) {
+					      struct student me = {"Petra", "Bonfert-Taylor", 2001, 3.8};
+					      struct student * studentptr = &amp;me;
+
+					      me->birthYear = 1998;
+					      return 0;
+						}
+					</input></program>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>The second-to-last line of code should be <c>(&amp;me)->birthYear = 1998;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The second-to-last line of code should be <c>(*me)->birthYear = 1998;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>The second-to-last line of code should be <c>(me)->birthYear = 1998;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>There is nothing wrong with this code.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<!--these next 8 questions come from the Canvas quiz "Multidimensional Arrays and Structures review" -->
+			<exercise xml:id="quiz-structfunction-5"> 
+				<statement>
+					<p>Time for some review of multidimensional arrays (this is called <em>interleaved learning</em> - a method of learning that helps you retain better what you have learned!)</p>
+					<p>Suppose you have written a function that initializes a two-dimensional array as follows:</p>
+					<program language="c"><input>
+						void initialize_array(int array[][NCOLS])
+						{
+						  int i,j;
+						  for (i=0; i&lt;NROWS; i++)
+						    for (j=0; j&lt;NCOLS; j++)
+						      array[i][j] = i;
+						}
+					</input></program>
+					<p>Assume that you also have</p>
+					<program language="c"><input>
+						#define NROWS 20
+						#define NCOLS 30
+					</input></program>
+					<p>as part of your code.</p>
+					<p>In your main program you have declared an array matrix as follows:</p>
+					<program language="c"><input>
+						int matrix[NROWS][NCOLS];
+					</input></program>
+					<p>What is the correct function call of the function <c>initialize_array()</c> from within your main function?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>initialize_array(matrix);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>initialize_array(matrix[NROWS][]);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>initialize_array(matrix[][NCOLS]);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>initialize_array(matrix[NROWS][NCOLS]);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>initialize_array(&amp;matrix);</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-structfunction-6"> 
+				<statement>
+					<p>Please complete the following program so that the function <c>maxTemp()</c> finds the maximum value stored in the array passed to it. Be sure to enter your prototype at the top of the program and don't forget to insert the correct function call into the main function. Store the value returned by the function <c>maxTemp()</c> in the variable "maximum" so that it gets printed out properly in the following line.</p>
+					<cmecode startPoint="engs20p_multiArrays1" height="600"></cmecode>
+					<p>When your program performs correctly you'll be given a keyword to enter in Canvas.</p>
+					<p><em>If your code appears to perform correctly but you are not given a keyword, please check for any extra spaces or line breaks in your output and remove them.</em></p>
+				</statement>
+			</exercise>
+			<exercise xml:id="quiz-structfunction-7"> 
+				<statement>
+					<p>Which of the following properly defines a structure:</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>struct point { int x; int y; }</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>struct point { int x; int y; };</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>struct point { int x; int y; }</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>struct point int x; int y;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-structfunction-8"> 
+				<statement>
+					<p>Which of the following properly declares a variable z (i.e. an instance) of structure point?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>struct point z;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>struct z point;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>struct point;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>point z;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-structfunction-9"> 
+				<statement>
+					<p>Which of the following properly declares a new type “point_t”?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>
+							<program language="c"><input>
+								typedef struct {
+								  int x;
+								  int y;
+								} point_t;
+							</input></program>
+						</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>
+							<program language="c"><input>
+								typedef struct point {
+								  int x;
+								  int y; 
+								} point_t;
+							</input></program>
+						</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>
+							<program language="c"><input>
+								typedef struct point {
+								  int x;
+								  int y;
+								};
+							</input></program>
+						</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-structfunction-10"> 
+				<statement>
+					<p>Suppose you have declared a new type “student_t” as follows:</p>
+					<program language="c"><input>
+						typedef struct {
+			              char name[30];
+			              long id;
+			              int class;
+						} student_t;
+					</input></program>
+					<p>What is the correct way to declare and initialize a variable me of type <c>student_t</c>?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>student_t me = {“Petra”, 123456L, 1994};</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>me = student_t{“Petra”, 123456L, 1994};</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>student_t = {“Petra”, 123456L, 1994} me;</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>student_t me; me = {“Petra”, 123456L, 1994};</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-structfunction-11"> 
+				<statement>
+					<p>As in the previous problem, you have defined a structure to store some student information as follows:</p>
+					<program language="c"><input>
+						typedef struct {
+			              char name[30];
+			              long id;
+			              int class;
+						} student_t;
+					</input></program>
+					<p>In your main program, you have furthermore declared a variable "me" of type <c>student_t</c> and initialized it, for example as follows:</p>
+					<program language="c"><input>
+					    student_t me = {"Petra", 123456L, 1994};
+					</input></program>
+					<p>You'd now like to print the student record to the screen (i.e. print what is stored in the variable <c>me</c>). How would you do this?</p> 
+					<p>Feel free to use the following window to try things out. I have already given you a bit of code to make things easier.</p>
+					<cmecode startPoint="engs20p_structs1" height="500"></cmecode>
+				</statement>
+			</exercise>
+			<exercise xml:id="quiz-structfunction-12"> 
+				<statement>
+					<p>Let's continue developing the previous problem. This time we'll practice how to change entries in a structure. Complete the following C program so that the user can enter a new student name, id and class year to be stored in the variable me of type <c>student_t</c>. All you need to do is complete the <c>scanf()</c> and <c>printf()</c> lines.</p>
+					<cmecode startPoint="engs20p_structs2" height="500"></cmecode>
+					<p>When your program performs correctly you'll be given a keyword to enter in Canvas.</p>
+					<p><em>If your code appears to perform correctly but you are not given a keyword, please check for any extra spaces or line breaks in your output and remove them.</em></p>
+				</statement>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="structures-summary">
+		<title>Summary</title>
+		<p>In this chapter, we covered the following topics:</p>
+		<ul>
+			<li>How to declare a new structure</li>
+			<li>The member selection operator</li>
+			<li>Using <c>typedef</c> to define a new data type</li>
+			<li>How to simplify the fraction calculator using structures</li>
+			<li>Passing structures to functions by value and by reference</li>
+			<li>The address of a structure and how to work with it efficiently</li>
+		</ul>
+	</section>
+</chapter>

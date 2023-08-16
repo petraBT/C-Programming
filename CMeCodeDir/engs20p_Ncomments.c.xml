@@ -1,0 +1,27 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    /* It is important to add comments to your code. */
+    /* There are two types of comments. */
+
+    /* This type of comment
+       an go over multiple lines if you wish. */
+       
+    /* Or just one line - up to you! */
+    
+    // This type of comment only affects the remainder of a line.
+    // Let's look at some examples.
+
+    /* This program prints a greeting to the screen.
+       It also tells you the day of the week. */
+       
+    printf("Hello, World!\n"); // print greeting.
+    printf("Today is Monday!\n"); // print the day of the week
+        
+    /* Note that comments show up in your source code in a different color. */
+    
+    return(0);
+}
+</cme>

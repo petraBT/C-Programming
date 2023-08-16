@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    double num = 5.567;
+    double rounded;
+    
+    rounded = roundToTwo(num);
+    printf("The number %f, rounded to two decimal places is %f.\n", num, rounded);
+    
+    return 0;
+}
+
+/* Function definitions here - don't forget your prototype! */
+</cme>

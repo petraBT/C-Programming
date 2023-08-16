@@ -1,0 +1,14 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+int main(void) {
+    float array[3];
+    int i;
+    for (i=0; i&lt;3; i++) {
+        printf("Enter a decimal: ");
+        scanf("%f", &amp;array[i]);
+        printf("I put %f at index %d of the array.\n", array[i], i);
+    }
+    return 0;
+}
+</cme>

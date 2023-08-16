@@ -1,0 +1,17 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+#define N 10
+int main (void) {
+    int array[N] = {45, 87, -12, 1000, 44, 190, -99, 3, 2, -4};
+    int largest;
+    
+    /* Your code goes here. */
+    
+    
+    printf("The largest element is %d.\n", largest);
+    
+    
+    return 0;
+}
+</cme>

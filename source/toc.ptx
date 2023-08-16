@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<preface xml:id="meta_frontmatter-toc">
+    <title>Table of Contents</title>
+    <p><xref ref="index-page" text="title"/> located at the end of the book.</p>
+    <p><alert>------------------------------------Week 1------------------------------------</alert></p>
+    <dl>
+        <li>
+            <title>Pre-Class 1</title>
+            <p><xref ref="meta_frontmatter-preface" text="title"/></p>
+            <p><xref ref="gettingstarted-codewindows" text="title"/></p>
+            <p><xref ref="gettingstarted-codecasts" text="title"/></p>
+            <p><xref ref="gettingstarted-submissions" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 1</title>
+            <p><xref ref="computers-vocabulary" text="title"/></p>
+            <p><xref ref="firstprogram-hello-world" text="title"/></p>
+            <p><xref ref="firstprogram-practice" text="title"/></p>
+            <p><xref ref="firstprogram-special-characters" text="title"/></p>
+            <p><xref ref="firstprogram-repetition" text="title"/></p>
+            <p><xref ref="firstprogram-multiple-repetitions" text="title"/></p>
+            <p><xref ref="firstprogram-comments" text="title"/></p>
+            <p><xref ref="firstprogram-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 2</title>
+            <p><xref ref="variables-printing-numbers" text="title"/></p>
+            <p><xref ref="variables-calculations" text="title"/></p>
+            <p><xref ref="variables-intro" text="title"/></p>
+            <p><xref ref="variables-changing" text="title"/></p>
+            <p><xref ref="variables-initializing" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 2</title>
+            <p><xref ref="variables-errors" text="title"/></p>
+            <p><xref ref="variables-loop-practice" text="title"/></p>
+            <p><xref ref="variables-user-input" text="title"/></p>
+            <p><xref ref="variables-char-datatype" text="title"/></p>
+            <p><xref ref="variables-float-datatype" text="title"/></p>
+            <p><xref ref="variables-summary" text="title"/></p>
+            <p><xref ref="variables-division" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 3</title>
+            <p><xref ref="integers-intro" text="title"/></p>
+            <p><xref ref="integers-positive" text="title"/></p>
+            <p><xref ref="integers-negative" text="title"/></p>
+            <p><xref ref="integers-hex" text="title"/></p>
+            <p><xref ref="integers-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 3</title>
+            <p><xref ref="floats-int-to-float" text="title"/></p>
+            <p><xref ref="floats-float-to-int" text="title"/></p>
+            <p><xref ref="floats-average" text="title"/></p>
+            <p><xref ref="floats-remainder" text="title"/></p>
+            <p><xref ref="floats-summary" text="title"/></p>
+        </li>
+    </dl>
+
+
+    <p><alert>------------------------------------Week 2------------------------------------</alert></p>
+    <dl>
+        <li>
+            <title>Pre-Class 1</title>
+            <p><xref ref="floats-intro" text="title"/></p>
+            <p><xref ref="chars-intro" text="title"/></p>
+            <p><xref ref="branching-if" text="title"/></p>
+            <p><xref ref="branching-if-else" text="title"/></p>
+            <p><xref ref="branching-operators" text="title"/></p>
+
+        </li>
+        <li>
+            <title>Class 1</title>
+            <p><xref ref="branching-if-else-practice" text="title"/></p>
+            <p><xref ref="branching-advanced" text="title"/></p>
+            <p><xref ref="branching-multiple" text="title"/></p>
+            <p><xref ref="branching-practice" text="title"/></p>
+            <p><xref ref="branching-evaluating" text="title"/></p>
+            <p><xref ref="chars-ascii" text="title"/></p>
+            <p><xref ref="chars-cases" text="title"/></p>
+            <p><xref ref="chars-summary" text="title"/></p>
+            <p><xref ref="branching-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 2</title>
+            <p><xref ref="prefixes-intro" text="title"/></p>
+            <p><xref ref="branching-operator" text="title"/></p>
+            <p><xref ref="branching-flag" text="title"/></p>
+            <p><xref ref="branching-logic" text="title"/></p>
+            <p><xref ref="branching-negate" text="title"/></p>
+            <p><xref ref="prefixes-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 2</title>
+            <p><xref ref="adv-branching-switch" text="title"/></p>
+            <p><xref ref="adv-branching-for-if" text="title"/></p>
+            <p><xref ref="adv-branching-nested" text="title"/></p>
+            <p><xref ref="adv-branching-practice" text="title"/></p>
+            <p><xref ref="adv-branching-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 3</title>
+            <p><xref ref="format-io" text="title"/></p>
+            <p><xref ref="format-scanf" text="title"/></p>
+            <p><xref ref="format-style" text="title"/></p>
+            <p><xref ref="format-summary" text="title"/></p>
+            <p><xref ref="functions-single" text="title"/></p>
+            <p><xref ref="functions-multiple" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 3</title>
+            <p><xref ref="functions-single" text="title"/></p>
+            <p><xref ref="functions-multiple" text="title"/></p>
+            <p><xref ref="functions-practice" text="title"/></p>
+            <p><xref ref="functions-recursion" text="title"/></p>
+            <p><xref ref="function-recursion-practice" text="title"/></p>
+            <p><xref ref="functions-summary" text="title"/></p>
+        </li>
+    </dl>
+
+    <p><alert>------------------------------------Week 3------------------------------------</alert></p>
+    <dl>
+        <li>
+            <title>Pre-Class 1</title>
+            <p><xref ref="loops-while" text="title"/></p>
+            <p><xref ref="loops-compound" text="title"/></p>
+            <p><xref ref="loops-operators" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 1</title>
+            <p><xref ref="loops-operators-practice" text="title"/></p>
+            <p><xref ref="loops-fun" text="title"/></p>
+            <p><xref ref="loops-for-while" text="title"/></p>
+            <p><xref ref="loops-do-while" text="title"/></p>
+            <p><xref ref="loops-summary" text="title"/></p>
+            <p><xref ref="linux-intro" text="title"/></p>
+            <p><xref ref="linux-terminal" text="title"/></p>
+            <p><xref ref="linux-files" text="title"/></p>
+            <p><xref ref="linux-directories" text="title"/></p>
+            <p><xref ref="linux-remove-file" text="title"/></p>
+            <p><xref ref="linux_display-file" text="title"/></p>
+            <p><xref ref="linux-move-file" text="title"/></p>
+            <p><xref ref="linux-copy-file" text="title"/></p>
+            <p><xref ref="linux-compile" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 2</title>
+            <p><xref ref="linux-editor" text="title"/></p>
+            <p><xref ref="linux-languages" text="title"/></p>
+            <p><xref ref="linux-cheat-sheet" text="title"/></p>
+            <p><xref ref="linux-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 2</title>
+            <p><xref ref="files-intro" text="title"/></p>
+            <p><xref ref="files-read" text="title"/></p>
+            <p><xref ref="files-read-server" text="title"/></p>
+            <p><xref ref="files-read-practice" text="title"/></p>
+            <p><xref ref="files-read-efficient" text="title"/></p>
+            <p><xref ref="files-exist" text="title"/></p>
+            <p><xref ref="files-write" text="title"/></p>
+            <p><xref ref="files-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 3</title>
+            <p><xref ref="debug-software" text="title"/></p>
+            <p><xref ref="debug-code" text="title"/></p>
+            <p><xref ref="debug-conditional" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 3</title>
+            <p><xref ref="debug-practice" text="title"/></p>
+            <p><xref ref="debug-test" text="title"/></p>
+            <p><xref ref="debug-barcode" text="title"/></p>
+            <p><xref ref="debug-summary" text="title"/></p>
+        </li>
+    </dl>
+
+    <p><alert>------------------------------------Week 4------------------------------------</alert></p>
+    <dl>
+        <li>
+            <title>Pre-Class 1</title>
+            <p><xref ref="array-integer" text="title"/></p>
+            <p><xref ref="array-other" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 1</title>
+            <p><xref ref="array-initialize" text="title"/></p>
+            <p><xref ref="array-practice" text="title"/></p>
+            <p><xref ref="array-advanced" text="title"/></p>
+            <p><xref ref="array-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 2</title>
+            <p><xref ref="memory-space" text="title"/></p>
+            <p><xref ref="memory-stack" text="title"/></p>
+            <p><xref ref="memory-functions" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 2</title>
+            <p><xref ref="memory-scope" text="title"/></p>
+            <p><xref ref="memory-bad-variables" text="title"/></p>
+            <p><xref ref="memory-update" text="title"/></p>
+            <p><xref ref="memory-arrays" text="title"/></p>
+            <p><xref ref="memory-roundoff" text="title"/></p>
+            <p><xref ref="memory-rounding" text="title"/></p>
+            <p><xref ref="memory-rounding-practice" text="title"/></p>
+            <p><xref ref="memory-overflow" text="title"/></p>
+            <p><xref ref="memory-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 3</title>
+            <p><xref ref="pointers-address" text="title"/></p>
+            <p><xref ref="pointers-dereference" text="title"/></p>
+            <p><xref ref="pointers-example" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 3</title>
+            <p><xref ref="pointers-design" text="title"/></p>
+            <p><xref ref="pointers-intro-frac-calc" text="title"/></p>
+            <p><xref ref="pointers-bottom-up-testing" text="title"/></p>
+            <p><xref ref="pointers-top-down-testing" text="title"/></p>
+            <p><xref ref="pointers-frac-calc" text="title"/></p>
+        </li>
+    </dl>
+
+    <p><alert>------------------------------------Week 5------------------------------------</alert></p>
+    <dl>
+        <li>
+            <title>Pre-Class 1</title>
+            <p><xref ref="pointers-arrays" text="title"/></p>
+            <p><xref ref="pointers-functions" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 1</title>
+            <p><xref ref="pointers-functions-practice" text="title"/></p>
+            <p><xref ref="pointers-arithmetic" text="title"/></p>
+            <p><xref ref="pointers-summary" text="title"/></p>
+            <p><xref ref="strings-intro" text="title"/></p>
+            <p><xref ref="strings-assign" text="title"/></p>
+            <p><xref ref="strings-library" text="title"/></p>
+            <p><xref ref="strings-practice" text="title"/></p>
+            <p><xref ref="strings-length" text="title"/></p>
+            <p><xref ref="strings-input" text="title"/></p>
+            <p><xref ref="strings-print" text="title"/></p>
+            <p><xref ref="strings-alphabetize" text="title"/></p>
+            <p><xref ref="strings-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 2</title>
+            <p><xref ref="malloc-intro" text="title"/></p>
+            <p><xref ref="malloc-free" text="title"/></p>
+            <p><xref ref="malloc-array" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 2</title>
+            <p><xref ref="malloc-practice" text="title"/></p>
+            <p><xref ref="malloc-strings" text="title"/></p>
+            <p><xref ref="malloc-array-strings" text="title"/></p>
+            <p><xref ref="malloc-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 3</title>
+            <p><xref ref="sortsearch-linear" text="title"/></p>
+            <p><xref ref="sortsearch-bisection" text="title"/></p>
+            <p><xref ref="sortsearch-bubble" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 3</title>
+            <p><xref ref="sortsearch-linear-practice" text="title"/></p>
+            <p><xref ref="sortsearch-selection" text="title"/></p>
+            <p><xref ref="sortsearch-insertiion" text="title"/></p>
+            <p><xref ref="sortsearch-sort-practice" text="title"/></p>
+            <p><xref ref="sortsearch-parallel-arrays" text="title"/></p>
+            <p><xref ref="sortsearch-arrays" text="title"/></p>
+            <p><xref ref="sortsearch-implementing" text="title"/></p>
+            <p><xref ref="sortsearch-summary" text="title"/></p>
+        </li>
+    </dl>
+
+    <p><alert>------------------------------------Week 6------------------------------------</alert></p>
+    <dl>
+        <li>
+            <title>Pre-Class 1</title>
+            <p><xref ref="multiarray-strings" text="title"/></p>
+            <p><xref ref="multiarray-matrices" text="title"/></p>
+            <p><xref ref="multiarray-initialize" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 1</title>
+            <p><xref ref="la2-menu" text="title"/></p>
+            <p><xref ref="multiarray-functions" text="title"/></p>
+            <p><xref ref="multiarray-practice" text="title"/></p>
+            <p><xref ref="multiarray-summary" text="title"/></p>
+            <p><xref ref="structures-intro" text="title"/></p>
+            <p><xref ref="structures-typedef" text="title"/></p>
+            <p><xref ref="structures-frac-calc" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 2</title>
+            <p><xref ref="structures-functions" text="title"/></p>
+            <p><xref ref="structures-pointers" text="title"/></p>
+            <p><xref ref="structures-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 2</title>
+            <p><xref ref="arraystruct-operators" text="title"/></p>
+            <p><xref ref="arraystruct-structures" text="title"/></p>
+            <p><xref ref="arraystruct-triangle" text="title"/></p>
+            <p><xref ref="arraystruct-dynamic" text="title"/></p>
+            <p><xref ref="arraystruct-pentagon" text="title"/></p>
+            <p><xref ref="arraystruct-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Pre-Class 3</title>
+            <p><xref ref="linkedlists-intro" text="title"/></p>
+            <p><xref ref="linkedlists-functions" text="title"/></p>
+            <p><xref ref="linkedlists-autolink" text="title"/></p>
+            <p><xref ref="linkedlists-create" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 3</title>
+            <p><xref ref="linkedlists-large-ints" text="title"/></p>
+            <p><xref ref="linkedlists-digits" text="title"/></p>
+            <p><xref ref="linkedlists-append" text="title"/></p>
+            <p><xref ref="linkedlists-print" text="title"/></p>
+            <p><xref ref="linkedlists-free" text="title"/></p>
+            <p><xref ref="linkedlists-input" text="title"/></p>
+            <p><xref ref="linkedlists-search" text="title"/></p>
+            <p><xref ref="linkedlists-summary" text="title"/></p>
+        </li>
+    </dl>
+
+    <p><alert>------------------------------------Week 7------------------------------------</alert></p>
+    <dl>
+        <li>
+            <title>Pre-Class 1</title>
+            <p><xref ref="linkedlists-reverse" text="title"/></p>
+            <p><xref ref="linkedlists-sort" text="title"/></p>
+        </li>
+        <li>
+            <title>Class 1</title>
+            <p><xref ref="libraries-intro" text="title"/></p>
+            <p><xref ref="libraries-components" text="title"/></p>
+            <p><xref ref="libraries-header" text="title"/></p>
+            <p><xref ref="libraries-source" text="title"/></p>
+            <p><xref ref="libraries-object" text="title"/></p>
+            <p><xref ref="libraries-complex" text="title"/></p>
+            <p><xref ref="libraries-complex-source" text="title"/></p>
+            <p><xref ref="libraries-complex-header" text="title"/></p>
+            <p><xref ref="libraries-complex-assemble" text="title"/></p>
+            <p><xref ref="libraries-complex-test" text="title"/></p>
+            <p><xref ref="libraries-compile-library" text="title"/></p>
+            <p><xref ref="libraries-compile-object" text="title"/></p>
+            <p><xref ref="libraries-executable" text="title"/></p>
+            <p><xref ref="libraries-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Off to MATLAB!</title>
+            <p><m>\Longrightarrow</m></p>
+        </li>
+    </dl>
+</preface>
+

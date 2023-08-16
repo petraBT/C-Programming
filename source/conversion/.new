@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="loops">
+    <title>Loops</title>
+    <introduction>
+        <p>We have already used one type of loop in our previous work, namely the <c>for</c> loop. This type of loop requires us to know up front how many times the enclosed code is to be repeated. There are situations where this is not the case however, for example if we wanted to read integers entered by the user until the user enters a certain number that signifies that they are done. This would be quite difficult to accomplish using a <c>for</c> loop. In this chapter, we'll learn about some other types of loops that are more suitable in such a situation.</p>
+        <p>In order to program a loop it is often necessary to have a loop counter that needs to be updated after each run through the loop (think <c>i++;</c> for example). We'll take a closer look at such increment and decrement operators and more generally, so-called compound assignment operators. Specifically, we'll cover the following topics:</p>
+        <ul>
+            <li>The <c>while</c> loop</li>
+            <li>Compound assignment operators</li>
+            <li>Increment and decrement operators</li>
+            <li>An in-depth look at loops (<c>for</c> and <c>while</c>)</li>
+            <li>The <c>do-while</c> loop</li>
+        </ul>
+    </introduction>
+
+    <section xml:id="loops-while">
+        <title>The <c>while</c> Loop</title>
+        <p>Remember our program, using a <c>for</c>-loop, to compute the factorial of a number? Essentially, it went like this:</p>
+        <program language="c"><input>
+            N = 5; 
+            fac = 1; 
+            for (i=1; i&lt;=N; i++) { 
+              fac = fac * i; 
+            }
+        </input></program>
+        <p><idx><h>loops</h><h><c>while</c></h></idx>C has three different types of loops. Sometimes we want to loop through a section of code, but we do not know how many times we want it to execute. Maybe we want it to repeat the code while a certain condition is true, or maybe while that condition is not met. In these sorts of cases, a <c>while</c>-loop will come in handy!</p>
+        <codecast href="1513619151761"/>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>The <c>while</c> loop allows code to be repeated "while" some condition is satisfied</li>
+                    <li>Computing the factorial of a number using a <c>while</c> loop</li>
+                    <li>NEW SYNTAX:</li>
+                </ul>
+                while (condition) { do this };
+            </p>
+        </aside>
+        <reading-questions>
+            <exercise xml:id="quiz-loops-1">
+                <statement>
+                    <p>Quick review on <c>for</c>-loops:</p>
+                    <p>What is the final value of x (i.e. the value of x after the loop has terminated) when the following code is run:</p>
+                    <program language="c"><input>
+                        int x;
+                        for(x=0; x&lt;5; x++) {
+                          printf("x = %d\n", x);
+                        }
+                    </input></program>
+                </statement>
+            </exercise>
+            <exercise xml:id="quiz-loops-2">
+                <statement>
+                    <p>How many times does the following loop get executed, assuming that <c>i</c> is an integer type variable initialized with the value 8:</p>
+                    <program language="c"><input>
+                        while (i>0) {
+                          printf("i = %d\n", i); 
+                          i = i-1;
+                        }
+                    </input></program>
+                    <p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
+                    <cmecode startPoint="engs20p_loops1" height="300"></cmecode>
+                    <p><em>Please enter your answer (the number only, no words) in the box below.</em></p>
+                </statement>
+            </exercise>
+            <exercise xml:id="quiz-loops-3">
+                <statement>
+                    <p>What is the value of <c>n</c> after the loop terminates, assuming that before starting the loop, <c>n</c> has the value 19:</p>
+                    <program language="c"><input>
+                        while (n&lt;10)
+                          n = n+1;
+                    </input></program>
+                    <p><em>Code window for your convenience. Remember to work the correct answer out "by hand" first before verifying it using the code window.</em></p>
+                    <cmecode startPoint="engs20p_loops3" height="300"></cmecode>
+                    <p><em>Please enter your answer (the number only, no words) in the box below.</em></p>
+                </statement>
+            </exercise>
+            <exercise xml:id="quiz-loops-4">
+                <statement>
+                    <p>You'd like to add up all of the scores you have received so far on your assignments. Please write a C program that uses a while loop to repeatedly ask the user to enter a score, and that adds up all of these scores until the user enters -1 to finish. Obviously, the -1 should not be added to your final tally.</p>
+                    <p>Finally, print the calculated sum.</p>
+                    <p><em>Note: scores entered could be negative (you may not have experienced this, but the old SATs actually had negative scores for guessing incorrectly...). Just -1 is not an actual score in this particular exercise and forces the loop to terminate.</em></p>
+                    <cmecode startPoint="engs20p_NWhile2" height="500"></cmecode>
+                    <p><em>When your program performs correctly you'll be given a keyword to enter below. Please enter the keyword exactly as given to you (without the quotation marks).</em></p>
+                </statement>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="loops-for-while">
+        <title><c>for</c> vs. <c>while</c> Loops</title>
+        <p>Though <c>for</c>- and <c>while</c>-loops can accomplish the same tasks, both have certain benefits and drawbacks. Here, we compare the syntaxes of both loops and discuss situations and scenarios in which one loop is preferable over the other.</p>
+        <p><c>for</c>-loop syntax:</p>
+        <program language="c"><input>
+        for (initialization; loop run condition; update) {
+            statements...;
+        }
+        </input></program>
+        <p>At the very start of the loop (before any kind of repetition is entered) the initialization statement is executed. This happens exactly once. At the start of every repetition the loop condition is checked. If it evaluates to <c>true</c> then the actual loop statements are executed once. Afterwards, the update statement is executed and next, the loop run condition is checked again. If still true, the loop statements are executed again, etc.</p>
+        <p>Example:</p>
+        <program language="c"><input>            
+        for (i=10; i&gt;5; i--) {
+            printf("i = %d\n", i); 
+        }
+        </input></program>
+        <p>In this example, <c>i</c> is initialized with the value 10 right before the start of the loop. Next, the logic statement <c>i&gt;5</c> is evaluated, and since 10 is indeed greater than 5, the loop is entered. The <c>printf()</c> statement prints <pre>i = 10</pre> to the screen. Next, the update statement <c>i--</c> is executed, decreasing the value of <c>i</c> to 9. The loop condition is checked (9 is still greater than 5) and so <pre>i = 9</pre> is printed to the screen. <c>i</c> is next decreased to 8, loop condition checked, etc. This continues on until <pre>i = 6</pre> is printed to the screen. When <c>i</c> is next decreased to 5, the check of the loop condition evaluates to false since 5 is not greater than 5. The loop terminates with the loop counter having the value 5.</p>
+        <p><c>while</c>-loop syntax:</p>
+        <program language="c"><input>
+        while (condition) { 
+            statements...; 
+        }
+        </input></program>
+        <p>At the start of every run through the loop, the condition is checked and only if it evaluates to true are the statements in the loop body executed. It is the programmer's job to build in an update condition into these statements so that eventually the loop condition will evaluate to false, causing the loop to terminate. It is really easy to forget to do this, leading to a never-ending loop...</p>
+        <p>Example:</p>
+        <program language="c"><input>
+        i=10; 
+        while (i&gt;5) {
+            printf("i = %d\n", i);
+            i--; 
+        }
+        </input></program>
+        <p>This loop generates the exact same output as the above <c>for</c> loop. Notice that you have to explicitly initialize <c>i</c> on your own before the loop and program the update condition <c>i--;</c> as part of the loop body.</p>
+        <p>In general:</p>
+        <ul>
+            <li><idx><h>loops</h><h><c>for</c> vs. <c>while</c></h></idx>Use a <c>for</c>-loop when you have a known number of iterations.</li>
+            <li><idx><h>loops</h><h><c>for</c> vs. <c>while</c></h></idx>Use a <c>while</c>-loop when you have an unspecified number of iterations.</li>
+        </ul>
+        <investigation>
+            <statement>
+                <p>Would a <c>for</c>- or <c>while</c>-loop be more efficient to implement in the following scenario?</p>
+                <p><em>In your program, you want to use a loop to continuously get input from the user, and you want to continue to take in user input until a certain integer is entered.</em></p>
+            </statement>
+            <answer>
+                <p>A <c>while</c>-loop</p>
+            </answer>
+            <solution>
+                <p>Though this task could technically be accomplished with either type of loop, a <c>while</c>-loop would be more efficient to use, since you don't know how many times the user will input information before that certain "stop" integer is entered. With a <c>for</c>-loop, you'd have to prescribe a certain number of iterations through the loop, but you don't know this number up front! A <c>while</c>-loop does not need to be told how many times to iterate, rather it can simply run until it finds that certain "stop" integer being entered.</p>
+            </solution>
+        </investigation>
+        <p>Clearly, the following would be difficult to accomplish with a <c>for</c>-loop. We are asking the user to enter a positive number, and in case they accidentally put in a negative number, have them repeat the input.</p>
+        <cmecode startPoint="engs20p_Nloop9" addOn="&amp;nocheck=true" height="300"></cmecode>
+        <p>In the previous example, we had to type the <c>scanf()</c> statement twice: once to read the user input and then one more time in case they entered something negative by accident. This is not the most elegant code (though perfectly acceptable). So there is a third kind of loop that helps in such a case, the <c>do-while</c>-loop:</p>
+        <cmecode startPoint="engs20p_Nloop10" addOn="&amp;nocheck=true" height="300"></cmecode>
+        <p>Unlike our previous two types of loops, a <c>do-while</c> loop is guaranteed to execute its loop body at least once since it doesn't get around to checking the loop condition until after execution of the loop body.</p>
+        <investigation>
+            <statement>
+                <p>What differences between <c>while</c>-loops and <c>do-while</c>-loops do you notice? Are there any similarities in their syntaxes?</p>
+            </statement>
+            <answer>
+                <p>We'll look into the <c>do-while</c>-loop in the next section!</p>
+            </answer>
+        </investigation>
+    </section>
+    
+    <section xml:id="loops-do-while">
+        <title>The <c>do-while</c>-Loop</title>
+        <p><idx><h>loops</h><h><c>do-while</c></h></idx>The <c>do-while</c>-loop is similar in nature to the <c>while</c>-loop, in the sense that the code within both loops will execute so long as a certain condition is satisfied. The slight difference between the two types of loops is that in a <c>while</c>-loop, the condition is tested before the statements within the loop are executed, whereas in a <c>do-while</c>-loop, the code inside the loop executes once before the condition is ever tested.</p> 
+        <p>Therefore, even if the condition to continue the loop is never met, the <c>do-while</c>-loop will still execute the loop's statements once, but the <c>while</c>-loop will not execute at all.</p>
+        <activity xml:id=>
+            <p>Try out the features of the <c>do-while</c>-loop in the code window below. Test what happens if you edit the code so the condition of the loop is NOT met. Change the loop from a <c>do-while</c>-to a <c>while</c>-loop, and see if it produces the same results!</p>
+            <p><nbsp/></p>
+            <figure>
+                <idx><h>loops</h><h><c>do-while</c></h></idx>
+                <cmecodehere>
+#include &lt;stdio.h&gt;
+int main(void) {
+    int i = 1;
+    do {
+        printf("Hello, World!\n");
+        i++;
+    } while (i &lt; 5);
+    return (0);
+}
+                </cmecodehere>
+            </figure>
+        </activity>
+    </section>
+
+    <section xml:id="loops-compound">
+        <title>Compound Assignment Operators</title>
+        <idx><h>loops</h><h>operators</h><h>compound assignment (<c>i=i+1</c>)</h></idx>
+        <p>In programming we often update the values of variables using statements such as:</p>
+        <pre>i = i + 1;</pre>
+        <pre>fac = fac * i;</pre>
+        <pre>num = num - 1;</pre>
+        <p>These common coding tasks, where a certain operation (i.e. addition, subtraction, etc.) is being done to one variable itself (so the variable appears on both sides of the assignment operation), can be written in a shorthand using <alert>compound assignment operators</alert>.</p> 
+        <p>In the first example above, we want to increment <c>i</c> by one, meaning we take the old value of <c>i</c>, add one to it, and store the new value back in <c>i</c>. However, we can achieve the same result using a compound assignment operator!</p>
+        <p>In the following video, we'll learn about this shorthand notation for such variable updates.</p>
+        <codecast href="1513619611903"/>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>Shorthand notation for increments and decrements</li>
+                    <li>i.e. <c>+=</c>, <c>-=</c>, <c>*=</c>, <c>/=</c>, <c>%=</c></li>
+                    <li>NEW SYNTAX: <c>i+=1</c> will increase <c>i</c> by 1 (shorthand for i = i + 1)</li>
+               </ul>
+            </p>
+        </aside>
+        <reading-questions>
+            <exercise xml:id="quiz-loops-5">
+                <statement>
+                    <p>Please complete the following program by creating a loop that adds up the numbers from n to 2n (have the user enter the number n). Save the result of this addition in the variable sum (which has already been declared) and print it out. Be sure to declare any other additional variables you might need for your loop.</p>
+                    <cmecode startPoint="engs20p_loops4" height="300"></cmecode>
+                    <p><em>When your program performs correctly you'll be given a keyword to enter below. Please enter the keyword exactly as given to you (without the quotation marks).</em></p>
+                </statement>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="loops-operators">
+        <title>Increment / Decrement Operators</title>
+        <idx><h>loops</h><h>operators</h><h>shorthand</h></idx>
+        <p>Certain incremental and decrement statements, such as the following, are so commonly used in C, especially when working with loops, that there is even a shorthand for the shorthand!</p> 
+        <pre>i += 1;</pre> 
+        <pre>i -= 1;</pre>
+        <p>Because of their ubiquitousness, there is yet another shorthand notation just for these operations of adding one to or subtracting one from a variable!</p>
+        <investigation>
+            <statement>
+                <p>Do you remember what the following is shorthand notation for:</p>
+                <pre>i += 1;</pre>
+                <p> </p>
+            </statement>
+            <answer>
+                <pre>i = i + 1;</pre>
+            </answer>
+            <solution>
+                <p>Remember: <c>i += 1;</c> is a <em>compound assignment operation</em> that we just learned about in the previous section!</p>
+            </solution>
+        </investigation>
+        <p>In the following video, we'll take a look at the shorthand notation that shortens the already short compound assignment operators <c>+=</c> and <c>+=</c>:</p>
+        <codecast href="1513622685303"/>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                    <li>Shorthand notation for incrementing and decrementing the same variable</li>
+                    <li>i.e. <c>i++;</c>,  <c>++i</c></li>
+                    <li>i.e. <c>i--;</c>,  <c>--i</c></li>
+                    <li>Pre- and post-fix notation: the location of <c>++</c> or <c>--</c> either before or after the variable to be modified determines the timing of the update relative to other instructions that are part of the same statement.</li>
+                    <li>NEW SYNTAX: <c>i++</c>, for example, is equivalent to <c>i = i + 1</c></li>
+               </ul>
+            </p>
+        </aside>
+        <reading-questions>
+            <exercise xml:id="quiz-loops-6">
+                <statement>
+                    <p>What does the following code print to the screen?</p>
+                    <program language="c"><input>
+                        int i = 5;
+                        i++;
+                        printf("%d ", i);
+                        printf("%d ", i++);
+                        printf("%d ", i--);
+                        printf("%d ", --i);
+                    </input></program>   
+                    <ol>
+                        <li>6 7 6 5</li>
+                        <li>6 6 7 5</li>
+                        <li>6 7 6 6</li>
+                        <li>5 5 4 4</li>
+                        <li>5 6 5 4</li>
+                    </ol>
+                    <p><em>Enter your choice (a/b/c/d/e):</em></p>
+                </statement>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="loops-operators-practice">
+        <title>Increment / Decrement Practice</title>
+        <subsection>
+            <title>Increment Practice</title>
+            <activity xml:id=>
+                <p>Do you remember what this code prints to the screen?</p>
+                <cmecode startPoint="engs20p_NIncrementDecrementCRAZY" addOn="&amp;nocheck=true&amp;hide_run=true" height="300"></cmecode>
+            loop, and see if it produces the same results!</p>
+            <p><nbsp/></p>
+            <figure>
+                <idx><h>loops</h><h><c>do-while</c></h></idx>
+                <cmecodehere>
+#include &lt;stdio.h&gt;
+int main(void) {
+    int i = 1;
+    do {
+        printf("Hello, World!\n");
+        i++;
+    } while (i &lt; 5);
+    return (0);
+}
+                </cmecodehere>
+            </figure>
+        </activity>
+        </subsection>
+
+        <subsection>
+            <title>Predict the Result</title>
+            <activity xml:id=>
+                <p>Now look at the part that is commented out - basically the same <c>printf()</c>
+                statements as above, but this time all in one line. What do you expect this to
+                print to the screen?</p>
+                <p>Be sure to think about this first, before actually running the code.</p>
+                <cmecode startPoint="engs20p_NIncrementDecrementCRAZY" addOn="&amp;nocheck=true&amp;hide_run=true" height="300"></cmecode>
+             do {
+        printf("Hello, World!\n");
+        i++;
+    } while (i &lt; 5);
+    return (0);
+}
+                </cmecodehere>
+            </figure>
+        </activity>
+        </subsection>
+
+        <subsection>
+            <title>Try It Out!</title>
+            <activity xml:id=>
+                <p>Okay, now you can hit the <c>Run</c> button. Is this what you predicted?</p>
+                <cmecode startPoint="engs20p_NIncrementDecrementCRAZY" addOn="&amp;nocheck=true" height="300"></cmecode>
+                <p>What happened?</p>
+            ink about this first, before actually running the code.</p>
+                <cmecode startPoint="engs20p_NIncrementDecrementCRAZY" addOn="&amp;nocheck=true&amp;hide_run=true" height="300"></cmecode>
+             do {
+        printf("Hello, World!\n");
+        i++;
+    } while (i &lt; 5);
+    return (0);
+}
+                </cmecodehere>
+            </figure>
+        </activity>
+        </subsection>
+    </section>
+
+    <section xml:id="loops-fun">
+        <title>Fun With Loops!</title>
+        <p>Remember: the best way to learn to code is to write code! So let's practice our loops. Pick one of the following prompts. And most importantly: have fun! If you get done early, pick another one!</p>
+        <subsection>
+            <title>Option 1</title>
+            <activity xml:id="activity-13-7-1_Fun_With_Loops_1">
+                <statement>
+                    <p>Write a program that prompts the user to enter a positive integer <em>n</em> and then computes the sum of the numbers from 1 through <em>n</em>. For example, if the user enters 5, then your program's output should be: </p>
+                    <pre>"The sum of the numbers from 1 through 5 equals 15."</pre>
+                    <p>A quick way to check that your program works is to ensure that the sum of the numbers from 1 to <em>n</em> equals <m>\frac{n(n+1)}{2}</m>.</p>
+                    <p>Write two versions of this program: One using a <c>while</c>-loop, and another one using a <c>for</c>-loop.</p>
+                    <cmecode startPoint="engs20p_Nloop5" height="400"></cmecode>
+                    <p><em>When you are done, please paste your code into the code submission box below:</em></p>
+                </statement>
+                <response/>
+</activity>
+        </subsection>
+
+        <subsection>
+            <title>Option 2</title>
+            <activity xml:id="activity-13-7-2-Fun_With_Loops_2-no-output">
+                <statement>
+                    <p>Write a program that continuously asks the user to enter a nonzero number and adds up all of the numbers entered. The program should terminate when the user enters a zero and then print out the total sum.</p>
+                    <p>Here is a sample run of the program:</p>
+                    <console>
+                        <prompt>Please enter a number: </prompt>
+                        <input>5</input>
+                        <prompt>Please enter a number: </prompt>
+                        <input>11</input>
+                        <prompt>Please enter a number: </prompt>
+                        <input>-3</input>
+                        <prompt>Please enter a number: </prompt>
+                        <input>0</input>
+                        <output>The numbers you entered add up to 13.</output>
+                    </console>
+                    <cmecode startPoint="engs20p_Nloop6" height="400"></cmecode>
+                    <p><em>When you are done, please paste the code you</em> <alert>added</alert> <em>into the code submission box below:</em></p>
+                </statement>
+                <response/>
+</activity>
+        </subsection>
+
+        <subsection>
+            <title>Option 3</title>
+            <activity xml:id="activity-13-7-3-Fun_With_Loops_3-no-output">
+                <statement>
+                    <p>Write a program that prompts the user for two numbers <em>p</em> and <em>q</em>, then calculates the greatest common divisor of <em>p</em> and <em>q</em>. You may do so using the "brute force" method: If <em>q</em> <m>\leq</m> <em>p</em>, for example, you simply check each of the divisors <em>q, q-1, q-2, ..., 1</em>, until you find one that divides both <em>p</em> and <em>q</em>.</p>
+                    <p><em>Challenge: implement the Euclidean algorithm!</em></p>
+                    <cmecode startPoint="engs20p_Nloop7" height="400"></cmecode>
+                    <p><em>When you are done, please paste the code you</em> <alert>added</alert> <em>into the code submission box below:</em></p>
+                </statement>
+                <response/>
+</activity>
+        </subsection>
+
+        <subsection>
+            <title>Option 4</title>
+            <activity xml:id="activity-13-7-4-Fun_With_Loops_4-no-output">
+                <statement>
+                    <p>Write a program that determines whether a number entered by the user is prime (again, you may use the <lq/>brute force<rq/> method, going through all possible divisors 2, 3, 4, <ellipsis/>, <em>n</em>).</p>
+                    <p>(You only really need to check factors up to <m>\sqrt{n}</m>.)</p>
+                    <cmecode startPoint="engs20p_Nloop8" addOn="&amp;nocheck=true" height="400"></cmecode>
+                    <p><em>When you are done, please paste the code you</em> <alert>added</alert> <em>into the code submission box below:</em></p>
+                </statement>
+                <response/>
+</activity>
+        </subsection>
+    </section>
+
+    <section xml:id="loops-summary">
+        <title>Summary</title>
+        <p>In this chapter, we covered the following topics:</p>
+        <ul>
+            <li>An in-depth look at how the <c>for</c>-loop really works</li>
+            <li>The <c>while</c>-loop</li>
+            <li>The <c>do-while</c>-loop</li>
+            <li>Compound assignment operators</li>
+            <li>Increment and decrement operators</li>
+            <li>Lots of loop practice</li>
+        </ul>
+    </section>
+</chapter>

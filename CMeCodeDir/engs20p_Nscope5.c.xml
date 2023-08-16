@@ -1,0 +1,35 @@
+<?xml version='1.0'?>
+<cme>
+#define N 10
+#include &lt;stdio.h&gt;
+
+/* function prototype here */
+
+int main(void) {
+    int array[N];
+    int i;
+    
+    for (i=0; i&lt;N; i++) {
+        array[i] = 0;
+    }
+    printf("Array elements before function call: \n");
+    for (i=0; i&lt;N; i++) {
+        printf("%d  ", array[i]);
+    }
+    printf("\n");
+    
+    /* function call here */
+    
+    printf("Array elements after function call: \n");
+    for (i=0; i&lt;N; i++) {
+        printf("%d  ", array[i]);
+    }
+    printf("\n");
+    
+    return 0;
+}
+
+void enterValues(/*complete this part */) {
+    /* function body here */
+}
+</cme>

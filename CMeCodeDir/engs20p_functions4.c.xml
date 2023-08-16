@@ -1,0 +1,23 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+/* Here is your prototype. */
+void minutesToHoursMinutes(int totalMinutes, int *hours, int *minutes);
+
+int main(void) {
+ 
+   int totalTime, newHours, newMinutes;
+    totalTime = 0;
+
+   printf("Enter total minutes to convert: ");
+   scanf("%d", &amp;totalTime);
+   
+    minutesToHoursMinutes(totalTime, &amp;newHours, &amp;newMinutes);
+    printf("%d minutes equals %d hours and %d minutes.", totalTime, newHours, newMinutes);
+    
+    return(0);
+}
+
+/* Your function goes here. */
+</cme>

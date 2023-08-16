@@ -1,0 +1,17 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main (void)
+{
+   int i;
+   int total = 0;
+    
+   for (i=0; i&lt;=100; i--) {
+          total +=i;
+   }
+   printf("The sum of the numbers from 0 to 100 equals %d.\n", total);
+
+   return (0);
+}
+</cme>

@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="variables">
+    <title>Variables in C</title>
+    <introduction>
+        <p>So far we have dealt with printing text to the screen that was given (and stored) in our program's C-code. We will now delve into printing numbers and results of calculations to the screen. Next we will learn about the concept of a variable. You can think of a variable as a storage location that can hold hold numbers or characters for example and to which you can refer by a name of your choosing. Variables allow us to write programs that behave differently, depending on the value stored in this variable.</p>
+        <p>We'll learn how to capture and store in a variable input from the user. We'll also discuss common errors when working with variables as well as the use of variables in loops.</p>
+        <p>Since we may want to store data of a variety of types (such as numbers, text, etc.) we'll learn about different data types, in particular integers (<c>int</c>), characters (<c>char</c>) and floating point numbers (<c>float</c>).</p>
+        <p>We'll finish this chapter by discussion the way in which results of a division might vary depending on the data type being used.</p>
+    </introduction>
+
+    <section xml:id="variables-printing-numbers">
+        <title>Printing Numbers</title>
+        <p><idx><h>data type</h><h>integers</h></idx>There are lots of different types of numbers: integers (whole numbers without any decimal places), rational numbers, irrational numbers, complex numbers, etc. No matter how large, a computer's amount of storage has limits. You can see that therefore it would be hard to store with 100% accuracy, a number with infinitely many decimal places such as <m>\pi</m>. Moreover, different types of numbers are dealt with in different ways internally and that's why we discuss them separately. We start with whole numbers, also called <term>integers</term>, or <c>int</c> for short. Integers can be positive, negative, or zero and have no digits after the decimal point.</p>
+        <p><idx><c>printf()</c></idx><idx><h>format</h><h>specifiers</h><h><c>%d</c></h></idx>Up to this point, we have only printed words to the screen. In the following Codecast we'll learn how to print numbers to the screen using the <c>printf()</c> statement and the <term>format specifier</term> for integers.</p>
+        <codecast href="1511885551311"/>
+        <aside>
+            <title>Video Description</title>
+            <p>
+                <ul>
+                    <li>Using <c>printf()</c> to print integers</li>
+                    <li>The <c>%d</c> format specifier is demonstrated</li>
+                    <li>Multiple parameters are used in one <c>printf()</c> statement</li>
+                    <li>NEW SYNTAX: the following will print "Hello, 5":</li>
+                </ul>
+                printf("Hello, %d", 5);
+            </p>
+        </aside>
+        <reading-questions>
+            <exercise xml:id="quiz-printing-1">
+                <statement>
+                    <p>What will be printed to the screen by the following program:</p>
+                    <program language="c"><input>
+                        #include &lt;stdio.h&gt;
+                        int main(void) {
+                           printf("We need %d apples and %d cups sugar.\n", 10, 2);
+
+                           return(0);
+                        }
+                    </input></program>
+                </statement>
+                 <choices randomize="yes">
+                    <choice correct="yes">
+                        <statement>
+                            <c>We need 10 apples and 2 cups of sugar.</c>
+                        </statement>
+                        <feedback>
+                            <p>Great job!</p>
+                        </feedback>
+                    </choice>
+                    <choice>
+                        <statement>
+                            <c>We need 10 apples and 10 cups of sugar.</c>
+                        </statement>
+                        <feedback>
+                            <p>Not quite - try again!</p>
+                        </feedback>
+                    </choice>
+                    <choice>
+                        <statement>
+                            <c>We need 2 apples and 2 cups of sugar.</c>
+                        </statement>
+                        <feedback>
+                            <p>Not quite - try again!</p>
+                        </feedback>
+                    </choice>
+                    <choice>
+                        <statement>
+                            <c>We need 2 apples and 10 cups of sugar.</c>
+                        </statement>
+                        <feedback>
+                            <p>Not quite - try again!</p>
+                        </feedback>
+                    </choice>
+                    <choice>
+                        <statement>
+                            <c>We need %d apples and %d cups of sugar.</c>
+                        </statement>
+                        <feedback>
+                            <p>Not quite - try again!</p>
+                        </feedback>
+                    </choice>
+                </choices>
+                <hint>
+                    <p>There is a one-to-one match between format specifiers and parameters.</p>
+                </hint>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="variables-calculations">
+        <title>Simple Calculations</title>
+        <p><idx>calculations</idx>Simple calculations are straight-forward to perform in C with results easily printed to the screen. We'll learn how this is done in the next Codecast:</p>
+        <codecast href="1511887063528"/>
+        <aside>
+            <title>Video Description</title>
+            <p>
+                <ul>
+                    <li>Integer addition, subtraction, and multiplication</li>
+                    <li>Parentheses</li>
+                    <li>Order of operation</li>
+                    <li>NEW SYNTAX: the following will print "Result = 15"</li>
+                </ul>
+                printf("Result = %d", 5+10);
+            </p>
+        </aside>
+        <reading-questions>
+            <exercise xml:id="quiz-printing-2">
+                <statement>
+                    <p>Please complete the code below so that it prints the following computation to the screen:</p>
+                    <pre>5*8+2*8 = (5+2)*8 = 56</pre>
+                    <cmecode startPoint="engs20p_NAGprintNumbers" addOn="&amp;nocheck=true" height="300"></cmecode>
+                    <p><em>When your program performs correctly you'll be given a keyword to enter in Canvas. Please enter the keyword exactly as given to you (without the quotation marks).</em></p>
+                </statement>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="variables-intro">
+        <title>Introduction to Variables</title>
+        <p><idx><h>variables</h><h>declare</h></idx><idx><h>variables</h><h>initialize</h></idx>We'll now introduce the concept of a variable. As mentioned earlier, you can think of a variable as a storage location with a name associated to it by which you can refer to the contents of the storage location. A fundamental aspect of working with variables in C is that you need to decide and tell the computer up front what type of data (integer, character, etc) you wish to store in it. We call this process <term>declaring</term> the variable. Furthermore, it is good practice to assign a value to a variable right at the outset (we call this <term>initializing</term>) so that your variable holds a value that you control. If you try to use a variable that has not been declared, you will receive an error message from the compiler. Using a variable that has been declared but not initialized (not assigned a value) will lead to unpredictable results.</p>
+        <investigation xml:id="activity-variables-intro">
+            <statement>
+                <p>Can you deduce why uninitialized variables may give unpredictable results? What, if anything, do you think a variable that you have declared but <em>not initialized</em> contains?</p>
+            </statement>
+            <response/>
+        </investigation>
+        <p>How can we store numbers and recall them at different places in a program?</p>
+        <codecast href="1511892481149"/>
+        <aside>
+            <title>Video Description</title>
+            <p>
+                <ul>
+                    <li>Creating (declaring) variables</li>
+                    <li>Assigning values to variables</li>
+                    <li>Using variables</li>
+                    <li>NEW SYNTAX: <c>int myNum;</c> creates an integer variable named "myNum"</li>
+                    <li>NEW SYNTAX: <c>myNum = 5;</c> stores the integer "5" in the variable "myNum"</li>
+                </ul>
+            </p>
+        </aside>
+        <reading-questions>
+            <exercise xml:id="quiz-variables-1">
+                <statement>
+                    <p>What will be printed to the screen by the following program:</p>
+                    <program language="c"><input>
+                      #include &lt;stdio.h&gt;
+                      int main(void) {
+                          int money;
+                          money = 5;
+                          printf("I have %d dollars; that equals %d quarters.\n", money, 4*money);
+                          return 0;
+                      }
+                    </input></program>
+                </statement>
+                 <choices randomize="yes">
+                    <choice correct="yes">
+                        <statement>
+                            <c>I have 5 dollars; that equals 20 quarters.</c>
+                        </statement>
+                        <feedback>
+                            <p>Great job!</p>
+                        </feedback>
+                    </choice>
+                    <choice>
+                        <statement>
+                            <c>I have %d dollars; that equals %d quarters.</c>
+                        </statement>
+                        <feedback>
+                            <p>Not quite - try again!</p>
+                        </feedback>
+                    </choice>
+                    <choice>
+                        <statement>
+                            <c>I have 5 dollars; that equals 4*5 quarters.</c>
+                        </statement>
+                        <feedback>
+                            <p>Not quite - try again!</p>
+                        </feedback>
+                    </choice>
+                    <choice>
+                        <statement>
+                            <c>I have 20 dollars; that equals 5 quarters.</c>
+                        </statement>
+                        <feedback>
+                            <p>Not quite - try again!</p>
+                        </feedback>
+                    </choice>
+                </choices>
+                <hint>
+                    <p>There is a one-to-one match between format specifiers and parameters.</p>
+                </hint>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="variables-changing">
+        <title>Modifying Variables</title>
+        <p><idx><h>variables</h><h>update</h></idx>After declaring and initializing a variable, the stored value is not set in stone. It can be updated!</p>
+        <p>Next, we'll learn how to modify the value of a variable in a program.</p>
+        <codecast href="1511893717434"/>
+        <aside>
+            <title>Video Description</title>
+            <p>
+                <ul>
+                    <li>Assignment statements in C</li>
+                    <li>Variable values can be updated</li>
+                    <li>NEW SYNTAX: <c>myNum = myNum - 3;</c> will decrease the stored value of "myNum" by 3</li>
+                </ul>
+            </p>
+        </aside>
+        <reading-questions>
+            <exercise xml:id="quiz-variables-2">
+                <statement>
+                    <p>Suppose you declare and initialize a variable at the beginning of your program as follows:</p>
+                    <program language="c"><input>
+                      int var;
+                      var = 10;
+                    </input></program>
+                    <p>What is the value of the variable <c>var</c> after the line</p>
+                    <program language="c"><input>
+                      var = var + 20;
+                    </input></program>
+                    <p>has been executed? <var width="6"/></p>
+                </statement>
+                <setup>
+                    <var>
+                        <condition number="30">
+                            <feedback>
+                                <p>Correct</p>
+                            </feedback>
+                        </condition>
+                        <condition string=".*">
+                            <feedback>
+                                <p>Not quite - try again!</p>
+                            </feedback>
+                        </condition>
+                    </var>
+                </setup>
+            </exercise>
+            <exercise xml:id="quiz-variables-3">
+                <statement>
+                    <p>Continuing from the question above, your program now contains the next line:</p>
+                    <program language="c"><input>
+                      var = var - 5;
+                    </input></program>
+                    <p>What is the value of <c>var</c> after this statement? <var width="6"/></p>
+                </statement>
+                <setup>
+                    <var>
+                        <condition number="25">
+                            <feedback>
+                                <p>Correct</p>
+                            </feedback>
+                        </condition>
+                        <condition string=".*">
+                            <feedback>
+                                <p>Not quite - try again!</p>
+                            </feedback>
+                        </condition>
+                    </var>
+                </setup>
+            </exercise>
+            <exercise xml:id="quiz-variables-4">
+                <statement>
+                    <p>Finally, your program contains the two lines:</p>
+                    <program language="c"><input>
+                      var = 100;
+                      var = var+50;
+                    </input></program>
+                    <p>What is the value of <c>var</c> after these two lines have been executed? <var width="6"/></p>
+                </statement>
+                <setup>
+                    <var>
+                        <condition number="150">
+                            <feedback>
+                                <p>Correct</p>
+                            </feedback>
+                        </condition>
+                        <condition string=".*">
+                            <feedback>
+                                <p>Not quite - try again!</p>
+                            </feedback>
+                        </condition>
+                    </var>
+                </setup>
+            </exercise>
+        </reading-questions>
+   </section>
+
+  <section xml:id="variables-initializing">
+    <title>Initializing Variables</title>
+    <p>It is very important to always initialize your variables (that is, give initial values to your variables, even if you plan to change those values immediately). In the following video we discuss two ways to do so.</p>
+    <ul>
+     <li><idx><h>variables</h><h>initialize</h><h>separately</h></idx>Separate declaration and initialization: <program language="c"><input>int cash; 
+cash = 20;</input></program> </li>
+     <li><idx><h>variables</h><h>initialize</h><h>simultaneously</h></idx>Declaration and initialization in one statement: <program language="c"><input>int cash = 20;</input></program> </li>
+   </ul>
+   <p>
+     <codecast href="1511896979139"/>
+   </p>
+   <aside>
+       <title>Video Description</title>
+       <p>
+          <ul>
+            <li>Separate declaration and initialization for a variable</li>
+            <li>Declaring and initializing a variable in one line</li>
+            <li>NEW SYNTAX: <c>int money = 30;</c> declares an integer variable named "money" and stores the value 30 in it</li>
+          </ul>
+       </p>
+   </aside>
+    <reading-questions>
+      <exercise xml:id="quiz-variables-5">
+        <statement>
+          <p>Which of the following variable declaration and initialization statements is equivalent to:</p>
+          <program language="c"><input>
+            int money;
+            money = 20;
+          </input></program>
+        </statement>
+          <choices randomize="yes">
+                <choice correct="yes">
+                    <statement>
+                        <c>int money = 20;</c>
+                    </statement>
+                    <feedback>
+                        <p>Great job!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <c>money = int 20;</c>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <c>int 20;</c>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <c>int money 20;</c>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+          </choices>
+          <hint>
+                <p>Scroll up to the top of this page for the correct syntax.</p>
+          </hint>
+      </exercise>
+      <exercise xml:id="quiz-variables-6">
+        <statement>
+          <p>Find an equivalent variable declaration and initialization statement to:</p>
+          <program language="c"><input>
+            int apples;
+            apples = 4;
+          </input></program>
+        </statement>
+          <choices randomize="yes">
+                <choice correct="yes">
+                    <statement>
+                        <c>int apples = 4;</c>
+                    </statement>
+                    <feedback>
+                        <p>Great job!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <c>apples = 4 int;</c>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <c>int 4;</c>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <c>nt apples 4;</c>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+          </choices>
+          <hint>
+                <p>Scroll up to the top of this page for the correct syntax.</p>
+          </hint>
+      </exercise>
+    </reading-questions>
+  </section>
+
+<section xml:id="variables-errors">
+  <title>Common Variable Errors</title>
+  <p><idx><h>variables</h><h>errors</h></idx>We all make mistakes. In coding there are several types of errors we are all prone to. Some are akin to spelling or grammar errors (we call them syntax errors) and some are of logical nature, for example. It can be helpful to think about potential errors before getting started so that you can be on the lookout. Let's look at some common errors in working with variables.</p>
+  <p>The following three activities present erroneous code. Can you spot the error and fix it? Don't be afraid to play around and try out multiple solutions. You cannot break anything! Remember that you can always go back to the original problem by clicking on the <q>Start fresh</q> button.</p>
+  <subsection>
+    <title>Fix Me!</title>
+    <activity xml:id="activity-4-6-1-Fix_Me_1">
+        <statement>
+          <p>You'd like to print your age to the screen. What is wrong with the following code? Can you fix it?</p>
+          <p>If you'd like our autograder to check your program for correctness, please do not change the <c>printf()</c> statement.</p>
+          <cmecode startPoint="engs20p_NvariablesErrors1" height="300"></cmecode>
+          <p>What was wrong with the given code?</p>
+          <p><em>Please paste your text submission into the box below.</em></p>
+          </statement>
+          <response/>
+    </activity>
+  </subsection>
+
+  <subsection>
+    <title>Fix me too...!</title>
+    <activity xml:id="activity-4-6-2-Fix_Me_2">
+        <statement>
+        <p>Again, you'd like to print your age to the screen. And again, something is wrong with the following code. Can you fix it?</p>
+        <p>If you'd like our autograder to check your program for correctness, please do not change the <c>printf()</c> statement.</p>
+        <cmecode startPoint="engs20p_NvariablesErrors2" height="300"></cmecode>
+        <p>What was wrong with the given code?</p>
+        <p><em>Please paste your text submission into the box below.</em></p>
+        </statement>
+        <response/>
+    </activity>
+  </subsection>
+
+  <subsection>
+    <title>Fix me three...!</title>
+    <activity xml:id="activity-4-6-3-Fix_Me_3">
+      <statement>
+        <p>Another error! You'd like to print your age to the screen. And again, something is wrong with the following code. Can you fix it?</p>
+        <p>If you'd like our autograder to check your program for correctness, please do not change the printf statement.</p>
+        <cmecode startPoint="engs20p_NvariablesErrors3" height="300"></cmecode>
+        <p>What was wrong with the given code?</p>
+        <p><em>Please paste your text submission into the box below.</em></p>
+        </statement>
+        <response/>
+    </activity>
+  </subsection>
+
+  <subsection>
+    <title>Summary</title>
+    <p>Here is what we have learned:</p>
+    <ul>
+      <li>Variable names can only contain letters, numbers and the underscore character <q>_</q>. </li>
+      <li>Variable names must start with a letter or an underscore <q>_</q>.</li>
+      <li>Variable names are case sensitive. </li>
+      <li>Variables need to be initialized (assigned a value) BEFORE they are used.</li>
+    </ul>
+  </subsection>
+</section>
+
+<section xml:id="variables-loop-practice">
+  <title>Using Variables in Loops: Practice!</title>
+  <activity xml:id="activity-4-7-1-Practice_Your_Loops">
+    <statement>
+      <p>
+        Please print a multiplication table
+        (for multiplication by 7)
+        to the screen, in the following form:
+      </p>
+      <cd>
+        1 x 7 = 7
+        2 x 7 = 14
+        3 x 7 = 21
+        4 x 7 = 28
+        5 x 7 = 35
+        6 x 7 = 42
+        7 x 7 = 49
+        8 x 7 = 56
+        9 x 7 = 63
+        10 x 7 = 70
+      </cd>
+      <p>
+        Be sure to use a loop here, do not write 10 <c>printf()</c> statements...
+      </p>
+      <p>
+        As a reminder, here is the format of a
+        <c>for</c>-loop that runs 10 times:
+      </p>
+      <program language="c"><input>
+        int i; /* a variable, for example by the name of i, is needed */
+        for (i=1; i&lt;=10; i++) {
+           /* code that needs to be repeated goes here */
+        }
+      </input></program>
+      Through this loop, the variable <c>i</c> successively gets assigned values from 1 to 10. In the first run through the loop <c>i</c> has the value 1, in the next run-through that value is increased to 2, then to 3, all the way up to and including 10.
+      <cmecode startPoint="engs20p_NmultiplicationTable1" addOn="&amp;nocheck=true" height="300"></cmecode>
+      <p><em>When you are done, please put your code into the box below:</em></p>
+    </statement>
+    <response/>
+  </activity>
+
+  <investigation>
+    <statement>
+      <p>How could you easily change the output of this program, so that instead of each line reading <c>i x 7</c>, where <c>i</c> is that incrementing variable, it prints as <c>7 x i</c>? Or, what if you wanted to print a multiplication table for a different number, instead of 7? Try out some of these changes if you have time!</p>
+    </statement>
+  </investigation>
+</section>
+
+<section xml:id="variables-user-input">
+  <title>User Input Using <c>scanf()</c></title>
+  <p><idx><c>scanf()</c></idx>It is possible to have the user (the person sitting in front of the computer screen) modify the value of a variable while the program is running! To do so the user needs to enter a value (this is typically done by typing on the keyboard) and your program needs to be ready to accept such an input value and store it in a variable. The C-command to accomplish this is <c>scanf()</c>.</p>
+  <p>The following code asks the user for their age, has them enter it and then prints it out. <em>You'll notice the strange ampersand (&amp;) character in front of the variable in which we are storing the user input. We'll explain this a bit later - for now: don't worry.</em></p>
+  <cmecode startPoint="engs20p_NuserInput1" addOn="&amp;nocheck=true" height="300"></cmecode>
+  <p>Try it out by hitting the <q>Run</q> button! When prompted, enter your age.</p>
+  <p>You can read multiple entries with one <c>scanf()</c> statement if you wish (or you can simply use multiple <c>scanf()</c> statements in a row):</p>
+  <cmecode startPoint="engs20p_NuserInput2" addOn="&amp;nocheck=true" height="300"></cmecode>
+  <p>Let's get back to our multiplication table. Rather than printing the x7 table, in this next example, we'll have the user enter which multiplication table to print:</p>
+  <cmecode startPoint="engs20p_NuserInput3" addOn="&amp;nocheck=true" height="300"></cmecode>
+
+  <activity xml:id="activity-4-8-1-Adding_User_Input">
+    <title>Adding User Input</title>
+    <statement>
+      <p>Please write a program that adds integers, entered by the user.</p>
+      <p>First, ask the user to enter the number of integers they wish to add. Next, use a <c>for</c>-loop that runs the desired number of times, and in which you continually ask the user to enter another number that then gets added to the sum.</p>
+      <p>When the loop terminates, print the result to the screen.</p>
+      <p>Here is a sample session, with simulated user input in bold:</p>
+      <console>
+        <prompt>How many numbers do you wish to add? </prompt>
+        <input>5</input>
+        <prompt>Please enter number 1: </prompt>
+        <input>7</input>
+        <prompt>Please enter number 2: </prompt>
+        <input>13</input>
+        <prompt>Please enter number 3: </prompt>
+        <input>4</input>
+        <prompt>Please enter number 4: </prompt>
+        <input>-3</input>
+        <prompt>Please enter number 5: </prompt>
+        <input>9</input>
+        <prompt>The numbers you entered add up to 30.</prompt>
+      </console>
+      <cmecode startPoint="engs20p_NuserInput4" addOn="&amp;nocheck=true" height="500"></cmecode>
+      <p><em>When you are done, please copy the code you</em> added <em>into the box below:</em></p>
+    </statement>
+    <response/>
+  </activity>
+</section>
+
+<section xml:id="variables-char-datatype">
+  <title>The <c>char</c> Datatype</title>
+  <p>So far we have only stored integer numbers in variables.</p>
+  <p>
+    <idx><h>data type</h><h>characters</h></idx>
+    You can also store letters or symbols in variables (in computer speak these are called <term>characters</term>).
+  </p>
+  <p>
+    <idx><h>format</h><h>specifiers</h><h><c>%c</c></h></idx>
+    The datatype to store a character is called <c>char</c>, the format specifier is <c>%c</c>
+  </p>
+  <p>Here is an example:</p>
+  <cmecode startPoint="engs20p_NprintChar" addOn="&amp;nocheck=true" height="300"></cmecode>
+  <activity xml:id="activity-4-9-1-printf_Practice">
+    <title><c>printf</c> Practice</title>
+    <statement>
+      <p>
+        Write a program that prints out <q>ENGS 20</q> using the following <c>printf()</c> statement:
+      </p>
+      <cd>
+        printf("%c%c%cS 20\n", letter1, letter2, letter3);
+      </cd>
+      <p>
+        Please do not make any changes to the <c>printf</c> statement since the autograder will not function correctly if you do.
+      </p>
+      <cmecode startPoint="engs20p_NprintChars" height="300"></cmecode>
+      <p><em>When you are done, please put your code into the box below:</em></p>
+    </statement>
+    <response/>
+  </activity>
+
+
+<paragraphs>
+  <title>Reading characters from the user input</title>
+  <p>You can use <c>scanf()</c> to read a character from the user input:</p>
+  <cmecode startPoint="engs20p_NscanChar" addOn="&amp;nocheck=true" height="300"></cmecode>
+</paragraphs>
+<investigation>
+  <statement>
+    <p>What do you think would happen if you tried to use the <c>scanf()</c> function to read a character, but you use the format specifier for an integer-type variable, <c>%d</c>? Will it work or fail?</p>
+  </statement>
+  <hint>
+    <p>Take your best guess, and then feel free to try it out in the code window above</p>
+  </hint>
+  <answer>
+    <p>It does not work!</p>
+  </answer>
+  <solution>
+    <p>Since our <c>scanf()</c> statement in the code window above has <c>&amp;letter</c> as the destination where the scanned input is to be stored, the <c>scanf()</c> function knows that <c>&amp;letter</c> was declared as a <c>char</c>, so it expects the complementary <c>%c</c> format specifier.</p>
+  </solution>
+</investigation>
+</section>
+
+<section xml:id="variables-float-datatype">
+  <title>The <c>float</c> Datatype</title>
+  <p>
+    <idx><h>data type</h><h>floats</h></idx>
+    Storing decimal numbers takes up more computer memory than storing integers because of all those decimal places. The more precision you are looking for the more space it takes up. Although today's computers come with plenty of memory, it is prudent to only use up what you really need.
+  </p>
+  <p>
+    C has several data types to store decimal numbers: <c>float</c>, <c>double</c> and <c>long double</c>. They have increasing precision. We'll mostly use the type <c>float</c>.
+  </p>
+  <p>
+    <idx><h>format</h><h>specifiers</h><h><c>%f</c></h></idx>
+    The format specifier for a <c>float</c> is <c>%f</c>.
+  </p>
+  <p>While internally, numbers are always stored with the precision dictated by the number's data type, for visualization purposes you can specify the number of decimal places to display using <c>%.1f</c> (one decimal place), <c>%.2f</c> (two decimal places), etc.</p>
+  <p>By default (if using simply <c>%f</c>) floats are displayed with 6 decimal places.</p>
+  <cmecode startPoint="engs20p_NprintScanFloat" addOn="&amp;nocheck=true" height="300"></cmecode>
+  <investigation>
+    <statement>
+      <p>What happens if the precision of the format specifier exceeds that of the number being displayed? For example, if the user enters 1.77 in the code window above, but the code specifies the output to have four decimal places, <c>%.4f</c>, what will happen?</p>
+    </statement>
+    <hint>
+      <p>Try it out above to see what happens, then see if you can guess why that happens!</p>
+    </hint>
+  </investigation>
+</section>
+
+<section xml:id="variables-division">
+    <title>Division</title>
+    <p>Get ready to be surprised. But don't worry, we'll explain everything soon!</p>
+    <subsection>
+      <title>Intro to Division in C</title>
+      <activity label="activity-variables-division">
+        <statement>
+          <p>Try to predict what the output of the following program will be:</p>
+          <cmecode startPoint="engs20p_Ndivision1" addOn="&amp;nocheck=true&amp;hide_run=true" height="300"></cmecode>
+          <p>Which of the following do you think will be printed to the screen?</p>
+        </statement>
+        <choices randomize="yes">
+            <choice correct="yes">
+                <statement>
+                    <c>5 / 3 = 1</c>
+                </statement>
+                <feedback>
+                    <p>Correct! Do you have any idea why this might be happening?</p>
+                </feedback>
+            </choice>
+            <choice correct="no">
+                <statement>
+                    <c>5 / 3 = 1.666667</c>
+                </statement>
+                <feedback>
+                    <p>Unfortunately, this is not what happens...</p>
+                </feedback>
+            </choice>
+            <choice correct="no">
+                <statement>
+                    <c>5 / 3 = 1.67</c>
+                </statement>
+                <feedback>
+                    <p>Unfortunately, this is not what happens...</p>
+                </feedback>
+            </choice>
+            <choice correct="no">
+                <statement>
+                    <c>5 / 3 = 2</c>
+                </statement>
+                <feedback>
+                    <p>Not quite - try again!</p>
+                </feedback>
+            </choice>
+            <choice>
+                <statement>
+                    <c>5 / 3 = 1.7</c>
+                </statement>
+                <feedback>
+                    <p>Not quite - try again!</p>
+                </feedback>
+            </choice>
+        </choices>
+      </activity>
+    </subsection>
+    <subsection>
+      <title>Your Turn!</title>
+      <activity>
+        <p>Click on the <c>Run</c> button in the window below to reveal the integer division behavior that C exhibits. Next, change the data types of some of the variables (use float instead of int) and observe the outcome. What do you notice?</p>
+        <cmecode startPoint="engs20p_Ndivision1" addOn="&amp;nocheck=true" height="300"></cmecode>
+      </activity>
+
+      <paragraphs>
+        <title>Summary of division behavior in C:</title>
+        <p>Following are the results of various examples of division in C. Notice the effect that the <em>types</em> of numbers being divided have on the quotient. Are there patterns? Why is this happening?</p>
+        <ul>
+          <li><pre>5/2 = 2</pre></li>
+          <li><pre>5.0/2 = 2.5</pre></li>
+          <li><pre>5/2.0 = 2.5</pre></li>
+          <li><pre>5.0/2.0 = 2.5</pre></li>
+        </ul>
+      </paragraphs>
+    </subsection>
+  </section>
+
+  <section xml:id="variables-summary">
+    <title>Summary</title>
+    <p>Here is what we have learned in this chapter:</p>
+    <ul>
+      <li>Integer numbers can be stored efficiently in the <c>int</c> datatype, characters in the <c>char</c> datatype and floating point numbers in the <c>float</c> datatype.</li>
+      <li>The format specifiers for these datatypes are <c>%d</c>, <c>%c</c> and <c>%f</c>. </li>
+      <li>To read user input into these datatypes, use:
+      <program language="c"><input>
+        scanf("%d", &amp;age); 
+        scanf("%c", &amp;letter); 
+        scanf("%f", &amp;height);
+      </input></program></li>
+    </ul>
+  </section>
+</chapter>

@@ -1,0 +1,18 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void) {
+    char word[50];
+    int found = 0;
+    
+    printf("Please enter your word: ");
+    scanf("%s", word);
+    
+    // your code here
+    
+    printf("%d\n", found);
+    return 0;
+}
+</cme>

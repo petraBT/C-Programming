@@ -1,0 +1,42 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+struct point{
+    int x;
+    int y;
+    struct point * next;
+};
+void printPoints(struct point *start);
+struct point * append (struct point * end, struct point * newpt);
+int main(void) {
+
+    struct point pt1 = {1, 2, NULL};
+    struct point pt2 = {-2, 3, NULL};
+    struct point pt3 = {5, -4, NULL};
+    struct point * start, * end;
+    
+    start = end = &amp;pt1;
+    end = append(end, &amp;pt2);
+    end = append(end, &amp;pt3);
+    
+    printPoints(start);
+    
+	return 0;
+}
+
+void printPoints(struct point *start) {
+
+    struct point * ptr;
+    ptr = start;
+    while (ptr!=NULL) {
+        printf("(%d, %d)\n", ptr-&gt;x, ptr-&gt;y);
+        ptr = ptr-&gt;next;
+    }
+}
+
+struct point * append (struct point * end, struct point * newpt) {
+    end-&gt;next = newpt;
+    return(end-&gt;next);
+} 
+</cme>

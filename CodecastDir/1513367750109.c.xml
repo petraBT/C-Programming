@@ -1,0 +1,18 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    int myNumber = 3;
+    int yourNumber = 5;
+    
+    if (myNumber&gt;yourNumber)
+        printf("I win!\n");
+    else if (myNumber&lt;yourNumber)
+        printf("You win!\n");
+    else
+        printf("It's a tie.\n");
+    
+    return(0);
+}
+</cme>

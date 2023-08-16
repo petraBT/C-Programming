@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="chars">
+	<title>Characters and ASCII Codes</title>
+	<introduction>
+        <p>We have previously focused on how numbers, such as integers and floats, are stored in the computer's memory. Suppose now you wanted to store someone's middle initial in a variable: how would the computer manage to save such a character in its memory using only zeros and ones?</p>
+        <p>In this chapter, we will dive into this topic of characters and see how they are stored in memory. We will also practice coding with characters and find a pattern between how upper- versus lower-case letters are stored in the computer's memory.</p>
+    </introduction>
+
+    <section xml:id="chars-intro">
+        <title>Digital Representation of Characters</title>
+        <p>How are characters (letters and symbols) stored in the computer's memory?</p>
+        <p>In this next video you'll find out.</p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+               <ul>
+                <li><idx><h>digital representation</h><h>characters</h></idx>Each character is assigned in a unique number (its ASCII code)</li>
+                <li>Instead of storing the character directly in memory, its ASCII code (an integer) is stored. We already know how integers are stored!</li>
+                <li>The %c format specifier interprets the ASCII code and displays the corresponding character when used in a printf() statement</li>
+                <li>For example, the ASCII code of "X" is the number "88", which is "01011000" in binary. So "X" is stored as 01011000 in the computer's memory</li>
+               </ul>
+            </p>
+        </aside>
+        <video xml:id="QEMODOAw4Fk" youtube="QEMODOAw4Fk" play-at="select"/>
+        <p>Each character (a, b, ..., A, B, ...), number (0-9), and symbol (*,&amp;!%@) is represented by a 1-byte code:</p>
+        <figure>
+            <image source="images/ASCII.png" width="70%"/>
+            <caption>ASCII Table (Bronson, Appendix B)</caption>
+        </figure>
+        <p><alert>Example:</alert></p>
+        <p>ASCII code for <c>X</c> is 88. In HEX: <c>0x58</c></p>
+        <p>In binary, the character <c>X</c> is represented in memory by 1 byte (8 bits): 01011000</p>
+        <reading-questions>
+            <exercise xml:id="quiz-floatchar-6">
+                <statement>
+                    <p>Find the 8-bit binary representation of the letter <alert>a</alert> (lower case), if the ASCII code is used, as described in the video.</p>
+                </statement>
+              <choices randomize="yes">
+                <choice correct="yes">
+                    <statement>
+                        <p>01100001</p>
+                    </statement>
+                    <feedback>
+                        <p>Correct!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>10010111</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>01100101</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+                <choice>
+                    <statement>
+                        <p>00100000</p>
+                    </statement>
+                    <feedback>
+                        <p>Not quite - try again!</p>
+                    </feedback>
+                </choice>
+            </choices>
+            <hint>
+                <p>Look at the above table and convert the hexadecimal code into binary.</p>
+            </hint>
+            </exercise>
+        </reading-questions>
+    </section>
+
+    <section xml:id="chars-ascii">
+        <title>Characters and the ASCII code</title>
+        <p><idx>ASCII code</idx>Recall that characters are stored in the computer's memory as numbers, namely the ASCII codes corresponding to the characters. Check this out:</p>
+        <cmecode startPoint="engs20p_NASCIIdemo" addOn="&amp;nocheck=true" height="300"></cmecode>
+        <activity xml:id="activity-7-2-1-ASCII-pattern">
+        <statement>
+            <p>Please find the ASCII codes for 'a', 'A', 'd', 'D', 's', 'S', 'u', 'U'.</p>
+            <p>Do you notice any patterns with their ASCII codes?</p>
+            <p><em>Please type your answer below.</em></p>
+        </statement>
+        <response/>
+        </activity>
+    </section>
+
+    <section xml:id="chars-cases">
+        <title>Upper- and Lower-Case Chars</title>
+        <p><idx>uppercase</idx><idx>lowercase</idx>Each letter in our alphabet has a lower-case and an upper-case version. Since we may be interested in converting from upper- to lower-case or from lower- to upper-case it is beneficial for us to examine whether there might be a pattern between the two ASCII codes that correspond to the lower- and upper-case versions of a given letter.</p>
+        <p>Have you found the pattern? If not, go back to the previous code window and keep experimenting until you do. Or take a close look at the ASCII table.</p>
+        <activity xml:id="activity-7-3-1-UpperLowerCaseChars">
+            <statement>
+            <p>Using the pattern you found, write a C program that first asks the user to enter a lowercase letter and then converts that letter to the corresponding uppercase letter and prints the letter (with no other text) out to the screen.</p>
+            <cmecode startPoint="engs20p_NAGLowerToUpperASCII" height="300"></cmecode>
+            <p>What line of code did you add?</p>
+            </statement>
+            <response/>
+        </activity>
+    </section>
+
+    <section xml:id="chars-summary">
+        <title>Summary</title>
+        <p>In this chapter, we covered the following topics:</p>
+        <ul>
+            <li>Representing characters in memory</li>
+            <li>The ASCII code</li>
+            <li>Printing characters and their ASCII codes</li>
+            <li>Converting between upper- and lower-case characters</li>
+        </ul>
+    </section>
+</chapter>

@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="linux">
+	<title>Linux</title>
+	<introduction>
+		<p>We will now begin transitioning to working in a C-programming environment that is used in the professional world. We will continue to use our convenient coding windows whenever possible, but there are some limitations to our coding windows, for example when it comes to working with files. While it is possible for you to install your own C-compiler on your computer it'll be more convenient for now to simply use the C-compiler that has been installed on the Thayer School computer servers. In order to make use of this compiler we'll have to save our source code 'on the server', navigate to the source code, invoke the compiler and then run the code on the server. All of these steps happen automatically in our coding windows and we'll now learn how to perform them ourselves. The Thayer School servers (and many many other servers) 'speak' Linux, which is an operating system just like Windows or MacOS. What's special about Linux and related operating systems is that it can accommodate many users logging onto the same server in order to perform operations there. That's what we want since we will all be logging onto the Thayer School servers. And so the first step in this transition is an introduction to the Linux operating system.</p>
+    </introduction>
+
+    <section xml:id="linux-editor">
+    	<title>Install Software On Your Computer</title>
+    	<p>Three pieces of software are needed to get your computer set up for Linux and our next class meeting. Don't worry, you'll only need to go through these steps once, so don't cut corners and skip anything this time!</p>
+    	<subsection>
+    		<title>Install Dartmouth's Virtual Private Network</title>
+			<p><idx><h>Linux</h><h>VPN</h></idx>To connect to our server-based coding environment, you must first connect to Dartmouth's network. This can be accomplished by using a Virtual Private Network (VPN), which allows you to extend Dartmouth's private network across the internet to where you are currently located. Please follow the VPN <url href="https://kb.thayer.dartmouth.edu/article/227-dartmouth-vpn" visual="kb.thayer.dartmouth.edu/article/227-dartmouth-vpn"><c>installation instructions</c></url> pertaining to your operating system.</p>
+		</subsection>
+		<subsection>
+			<title>Install an Editor and Compile "On The Server"</title>
+			<p><idx><h>Linux</h><h>install</h></idx>Now, once you have the VPN client running and connected to Dartmouth, you need to install a certain editor on your computer in order to use our server-based coding environment. This is actually not really necessary but will make subsequent steps much simpler for you. Please follow the <url href="http://kb.thayer.dartmouth.edu/article/237-engs-20" visual="kb.thayer.dartmouth.edu/article/237-engs-20"><c>installation instructions</c></url> to get your computer prepared. Be sure to follow <alert>ALL</alert> of the instructions. You will even write and compile your first program ("hello word", again...).</p>
+		</subsection>
+		<subsection>
+			<title>Install Thayer Shares</title>
+			<p>Please read about the Thayer Shares system <url href="https://kb.thayer.dartmouth.edu/article/319-thayer-shares" visual="kb.thayer.dartmouth.edu/article/319-thayer-shares"><c>here</c></url>. Next, please install the connection software appropriate for your computer. To do so, follow these <url href="https://kb.thayer.dartmouth.edu/article/317-thayer-shares-connecting" visual="kb.thayer.dartmouth.edu/article/317-thayer-shares-connecting"><c>installation instructions</c></url>.</p>
+		</subsection>
+		<reading-questions>
+			<exercise xml:id="quiz-linux-1">
+				<statement>
+					<p>Did you install all necessary software on your computer and write the "hello, world" program on the server?</p>
+					<p><em>Enter yes or no:</em></p>
+				</statement>
+			</exercise>
+			<exercise xml:id="quiz-linux-2">
+				<statement>
+					<p>What is the command prompt you see when you log onto the Thayer School <c>engs20</c> server?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p><c>~$</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>~/</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>$$</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p><c>/$</c></p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+			<exercise xml:id="quiz-linux-3">
+				<statement>
+					<p>When logged into the Thayer School <c>engs20</c> server, what does the command "clear" do?</p>
+				</statement>
+            <choices randomize="yes">
+               <choice correct="yes">)
+                  <statement>
+                     <p>It clears several lines and puts the command prompt at the top of the screen.</p>
+                  </statement>
+                  <feedback>
+                     <p>Correct</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>It erases the command history.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>It cleans the operating system.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+               <choice>
+                  <statement>
+                     <p>It prints out multiple empty lines and puts the command prompt at the bottom of the screen.</p>
+                  </statement>
+                  <feedback>
+                     <p>Not quite. Try again!</p>
+                  </feedback>
+               </choice>
+            </choices>
+			</exercise>
+		</reading-questions>
+	</section>
+
+    <section xml:id="linux-intro">
+    	<title>Introduction to Linux</title>
+    	<p><alert>Linux</alert> is an operating system. Here are some quick facts about Linux:</p>
+    	<ul>
+    		<li>Linux was developed by Linus Torvalds who was at the time a student at the University of Helsinki in Finland. Torvalds' M.Sc. thesis was titled <em>Linux: A Portable Operating System</em>.</li>
+    		<li>The prototype for Linux was released in 1991, when Torvalds was 21 years old, with version 1.0 following in 1994. What Torvalds had in mind with this operating system is encapsulated well in his prototype announcement: <em>"Hello everybody out there using minix - I'm doing a (free) operating system (just a hobby, won't be big and professional like gnu) for 386(486) AT clones. (...) I'll get something practical within a few months, and I'd like to know what features most people would want. Any suggestions are welcome, but I won't promise I'll implement them :-) Linus (torvalds@kruuna.helsinki.fi)"</em></li>
+    		<li>While a server-based operating system (namely Unix) already existed at the time, Unix is expensive proprietary software that at the time only ran on special expensive hardware. Torwalds' goal was to create a free, Unix-like operating system that can run on PC hardware.</li>
+    		<li>To this day, Linux is distributed under a license prohibiting commercial distribution.</li>
+    		<li>By now, Linux has been ported to more computer hardware platforms than any other operating system (servers, mainframe computers, supercomputers, desktop computers, Chrome OS, also runs on embedded systems including smartphones and tablet computers running Android, DVR devices, network routers, TVs, video game consoles, smartwatches.)</li>
+    	</ul>
+    	<p>One thing that will be a bit unfamiliar and take getting used to is the fact that graphical user interfaces did not yet exist when Linux was invented. A computer mouse was not a thing yet either. As such, rather than double clicking on a folder in order to advance into the folder, you'd issue a command with with your keyboard into a so-called <alert>terminal window</alert> whose purpose it is to interpret the commands you type.</p>
+    	<p>Despite the fact that by now, graphical user interfaces do exist for Linux, it'll be beneficial for us to learn about the typed commands. To make things a bit easier we'll explore such commands both in the graphical user interface as well as in the terminal window.</p>
+    	<p>Thus, to help you get acquainted with Linux we'll follow along some of the commands using a file browser. For this purpose, please navigate to your workspace folder inside your <c>engs20</c> folder on <alert>Thayer Shares</alert>.</p>
+    	<p>In case you don't know how to get there, the next two subsections include detailed instructions for how to do so on a <em>PC</em> or <em>Mac</em>:</p>
+    	<subsection>
+    		<title>Navigating to your Workspace Folder on a PC</title>
+    		<ol>
+    			<li>
+    				Connect to your Home folder on <alert>Thayer Shares</alert>:
+    				<image source="images/Linux_PC1.png" width="60%"/>
+    			</li>
+    			<li>
+    				Then, navigate to your workspace directory (engs20 <m>\rightarrow</m> workspace):
+    				<sidebyside widths="45% 46%">
+	    				<image source="images/Linux_PC2.png" width="50%"/>
+	    				<image source="images/Linux_PC3.png" width="50%"/>
+	    			</sidebyside>
+    			</li>
+    			<li>
+    				You should now see the <c>hello.c</c> program you created earlier:
+    				<image source="images/Linux_PC4.png" width="60%"/>
+    			</li>
+    		</ol>
+    	</subsection>
+    	<subsection>
+    		<title>Navigating to your Workspace Folder on a Mac</title>
+    		<ol>
+    			<li>
+    				Connect to your Home folder on <alert>Thayer Shares</alert>:
+    				<sidebyside widths="20% 70%">
+	    				<image source="images/Linux_Mac1.png" width="50%"/>
+	    				<image source="images/Linux_Mac2.png" width="50%"/>
+	    			</sidebyside>
+    			</li>
+    			<li>
+    				Then, navigate to your workspace directory (engs20 <m>\rightarrow</m> workspace):
+    				<sidebyside widths="30% 30%">
+    					<image source="images/Linux_Mac3.png" width="50%"/>
+    					<image source="images/Linux_Mac4.png" width="50%"/>
+    				</sidebyside>
+    			</li>
+    			<li>
+    				You should now see the <c>hello.c</c> program you created earlier:
+    				<image source="images/Linux_Mac5.png" width="45%"/>
+    			</li>
+    		</ol>
+    	</subsection>
+    </section>
+
+    <section xml:id="linux-terminal">
+    	<title>Connect to Server via Terminal Window</title>
+    	<p>To connect to the ENGS20 Server via a Terminal Window, please click on the following link. Once the window opens in a new tab, wait until you are prompted to enter your Dartmouth password, and then do so.</p> 
+    	<p><nbsp/><nbsp/><nbsp/><url href="https://code.thayer.dartmouth.edu/linux.php?starting_point=engs20p_engs20Server" visual=""><alert><c>CLICK HERE</c></alert></url></p>
+    	<p>On your screen, please arrange the windows showing the terminal and the file browser, so that you can see both at the same time.</p>
+    	<figure>
+			<image source="images/Linux_Setup.png" width="100%">
+				<description>Arranging Terminal Window and File Browser</description>
+			</image>
+			<caption>Arranging Terminal Window and File Browser</caption>
+		</figure>
+    </section>
+
+    <section xml:id="linux-files">
+    	<title>Linux File System</title>
+    	<subsection>
+    		<title>Navigation Commands</title> 
+	    	<p>To begin exploring how to find your files using typed commands in Linux, we must learn how to navigate between folders using only typed commands.</p>
+	    	<p>The first <alert>command</alert> we will study is <c>ls</c>. This command lists the content of a directory. You of course are familiar with how to accomplish the equivalent in a file browser: you simply click on the folder icon and automatically are shown the files inside the folder.</p> 
+	    	<activity>
+	    		<p>Try it out by typing <c>ls</c> in your terminal window. What happens?</p>
+	    	</activity>
+	    	<p><alert>Switches</alert> can be added to a command to modify its behavior. For <c>ls</c>, switches include:</p>
+	    	<ul>
+	    		<li><c>-l</c>: long listing (type <c>ls -l</c> into the terminal window to try it out)</li>
+	    		<li><c>-t</c>: sorts by date (type <c>ls -t</c>)</li>
+	    		<li><c>-a</c>: show all files, even those that are hidden by the operating system (type <c>ls -a</c>)</li>
+	    	</ul>
+	    	<p>You can also combine several switches in arbitrary order:</p>
+	    	<ul>
+	    		<li><c>-lta</c>: shows a long listing, sorted by date, of all files (type <c>ls -lta</c>)</li>
+	    		<li>See <xref ref="linux-cheat-sheet" text="title"/> for more switches and description of <c>ls</c></li>
+	    	</ul>
+	    	<activity>
+	    		<p>Now, try typing <c>ls engs20</c> into the terminal window. What do you see? How would you accomplish this in the file browser?</p>
+	    	</activity>
+	    	<p>The next <alert>command</alert> we will discuss is <c>cd</c>. This command is used to change the directory in which you find yourself.</p> 
+	    	<activity>
+	    		<p>Try it out by typing <c>cd engs20</c>, then type <c>ls</c>. Now, your file browser and terminal are both pointing to the same directory.</p>
+	    	</activity>
+	    	<p>How do we return to the <em>parent directory</em>, which is the directory in which <c>engs20</c> is located?</p>
+	    	<activity>
+	    		<p>Type <c>cd ..</c>, then type <c>ls</c> to verify that we are back to where we started. How would you do this in the file browser?</p>
+	    		<p>What are all these other directories and where in the file system are we to begin with?</p>
+	    	</activity>
+	    </subsection>
+	    <subsection>
+	    	<title>Hierarchical File System</title>
+	    	<p>The Linux file system is hierarchical and is pretty much organized like a tree. The start of the file system is called its <em>root</em> directory: <c>/</c>. Type <c>cd /</c>, then type <c>ls</c>. You should see something like the following:</p>
+	    	<image source="images/Linux_root.png" width="65%"/>
+	    	<p>Where did <c>engs20</c> go? Don't worry, we'll find it!</p>
+	    </subsection>
+	    <subsection>
+	    	<title>Expanded Hierarchical File System</title>
+	    	<p>Can you find your <c>engs20</c> folder now?</p>
+			<image source="images/Linux_root_large.png" width="100%"/>
+			<activity>
+				<p>Now that you know where it is located, what Linux commands do you type in the terminal window to get you back into the <c>engs20</c> folder?</p>
+			</activity>
+	    </subsection>
+	</section>
+
+	<section xml:id="linux-directories">
+		<title>Making and Using Directories</title>
+	    <subsection>
+	    	<title>The Home Directory</title>
+	    	<p>The <c>~</c> (tilde) symbol is a quick way (sort of a short-hand) for specifying your home directory. Every user has a home directory and each user's home directory is their own (not accessible to others).</p>
+	    	<p>On the <c>engs20</c> servers, you are the user <em>Your NetID</em>, and your home directory is:</p> 
+	    	<pre>/thayerfs/home/Your_NetID</pre>
+	    	<p>Thus, the <c>~</c> stands for that exact path on the <c>engs20</c> servers. Try it out: type <c>cd ~</c> and then <c>ls</c> to verify that you are indeed back in your home directory.</p>
+	    	<image source="images/Linux_root_dir.png" width="100%"/>
+	    </subsection>
+	    <subsection>
+	    	<title>Print the Working Directory</title>
+	    	<p>Got lost in your filesystem? Type <c>pwd</c> to <alert>p</alert>rint the <alert>w</alert>orking <alert>d</alert>irectory (that is the directory that you are currently in).</p>
+	    	<p>You can also look at your prompt in terminal to find out where you are. Or you could simply type <c>cd</c> with nothing after it, and you will be brought to your home directory. Or <c>cd ~</c> as we just learned.</p>
+	    </subsection>
+	    <subsection>
+	    	<title>Make a New Directory</title>
+	    	<p>The command <c>mkdir</c> creates a new directory, and it will only work in a directory for which you have <em>write permission</em>.</p>
+	    	<activity>
+		    	<p>Change into your workspace directory by typing <c>cd</c> or <c>cd ~</c> to change into your home directory, then <c>cd engs20</c>, followed by <c>cd workspace</c> to be brought into the workspace directory.</p>
+		    	<p>Now, type <c>mkdir LA1</c> to create a directory for Long Assignment 1. <alert>Note: Linux is case sensitive!</alert> So <c>la1</c> is totally different from <c>LA1</c>.</p>
+		    	<p>Type <c>ls</c> to verify that you have created a new directory named <c>LA1</c> in your workspace directory. Verify that you see the directory in your file browser as well.</p>
+		    </activity>
+	    </subsection>
+	</section>
+
+	<section xml:id="linux-remove-file">   
+    	<title>Remove a File</title>
+    	<p>The command <c>rm</c> removes (deletes) a file.</p>
+    	<p><alert>CAUTION</alert>: <c>rm</c> does not check whether you actually mean to remove a file... It'll simply go ahead and do so.</p>
+    	<activity>
+	    	<p>In the Linux window <alert>below</alert>, change into the directory <c>~/engs20</c> (from your home directory, type <c>cd engs20</c>). Then, type <c>ls</c>. Now, delete the file "toBeDeleted.txt" by typing <c>rm toBeDeleted.txt</c>. Type <c>ls</c> and observe that the file is now gone.</p>
+		    <p>There must be a waste basket somewhere? Where is the trash folder? Where did the file "toBeDeleted.txt" go?</p>
+	    	<server startPoint="engs20p_rmPractice" height="300"/>
+	    </activity>
+	</section>
+
+	<section xml:id="linux_display-file">   
+    	<title>Display File Contents</title>
+    	<p>Linux provides a convenient way to peek into a file without going through the hassle of opening it in an editor. This is somewhat similar to the preview pane that pops up in your file browser when you click on or hover over a file with your mouse.</p>
+    	<p>The command <c>less</c> displays contents of a file, one screen-full at a time. Once you see the first screen-full you can navigate through the file's contents either using your cursor keys or advance by the page via the following:</p>
+    	<ul>
+    		<li><c>Space Bar</c> advances one page</li>
+    		<li><c>Ctrl+b</c> goes back one page</li>
+    		<li><c>q</c> exits the <c>less</c> program and returns you to the command prompt</li>
+    	</ul>
+    	<activity>
+    		<p>In the Practice Linux Window below, there is a file named "lookAtMe.txt" in the directory <c>engs20</c>, which itself is located in your home directory. Which one of the words below is hidden in the file "lookAtMe.txt"?</p>
+    		<ul>
+    			<li>Chocolate</li>
+    			<li>Cookies</li>
+    			<li>Coffee</li>
+    			<li>Coconuts</li>
+    		</ul>
+    		<server startPoint="engs20p_lessPractice" height="300"/>
+    	</activity>
+    </section>
+
+    <section xml:id="linux-move-file">  
+    	<title>Move a File</title>
+    	<p>The command <c>mv</c> moves a file (as in take it from one location and relocate the file to another location). It is the command-line analog of drag-and-drop.</p>
+    	<activity>
+	    	<p>In the Practice Linux Window below, verify that there is a file named "myLongAssignment.c" inside the <c>engs20</c> folder. Then, type:</p>
+	    	<pre>mv ~/engs20/myLongAssignment.c ~/engs20/workspace/LA1</pre> 
+	    	<p><em>If you are already in the <c>engs20</c> folder, you could type:</em></p> 
+	    	<pre>mv myLongAssignment.c workspace/LA1</pre>
+	    	<p>Now, check that "myLongAssignment.c" no longer resides in <c>~/engs20</c> but has moved to <c>~/engs20/workspace/LA1</c>.</p>
+	    	<p>You can also rename a file using <c>mv</c>. Navigate into the folder <c>~/engs20/workspace/LA1</c> and type <c>mv myLongAssignment.c myLA.c</c>. Type <c>ls</c> to verify the name change.</p>
+    		<server startPoint="engs20p_mvPractice" height="300"/>
+    	</activity>
+    </section>
+ 
+	<section xml:id="linux-copy-file"> 
+    	<title>Copy a File</title>
+    	<p>The command <c>cp</c> makes a copy of a file, so you'll have two independent copies of the same file.</p>
+    	<activity>
+    		<p>In the Practice Linux Window below, copy the file <c>~/engs20/workspace/hello.c</c> to the folder <c>~/ens20/workspace/LA1</c> What is the code to do so?</p>
+        	<server startPoint="engs20p_cpPractice" height="300"/>
+    	</activity>
+	</section>
+
+	<section xml:id="linux-compile">
+		<title>Compiling Code</title>
+		<activity>
+			<p>In the server window below, enter your Dartmouth password when prompted. You'll find yourself back on the ENGS20 server. This is thus no longer a practice coding window but rather the real deal. So do not randomly delete files; you are now in your own space on the server with your own responsibilities.</p>
+			<p>Navigate to your workspace directory (<c>cd engs20/workspace</c>), then type <c>ls</c>. You should see your "hello.c" program there.</p>
+			<p>Type <c>compile hello.c</c>, which will translate your code into machine language. The compiler names the resulting executable program "hello". In order to run this code, type <c>hello</c> (the name of the executable file resulting from compiling "hello.c").</p>
+			<p>Open your editor (NotePad++ on a PC or BBEdit on a Mac) and establish a connection to the ENGS20 server. Next, open "hello.c" in your editor. Make a change to your code, such as printing out your pet's name, and <alert>save</alert> the changes on the server.</p>
+			<p>Verify in the code window below that your code has indeed changed (hint: use the <c>less</c> command). Now, recompile and run your code to observe your printed changes.</p>
+			<server startPoint="engs20p_engs20Server" height="300"/>
+		</activity>
+	</section>
+ 
+	<section xml:id="linux-languages">
+		<title>Computer Languages</title>
+		<p><idx>languages</idx>How did we choose the computer languages studied in this class? Why C? Why Matlab? Watch this video to find out:</p>
+		<aside>
+		    <title>Video Description</title>
+		    <p>
+		       <ul>
+		            <li>Computer languages</li>
+        			<li>Low-level versus high-level languages</li>
+        			<li>Steps to translating into machine language</li>
+        			<li>Compiled versus interpreted languages</li>
+		       </ul>
+		    </p>
+		</aside>
+		<video xml:id="_9AvLxDsvUBY" youtube="9AvLxDsvUBY" play-at="select"/>
+		<reading-questions>
+			<exercise xml:id="quiz-languages-1">
+				<statement>
+					<p>Let's start with a review question...</p>
+					<p>You just wrote the following program:</p>
+					<program language="c"><input>
+						#include &lt;stdio.h&gt;
+						int myrecursion(int i, int j);
+
+						int main(void)
+						{
+					      int a;
+					      a = myrecursion(24,7);
+					      printf("%d\n", a);
+					      return(0);
+						}
+
+						int myrecursion(int i, int j)
+						{
+						  if (i>j)
+						    return myrecursion(i-j, j);
+						  else
+						    return(i);
+						}
+					</input></program>
+					<p>What is the value of the variable <em>a</em> that is printed to the screen at the end of the program? <alert>Choose one: 3 / 7 / 10 / 17 / 24</alert></p>
+					<p>How many times is the function <c>myrecursion()</c> called during execution of this program? <alert>Choose one: 1 time / 2 times / 3 times / 4 times / 5 times</alert></p>
+					<p>Feel free to use the window below to experiment. You may want to add some <c>printf()</c> statements inside the recursive function to be able to track its behavior. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</p>
+					<cmecode startPoint="engs20p_recursion1" height="500"></cmecode>
+					<p><em>Enter your two answers, separated by a comma, i.e.</em> <alert>30, 8 times</alert>:</p>
+				</statement>	
+			</exercise>
+			<exercise xml:id="quiz-languages-2">
+				<statement>
+					<p>Please arrange the following computer languages from lowest to highest level:</p>
+					<pre>C, machine language, assembly language, MATLAB, Java</pre>
+					<p> </p>
+				</statement>
+			</exercise>
+		</reading-questions>
+	</section>
+
+	<section xml:id="linux-cheat-sheet">
+		<title>List of Linux Commands</title>
+		<idx><h>Linux</h><h>commands</h></idx>
+		<p>The Linux operating system provides a wealth of <alert>commands</alert> that are extremely useful. Below you will find some of the most commonly used commands that will be useful in this course, along with descriptions and information on how and when to use them.</p>
+		<p><c>ls</c>:
+            <ul>
+                <li>lists content of a directory</li>
+                <li>
+                    <p><em>switches</em> modify behavior:
+                        <ul>
+                            <li><c>-l</c>: long listing</li>
+                            <li><c>-t</c>: sort by date</li>
+                            <li><c>-a</c>: show all files</li>
+                            <li><c>-S</c>: sort by size</li>
+                            <li><c>-r</c>: sort in reverse order</li>
+                            <li><c>-lta</c>: long, sorted by date, all files</li>
+                            <li><c>man ls</c>:gives information on <c>ls</c> and all possible switches</li>
+                        </ul>
+                    </p>
+                </li>
+            </ul>
+        </p>
+
+        <p><c>cd</c>:
+            <ul>
+                <li>changes working directory</li>
+                <li><p><c>cd ..</c> moves up a directory
+                	   <ul>
+                		  <li><c>.</c> is the current directory, <c>..</c> is one directory up, etc.</li>
+                	   </ul>
+                	</p>
+                </li>
+                <li><p>can change to a directory with path
+                	  <ul>
+                		<li>i.e. <c>cd ~/engs20/workspace</c></li>
+                	  </ul>
+                	</p>
+                </li>
+                <li><c>cd ~</c> or simply <c>cd</c> changes to home directory</li>
+            </ul>
+        </p>
+
+
+        <p><c>pwd</c>:
+            <ul>
+                <li>prints working directory</li>
+                <li>alternatively, looks at your command prompt to determine your current location</li>
+            </ul>
+        </p>
+
+        <p><c>mkdir</c>:
+            <ul>
+            	<li>
+	                <p>creates a new directory
+	                	<ul>
+	                		<li>will only work in a directory for which you have write permission</li>
+	                	</ul>
+	                </p>
+	            </li>
+            </ul>
+        </p>
+
+        <p><c>rm</c>:
+            <ul>
+            	<li>
+	                <p>removes (deletes) a file
+	                	<ul>
+	                		<li>does not check whether you mean it</li>
+	                		<li>demonstrate in a shell and file browser with a test file to delete</li>
+	                	</ul>
+	                </p>
+	            </li>
+            </ul>
+        </p>
+
+        <p><c>rmdir</c>:
+            <ul>
+                <li>removes a directory, provided it contains no files or directories</li>
+            </ul>
+        </p>
+
+        <p><c>less</c>:
+            <ul>
+                <li>displays contents of a file, one screen-full at a time</li>
+                <li>space bar advances one page</li>
+                <li><c>Ctrl+b</c> goes back one page</li>
+                <li><c>q</c> quits <c>less</c> and returns you to the command prompt</li>
+            </ul>
+        </p>
+
+        <p><c>mv</c>:
+            <ul>
+                <li>moves a file to a new location</li>
+                <li>can also use mv to simply rename a file</li>
+            </ul>
+        </p>
+
+        <p><c>cp</c>:
+            <ul>
+                <li>makes an independent copy of a file</li>
+            </ul>
+        </p>
+
+        <p><c>man</c>:
+            <ul>
+            	<li>
+	                <p>tells you about the a given command and its switches (options)
+	                	<ul>
+	                		<li>i.e. <c>man cp</c></li>
+	                	</ul>
+	                </p>
+	            </li>
+            </ul>
+        </p>
+	</section>
+
+	<section xml:id="linux-summary">
+	    <title>Summary</title>
+	    <p>In this chapter, we learned about the following topics:</p>
+	    <ul>
+	        <li>Introduction to Linux and its file system</li>
+	        <li>How to install an editor and other necessary software on your computer in order to work on the engs20 servers to compile code</li>
+	        <li>Practice working on the <c>engs20</c> servers</li>
+	    </ul>
+	</section>
+</chapter>
+

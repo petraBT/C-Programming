@@ -1,0 +1,27 @@
+<?xml version='1.0'?>
+<cme>
+#define MAX 200
+#define WORDLEN 50
+#include &lt;stdio.h&gt;
+
+// prototypes here
+
+int main(void) {
+    FILE *ifile;
+    char text[MAX][WORDLEN];
+    int i,N;
+   
+    i=0;
+    ifile = fopen("reverseText.txt", "r");
+    while((i&lt;MAX) &amp;&amp; (fscanf(ifile, "%s", text[i])!=EOF)) {
+        i++;
+    }
+    N=i;
+    printText(text, N);
+    printf("\n\n");
+    printReverseText(text, N);
+    return 0;
+}
+
+// function definitions here
+</cme>

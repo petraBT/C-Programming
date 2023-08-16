@@ -1,0 +1,34 @@
+<?xml version='1.0'?>
+<cme>
+/* Program to test our complex number library
+* 
+*  testComplex.c
+* 
+* compile this program to an object file using
+*     gcc -c -o testComplex.o testComplex.c
+*
+* then link this object file with the complex number library
+*     gcc -o testComplex testComplex.o complexlib.o -lm
+*
+*/
+
+#include &lt;stdio.h&gt;
+#include "complexlib.h"
+
+int main(void)
+{
+   complex_t z,w;
+   
+   z = complex(2,3);
+   w = complex(-4,-6.5);
+   
+   display_c(z);
+   printf(" + ");
+   display_c(w);
+   printf(" = ");
+   display_c(add_c(z,w));
+   printf("\n");
+
+    return(0);
+}
+</cme>

@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+int main(void) {
+   char firstName[50];
+   char lastName[] = "Bonfert-Taylor";
+   int len;
+   
+   strcpy(firstName, "Petra The Chocolate Eater");
+   len = strlen(firstName);
+   printf("%s has %d letters, and %s has %d letters.\n", firstName, len, lastName, (int) strlen(lastName));
+   return 0;
+}
+</cme>

@@ -1,0 +1,14 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+/* Don't forget to #include the string library here! 
+   The header for the library is called string.h */
+
+int main(void) {
+   
+   /* You'll have to fill in the details here! */
+
+    return(0);
+}
+</cme>

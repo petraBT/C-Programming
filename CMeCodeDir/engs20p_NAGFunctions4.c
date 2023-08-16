@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+float divide(float, float);
+
+/* Do not change the main function! */
+int main(void) {
+  float x,y;
+  float result;
+  
+  printf("Please enter two numbers for division: ");
+  scanf("%f %f", &x, &y);
+  if (y==0.0) y = 1;
+  result = divide(x,y);
+  printf("%.2f / %.2f = %.2f. \n", x, y, result);
+  
+  return(0);
+}
+
+/* Please add your function here!*/

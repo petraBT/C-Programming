@@ -1,0 +1,38 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+struct student{
+	char firstName[30];
+	char lastName[30];
+	int birthYear;
+	double aveGrade;
+};
+void printStudent(struct student);
+void readStudent(struct student *studptr);
+int main(void) {
+
+    struct student me;
+    readStudent(&amp;me);
+    printStudent(me);
+	return 0;
+}
+
+void readStudent(struct student *studptr) {
+    printf("\nEnter a new student record: \n");
+    printf("First name: ");
+    scanf("%s", studptr-&gt;firstName);
+    printf("Last name: ");
+    scanf("%s", studptr-&gt;lastName);
+    printf("Birth year: ");
+    scanf("%d", &amp;studptr-&gt;birthYear);
+    printf("Average grade: ");
+    scanf("%lf", &amp;studptr-&gt;aveGrade);
+}
+
+void printStudent(struct student stud) {
+    printf("Name: %s %s\n", stud.firstName, stud.lastName);
+	printf("Year of birth: %d\n",stud.birthYear);
+	printf("Average grade: %.2lf\n",stud.aveGrade);
+}
+</cme>

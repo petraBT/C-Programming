@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="computers">
+    <title>Computers, Hardware, and Software</title>
+    <introduction>
+        <p>We provide a very brief introduction to some basic computer vocabulary, in particular the terms <term>hardware</term>, <term>software</term> and <term>algorithm</term>.</p>
+    </introduction>
+    <section xml:id="computers-vocabulary">
+        <title>Introductory Vocabulary</title>
+        <p>A computer is an object that is made up of hardware components as well as software to instruct the hardware what to do.</p>
+        <ul>
+            <li><idx>hardware</idx><term>Hardware:</term> Computer hardware refers to the physical components that make up a computer system. Examples of hardware components are the motherboard, the Central Processing Unit (CPU), random access memory (RAM) to run programs, the computer's power supply, a video card, a hard drive to store information, peripherals (keyboard, mouse, screen, printer etc) so as to provide user interaction, and more.</li>
+            <li><idx>software</idx><term>Software:</term> The purpose of software is to instruct the hardware components what to do. Software is basically computer code that runs on the computer and includes the operating system as well as all the applications installed on the computer.</li>
+            <li><idx>algorithm</idx><term>Algorithm:</term> An algorithm is a sequence of instructions that provides a set of steps to follow in order to achieve a desired result. </li>
+            <li><idx>program</idx><term>Program:</term> A program is an algorithm that is implemented (written) in a certain programming language, for example the C-programming language.</li>
+            <li><idx><h>program</h><h>input</h></idx><term>Program Input:</term> A program often needs input data that is supposed to be processed. Such data can be provided by the user or read from the hard disk for example.</li>
+            <li><idx><h>program</h><h>output</h></idx><term>Program Output:</term> Finally, a program often presents the results of its work back to the user in the form of output data.</li>
+        </ul>
+        <p>The following video explains these concepts:</p>
+        <aside>
+            <title>Video Description</title>
+            <p>
+                <ul>
+                    <li>Computer vocabulary is explained</li>
+                    <li>Examples of each term are given</li>
+                </ul>
+            </p>
+        </aside>
+        <figure>
+            <caption>Petra and Rémi explain Computers, Hardware, Software and Algorithms</caption>
+            <video xml:id="nF0gbyPfhj4" youtube="nF0gbyPfhj4" play-at="select"/>
+            <!-- <video source="video/ComputersHardwareSoftware.mp4" width="100%" start="4" preview="VideoDir/ComputersHardwareSoftware.png"/> -->
+        </figure>
+
+        <reading-questions xml:id="computers-vocabulary-reading-questions">
+            <title>Check your understanding!</title>
+
+            <exercise xml:id="computers-vocabulary-reading-question1">
+                <statement>
+                    <p>Can you think of any examples of software that you have used recently?</p>
+                </statement>
+                <response/>
+                <hint>
+                  <p>
+                    Do you use word processing software? How about spreadsheets? Or graphics programs?
+                  </p>
+                </hint>
+            </exercise>
+            <exercise xml:id="computers-vocabulary-reading-question2">
+                <statement>
+                    <p>What are some examples of program input that you can think of? How are you currently controlling your computer?</p>
+                </statement>
+                <response/>
+                <hint>
+                    <p>
+                        Do you use a keyboard? A mouse? Other input devices?
+                    </p>
+                </hint>
+            </exercise>
+        </reading-questions>
+     </section>
+</chapter>
