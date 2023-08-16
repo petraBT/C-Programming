@@ -1,3 +1,3 @@
-# My Great Book
+# ENGS 20 C-Programming Book
 
-Visit <https://pretextbook.org/documentation.html> to learn more.
+Visit <https://engs20book.thayer.dartmouth.edu/C-Programming> to learn more.
