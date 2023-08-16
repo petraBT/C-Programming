@@ -13,14 +13,6 @@
       <output-dir>output/web</output-dir>
       <xsl>xsl/c-programming-html.xsl</xsl>
     </target>
-    <target name="html">
-      <format>html</format>
-      <source>source/main.ptx</source>
-      <publication>publication/publication.ptx</publication>
-      <output-dir>output/html</output-dir>
-<!--      <output-dir>../ENGS20/c-programming/</output-dir> -->
-      <xsl>xsl/c-programming-html.xsl</xsl>
-    </target>
     <target name="latex">
       <format>latex</format>
       <source>source/main.ptx</source>
