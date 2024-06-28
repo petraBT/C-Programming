@@ -58,7 +58,7 @@
                </choice>
                <choice>
                   <statement>
-                     <p><pre>char name[] = "cool_file_name";</pre></p>
+                     <p><pre>char name = "cool_file_name";</pre></p>
                   </statement>
                   <feedback>
                      <p>Not quite. Try again!</p>

@@ -1,0 +1,15 @@
+INFO    : PreTeXt project found in `/Users/dz00762/Documents/PreTeXt Projects/C-Programming`.
+WARNING : Using CLI version 2.3.3 but project's `requirements.txt`
+WARNING : is configured to use 1.7.5. Consider either installing
+WARNING : CLI version 1.7.5 or running `pretext init --refresh`
+WARNING : to update `requirements.txt` to match 2.3.3.
+INFO    : Since no target was supplied, we will use "web".
+
+INFO    : Staging latest build located in `/Users/dz00762/Documents/PreTeXt Projects/C-Programming/output/web` at `/Users/dz00762/Documents/PreTeXt Projects/C-Programming/output/stage`.
+INFO    : 
+INFO    : Deployment is now staged at `/Users/dz00762/Documents/PreTeXt Projects/C-Programming/output/stage`.
+INFO    : Preparing to deploy from active `main` git branch.
+INFO    : 
+INFO    : Changes to project source since last commit detected.
+INFO    : Add/committing these changes to local Git repository.
+INFO    : 
