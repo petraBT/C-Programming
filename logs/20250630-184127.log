@@ -1,0 +1,10 @@
+INFO    : Staging deployment according to strategy default_target
+INFO    : Since no target was supplied, we will use "web".
+
+INFO    : Staging latest build located in `/Users/dz00762/repos/C-Programming/output/web` at `/Users/dz00762/repos/C-Programming/output/stage`.
+INFO    : 
+INFO    : Preparing to deploy from active `main` git branch.
+
+INFO    : Changes to project source since last commit detected.
+INFO    : Committing these changes to local Git repository.
+
