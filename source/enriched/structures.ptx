@@ -24,12 +24,12 @@
 		<p>C also provides the capability to define your own data types. In particular, we'll be learning about <q>structures</q>. </p>
 		<p><idx>structures</idx>A <term>structure</term> is simply a <em>collection of items of various data types</em> into one single object.</p>
 		<p>Note that arrays on the other hand have to stick to one data type. Suppose we wanted to store some student data, for example, for each student:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			char firstName[50];
 			char lastName[50];
 			int birthYear;
 			double aveGrade;
-		</input></program>
+		</code></program>
 		<p>We could simply create four separate arrays: one that holds the first names, one for last names, etc. Structures make this much easier, however. We can store, in one variable, all of the data for one specific student. We can then simply create one array of students to hold all of the data we are interested in.</p>
 		<p>In the code window below you can see how to define such a <c>struct student</c> data type and how to subsequently use it in your code to declare variables <c>me</c> and <c>you</c> of this data type. You can also see how to initialize such a structure at declaration time and how to access the so-called <term>members</term> of the structure (so <c>firstName</c>, <c>lastName</c>, <c>birthYear</c>, <c>aveGrade</c>) in your code.</p>
 		<cmecode startPoint="engs20p_Nstructures1" addOn="&amp;nocheck=true" height="500"></cmecode>
@@ -181,14 +181,14 @@
 				</solution>
 			</investigation>
 			<p>We'll work with the following structure example:</p>
-			<program language="c"><input>
+			<program language="c"><code>
 				struct student{
 				  char firstName[30];
 				  char lastName[30];
 				  int birthYear;
 				  double aveGrade;
 				};
-			</input></program>
+			</code></program>
 			<p>This stores student data (first and last name, birth year and average grade) in a structure.</p>
 			<p>The following Codecast shows you how to pass a student record to a function in order to print the record. Note that in the video we do not use <c>typedef</c> for the sole reason that sadly, <c>typedef</c> has not (yet) been implemented in the recording software.</p>
 			<codecast href="1521046478311"/>
@@ -206,14 +206,14 @@
 				<exercise xml:id="quiz-structfunction-1">
 					<statement>
 						<p>Suppose you have declared a structure to hold student data as in the video:</p>
-						<program language="c"><input>
+						<program language="c"><code>
 							struct student{
 							  char firstName[30];
 							  char lastName[30];
 							  int birthYear;
 							  double aveGrade;
 							};
-						</input></program>
+						</code></program>
 						<p>Suppose furthermore that you are writing a function compareStudents(), to which you'd like to pass two students of type struct student, and which returns the average grade of the student whose average grade is the lower of the two. Which of the following is the correct function prototype for such a function?</p>
 					</statement>
             <choices randomize="yes">
@@ -246,27 +246,27 @@
 				<exercise xml:id="quiz-structfunction-2">
 					<statement>
 						<p>In the same scenario as in the previous question, where you have declared a structure to hold student data via:</p>
-						<program language="c"><input>
+						<program language="c"><code>
 							struct student{
 							  char firstName[30];
 							  char lastName[30];
 							  int birthYear;
 							  double aveGrade;
 							};
-						</input></program>
+						</code></program>
 						<p>and are writing a function <c>compareStudents()</c> which compares the average grades of the two student records passed to the function, which of the following correctly finds the lower of the two average grades:</p>
 					</statement>
             <choices randomize="yes">
                <choice correct="yes">)
                   <statement>
                      <p>
-								<program language="c"><input>
+								<program language="c"><code>
 									double lower;
 									if (stud1.aveGrade&lt;stud2.aveGrade)
 									  lower = stud1.aveGrade;
 									else
 									  lower = stud2.aveGrade;
-								</input></program>
+								</code></program>
 							</p>
                   </statement>
                   <feedback>
@@ -276,13 +276,13 @@
                <choice>
                   <statement>
                      <p>
-								<program language="c"><input>
+								<program language="c"><code>
 									double lower;
 									if (aveGrade(stud1)&lt;aveGrade(stud2))
 									  lower = stud1.aveGrade;
 									else
 									  lower = stud2.aveGrade;
-								</input></program>
+								</code></program>
 							</p>
                   </statement>
                   <feedback>
@@ -292,10 +292,10 @@
                <choice>
                   <statement>
                      <p>
-								<program language="c"><input>
+								<program language="c"><code>
 									double lower;
 									lower = stud1.aveGrade&lt;stud2.aveGrade;
-								</input></program>
+								</code></program>
 							</p>
                   </statement>
                   <feedback>
@@ -325,7 +325,7 @@
 				<exercise xml:id="quiz-structfunction-3">
 					<statement>
 						<p>What is wrong with the following piece of code and how would you fix it?</p>
-						<program language="c"><input>
+						<program language="c"><code>
 							struct student{
 							  char firstName[30];
 							  char lastName[30];
@@ -340,7 +340,7 @@
 							  *studentptr.birthYear = 1998;
 							  return 0;
 							}
-						</input></program>
+						</code></program>
 					</statement>
             <choices randomize="yes">
                <choice correct="yes">)
@@ -385,28 +385,28 @@
 		<title>Structures and Pointers</title>
 		<p>When dealing with a pointer to a structure it can get pretty cumbersome to access a member of the structure being pointed to.</p>
 		<p>Suppose again that we have declared a structure as before:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			struct student{
 			  char firstName[30];
 			  char lastName[30];
 			  int birthYear;
 			  double aveGrade;
 			};
-		</input></program>
+		</code></program>
 		<p>Suppose furthermore that we have a pointer:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			struct student * studentptr;
-		</input></program>
+		</code></program>
 		<p>which points to a particular student's record. In order to access a member (for example birthYear) of this student's record via the pointer we first need to dereference the pointer (*studentptr) and then access the member via the <term>direct member selection operator</term> <c>.</c>:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			(*studentptr).birthYear
-		</input></program>
+		</code></program>
 		<p>The parentheses around (*studentptr) are important since without them the computer would attempt to execute the member selection operator first, which would make no sense, given that studentptr is not a structure but rather a pointer to a structure.</p>
 		<p>The <term>indirect member selection operator</term> <c>-&gt;</c> combines these steps into one:
 		</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			studentptr-&gt;birthYear
-		</input></program>
+		</code></program>
 		<p>and therefore accomplishes the same thing as the above. Watch the video to find out more:</p>
 		<codecast href="1521049225939"/>
 		<aside>
@@ -423,7 +423,7 @@
 			<exercise xml:id="quiz-structfunction-4">
 				<statement>
 					<p>Now, what is wrong with the following piece of code and how would you fix it?</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						struct student{
 						  char firstName[30];
 						  char lastName[30];
@@ -438,7 +438,7 @@
 					      me->birthYear = 1998;
 					      return 0;
 						}
-					</input></program>
+					</code></program>
 				</statement>
             <choices randomize="yes">
                <choice correct="yes">)
@@ -480,7 +480,7 @@
 				<statement>
 					<p>Time for some review of multidimensional arrays (this is called <em>interleaved learning</em> - a method of learning that helps you retain better what you have learned!)</p>
 					<p>Suppose you have written a function that initializes a two-dimensional array as follows:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						void initialize_array(int array[][NCOLS])
 						{
 						  int i,j;
@@ -488,17 +488,17 @@
 						    for (j=0; j&lt;NCOLS; j++)
 						      array[i][j] = i;
 						}
-					</input></program>
+					</code></program>
 					<p>Assume that you also have</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						#define NROWS 20
 						#define NCOLS 30
-					</input></program>
+					</code></program>
 					<p>as part of your code.</p>
 					<p>In your main program you have declared an array matrix as follows:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						int matrix[NROWS][NCOLS];
-					</input></program>
+					</code></program>
 					<p>What is the correct function call of the function <c>initialize_array()</c> from within your main function?</p>
 				</statement>
             <choices randomize="yes">
@@ -638,12 +638,12 @@
                <choice correct="yes">)
                   <statement>
                      <p>
-							<program language="c"><input>
+							<program language="c"><code>
 								typedef struct {
 								  int x;
 								  int y;
 								} point_t;
-							</input></program>
+							</code></program>
 						</p>
                   </statement>
                   <feedback>
@@ -653,12 +653,12 @@
                <choice>
                   <statement>
                      <p>
-							<program language="c"><input>
+							<program language="c"><code>
 								typedef struct point {
 								  int x;
 								  int y; 
 								} point_t;
-							</input></program>
+							</code></program>
 						</p>
                   </statement>
                   <feedback>
@@ -668,12 +668,12 @@
                <choice>
                   <statement>
                      <p>
-							<program language="c"><input>
+							<program language="c"><code>
 								typedef struct point {
 								  int x;
 								  int y;
 								};
-							</input></program>
+							</code></program>
 						</p>
                   </statement>
                   <feedback>
@@ -685,13 +685,13 @@
 			<exercise xml:id="quiz-structfunction-10"> 
 				<statement>
 					<p>Suppose you have declared a new type “student_t” as follows:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						typedef struct {
 			              char name[30];
 			              long id;
 			              int class;
 						} student_t;
-					</input></program>
+					</code></program>
 					<p>What is the correct way to declare and initialize a variable me of type <c>student_t</c>?</p>
 				</statement>
             <choices randomize="yes">
@@ -732,17 +732,17 @@
 			<exercise xml:id="quiz-structfunction-11"> 
 				<statement>
 					<p>As in the previous problem, you have defined a structure to store some student information as follows:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						typedef struct {
 			              char name[30];
 			              long id;
 			              int class;
 						} student_t;
-					</input></program>
+					</code></program>
 					<p>In your main program, you have furthermore declared a variable "me" of type <c>student_t</c> and initialized it, for example as follows:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 					    student_t me = {"Petra", 123456L, 1994};
-					</input></program>
+					</code></program>
 					<p>You'd now like to print the student record to the screen (i.e. print what is stored in the variable <c>me</c>). How would you do this?</p> 
 					<p>Feel free to use the following window to try things out. I have already given you a bit of code to make things easier.</p>
 					<cmecode startPoint="engs20p_structs1" height="500"></cmecode>

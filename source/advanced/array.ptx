@@ -341,8 +341,7 @@
 					<p>Write a program that prompts the user to type in a sentence, and that reads the sentence, character by character, and stores it in an array of characters. Stop reading, when the array is full or the character read is <c>\n</c>. Next, print out the sentence in reverse.</p>
 					<p>Here is a sample output:</p>
 					<console>
-						<prompt>Enter a sentence: </prompt>
-						<input>I love programming.</input>
+						<input prompt="Enter a sentence: ">I love programming.</input>
 						<output>Reverse: .gnimmargorp evol I</output>
 					</console>
 					<cmecode startPoint="engs20p_Narrays7" addOn="&amp;nocheck=true" height="400"></cmecode>
@@ -363,8 +362,7 @@
 					<p>Write a program that prompts the user to enter the weight of a letter and that tells the user the postage necessary to mail this letter with the US Postal Service.</p>
 					<p>Here is a sample output:</p>
 					<console>
-						<prompt>How much does your letter weigh (in ounces): </prompt>
-						<input>5.5</input>
+						<input prompt="How much does your letter weigh (in ounces): ">5.5</input>
 						<output>The postage is 203 cents.</output>
 					</console>
 					<p>Note: You can start with the code given below. Postage is calculated based on the next higher weight in the chart.</p>

@@ -343,14 +343,10 @@
             <p>Write a C program that finds the average of integers, entered by the user. First, the user should be asked to enter the number of integers they wish to average, then they should be asked to enter those integers and their average should be calculated.</p>
             <p>Here is a sample run of your program (with <alert>simulated user input</alert>):</p>
             <console>
-                <prompt>How many integers do you wish to average? </prompt>
-                <input>3</input>
-                <prompt>Please enter an integer: </prompt>
-                <input>8</input>
-                <prompt>Please enter an integer: </prompt>
-                <input>12</input>
-                <prompt>Please enter an integer: </prompt>
-                <input>101</input>
+                <input prompt="How many integers do you wish to average? ">3</input>
+                <input prompt="Please enter an integer: ">8</input>
+                <input prompt="Please enter an integer: ">12</input>
+                <input prompt="Please enter an integer: ">101</input>
                 <output>The average is 40.333333.</output>
             </console>
             <p>Recall that the average needs to be of type float, please store it in the variable <c>ave</c> which has already been declared for your convenience.</p>
@@ -391,12 +387,12 @@
                             <li>
                                 <p>Example:
                                     <ul>
-                                        <li><program language="c"><input>
+                                        <li><program language="c"><code>
                                             int a = 3;
                                             int b = 4;
                                             float ave;
                                             ave = ((float) a)/((float) b);
-                                        </input></program></li>
+                                        </code></program></li>
                                     </ul>
                                 </p>
                             </li>
@@ -409,9 +405,9 @@
                             <li>
                                 <p>Example: 
                                     <ul>
-                                        <li><program language="c"><input>
+                                        <li><program language="c"><code>
                                             8%5 = 3
-                                        </input></program></li>
+                                        </code></program></li>
                                     </ul>
                                 </p>
                             </li>

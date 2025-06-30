@@ -42,13 +42,13 @@
 		<image source="images/linkedLists4.png" width="100%"/>
 		<p>The following video presents a first example of a linked list. Just as we did previously in class with arrays, we'll be storing coordinates of points in this example, but unlike the arrays we used in class for this purpose, this time around each individual point will be stored at some place assigned to it during run-time, and each point will keep track of the location of the subsequent point in order to maintain the ordering.</p>
 		<p><idx>linked lists</idx>In order to do so, we need to store the address of a point (the next point in the list) as part of (so as a member of) the structure that holds the coordinates of the point. We'll therefore work with the following structure in this example (note that we are switching coordinates to integers just to make the memory view nicer):</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			struct point{
 			  int x;
 			  int y;
 			  struct point * next;
 			};
-		</input></program>
+		</code></program>
 		<codecast href="1521228105232"/>
 		<aside>
 		    <title>Video Description</title>
@@ -66,16 +66,16 @@
 				<statement>
 					<p>Let's start with a quick review question.</p>
 					<p>Suppose the following declarations have been made:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						typedef struct {
 					      int x;
 					      int y;
 						} point_t;
-					</input></program>
+					</code></program>
 					<p>and</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						point_t octagon[8];
-					</input></program>
+					</code></program>
 					<p>How would you assign the value 20 to the y-coordinate of the last point in the array <em>octagon</em>?</p>
 				</statement>
             <choices randomize="yes">
@@ -116,14 +116,14 @@
 			<exercise xml:id="quiz-linkedlist1-2">
 				<statement>
 					<p>Suppose that we have created a linked list of three student records using the structure definition below:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						struct student {
 					      char    name[50];
 					      int     birthYear;
 					      float   gpa;     
 					      struct student *next;
 						};
-					</input></program>
+					</code></program>
 					<p>Suppose also that the pointer <c>start</c> of type <c>struct student *</c> points to the first student in the list.</p>
 					<p>How would you print the name and GPA of the first student in the list?</p>
 					</statement>
@@ -182,14 +182,14 @@
 			<exercise xml:id="quiz-linkedlist1-3">
 				<statement>
 					<p>As in the previous question, you have created a linked list of three student records using the structure definition below:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						struct student {
 					      char    name[50];
 					      int     birthYear;
 					      float   gpa;     
 					      struct student *next;
 						};
-					</input></program>
+					</code></program>
 					<p>Suppose also that the pointer <c>start</c> of type <c>struct student *</c> points to the first student in the list.</p>
 					<p>How would you print the name and GPA of the <em>second</em> student in the list?</p>
 					</statement>
@@ -250,20 +250,20 @@
 			<exercise xml:id="quiz-linkedlist1-4">
 				<statement>
 					<p>Given the structure definition from the video,</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						struct point{
 						  int x;
 						  int y;
 						  struct point * next;
 						};
-					</input></program>
+					</code></program>
 					<p>what is the return type of the following function:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						struct point * append (struct point * end, struct point * newpt) {
 						  end->next = newpt;
 						  return(end->next);
 						} 
-					</input></program>
+					</code></program>
 					</statement>
             <choices randomize="yes">
                <choice correct="yes">)
@@ -321,23 +321,23 @@
 			<exercise xml:id="quiz-linkedlist1-5">
 				<statement>
 					<p>You'd like to print all of the names of students whose records are stored in a linked list. As before, each student record is stored as</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						struct student {
 					      char    name[50];
 					      int     birthYear;
 					      float   gpa;     
 					      struct student *next;
 						};
-					</input></program>
+					</code></program>
 					<p>You are given the following function in order to print the names of all students in the list:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						void printNames(struct student *start) {
 						  while (start->next!=NULL) {
 					        printf("%s\n", start->name); 
 					        start = start->next;
 						  }
 						}
-					</input></program>
+					</code></program>
 					<p>Which of the following is true about the above function?</p>
 					</statement>
             <choices randomize="yes">
@@ -521,14 +521,14 @@
 			<exercise xml:id="quiz-linkedlist2-1">
 				<statement>
 					<p>Given the definition of a linked list of digits as in the video, what does the following function do if called with the address of the first digit of a linked list of digits?</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						void whatAmIDoing(struct digit * start) {
 						  if(start != NULL) {
 						    whatAmIDoing(start->next);
 						    printf("%d", start->num);
 						  }
 						}
-					</input></program>
+					</code></program>
 				</statement>
             <choices randomize="yes">
                <choice correct="yes">)
@@ -576,7 +576,7 @@
 			<exercise xml:id="quiz-linkedlist2-2">
 				<statement>
 					<p>Given again the definition of a linked list of digits as in the video, the following function <c>reverse()</c> is supposed to reverse a linked list of digits in place, that is, without creating a copy of the list. There is one line missing at the end of the function.</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						struct digit * reverse(struct digit * start) {
 						  struct digit * prev = NULL;
 						  struct digit * current = start;
@@ -589,7 +589,7 @@
 						  }
 						  /*ADD LINE HERE*/
 						}
-					</input></program>
+					</code></program>
 					<p>What should be added in place of <c>/*ADD LINE HERE*/</c>, so that the function correctly reverses the number?</p>
 					</statement>
             <choices randomize="yes">

@@ -77,10 +77,10 @@
             <exercise xml:id="quiz-format-2">
                 <statement>
                     <p>What happens when you don’t have enough variables to match the number of format specifiers in your format string? For example, what happens when you type:</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                         int age = 34;
                         printf("I am %d years old and weight %f pounds.", age);
-                    </input></program>
+                    </code></program>
                     <p>Feel free to quickly write a program to try this out.</p>
                     <cmecode startPoint="engs20p_basicIO5play" height="300"></cmecode>
                 </statement>

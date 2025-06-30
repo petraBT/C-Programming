@@ -53,12 +53,12 @@
 			<exercise xml:id="quiz-pointers-1">
 				<statement>
 					<p>You want to write a function that increases the integer value stored in a variable num by one. Given the following function definition, what is the correct function call? Assume that a variable num of type int has been declared and initialized.</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						void increasebyone(int *a)
 						{
 						  *a = *a + 1;
 						}
-					</input></program>
+					</code></program>
 					<p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
 					<cmecode startPoint="engs20p_functions2" height="400"></cmecode>
 				</statement>
@@ -100,14 +100,14 @@
 			<exercise xml:id="quiz-pointers-2">
 				<statement>
 					<p>What does the following piece of code do?</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						float num = 5.0;
 						float *pointer;
 
 						pointer = &amp;num;
 						*pointer = *pointer + 1.0;
 						printf("%f", *pointer);
-					</input></program>
+					</code></program>
 				</statement>
             <choices randomize="yes">
                <choice correct="yes">)
@@ -220,7 +220,7 @@
 		<p><idx><h>testing</h><h>bottom-up</h></idx>When working on a small sub-sub-problem of a big program via a function it is important to test the function extensively before making it part of the bigger program.</p>
 		<p>To do so, one simply writes a so-called <alert>driver</alert>, that is, a main function whose purpose it is to call your new function in order to check whether if works correctly.</p>
 		<p>Suppose, for example, you are writing the function <c>simplify()</c> that simplifies a fraction. Here is a sample driver to test this function:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 	        int main(void) {
         	  int numer = 50;
         	  int denom = 10;
@@ -228,7 +228,7 @@
         	  simplify(&amp;numer, &amp;denom);
         	  printf("simplified: %d/%d\n", numer, denom);
 	        }
-		</input></program>
+		</code></program>
 		<p>There is no point in making this fancy: you'll discard it later!</p>
 		<investigation>
 			<statement>
@@ -249,7 +249,7 @@
 		<p><idx><h>testing</h><h>top-down</h></idx>In this situation we use something called a <alert>stub</alert>. A stub is a skeleton function that consists of header info (comments), tracing messages (<c>printf()</c>) and assignment of output parameters (but not necessarily the actual values).</p>
 		<p>Example:</p>
 		<p>Suppose you wanted to check the flow of our fraction calculator, but you haven't written the <c>simplify()</c> function yet. So here is what you could write instead of your simplify function:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			/* *********************** STUB *************************
 			* given a fraction numer/denom determine a simplified
 			* fraction and return as output parameters
@@ -261,7 +261,7 @@
 			  printf("Exiting simplify() with %d/%d\n", *numer, *denom);
 			  return 0;
 			}
-		</input></program>
+		</code></program>
 		<p>Eventually you'll replace this stub with the real function.</p>
 	</section>
 
@@ -271,7 +271,7 @@
 		<p>We'll use a Google Doc to share all of the pieces of code that different groups are writing. Please follow the link given below.</p>
 		<p>We'll furthermore be working on the Thayer School servers for this problem, although you are welcome to use the code window provided below for some code development and testing.</p>
 		<p>Here are the prototypes for the fraction calculator:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			void getFraction(int *num, int *denom);
 			void getOp(char *operation);
 			void simplify(int *num, int *denom);
@@ -279,7 +279,7 @@
 			void multiplyFractions(int n1, int d1, int n2, int d2, int *num, int *denom);
 			int computeResult(int n1, int d1, char op, int n2, int d2, int *num, int *denom);
 			void printEverything(int n1, int d1, char op, int n2, int d2, int num, int denom);
-		</input></program>
+		</code></program>
 		<cmecode startPoint="engs20p_NFractionCalc" addOn="&amp;nocheck=true" height="800"></cmecode>
 		<p>Please sign in with your group in the Google Doc below. Once your group is finished, please paste it into the correct location of the Google Doc for the whole class to see.</p>
 		<p><gdoc href="2PACX-1vRHOzA_rVxopDiPiCLmGd-g6LGkMLB_HG727AmhDHy4r__SCfaTU7v2wMUAxYXV7GGi2QRt13xD4CRC"/></p>
@@ -310,7 +310,7 @@
 				<statement>
 					<p>Let's start with a review question!</p>
 					<p>What is the output of the following program:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						#include &lt;stdio.h&gt;
 						void swap (char *x, char *y); 
 						int main(void) {
@@ -327,7 +327,7 @@
 						  *x = *y;
 						  *y = temp;
 						}
-					</input></program>
+					</code></program>
 				</statement>
             <choices randomize="yes">
                <choice correct="yes">)
@@ -671,7 +671,7 @@
 			<exercise xml:id="quiz-arrayfunction-2">
 				<statement>
 					<p>Suppose a function sum has been defined as follows:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						int sum(int n, int array[])
 						{
 			              int i;
@@ -680,11 +680,11 @@
 			                result += array[i];
 			              return(result);
 						}
-					</input></program>
+					</code></program>
 					<p>Suppose furthermore that in your main function an array num has been declared and initialized with the following:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						int num[]={4,2,7,5,8,9,4,2,4,6};
-					</input></program>
+					</code></program>
 					<p>What is the correct function call of <c>sum()</c>, using this array?</p>
 					<p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
 					<cmecode startPoint="engs20p_functions4" height="600"></cmecode>
@@ -791,8 +791,7 @@
 					<p>Write a program that prompts the user to type in a sentence, and that reads the sentence, character by character, and stores it in an array of characters. Stop reading, when the array is full or the character read is <c>\n</c>. Next, print out the sentence in reverse. Your program should use two functions: one function to read from the user input the relevant sentence, and another function to print the sentence in reverse. You'll also need to think about passing along the length of the sentence entered by the user.</p>
 					<p>Here is a sample output:</p>
 					<console>
-						<prompt>Enter a sentence: </prompt> 
-						<input>I love programming.</input>
+						<input prompt="Enter a sentence: ">I love programming.</input>
 						<output>Reverse: .gnimmargorp evol I</output>
 					</console>
 					<p>Does this problem look familiar? You have worked on this before, just not using functions. Below is the code we wrote previously for this problem.
@@ -815,8 +814,7 @@
 				<p>Write a program that prompts the user to enter the weight of a letter and that tells the user the postage necessary to mail this letter with the US Postal Service.</p>
 				<p>Here is a sample output:</p>
 				<console>
-					<prompt>How much does your letter weigh (in ounces): </prompt>
-					<input>5.5</input>
+					<input prompt="How much does your letter weigh (in ounces): ">5.5</input>
 					<output>The postage is 203 cents.</output>
 				</console>
 				<p>Note: You can start with the code given below. Postage is calculated based on the next higher weight in the chart.</p>

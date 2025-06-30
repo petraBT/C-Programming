@@ -21,10 +21,10 @@
 		<p>The <alert>header file</alert> contains all of the prototypes of functions from the library (remember, the compiler needs to know about these prototypes so that it can check whether you are using your functions correctly). That's why we need to <c>#include ...</c> the header files of those libraries whose functions we wish to invoke in our code.</p>
 		<p>The <alert>object file</alert> contains the actual library functions in machine language. It's already been translated by the compiler so that when you build your program you don't have to compile the entire library each time around. You can simply <alert>link</alert> the translated code contained in the library object file to your own code (that's what the <alert>linker</alert> does.)</p>
 		<p>So here is an example. Suppose you are writing a C-program <c>coolProgram.c</c> that uses functions from the two libraries <c>stdio</c> and <c>math</c>. In order for the compiler to have access to all of the function prototypes from these libraries, we need to:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			#include &lt;stdio.h&gt;
 			#include &lt;math.h&gt;
-		</input></program>
+		</code></program>
 		<p>Once your program compiles without any compiler errors, the compiler produces an object file <c>coolProgram.o</c>, which is your code, translated into machine language. Next, the linker starts its job and finds the object files that contain the input/output functions and math functions used in your program, namely <c>stdio.o</c> and <c>math.o</c>. These object files contain all of these functions already compiled into machine language. The linker then links (packages) these object files together with the object file <c>coolProgram.o</c> of the program you are writing, and if all goes well, an <alert>executable file</alert> results.</p>
 		<activity xml:id="activity-28-1-1-Library_Parts-no-output">
 			<statement>
@@ -47,13 +47,13 @@
 			<p>For example, for the standard library <c>stdlib</c>, the header file, which you include via </p>
 			<pre>#include &lt;stdlib.h&gt;</pre>
 			<p>contains prototypes for standard functions like:</p>
-			<program language="c"><input>
+			<program language="c"><code>
 				int abs(int x);
 				void *calloc(size_t nitems, size_t size);
 				void *malloc(size_t size);
 				void free(void *block);
 				int atoi(const char *s);
-			</input></program>
+			</code></program>
 			<p>The actual object file is part of your C distribution. We never get to see the actual source code.</p>
 			<statement>
 				<p>What do you think the function <c>atoi()</c> does?</p>
@@ -67,7 +67,7 @@
 		<title>Making Our Own Library - Header File</title>
 		<p>In order to make our own library we need to provide a header file <c>(.h)</c> and an object file <c>(.o)</c>. Let's look at the example of our arbitrarily long integers.</p>
 		<p>The header file, <c>arbitraryintegers.h</c>, would contain the structure type definition and function prototypes:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			struct digit {
 			  int num;
 			  struct digit *next;
@@ -85,13 +85,13 @@
 			digit_t * reverseNumber(digit_t * start);
 			digit_t * insertIntoSorted(digit_t *start,digit_t *newDig);
 			digit_t * sortedCopy(digit_t *);
-		</input></program>
+		</code></program>
 	</section>
 
 	<section xml:id="libraries-source">
 		<title>Making Our Own Library - Source File</title>
 		<p>The source file, <c>arbitraryintegers.c</c>, contains the collection of all functions that are to be part of the library (but no <c>main()</c> function!):</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			#include "arbitraryintegers.h"
 			digit_t *createDigit(int dig) {
 			  digit_t *ptr;
@@ -115,7 +115,7 @@
 			  printf("\n");
 			}
 			. . . 
-		</input></program>
+		</code></program>
 	</section>
 
 	<section xml:id="libraries-object">
@@ -124,7 +124,7 @@
 		<p>The library then consists of both the header file and the object file. In our example, this would be </p>
 		<pre> arbitraryintegers.h arbitraryintegers.o </pre>
 		<p>We can now use this library in other programs:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			#include &lt;stdio.h&gt;
 			#include "arbitraryintegers.h"
 
@@ -134,7 +134,7 @@
 			  myNumber = readNumber();
 			  . . . 
 			}
-		</input></program>
+		</code></program>
 		<p>Note the use of <c>" "</c> for user-defined libraries instead of <c>&lt; &gt;</c>, which is reserved for built-in libraries.</p>
 	</section>
 
@@ -163,7 +163,7 @@
 	<section xml:id="libraries-complex-source">
 		<title>Complex Number Library Source File</title>
 		<p>Here are the prototypes of the functions we'd like to create:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 /* Create a complex number from real and imaginary parts */
 complex_t complex(float x, float y);
 
@@ -208,7 +208,7 @@ float phase_c(complex_t z);
 
 /* display a complex number to the console */
 void display_c(complex_t z);
-		</input></program>
+		</code></program>
 		<p>Below is a coding window in which there is room to write all of these functions:</p>
 		<cmecode startPoint="engs20p_NComplexNumberLibFunctions" addOn="&amp;nocheck=true&amp;hide_run=true" height="900"></cmecode>
 	</section>
@@ -247,7 +247,7 @@ void display_c(complex_t z);
 			<title>Test Programs</title>
 			<activity>
 				<p>Here is a quick program to test some functionality of our library. You'll have to work on the server in order to compile the library and link it to the test program. I'll walk you through this below. Add more tests here!</p>
-				<program language="c"><input>
+				<program language="c"><code>
 /* Program to test our complex number library
 * 
 *  testComplex.c
@@ -278,7 +278,7 @@ int main(void) {
 
     return(0);
 }	
-				</input></program>
+				</code></program>
 <!--				<cmecode startPoint="engs20p_NComplexNumberLibTest" addOn="&amp;nocheck=true&amp;hide_run=true" height="400"></cmecode> -->
 			</activity>
 		</subsection>

@@ -197,38 +197,38 @@
             <li>
                 <idx><c>printf()</c></idx>
                 <p><c>printf()</c> is used to display a message to the screen. Example:
-                <program language="c"><input>
+                <program language="c"><code>
                    printf("This will be displayed on the screen!");
-                </input></program></p>
+                </code></program></p>
             </li>
             <li>
                 <p><c>\n</c>
                 starts a new line. Example:
-                <program language="c"><input>
+                <program language="c"><code>
                    printf("Hello!\nMy name is Petra!");
-                </input></program></p>
+                </code></program></p>
             </li>
             <li>
                 <p>Quotation marks need to be "escaped", as in:
                 <c>\"</c>, <c>\'</c>. Example:
-                <program language="c"><input>
+                <program language="c"><code>
                    printf("She said: \"Today it\'s Monday!\" ");
-               </input></program></p>
+               </code></program></p>
             </li>
             <li>
                 <idx><h>loops</h><h><c>for</c></h></idx>
                 <p>Loops are used to repeat instructions multiple times.
                 Example: 
-                <program language="c"><input>
+                <program language="c"><code>
                     int i;
                     for (i=0; i&lt;3; i++) {  
                         printf("Hello! ");
                         printf("Hi!\n");
                     }
-                </input></program></p>
+                </code></program></p>
             </li>
             <li><p>Comments are important throughout your code. Comments can be included in your code by enclosing them in <c>/* ... */</c> or by using <c>//</c>. Example:
-                <program language="c"><input>
+                <program language="c"><code>
                     int main(void) {
                         int i; /* This is a comment. */
                         /* This is also a comment. */
@@ -241,7 +241,7 @@
                             printf("Hi!\n");
                         }
                     }
-                </input></program></p>
+                </code></program></p>
             </li>
         </ul>
     </section>

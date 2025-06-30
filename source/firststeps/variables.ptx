@@ -37,14 +37,14 @@
             <exercise xml:id="quiz-printing-1">
                 <statement>
                     <p>What will be printed to the screen by the following program:</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                         #include &lt;stdio.h&gt;
                         int main(void) {
                            printf("We need %d apples and %d cups sugar.\n", 10, 2);
 
                            return(0);
                         }
-                    </input></program>
+                    </code></program>
                 </statement>
                  <choices randomize="yes">
                     <choice correct="yes">
@@ -150,7 +150,7 @@
             <exercise xml:id="quiz-variables-1">
                 <statement>
                     <p>What will be printed to the screen by the following program:</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                       #include &lt;stdio.h&gt;
                       int main(void) {
                           int money;
@@ -158,7 +158,7 @@
                           printf("I have %d dollars; that equals %d quarters.\n", money, 4*money);
                           return 0;
                       }
-                    </input></program>
+                    </code></program>
                 </statement>
                  <choices randomize="yes">
                     <choice correct="yes">
@@ -220,14 +220,14 @@
             <exercise xml:id="quiz-variables-2">
                 <statement>
                     <p>Suppose you declare and initialize a variable at the beginning of your program as follows:</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                       int var;
                       var = 10;
-                    </input></program>
+                    </code></program>
                     <p>What is the value of the variable <c>var</c> after the line</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                       var = var + 20;
-                    </input></program>
+                    </code></program>
                     <p>has been executed? <var width="6"/></p>
                 </statement>
                 <setup>
@@ -248,9 +248,9 @@
             <exercise xml:id="quiz-variables-3">
                 <statement>
                     <p>Continuing from the question above, your program now contains the next line:</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                       var = var - 5;
-                    </input></program>
+                    </code></program>
                     <p>What is the value of <c>var</c> after this statement? <var width="6"/></p>
                 </statement>
                 <setup>
@@ -271,10 +271,10 @@
             <exercise xml:id="quiz-variables-4">
                 <statement>
                     <p>Finally, your program contains the two lines:</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                       var = 100;
                       var = var+50;
-                    </input></program>
+                    </code></program>
                     <p>What is the value of <c>var</c> after these two lines have been executed? <var width="6"/></p>
                 </statement>
                 <setup>
@@ -299,9 +299,9 @@
     <title>Initializing Variables</title>
     <p>It is very important to always initialize your variables (that is, give initial values to your variables, even if you plan to change those values immediately). In the following video we discuss two ways to do so.</p>
     <ul>
-     <li><idx><h>variables</h><h>initialize</h><h>separately</h></idx>Separate declaration and initialization: <program language="c"><input>int cash; 
-cash = 20;</input></program> </li>
-     <li><idx><h>variables</h><h>initialize</h><h>simultaneously</h></idx>Declaration and initialization in one statement: <program language="c"><input>int cash = 20;</input></program> </li>
+     <li><idx><h>variables</h><h>initialize</h><h>separately</h></idx>Separate declaration and initialization: <program language="c"><code>int cash; 
+cash = 20;</code></program> </li>
+     <li><idx><h>variables</h><h>initialize</h><h>simultaneously</h></idx>Declaration and initialization in one statement: <program language="c"><code>int cash = 20;</code></program> </li>
    </ul>
    <p>
      <codecast href="1511896979139"/>
@@ -320,10 +320,10 @@ cash = 20;</input></program> </li>
       <exercise xml:id="quiz-variables-5">
         <statement>
           <p>Which of the following variable declaration and initialization statements is equivalent to:</p>
-          <program language="c"><input>
+          <program language="c"><code>
             int money;
             money = 20;
-          </input></program>
+          </code></program>
         </statement>
           <choices randomize="yes">
                 <choice correct="yes">
@@ -366,10 +366,10 @@ cash = 20;</input></program> </li>
       <exercise xml:id="quiz-variables-6">
         <statement>
           <p>Find an equivalent variable declaration and initialization statement to:</p>
-          <program language="c"><input>
+          <program language="c"><code>
             int apples;
             apples = 4;
-          </input></program>
+          </code></program>
         </statement>
           <choices randomize="yes">
                 <choice correct="yes">
@@ -498,12 +498,12 @@ cash = 20;</input></program> </li>
         As a reminder, here is the format of a
         <c>for</c>-loop that runs 10 times:
       </p>
-      <program language="c"><input>
+      <program language="c"><code>
         int i; /* a variable, for example by the name of i, is needed */
         for (i=1; i&lt;=10; i++) {
            /* code that needs to be repeated goes here */
         }
-      </input></program>
+      </code></program>
       Through this loop, the variable <c>i</c> successively gets assigned values from 1 to 10. In the first run through the loop <c>i</c> has the value 1, in the next run-through that value is increased to 2, then to 3, all the way up to and including 10.
       <cmecode startPoint="engs20p_NmultiplicationTable1" addOn="&amp;nocheck=true" height="300"></cmecode>
       <p><em>When you are done, please put your code into the box below:</em></p>
@@ -537,19 +537,13 @@ cash = 20;</input></program> </li>
       <p>When the loop terminates, print the result to the screen.</p>
       <p>Here is a sample session, with simulated user input in bold:</p>
       <console>
-        <prompt>How many numbers do you wish to add? </prompt>
-        <input>5</input>
-        <prompt>Please enter number 1: </prompt>
-        <input>7</input>
-        <prompt>Please enter number 2: </prompt>
-        <input>13</input>
-        <prompt>Please enter number 3: </prompt>
-        <input>4</input>
-        <prompt>Please enter number 4: </prompt>
-        <input>-3</input>
-        <prompt>Please enter number 5: </prompt>
-        <input>9</input>
-        <prompt>The numbers you entered add up to 30.</prompt>
+        <input prompt="How many numbers do you wish to add? ">5</input>
+        <input prompt="Please enter number 1: ">7</input>
+        <input prompt="Please enter number 2: ">13</input>
+        <input prompt="Please enter number 3: ">4</input>
+        <input prompt="Please enter number 4: ">-3</input>
+        <input prompt="Please enter number 5: ">9</input>
+        <input prompt="The numbers you entered add up to 30."></input>
       </console>
       <cmecode startPoint="engs20p_NuserInput4" addOn="&amp;nocheck=true" height="500"></cmecode>
       <p><em>When you are done, please copy the code you</em> added <em>into the box below:</em></p>
@@ -719,11 +713,11 @@ cash = 20;</input></program> </li>
       <li>Integer numbers can be stored efficiently in the <c>int</c> datatype, characters in the <c>char</c> datatype and floating point numbers in the <c>float</c> datatype.</li>
       <li>The format specifiers for these datatypes are <c>%d</c>, <c>%c</c> and <c>%f</c>. </li>
       <li>To read user input into these datatypes, use:
-      <program language="c"><input>
+      <program language="c"><code>
         scanf("%d", &amp;age); 
         scanf("%c", &amp;letter); 
         scanf("%f", &amp;height);
-      </input></program></li>
+      </code></program></li>
     </ul>
   </section>
 </chapter>

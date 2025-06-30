@@ -1,0 +1,19 @@
+WARNING : Using CLI version 2.20.0 but project's `requirements.txt`
+WARNING : is configured to use 1.7.5. Consider either installing
+WARNING : CLI version 1.7.5 or running `pretext update`
+WARNING : to update `requirements.txt` and other managed files to match 2.20.0.
+INFO    : Since no target was supplied, we will use "web".
+
+INFO    : Building target web
+ERROR   : XInclude Error caused build to fail:
+ERROR   : /Users/dz00762/repos/C-Programming/source/fundamentals/branching.ptx:444:28:FATAL:PARSER:ERR_TAG_NAME_MISMATCH: Opening and ending tag mismatch: input line 440 and code
+/Users/dz00762/repos/C-Programming/source/main.ptx:45:0:ERROR:XINCLUDE:XINCLUDE_NO_FALLBACK: could not load /Users/dz00762/repos/C-Programming/source/fundamentals/branching.ptx, and no fallback was found
+CRITICAL: XML syntax for source file is invalid
+INFO    : ------------------------
+CRITICAL: Failed to build.  Exiting...
+INFO    : 
+----------------------------------------------------
+INFO    : While running pretext, the following errors occurred:
+
+INFO    : (see log messages above or in the 'logs' folder for more information)
+INFO    : ----------------------------------------------------

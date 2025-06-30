@@ -25,13 +25,13 @@
     <section xml:id="loops-while">
         <title>The <c>while</c> Loop</title>
         <p>Remember our program, using a <c>for</c>-loop, to compute the factorial of a number? Essentially, it went like this:</p>
-        <program language="c"><input>
+        <program language="c"><code>
             N = 5; 
             fac = 1; 
             for (i=1; i&lt;=N; i++) { 
               fac = fac * i; 
             }
-        </input></program>
+        </code></program>
         <p><idx><h>loops</h><h><c>while</c></h></idx>C has three different types of loops. Sometimes we want to loop through a section of code, but we do not know how many times we want it to execute. Maybe we want it to repeat the code while a certain condition is true, or maybe while that condition is not met. In these sorts of cases, a <c>while</c>-loop will come in handy!</p>
         <codecast href="1513619151761"/>
         <aside>
@@ -50,23 +50,23 @@
                 <statement>
                     <p>Quick review on <c>for</c>-loops:</p>
                     <p>What is the final value of x (i.e. the value of x after the loop has terminated) when the following code is run:</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                         int x;
                         for(x=0; x&lt;5; x++) {
                           printf("x = %d\n", x);
                         }
-                    </input></program>
+                    </code></program>
                 </statement>
             </exercise>
             <exercise xml:id="quiz-loops-2">
                 <statement>
                     <p>How many times does the following loop get executed, assuming that <c>i</c> is an integer type variable initialized with the value 8:</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                         while (i>0) {
                           printf("i = %d\n", i); 
                           i = i-1;
                         }
-                    </input></program>
+                    </code></program>
                     <p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
                     <cmecode startPoint="engs20p_loops1" height="300"></cmecode>
                     <p><em>Please enter your answer (the number only, no words) in the box below.</em></p>
@@ -75,10 +75,10 @@
             <exercise xml:id="quiz-loops-3">
                 <statement>
                     <p>What is the value of <c>n</c> after the loop terminates, assuming that before starting the loop, <c>n</c> has the value 19:</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                         while (n&lt;10)
                           n = n+1;
-                    </input></program>
+                    </code></program>
                     <p><em>Code window for your convenience. Remember to work the correct answer out "by hand" first before verifying it using the code window.</em></p>
                     <cmecode startPoint="engs20p_loops3" height="300"></cmecode>
                     <p><em>Please enter your answer (the number only, no words) in the box below.</em></p>
@@ -100,34 +100,34 @@
         <title><c>for</c> vs. <c>while</c> Loops</title>
         <p>Though <c>for</c>- and <c>while</c>-loops can accomplish the same tasks, both have certain benefits and drawbacks. Here, we compare the syntaxes of both loops and discuss situations and scenarios in which one loop is preferable over the other.</p>
         <p><c>for</c>-loop syntax:</p>
-        <program language="c"><input>
+        <program language="c"><code>
         for (initialization; loop run condition; update) {
             statements...;
         }
-        </input></program>
+        </code></program>
         <p>At the very start of the loop (before any kind of repetition is entered) the initialization statement is executed. This happens exactly once. At the start of every repetition the loop condition is checked. If it evaluates to <c>true</c> then the actual loop statements are executed once. Afterwards, the update statement is executed and next, the loop run condition is checked again. If still true, the loop statements are executed again, etc.</p>
         <p>Example:</p>
-        <program language="c"><input>            
+        <program language="c"><code>            
         for (i=10; i&gt;5; i--) {
             printf("i = %d\n", i); 
         }
-        </input></program>
+        </code></program>
         <p>In this example, <c>i</c> is initialized with the value 10 right before the start of the loop. Next, the logic statement <c>i&gt;5</c> is evaluated, and since 10 is indeed greater than 5, the loop is entered. The <c>printf()</c> statement prints <c>i = 10</c> to the screen. Next, the update statement <c>i--</c> is executed, decreasing the value of <c>i</c> to 9. The loop condition is checked (9 is still greater than 5) and so <c>i = 9</c> is printed to the screen. <c>i</c> is next decreased to 8, loop condition checked, etc. This continues on until <c>i = 6</c> is printed to the screen. When <c>i</c> is next decreased to 5, the check of the loop condition evaluates to false since 5 is not greater than 5. The loop terminates with the loop counter having the value 5.</p>
         <p><c>while</c>-loop syntax:</p>
-        <program language="c"><input>
+        <program language="c"><code>
         while (condition) { 
             statements...; 
         }
-        </input></program>
+        </code></program>
         <p>At the start of every run through the loop, the condition is checked and only if it evaluates to true are the statements in the loop body executed. It is the programmer's job to build in an update condition into these statements so that eventually the loop condition will evaluate to false, causing the loop to terminate. It is really easy to forget to do this, leading to a never-ending loop...</p>
         <p>Example:</p>
-        <program language="c"><input>
+        <program language="c"><code>
         i=10; 
         while (i&gt;5) {
             printf("i = %d\n", i);
             i--; 
         }
-        </input></program>
+        </code></program>
         <p>This loop generates the exact same output as the above <c>for</c> loop. Notice that you have to explicitly initialize <c>i</c> on your own before the loop and program the update condition <c>i--;</c> as part of the loop body.</p>
         <p>In general:</p>
         <ul>
@@ -255,14 +255,14 @@ int main(void) {
             <exercise xml:id="quiz-loops-6">
                 <statement>
                     <p>What does the following code print to the screen?</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                         int i = 5;
                         i++;
                         printf("%d ", i);
                         printf("%d ", i++);
                         printf("%d ", i--);
                         printf("%d ", --i);
-                    </input></program>   
+                    </code></program>   
                 </statement>
             <choices randomize="yes">
                <choice correct="yes">)
@@ -366,14 +366,10 @@ int main(void) {
                     <p>Write a program that continuously asks the user to enter a nonzero number and adds up all of the numbers entered. The program should terminate when the user enters a zero and then print out the total sum.</p>
                     <p>Here is a sample run of the program:</p>
                     <console>
-                        <prompt>Please enter a number: </prompt>
-                        <input>5</input>
-                        <prompt>Please enter a number: </prompt>
-                        <input>11</input>
-                        <prompt>Please enter a number: </prompt>
-                        <input>-3</input>
-                        <prompt>Please enter a number: </prompt>
-                        <input>0</input>
+                        <input prompt="Please enter a number: ">5</input>
+                        <input prompt="Please enter a number: ">11</input>
+                        <input prompt="Please enter a number: ">-3</input>
+                        <input prompt="Please enter a number: ">0</input>
                         <output>The numbers you entered add up to 13.</output>
                     </console>
                     <cmecode startPoint="engs20p_Nloop6" height="400"></cmecode>

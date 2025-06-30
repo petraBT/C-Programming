@@ -1,0 +1,16 @@
+WARNING : Using CLI version 2.20.0 but project's `requirements.txt`
+WARNING : is configured to use 1.7.5. Consider either installing
+WARNING : CLI version 1.7.5 or running `pretext update`
+WARNING : to update `requirements.txt` and other managed files to match 2.20.0.
+ERROR   : BUG: the `pretext view` command encountered an error.  Please report this: process 62557 with laddr 
+ERROR   : BUG: the `pretext view` command encountered an error.  Please report this: process 62557 with laddr 
+ERROR   : BUG: the `pretext view` command encountered an error.  Please report this: process 62557 with laddr 
+INFO    : Found PreTeXt web server at localhost:8128
+INFO    : Server is already available at http://localhost:8128
+INFO    : Now opening browser for target `web` at http://localhost:8128/output/web
+INFO    : 
+----------------------------------------------------
+INFO    : While running pretext, the following errors occurred:
+
+INFO    : (see log messages above or in the 'logs' folder for more information)
+INFO    : ----------------------------------------------------

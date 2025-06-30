@@ -108,10 +108,10 @@
             <exercise xml:id="quiz-branching-2">
                 <statement>
                     <p>What is the output of the following piece of code, assuming that n is a variable of type int that has the value 1:</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                     	if (n) printf("You win!");
                     	else printf("Ooops!");
-                    </input></program>
+                    </code></program>
                 </statement>
               <choices randomize="yes">
                 <choice correct="yes">
@@ -184,14 +184,14 @@
 					<li><pre>float c = 0.0</pre></li>
 					<li><pre>int d = 4000</pre></li>
 				</ol>
-				<program language="c"><input>
+				<program language="c"><code>
 					if (variable){
 					  printf("True")
 					}
 					else{
 					  printf("False")
 					}
-				</input></program>
+				</code></program>
 			</statement>
 			<answer>
 				<p>C will interpret the variables <c>a</c>, <c>b</c>, and <c>d</c> as "True", and the variable <c>c</c> as "False"</p>
@@ -297,14 +297,14 @@
 			</answer>
 			<solution>
 				<p>By using an exclamation mark in front of the condition in our <c>if</c> statement, C will interpret the condition as the opposite of whatever it normally would be. For example, if our simple <c>if</c> statement was as follows:</p>
-				<program language="c"><input>
+				<program language="c"><code>
 					int var; /*see below for our example values of var*/
 					if (!var){
 					  print("True");
 					}else{
 					  printf("False");
 					}
-				</input></program>
+				</code></program>
 				<p>then, if <c>var = 0</c> which is originally false, <c>!var</c> would be true.</p> 
 				<p>Similarly, if <c>var = 1</c> which is originally true, <c>!var</c> would thus be false.</p>
 			</solution>
@@ -437,11 +437,11 @@
             <exercise xml:id="quiz-logic-2">
                 <statement>
                     <p>What is the value of the variable d once the following code has been executed:</p>
-                    <program langauge="c"><input>
+                    <program language="c"><code>
                         int d, num;
                         num = 17;
                         d = ((17%3)==0);
-                    </input></program>
+                    </code></program>
                 </statement>
             </exercise>
         </reading-questions>
@@ -578,26 +578,26 @@
 		<title>Summary</title>
 		<p>Various ways to use branching statements in C:</p>
 		<ul>
-			<li><program language="c"><input>
+			<li><program language="c"><code>
 				if (condition){
 				  statement;
 				}
-			</input></program></li>
-			<li><program language="c"><input>
+			</code></program></li>
+			<li><program language="c"><code>
 				if (condition){
 				  statement1;
 				  statement2;
 				  ...
 				}
-			</input></program></li>
-			<li><program language="c"><input>
+			</code></program></li>
+			<li><program language="c"><code>
 				if (condition){
 				  statement(s);
 				} else {
 				  statement(s);
 				}
-			</input></program></li>
-			<li><program language="c"><input>
+			</code></program></li>
+			<li><program language="c"><code>
 				if (condition){
 				  statement(s);
 				} else if (other condition){
@@ -607,7 +607,7 @@
 				} else {
 				  statement(s);
 				}
-			</input></program></li>
+			</code></program></li>
   			<li>There can be as many <c>if-else</c> cases as you would like.</li>
   			<li>The final <c>else</c> statement can be omitted if that makes sense.</li>
 		</ul>

@@ -120,12 +120,12 @@
             <exercise xml:id="quiz-functions-4">
                 <statement>
                     <p>Given the following function definition, which is the correct function call, given that a variable <c>a</c> of type <c>int</c> has been declared?</p>
-                    <program language="c"><input>
+                    <program language="c"><code>
                         int myaddition(int x, int y)
                         {
                           return(x+y);
                         }
-                    </input></program>
+                    </code></program>
                     <p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
                     <cmecode startPoint="engs20p_functions1" height="300"></cmecode>
                 </statement>
@@ -177,14 +177,12 @@
             <activity>
                 <p>Write a C program that converts temperature from Fahrenheit to Celsius or from Celsius to Fahrenheit, depending on user input. Here is a sample session:</p>
                 <console>
-                    <prompt>Please enter a temperature: </prompt>
-                    <input>45 F</input>
+                    <input prompt="Please enter a temperature: ">45 F</input>
                     <output>45 degrees Fahrenheit correspond to approximately 7.2 degrees Celsius.</output>
                 </console>
                 <p>And another sample session:</p>
                 <console>
-                    <prompt>Please enter a temperature: </prompt>
-                    <input>28 C</input>
+                    <input prompt="Please enter a temperature: ">28 C</input>
                     <output>28 degrees Celsius correspond to approximately 82.4 degrees Fahrenheit.</output>
                 </console>
                 <p>The overall structure of the program is provided for you below. Your program should use functions for the temperature conversions: one for Fahrenheit to Celsius, and another for Celsius to Fahrenheit.</p>

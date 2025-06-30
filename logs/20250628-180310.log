@@ -1,0 +1,21 @@
+WARNING : Using CLI version 2.20.0 but project's `requirements.txt`
+WARNING : is configured to use 1.7.5. Consider either installing
+WARNING : CLI version 1.7.5 or running `pretext update`
+WARNING : to update `requirements.txt` and other managed files to match 2.20.0.
+INFO    : Since no target was supplied, we will use "web".
+
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : Building theme for target 'web'
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : Using prebuilt CSS theme: salem-legacy with options: {'options': {'primary-color': '#195684', 'secondary-color': '#932c1c'}, 'contrast-checks': {}}
+ERROR   : Failed to build theme: [Errno 2] No such file or directory: '/Users/dz00762/.ptx/2.20.0/core/css/dist/theme-salem-legacy.css'
+INFO    : 
+----------------------------------------------------
+INFO    : While running pretext, the following errors occurred:
+
+INFO    : (see log messages above or in the 'logs' folder for more information)
+INFO    : ----------------------------------------------------

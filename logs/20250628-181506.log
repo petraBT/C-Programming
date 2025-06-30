@@ -1,0 +1,63 @@
+WARNING : Using CLI version 2.20.0 but project's `requirements.txt`
+WARNING : is configured to use 1.7.5. Consider either installing
+WARNING : CLI version 1.7.5 or running `pretext update`
+WARNING : to update `requirements.txt` and other managed files to match 2.20.0.
+INFO    : Since no target was supplied, we will use "web".
+
+INFO    : Building target web
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : Generating any needed assets.
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : Finished generating assets.
+
+INFO    : Building with custom xsl /Users/dz00762/repos/C-Programming/xsl/c-programming-html.xsl
+INFO    : Preparing to build into /Users/dz00762/repos/C-Programming/output/web.
+INFO    : discovering source file's directory name: /Users/dz00762/repos/C-Programming/source
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../generated-assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/generated-assets
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/assets
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : Downloading rs services file from https://runestone.academy/cdn/runestone/latest/webpack_static_imports.xml.
+INFO    : Runestone Services via online CDN query: version 7.8.4
+INFO    : Downloading Runestone Services, version 7.8.4
+INFO    : Extracting Runestone Services from archive file
+INFO    : Using prebuilt CSS theme: salem-legacy with options: {'options': {'primary-color': '#195684', 'secondary-color': '#932c1c'}, 'contrast-checks': {}}
+CRITICAL: [Errno 2] No such file or directory: '/Users/dz00762/.ptx/2.20.0/core/css/dist/theme-salem-legacy.css'
+INFO    : ------------------------
+CRITICAL: Failed to build.  Exiting...
+INFO    : 
+----------------------------------------------------
+INFO    : While running pretext, the following errors occurred:
+
+INFO    : (see log messages above or in the 'logs' folder for more information)
+INFO    : ----------------------------------------------------

@@ -203,15 +203,15 @@
 		</table>
 		<p>The above sample table has <c>STRLEN=10</c> and <c>NRECS=5</c>.</p>
 		<p>You could <c>#define</c> <c>NRECS</c> and <c>STRLEN</c> at the top of your program if you wish, so that you could easily change these constants. For example:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			#define NRECS 100
 			#define STRLEN 50
 			char words[NRECS][STRLEN];
-		</input></program>
+		</code></program>
 		<p>declares an array of strings that can hold 100 strings of maximum length 50 characters (including the NULL-terminator). You could also simply write </p>
-		<program language="c"><input>
+		<program language="c"><code>
 			char words[100][50];
-		</input></program>
+		</code></program>
 		<p>The following video shows how to work with arrays of strings.</p>
 		<codecast href="1522698798801"/>
 		<aside>
@@ -273,18 +273,18 @@
 	<section xml:id="multiarray-matrices">
 		<title>Matrices</title>
 		<p><idx>matrices</idx>Just like we can have a 2-dimensional array of characters (or array of strings), it is also possible to have multidimensional arrays of other datatypes. Here is an example of a 2-dimensional array of integers (also known as a matrix):</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			int matrix[2][3];
-		</input></program>
+		</code></program>
 		<p>This declares (reserves space for) a 2-dimensional array of integers by the name of matrix, which has 2 rows and 3 columns. More generally, the following code could be used to declare a 2-dimensional array of integers with <c>NROWS</c> rows and <c>NCOLS</c> columns:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			int numbers[NROWS][NCOLS];
-		</input></program> 
+		</code></program> 
 		<p>This of course assumes that somewhere in your code you have told the computer what values <c>NROWS</c> and <c>NCOLS</c> take, for example via</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			#define NROWS 3
 			#define NCOLS 2
-		</input></program>
+		</code></program>
 		<p>at the top of your code.</p>
 		<p>The following video illustrates how to work with 2-dimensional arrays.</p>
 		<codecast href="1519416840248"/>
@@ -313,7 +313,7 @@
 	<section xml:id="multiarray-initialize">
 		<title>Initializing Multidimensional Arrays</title>
 		<p><idx><h>multidimensional array</h><h>initialize</h></idx>It is possible to initialize a multidimensional array during declaration time. In fact, there are multiple ways to do so. The following four ways are actually all equivalent and all initialize a 2-dimensional array with the same values:</p>
-		<program language="c"><input>
+		<program language="c"><code>
 		    int matrix1[NROWS][NCOLS] = {{1,2}, {3,4}, {5,6}, {7,8} };
       int matrix2[NROWS][NCOLS] = { {1,2},
                                     {3,4},
@@ -321,7 +321,7 @@
                                     {7,8}};
       int matrix3[][NCOLS] = {{1,2}, {3,4}, {5,6}, {7,8} };
       int matrix4[][NCOLS] = {1, 2, 3, 4, 5, 6, 7, 8};
-        </input></program>
+        </code></program>
         <p>The Codecast below illustrates this further:</p>
 		<codecast href="1522700958321"/>
 		<aside>

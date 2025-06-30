@@ -77,11 +77,11 @@
 			<exercise xml:id="quiz-sortsearch-2">
 				<statement>
 					<p>More review: Is there anything wrong with the following:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						char name[10];
 						. . . 
 						strcpy(name, "TodayIsMonday");
-					</input></program>
+					</code></program>
 				</statement>
             <choices randomize="yes">
                <choice correct="yes">)
@@ -281,21 +281,17 @@
 				<p>You are conducting a linguistic study and are interested in finding words that contain the letter 't' or 'T' in the first half of the word (including the middle letter if there is one). Specifically, if the first half of the word does contain a 't' or a 'T', your program's output should be a 1, if the first half does not contain the letter 't' or 'T', but the second half does, then your program should output a 2. Otherwise (if there is no 't' or 'T' in the word at all), your program's output should be -1. You may assume that the word entered does not have more than 50 letters.</p>
 				<p>Here are some examples: </p>
 				<console>
-					<prompt>Input: </prompt> 
-					<input>apple</input>
-					<output>Output: -1</output>
+					<input prompt="Input: ">apple</input>
+					<input prompt="Output: ">-1</input>
 
-					<prompt>Input: </prompt>
-					<input>raincoat</input>
-					<output>Output: 2</output>
+					<input prompt="Input: ">raincoat</input>
+					<input prompt="Output: ">2</input>
 
-					<prompt>Input: </prompt>
-					<input>enter</input>
-					<output>Output: 1</output>
+					<input prompt="Input: ">enter</input>
+					<input prompt="Output: ">1</input>
 
-					<prompt>Input: </prompt>
-					<input>Taylor</input>
-					<output>Output: 1</output>
+					<input prompt="Input: ">Taylor</input>
+					<input prompt="Output: ">1</input>
 				</console>
 				<cmecode startPoint="engs20p_NlinearSearchPractice" addOn="&amp;nocheck=true" height="600"></cmecode>
 				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
@@ -372,10 +368,10 @@
 			<exercise xml:id="quiz-sortsearch-8">
 				<statement>
 					<p>Suppose that you have made the following declarations:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						int num[] = {5,3,7,9,2,4,6}; 
 						int index[] = {2,3,4,5,6,7,1};
-					</input></program>
+					</code></program>
 					<p>What is <c>index[3]</c>? <em>Choose one:</em> 1 / 2 / 3 / 4 / 5</p>
 					<p>What is <c>num[index[3]]</c>? <em>Choose one:</em> 2 / 3 / 4 / 5 / 6 / 7 / 9</p>
 					<p><em>Feel free to use the window below to try out some code. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</em></p>
@@ -426,21 +422,17 @@
 			<p>You are still conducting linguistic research! This time, you'd like to find out how many letters occur multiple times in a given word. To do so, you will read a word from the input and then sort the letters of the word alphabetically (by their ASCII codes). Next, you go through the letters of the word and compare a letter with the one following it. If these equal each other, you increase a counter by 1, making sure to next skip ahead far enough so that letters that occur more than twice are not counted again. You may assume that the word you read from the input has no more than 50 letters.</p>
 			<p>Here are some examples:</p>
 			<console>
-				<prompt>Input: </prompt> 
-				<input>apple</input>
-				<output>Output: 1</output>
+				<input prompt="Input: ">apple</input>
+				<input prompt="Output: ">1</input>
 
-				<prompt>Input: </prompt>
-				<input>keeper</input>
-				<output>Output: 1</output>
+				<input prompt="Input: ">keeper</input>
+				<input prompt="Output: ">1</input>
 
-				<prompt>Input: </prompt>
-				<input>erroneousnesses</input>
-				<output>Output: 5</output>
+				<input prompt="Input: ">erroneousnesses</input>
+				<input prompt="Output: ">5</input>
 
-				<prompt>Input: </prompt>
-				<input>Taylor</input>
-				<output>Output: 0</output>
+				<input prompt="Input: ">Taylor</input>
+				<input prompt="Output: ">0</input>
 			</console>
 			<cmecode startPoint="engs20p_NsortPractice" addOn="&amp;nocheck=true" height="500"></cmecode>
 		</activity>
@@ -461,16 +453,16 @@
 		<title>Sort Arrays</title>
 		<activity xml:id="activity-22-9-1-Sort_Arrays-no-output">
 			<p>Suppose you have declared two arrays:</p>
-			<program language="c"><input>
+			<program language="c"><code>
 				int numbers[]={5, -1, 8, 4, 0, -10};
 				int sort[6];
-			</input></program>
+			</code></program>
 			<p>What values should you place in your sort array so the following loop prints out the list of numbers, sorted from smallest to largest?</p>
-			<program language="c"><input>
+			<program language="c"><code>
 				for (i=0; i&lt;6; i++) {
 				  printf("%d, ", numbers[sort[i]]);
 				}
-			</input></program>
+			</code></program>
 			<p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
             <response/>
 		</activity>

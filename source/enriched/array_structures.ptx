@@ -241,14 +241,14 @@
 		<title>Dynamic Arrays of Structures</title>
 		<p>Why stop at triangles? Suppose we wanted to store polygons with variable numbers of vertices.</p>
 		<p>Recall that in order to reserve space in memory (for example for an array whose size only becomes known at run-time of your program) we use the function <c>malloc()</c> whose prototype is</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			void * malloc(size_t size);
-		</input></program>
+		</code></program>
 		<p>Here, <c>size</c> is the total amount of space you need for your data. For example, if you wanted to store 10 structures of type <c>point_t</c> you'd need space in the amount of 10*sizeof(point_t).</p>
 		<p>Also recall that in order to use <c>malloc()</c> you need to</p>
-		<program language="c"><input>
+		<program language="c"><code>
 			#include &lt;stdlib.h&gt;
-		</input></program>
+		</code></program>
 		<activity xml:id="activity-26-4-1-Dynamic_Array_Structures">
 			<statement>
 				<p>Write a function <c>createPolygon()</c> to which you can pass an integer and that reserves space in memory for an array of points of that size and returns a pointer to that array. Just to be on the safe side, have this function also initialize all coordinates to (0.0,0.0).</p>

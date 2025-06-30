@@ -1,0 +1,178 @@
+WARNING : Using CLI version 2.20.0 but project's `requirements.txt`
+WARNING : is configured to use 1.7.5. Consider either installing
+WARNING : CLI version 1.7.5 or running `pretext update`
+WARNING : to update `requirements.txt` and other managed files to match 2.20.0.
+INFO    : Since no target was supplied, we will use "web".
+
+INFO    : Building target web
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : Generating any needed assets.
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : Finished generating assets.
+
+INFO    : Building with custom xsl /Users/dz00762/repos/C-Programming/xsl/c-programming-html.xsl
+INFO    : Preparing to build into /Users/dz00762/repos/C-Programming/output/web.
+INFO    : discovering source file's directory name: /Users/dz00762/repos/C-Programming/source
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../generated-assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/generated-assets
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/assets
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.20.0/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : Downloading rs services file from https://runestone.academy/cdn/runestone/latest/webpack_static_imports.xml.
+INFO    : Runestone Services via online CDN query: version 7.8.4
+INFO    : Downloading Runestone Services, version 7.8.4
+INFO    : Extracting Runestone Services from archive file
+INFO    : Building custom css theme: theme-denver
+INFO    : converting /Users/dz00762/repos/C-Programming/source/main.ptx to HTML in /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-qmiy6fv6
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptxcli_vx7cp4lr/cli_xsl/c-programming-html.xsl
+INFO    : messages from the log for XSL processing:
+INFO    : * PTX:INFO:   checking ONLY the last TWO YEARS of element deprecations.
+Rerun with the string parameter "author.deprecations.all" set to "yes" to check your source against all deprecations.
+WARNING : * PTX:DEPRECATE: (2024-11-19) program/input now should be program/code. An automatic correction will be attempted. (110 times)
+INFO    : *              located within: "firstprogram-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "firstprogram-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "firstprogram-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "firstprogram-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "firstprogram-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "quiz-printing-1" (xml:id)
+INFO    : *              located within: "quiz-variables-1" (xml:id)
+INFO    : *              located within: "quiz-variables-2" (xml:id)
+INFO    : *              located within: "quiz-variables-2" (xml:id)
+INFO    : *              located within: "quiz-variables-3" (xml:id)
+INFO    : *              located within: "quiz-variables-4" (xml:id)
+INFO    : *              located within: "variables-initializing" (xml:id), "Initializing Variables" (title)
+INFO    : *              located within: "variables-initializing" (xml:id), "Initializing Variables" (title)
+INFO    : *              located within: "quiz-variables-5" (xml:id)
+INFO    : *              located within: "quiz-variables-6" (xml:id)
+INFO    : *              located within: "activity-4-7-1-Practice_Your_Loops" (xml:id)
+INFO    : *              located within: "variables-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "floats-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "floats-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "quiz-branching-2" (xml:id)
+INFO    : *              located within: "branching-operators" (xml:id), "Relational and Equality Operators" (title)
+INFO    : *              located within: "branching-multiple" (xml:id), "Combining Multiple Logic Statements" (title)
+INFO    : *              located within: "quiz-logic-2" (xml:id)
+INFO    : *              located within: "branching-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "branching-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "branching-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "branching-summary" (xml:id), "Summary" (title)
+INFO    : *              located within: "adv-branching-for-if" (xml:id), "for and if together" (title)
+INFO    : *              located within: "adv-branching-for-if" (xml:id), "for and if together" (title)
+INFO    : *              located within: "quiz-format-2" (xml:id)
+INFO    : *              located within: "quiz-functions-4" (xml:id)
+INFO    : *              located within: "loops-while" (xml:id), "The while Loop" (title)
+INFO    : *              located within: "quiz-loops-1" (xml:id)
+INFO    : *              located within: "quiz-loops-2" (xml:id)
+INFO    : *              located within: "quiz-loops-3" (xml:id)
+INFO    : *              located within: "loops-for-while" (xml:id), "for vs. while Loops" (title)
+INFO    : *              located within: "loops-for-while" (xml:id), "for vs. while Loops" (title)
+INFO    : *              located within: "loops-for-while" (xml:id), "for vs. while Loops" (title)
+INFO    : *              located within: "loops-for-while" (xml:id), "for vs. while Loops" (title)
+INFO    : *              located within: "quiz-loops-6" (xml:id)
+INFO    : *              located within: "quiz-languages-1" (xml:id)
+INFO    : *              located within: "quiz-debug-2" (xml:id)
+INFO    : *              located within: "quiz-debug-4" (xml:id)
+INFO    : *              located within: "quiz-debug-5" (xml:id)
+INFO    : *              located within: "quiz-debug-6" (xml:id)
+INFO    : *              located within: "quiz-debug-7" (xml:id)
+INFO    : *              located within: "quiz-memory-2" (xml:id)
+INFO    : *              located within: "quiz-memory-3" (xml:id)
+INFO    : *              located within: "quiz-pointers-1" (xml:id)
+INFO    : *              located within: "quiz-pointers-2" (xml:id)
+INFO    : *              located within: "pointers-bottom-up-testing" (xml:id), "Bottom-Up Testing" (title)
+INFO    : *              located within: "pointers-top-down-testing" (xml:id), "Top-Down Testing" (title)
+INFO    : *              located within: "pointers-frac-calc" (xml:id), "The Fraction Calculator" (title)
+INFO    : *              located within: "quiz-arithmetic-1" (xml:id)
+INFO    : *              located within: "quiz-arrayfunction-2" (xml:id)
+INFO    : *              located within: "quiz-arrayfunction-2" (xml:id)
+INFO    : *              located within: "quiz-malloc-2" (xml:id)
+INFO    : *              located within: "activity-21-4-1-Malloc_Free_Practice_1" (xml:id)
+INFO    : *              located within: "quiz-sortsearch-2" (xml:id)
+INFO    : *              located within: "quiz-sortsearch-8" (xml:id)
+INFO    : *              located within: "activity-22-9-1-Sort_Arrays-no-output" (xml:id)
+INFO    : *              located within: "activity-22-9-1-Sort_Arrays-no-output" (xml:id)
+INFO    : *              located within: "multiarray-strings" (xml:id), "Arrays of Strings" (title)
+INFO    : *              located within: "multiarray-strings" (xml:id), "Arrays of Strings" (title)
+INFO    : *              located within: "multiarray-matrices" (xml:id), "Matrices" (title)
+INFO    : *              located within: "multiarray-matrices" (xml:id), "Matrices" (title)
+INFO    : *              located within: "multiarray-matrices" (xml:id), "Matrices" (title)
+INFO    : *              located within: "multiarray-initialize" (xml:id), "Initializing Multidimensional Arrays" (title)
+INFO    : *              located within: "structures-intro" (xml:id), "Intro to Structures" (title)
+INFO    : *              located within: "Passing by Value" (title)
+INFO    : *              located within: "quiz-structfunction-1" (xml:id)
+INFO    : *              located within: "quiz-structfunction-2" (xml:id)
+INFO    : *              located within: "quiz-structfunction-2" (xml:id)
+INFO    : *              located within: "quiz-structfunction-2" (xml:id)
+INFO    : *              located within: "quiz-structfunction-2" (xml:id)
+INFO    : *              located within: "quiz-structfunction-3" (xml:id)
+INFO    : *              located within: "structures-pointers" (xml:id), "Structures and Pointers" (title)
+INFO    : *              located within: "structures-pointers" (xml:id), "Structures and Pointers" (title)
+INFO    : *              located within: "structures-pointers" (xml:id), "Structures and Pointers" (title)
+INFO    : *              located within: "structures-pointers" (xml:id), "Structures and Pointers" (title)
+INFO    : *              located within: "quiz-structfunction-4" (xml:id)
+INFO    : *              located within: "quiz-structfunction-5" (xml:id)
+INFO    : *              located within: "quiz-structfunction-5" (xml:id)
+INFO    : *              located within: "quiz-structfunction-5" (xml:id)
+INFO    : *              located within: "quiz-structfunction-9" (xml:id)
+INFO    : *              located within: "quiz-structfunction-9" (xml:id)
+INFO    : *              located within: "quiz-structfunction-9" (xml:id)
+INFO    : *              located within: "quiz-structfunction-10" (xml:id)
+INFO    : *              located within: "quiz-structfunction-11" (xml:id)
+INFO    : *              located within: "quiz-structfunction-11" (xml:id)
+INFO    : *              located within: "arraystruct-dynamic" (xml:id), "Dynamic Arrays of Structures" (title)
+INFO    : *              located within: "arraystruct-dynamic" (xml:id), "Dynamic Arrays of Structures" (title)
+INFO    : *              located within: "linkedlists-intro" (xml:id), "Intro to Linked Lists" (title)
+INFO    : *              located within: "quiz-linkedlist1-1" (xml:id)
+INFO    : *              located within: "quiz-linkedlist1-1" (xml:id)
+INFO    : *              located within: "quiz-linkedlist1-2" (xml:id)
+INFO    : *              located within: "quiz-linkedlist1-3" (xml:id)
+INFO    : *              located within: "quiz-linkedlist1-4" (xml:id)
+INFO    : *              located within: "quiz-linkedlist1-4" (xml:id)
+INFO    : *              located within: "quiz-linkedlist1-5" (xml:id)
+INFO    : *              located within: "quiz-linkedlist1-5" (xml:id)
+INFO    : *              located within: "quiz-linkedlist2-1" (xml:id)
+INFO    : *              located within: "quiz-linkedlist2-2" (xml:id)
+INFO    : *              located within: "libraries-intro" (xml:id), "Intro to Libraries" (title)
+INFO    : *              located within: "activity-28-2-1-ATOI_Function-no-output" (xml:id)
+INFO    : *              located within: "libraries-header" (xml:id), "Making Our Own Library - Header File" (title)
+INFO    : *              located within: "libraries-source" (xml:id), "Making Our Own Library - Source File" (title)
+INFO    : *              located within: "libraries-object" (xml:id), "Making Our Own Library - Object File" (title)
+INFO    : *              located within: "libraries-complex-source" (xml:id), "Complex Number Library Source File" (title)
+INFO    : *              located within: "Test Programs" (title)
+INFO    : * --------------
+INFO    : successful application of /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptxcli_vx7cp4lr/cli_xsl/c-programming-html.xsl
+INFO    : Removing temporary directory /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-qmiy6fv6
+INFO    : Removing temporary directory /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-30rpb8b1
+INFO    : 
+Success! Run `pretext view web` to see the results.
+
+INFO    : 

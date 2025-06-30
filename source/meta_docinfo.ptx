@@ -60,10 +60,5 @@
   <document-id>bonfert-taylor-ICP</document-id>
   <brandlogo url="https://pretextbook.org" source="CProgrammingLogo.png" />
 
-<html>
-    <!-- Expects favicon/favicon-32x32.png, and favicon/favicon-16x16.png -->
-    <favicon/>
-</html>
-
 </docinfo>
 

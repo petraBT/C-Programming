@@ -351,7 +351,7 @@
 				<statement>
 					<p>Let's start with a review question...</p>
 					<p>You just wrote the following program:</p>
-					<program language="c"><input>
+					<program language="c"><code>
 						#include &lt;stdio.h&gt;
 						int myrecursion(int i, int j);
 
@@ -370,7 +370,7 @@
 						  else
 						    return(i);
 						}
-					</input></program>
+					</code></program>
 					<p>What is the value of the variable <em>a</em> that is printed to the screen at the end of the program? <alert>Choose one: 3 / 7 / 10 / 17 / 24</alert></p>
 					<p>How many times is the function <c>myrecursion()</c> called during execution of this program? <alert>Choose one: 1 time / 2 times / 3 times / 4 times / 5 times</alert></p>
 					<p>Feel free to use the window below to experiment. You may want to add some <c>printf()</c> statements inside the recursive function to be able to track its behavior. Be sure to work the correct answer out "by hand" first before verifying your answer using the code window.</p>

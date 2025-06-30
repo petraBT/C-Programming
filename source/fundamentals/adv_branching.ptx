@@ -59,7 +59,7 @@
 			<solution>
 				<p>Here is just one example of how the same statements placed in different orders can produce vastly different results:</p>
 				<ol>
-					<li><program language="c"><input>
+					<li><program language="c"><code>
 						int i = 0;
 						int a = 5;
 						for (i=0; i&lt;11; i++){
@@ -67,8 +67,8 @@
 						    printf("%d ", i);
 						  }
 						}
-					</input></program></li>
-					<li><program language="c"><input>
+					</code></program></li>
+					<li><program language="c"><code>
 						int i = 0;
 						int a = 5;
 						if (a&lt;i){
@@ -76,7 +76,7 @@
 						    printf("%d ", i);
 						  }
 						}
-					</input></program></li>
+					</code></program></li>
 				</ol>
 				<p>The first example program will output "6 7 8 9 10", whereas the second example program will have no output. Try it out yourself to see! So, of course, order does matter when coding, and it is important to be mindful of the potential errors you can encounter if reversing the order of certain statement, such as above!</p>
 			</solution>
