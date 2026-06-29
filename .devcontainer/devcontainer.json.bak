@@ -1,4 +1,4 @@
-// This file was automatically generated with PreTeXt 2.43.0.
+// This file was automatically generated with PreTeXt 2.20.0.
 // If you modify this file, PreTeXt will no longer automatically update it.
 //
 //////////////////////////////////////////////////////////////
@@ -13,13 +13,14 @@
 //
 ///////////////////////////////////////////////////////////////
 {
-  "image": "pretextbook/pretext-full:1.11", // uses latest image from https://hub.docker.com/r/PreTeXtBook/pretext-full/tags
+  "image": "oscarlevin/pretext-full:2.20.0",
   // If you don't need sagemath, you can use a smaller base image.  Comment out the line above and uncomment the line below to use a smaller image.
-  // "image": "pretextbook/pretext:1.11",
-  "features": {"ghcr.io/devcontainers/features/github-cli": {}},
+  // "image": "oscarlevin/pretext:2.20.0",
+  "features": {},
 
-  // The pretext-full image above includes pretext, prefigure, and enough parts of latex and sagemath for most cases.  Here we install additional dependencies.
+  // The pretext-full image above includes pretext, prefigure, and enough parts of latex and sagemath for most cases.  If there are errors with sage, you can install the full sagemath package through Conda by running ./.devcontainer/installSage.sh, or uncommenting that line and rebuilding the container.
   "postCreateCommand": {
+    // "install sagemath": "bash ./.devcontainer/installSage.sh",
     "install pandoc": "bash ./.devcontainer/installPandoc.sh",
     "mark repo as safe": "git config --global --add safe.directory $(pwd)"
     },
@@ -56,20 +57,19 @@
     }
   },
 
-
+  
   // Configure tool-specific properties.
   "customizations": {
     "codespaces": {
-      "openFiles": ["README.md"]
+      "openFiles": ["source/main.ptx"]
     },
     "vscode": {
       "settings": {
         "editor.quickSuggestions": {
           "other": "off"
         },
-        "editor.suggest.showProperties": false,
+        "files.autoSave": "onFocusChange",
         "editor.snippetSuggestions": "bottom",
-        "files.autoSave": "afterDelay",
         "xml.validation.enabled": true,
         "redhat.telemetry.enabled": false,
         "CodeChat.CodeChatServer.Command": "CodeChat_Server"
@@ -78,8 +78,7 @@
         "oscarlevin.pretext-tools",
         "CodeChat.codechat",
         "streetsidesoftware.code-spell-checker",
-        "alpinebuster.vscode-latex-table-editor",
-        "mathematic.vscode-pdf"
+        "alpinebuster.vscode-latex-table-editor"
       ]
     }
   }

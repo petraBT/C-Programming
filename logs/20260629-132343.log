@@ -1,0 +1,10 @@
+WARNING : Using CLI version 2.43.0 but project's `requirements.txt`
+WARNING : is configured to use 2.20.0. Consider either installing
+WARNING : CLI version 2.20.0 or running `pretext update-project`
+WARNING : to update `requirements.txt` and other managed files to match 2.43.0.
+INFO    : Since no target was supplied, we will use "web".
+
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.43.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.43.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : Validating source against schema pretext.rng.
+ERROR   : Schema validation could not be completed: no validator was available (jing is not installed and lxml could not compile the schema).

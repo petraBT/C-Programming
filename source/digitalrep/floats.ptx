@@ -164,10 +164,10 @@
         <p>How are real numbers (floats) represented/stored in the computer?</p>
         <p>Example: -5,032.4235</p>
         <p>Write in scientific notation (decimal):</p>
-        <me>-5.0324235\times 10^3</me>
+        <md>-5.0324235\times 10^3</md>
         <p>where <c>-</c> is the sign, <c>5.0324235</c> is the "mantissa", and <c>3</c> is the exponent.</p>
         <p>In binary, this representation takes on the following form:</p>
-        <me>-1.mantissa\times 2^{exp}</me>
+        <md>-1.mantissa\times 2^{exp}</md>
         <p>where <c>number</c> = <c>sign</c>*<c>1.mantissa</c>*<c>2^exponent</c></p>
         <image source="images/FloatingPoint.png" width="90%"/>
         <p>Special cases:</p>
@@ -181,7 +181,7 @@
         <reading-questions>
             <exercise xml:id="quiz-floatchar-5">
                 <statement>
-                    <p>The binary representation of the decimal number 0.75 is 0.11 (which basically stands for <m>2^{-1} + 2^{-2} = \frac{1}{2} + \frac{1}{4} = 0.75</m>). In scientific notation, this binary number would be written as: <me>1.1 * 2^{-1}</me> Suppose now that 0.75 is stored (in the binary representation) as a float. In this representation, choose the correct option for the following components of the float:</p>
+                    <p>The binary representation of the decimal number 0.75 is 0.11 (which basically stands for <m>2^{-1} + 2^{-2} = \frac{1}{2} + \frac{1}{4} = 0.75</m>). In scientific notation, this binary number would be written as: <md>1.1 * 2^{-1}</md> Suppose now that 0.75 is stored (in the binary representation) as a float. In this representation, choose the correct option for the following components of the float:</p>
                     <p>
                         <ul>
                             <li>sign: <var width="6" /> (choose from positive / negative / zero)</li>

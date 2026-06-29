@@ -143,11 +143,11 @@
 		<p>Let's give this a try! We'll now create our own library, namely a complex number library (note that C does not come with a complex number data type).</p>
 		<p>A complex number</p>
 		<p>
-		  <me>z = x + iy</me>
+		  <md>z = x + iy</md>
 		</p>
 		<p>has a real part x and an imaginary part y. Often, we write z in polar form also as </p>
 		<p>
-		  <me>z = re^{i\phi}</me>
+		  <md>z = re^{i\phi}</md>
 		</p>
 		<p>where <m>r</m> is the absolute value (also called magnitude) of the complex number and <m>\phi</m> is the argument (also called phase of the number).</p>
 		<p><idx>complex numbers</idx>Again, C does not provide a built-in complex data type (many other languages do), so we must create our own.</p>

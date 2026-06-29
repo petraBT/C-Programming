@@ -67,7 +67,7 @@
           <p>65</p>
         </answer>
         <solution>
-          <p>Remember from the video above that binary is base-2, with the least significant bit as the right-most digit, which has a place value of <m>2^0</m>. Moving left, the the place values are <m>2^1</m>, <m>2^2</m>, <m>2^3</m>, etc. Only those digits that are <q>1</q> contribute their place value to the number, so for this binary number, we interpret it as <me>(0 × 2^7) + (1 × 2^6) + (0 × 2^5) + (0 × 2^4) + (0 × 2^3) + (0 × 2^2) + (0 × 2^1) + (1 × 2^0) = 64 + 1 = 65</me></p>
+          <p>Remember from the video above that binary is base-2, with the least significant bit as the right-most digit, which has a place value of <m>2^0</m>. Moving left, the the place values are <m>2^1</m>, <m>2^2</m>, <m>2^3</m>, etc. Only those digits that are <q>1</q> contribute their place value to the number, so for this binary number, we interpret it as <md>(0 × 2^7) + (1 × 2^6) + (0 × 2^5) + (0 × 2^4) + (0 × 2^3) + (0 × 2^2) + (0 × 2^1) + (1 × 2^0) = 64 + 1 = 65</md></p>
         </solution>
       </investigation>
 
@@ -79,10 +79,10 @@
       </ul>
       <p>For example, in the 8-digit binary number <c>01100110</c>, the left-most bit is the <em>M</em>ost <em>S</em>ignificant <em>B</em>it, and the right-most bit is the <em>L</em>east <em>S</em>ignificant <em>B</em>it.</p>
       <p>In decimal (base-10), the number <c>135</c> can be represented as:</p>
-      <me>135 = 1\cdot 10^2 \; + \; 3\cdot 10^1 \; + \; 5\cdot 10^0</me>
+      <md>135 = 1\cdot 10^2 \; + \; 3\cdot 10^1 \; + \; 5\cdot 10^0</md>
       <p>where <m>10^2</m> is the "hundreds" place, <m>10^1</m> is the "tens" place, and <m>10^0</m> is the "ones" place.</p>
       <p>Instead of base-10, what if we have base-<em>b</em>?</p>
-      <me>(number)_b = a_nb^n + a_{n-1}b^{n-1} + ... + a_0b^0</me>
+      <md>(number)_b = a_nb^n + a_{n-1}b^{n-1} + ... + a_0b^0</md>
       <ul>
         <li><m>b</m>: base (binary: 2, decimal: 10, ...)</li>
         <li><m>a_k</m>: digits (binary: 0-1, decimal: 0-9, in general 0-(b-1))</li>
@@ -294,8 +294,8 @@
             <p>No, they are different decimal numbers!</p>
           </answer>
           <solution>
-            <p>In unsigned binary, <c>10000001</c> represents <me>(1 × 2^7) + (0 × 2^6) + (0 × 2^5) + (0 × 2^4) + (0 × 2^3) + (0 × 2^2) + (0 × 2^1) + (1 × 2^0) = 128 + 1 = 129</me></p>
-            <p>In signed magnitude binary, <c>10000001</c> represents <me>-1 * [(0 × 2^6) + (0 × 2^5) + (0 × 2^4) + (0 × 2^3) + (0 × 2^2) + (0 × 2^1) + (1 × 2^0)] = -1 * (1) = -1</me> since the most significant bit (the left-most bit) is "1", which denotes a negative number in this binary representation. Thus, that one binary number represents 129 in binary and -1 in signed magnitude, which are definitely different!</p>
+            <p>In unsigned binary, <c>10000001</c> represents <md>(1 × 2^7) + (0 × 2^6) + (0 × 2^5) + (0 × 2^4) + (0 × 2^3) + (0 × 2^2) + (0 × 2^1) + (1 × 2^0) = 128 + 1 = 129</md></p>
+            <p>In signed magnitude binary, <c>10000001</c> represents <md>-1 * [(0 × 2^6) + (0 × 2^5) + (0 × 2^4) + (0 × 2^3) + (0 × 2^2) + (0 × 2^1) + (1 × 2^0)] = -1 * (1) = -1</md> since the most significant bit (the left-most bit) is "1", which denotes a negative number in this binary representation. Thus, that one binary number represents 129 in binary and -1 in signed magnitude, which are definitely different!</p>
           </solution>
         </investigation>
 
