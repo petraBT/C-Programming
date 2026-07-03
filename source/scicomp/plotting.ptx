@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="plotting">
+    <title>Plotting, Bisection, and Least Squares</title>
+    <introduction>
+        <p>Scientific computing often means more than just computing a number&#8212; we also want to <em>see</em> our results. In this chapter we'll learn to plot data straight from a C program using <term>gnuplot</term>, and then put that ability to use in two classic scientific-computing problems: finding the root of an equation with the <term>bisection method</term>, and finding the best-fit line through a set of data points with <term>least squares</term> (linear regression). Here's what we'll cover:
+        <ul>
+            <li>Plotting with gnuplot</li>
+            <li>The bisection method for solving <m>f(x) = 0</m></li>
+            <li>Least squares (linear regression)</li>
+        </ul>
+        </p>
+    </introduction>
+
+    <section xml:id="plotting-gnuplot">
+        <title>Plotting with gnuplot</title>
+        <p><idx>gnuplot</idx><term>gnuplot</term> is a command-line plotting program. Rather than writing data to a file and opening gnuplot separately, we can open a <em>pipe</em> directly to gnuplot from within our C program using <c>popen()</c>, then write gnuplot commands and data to that pipe with <c>fprintf()</c>, exactly as if we were writing to a file:</p>
+        <cd>FILE *gfile = popen("gnuplot", "w");
+fprintf(gfile, "set terminal png\n");
+fprintf(gfile, "set output 'my_plot.png'\n");
+fprintf(gfile, "plot '-'\n");        /* '-' means: data follows inline */
+/* ... write x,y pairs, one per line ... */
+fprintf(gfile, "e\n");               /* 'e' ends the inline data       */
+pclose(gfile);</cd>
+        <p>Here is a complete, minimal example that plots a single array of data points:</p>
+        <cmecode startPoint="engs20p_NplotBasic" addOn="&amp;nocheck=true" height="450"></cmecode>
+        <p>We can plot multiple curves on the same figure, and add titles and axis labels, by extending the gnuplot commands we send through the pipe:</p>
+        <cmecode startPoint="engs20p_NplotAdvanced" addOn="&amp;nocheck=true" height="600"></cmecode>
+    </section>
+
+    <section xml:id="plotting-bisection">
+        <title>The Bisection Method</title>
+        <p><idx><h>bisection method</h><h>root-finding</h></idx>We've already met <term>Bisection Search</term> as a way to search a sorted list. The same halving idea can be used to solve equations of the form <m>f(x) = 0</m> for a continuous function <m>f</m>: this is the <term>bisection method</term>.</p>
+        <p>Suppose we know that a solution lies somewhere between <m>x=a</m> and <m>x=b</m> (that is, <m>f(a)</m> and <m>f(b)</m> have opposite signs). We compute the midpoint <m>x_1 = (a+b)/2</m>, and check the sign of <m>f(x_1)</m>: if it has the same sign as <m>f(a)</m>, the root must be between <m>x_1</m> and <m>b</m>, so we replace <m>a</m> with <m>x_1</m>. Otherwise, the root is between <m>a</m> and <m>x_1</m>, so we replace <m>b</m> with <m>x_1</m>. Either way, we now have a shorter interval containing the root, and we repeat the process until the interval is <q>short enough</q>.</p>
+        <activity xml:id="activity-plotting-bisection">
+            <statement>
+                <p>We want to write a program that finds the solution of the equation <m>x^3 - 4x - 9 = 0</m> using the bisection method.</p>
+                <ol>
+                    <li>Write a function <c>float func(float x)</c> that computes <m>f(x) = x^3 - 4x - 9</m>.</li>
+                    <li>Populate two arrays with the <m>x</m> and <m>y</m> coordinates over the interval <m>[a,b] = [2.0, 4.0]</m>, and plot them using gnuplot, as in the previous section.</li>
+                    <li>Compute a first estimate <m>x_1 = (a+b)/2</m>. Determine whether the true solution lies between <m>a</m> and <m>x_1</m>, or between <m>x_1</m> and <m>b</m>, by comparing the signs of <m>f(a)</m>, <m>f(x_1)</m>, and <m>f(b)</m>, then replace <m>a</m> or <m>b</m> with <m>x_1</m> to obtain a shorter interval that still contains the solution, and repeat.</li>
+                    <li>Come up with a reasonable way to stop once your approximation is <q>good enough</q>, and display the solution both in the terminal and on your graph.</li>
+                </ol>
+                <cmecode startPoint="engs20p_NbisectionPractice" addOn="&amp;nocheck=true" height="500"></cmecode>
+                <p><em>Record your code below.</em></p>
+            </statement>
+            <response/>
+        </activity>
+    </section>
+
+    <section xml:id="plotting-leastsquares">
+        <title>Least Squares (Linear Regression)</title>
+        <p><idx><h>least squares</h></idx><idx><h>linear regression</h></idx>Suppose we have <m>N</m> data points <m>(x_i, y_i)</m> and want to find the straight line <m>y = mx + b</m> that fits them as closely as possible. The <term>least squares</term> method finds the slope <m>m</m> and intercept <m>b</m> that minimize the sum of the squared vertical distances (shown below in green) between the data points and the line, using these formulas:</p>
+        <figure>
+            <image source="images/LinearRegressionFit.png" width="60%"/>
+            <caption>A least-squares line of best fit through four data points, with vertical distances (residuals) shown in green</caption>
+        </figure>
+        <p><m>\displaystyle m = \frac{N \sum(x_iy_i) - \sum(x_i) \sum(y_i)}{N \sum(x_i^2) - \left(\sum(x_i)\right)^2}</m></p>
+        <p><m>\displaystyle b = \frac{\sum(y_i) - m\sum(x_i)}{N}</m></p>
+        <p>The example below plots a set of data points along with their least-squares line of best fit:</p>
+        <cmecode startPoint="engs20p_NleastSquaresDemo" addOn="&amp;nocheck=true" height="600"></cmecode>
+    </section>
+
+    <section xml:id="plotting-summary">
+        <title>Summary</title>
+        <p>In this chapter, we covered the following topics:</p>
+        <ul>
+            <li>Plotting from C using a pipe to gnuplot</li>
+            <li>The bisection method for solving <m>f(x)=0</m></li>
+            <li>Least squares (linear regression)</li>
+        </ul>
+    </section>
+</chapter>

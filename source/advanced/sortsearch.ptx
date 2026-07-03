@@ -294,7 +294,7 @@
 					<input prompt="Output: ">1</input>
 				</console>
 				<cmecode startPoint="engs20p_NlinearSearchPractice" addOn="&amp;nocheck=true" height="600"></cmecode>
-				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				<p><em>Record your code below.</em></p>
 			</statement>
 			<response/>
 		</activity>
@@ -396,7 +396,7 @@
 			<statement>
 				<p>Please implement the selection sort algorithm to sort the given array of numbers. Use a function to which you pass the unsorted array as well as its number of elements, and which sorts the array 'in place', meaning that the unsorted array is replaced by the sorted array (rather than creating a sorted copy). You can use the given function printArray() to check whether your algorithm performed correctly.</p>
 				<cmecode startPoint="engs20p_NselectionSortPractice" addOn="&amp;nocheck=true" height="500"></cmecode>
-				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				<p><em>Record your code below.</em></p>
 			</statement>
 			<response/>
 		</activity>
@@ -413,6 +413,210 @@
 		<p>We will later look at an implementation of insertion sort that creates a sorted copy of the original list, leaving the original list in place unsorted. In this scenario, insertion sort works by taking elements from the unsorted list one by one and inserting them in their correct position into the new sorted list.</p>
 		<p>Inserting elements into an array at a particular location is not a very fun process: it may require shifting large numbers of array elements over to make room for the new element. We'll therefore wait on the implementation of this algorithm until we get to <term>linked lists</term>, which make this step much easier.</p>
 
+	</section>
+
+	<section xml:id="quicksort-algorithm">
+		<title>The QuickSort Algorithm</title>
+		<p><idx><h>sort</h><h>quicksort</h></idx>QuickSort is a <term>divide and conquer</term> algorithm: rather than repeatedly scanning the whole list like bubble sort does, it picks one element of the list&#8212; called the <term>pivot</term>&#8212; and rearranges the list so that every element smaller than the pivot ends up to its left, and every element larger ends up to its right. This rearranging step is called <term>partitioning</term>. Once the list has been partitioned around the pivot, the pivot itself is in its final, correct position, and QuickSort is called <em>recursively</em> on the (smaller) sublist to its left and the (smaller) sublist to its right.</p>
+		<p>In the example below, the pivot is chosen to always be the <em>last</em> element of the (sub)list being partitioned. The function <c>partition()</c> rearranges the list around the pivot and returns the pivot's final index; <c>quickSort()</c> then calls itself on the two sides:</p>
+		<cmecode startPoint="engs20p_NquickSortDemo" addOn="&amp;nocheck=true" height="500"></cmecode>
+		<p>Notice that <c>printArray()</c> is called inside <c>partition()</c> after every partitioning step&#8212; run the code above and watch how the list gradually becomes sorted, one pivot at a time.</p>
+		<p>The animation below might help you visualize how QuickSort functions.</p>
+		<p>ADAMSAPPLET style="width:50%; height:150px; margin-left:auto; margin-right:auto;" data-program="sorters" data-types="qui" data-size="20" data-duplicates="2" data-order="319,locked" ENDADAMSAPPLET</p>
+	</section>
+
+	<section xml:id="quicksort-debug">
+		<title>Debugging QuickSort</title>
+		<p>Both programs below are supposed to implement QuickSort, but each has a bug that keeps it from correctly sorting the entire list. Run each one, compare the <q>Sorted array</q> output to what it should be, and find the mistake.</p>
+		<activity xml:id="activity-quicksort-debug-1">
+			<title>Debug 1</title>
+			<statement>
+				<p>This version doesn't fully sort the array. What is missing?</p>
+				<cmecode startPoint="engs20p_NquickSortDebug1" addOn="&amp;nocheck=true" height="500"></cmecode>
+			</statement>
+			<hint>
+				<p>Look closely at how many times <c>quickSort()</c> calls itself inside its own body. A correct divide-and-conquer sort needs to recurse on <em>both</em> sides of the pivot.</p>
+			</hint>
+		</activity>
+		<activity xml:id="activity-quicksort-debug-2">
+			<title>Debug 2</title>
+			<statement>
+				<p>This version also fails to sort correctly, for a different reason. What is wrong this time?</p>
+				<cmecode startPoint="engs20p_NquickSortDebug2" addOn="&amp;nocheck=true" height="500"></cmecode>
+			</statement>
+			<hint>
+				<p>Compare the arguments passed to the two recursive calls to <c>quickSort()</c> here with the version from the previous section. Which array elements are being excluded from further sorting that shouldn't be?</p>
+			</hint>
+		</activity>
+	</section>
+
+	<section xml:id="quicksort-characters">
+		<title>QuickSort with Characters, and a Smarter Pivot</title>
+		<p>QuickSort doesn't just work on numbers&#8212; as long as we have a way to compare two elements, we can sort anything. Let's practice with an array of <c>char</c>s.</p>
+		<p>We'll also address a weakness of the version of QuickSort we've used so far: always choosing the <em>last</em> element as the pivot works fine on average, but performs poorly when the list is already sorted (or nearly sorted), since the partitioning barely shrinks the list each time. A common fix is to use the <term>median-of-three</term> strategy: instead of always taking the last element, take the median of the first, last, and middle elements of the (sub)list as the pivot.</p>
+		<p>The two animations below start from the <em>same, already-sorted</em> list, side by side&#8212; one always pivoting on the last element, the other using median-of-three. Watch how much more work the plain version has to do:</p>
+		<p>ADAMSAPPLET style="width:100%; height:150px; margin-left:auto; margin-right:auto;" data-program="sorters" data-types="qui,qui-med" data-size="20" data-duplicates="1" data-order="FOR,locked" data-columns="2" ENDADAMSAPPLET</p>
+		<activity xml:id="activity-quicksort-characters">
+			<statement>
+				<p>Starting from the working (integer) QuickSort below, modify the code to:</p>
+				<ol>
+					<li>Sort the array of characters <c>'l','a','e','o','s','p','g','i'</c> instead of an array of integers.</li>
+					<li>Before partitioning, swap whichever of the first, last, and middle elements is the <em>median</em> of the three into the last position, so that value is used as the pivot.</li>
+				</ol>
+				<cmecode startPoint="engs20p_NquickSortChars" addOn="&amp;nocheck=true" height="500"></cmecode>
+				<p><em>Record your code below.</em></p>
+			</statement>
+			<response/>
+		</activity>
+	</section>
+
+	<section xml:id="quicksort-runtime-analysis">
+		<title>Runtime Analysis and Big-O Notation</title>
+		<p><idx><h>runtime analysis</h></idx>So far we've mostly focused on whether our code and algorithms are <em>correct</em>. But when working with large datasets, it also matters how much <em>work</em> an algorithm has to do. Runtime analysis is our way of estimating how the amount of work (time, memory, <ellipsis/>) grows as the input size <m>n</m> becomes large.</p>
+		<p>Rather than counting the exact number of operations (which would depend on the specific computer, compiler, and even the specific input), we focus on the <em>dominant term</em> and ignore constant factors and lower-order terms. This is captured by <term>Big-O notation</term>: we say an algorithm runs in <m>O(f(n))</m> time if, for sufficiently large <m>n</m>, the runtime never exceeds <m>c \cdot f(n)</m> for some constant <m>c</m>.</p>
+
+		<p>Consider linear search:</p>
+		<program language="c"><code>
+#include &lt;stdio.h&gt;
+int main(void) {
+    int list[] = {6, -2, 5, 12, 7, 3, 8, 15, -10, 1};
+    int n = 10;
+    int item, i, found;
+    printf("What number are you interested in?");
+    scanf("%d", &amp;item);
+    i = 0;
+    found = 0;
+    while(!found &amp;&amp; i&lt;n){
+        if(list[i] == item){
+            found = 1;
+        }
+        else{
+            i++;
+        }
+    }
+    return (0);
+}
+		</code></program>
+		<p>In the worst case (the item is last, or not present at all) the <c>while</c> loop runs <m>n</m> times, so linear search is <m>O(n)</m>&#8212; <term>linear time</term>.</p>
+
+		<p>Now consider bubble sort:</p>
+		<program language="c"><code>
+#include&lt;stdio.h&gt;
+int main(void) {
+    int n = 10;
+    int i, j, swap;
+    int list[] = {759, 14, 2, 900, 106, 77, -10, 8, -3, 5};
+
+    for(j=0; j&lt;n-1; j++){
+        for(i=0; i&lt;n-1; i++){
+            if(list[i] &gt; list[i+1]){
+                swap = list[i];
+                list[i] = list[i+1];
+                list[i+1] = swap;
+            }
+        }
+    }
+    return (0);
+}
+		</code></program>
+		<p>Here we have two nested loops, each running roughly <m>n</m> times, so the inner comparison happens roughly <m>n^2</m> times: bubble sort is <m>O(n^2)</m>&#8212; <term>quadratic time</term>.</p>
+
+		<p>Runtime analysis generally involves:</p>
+		<ul>
+			<li>Counting primitive operations (comparisons, swaps, assignments) as a function of <m>n</m></li>
+			<li><term>Loop analysis</term>: multiplying the number of iterations by the cost of what's inside the loop</li>
+			<li>Recurrence relations for recursive algorithms (like QuickSort!)</li>
+		</ul>
+		<p>We also distinguish three common cases:</p>
+		<ul>
+			<li><term>Best-case</term>&#8212; the smallest possible cost</li>
+			<li><term>Average-case</term>&#8212; the expected cost, assuming a reasonable distribution of inputs</li>
+			<li><term>Worst-case</term>&#8212; the largest possible cost</li>
+		</ul>
+
+		<p>Here are the typical growth classes, from fastest to slowest:</p>
+		<figure>
+			<image source="images/RuntimeGrowthClasses.png" width="90%"/>
+			<caption>Typical growth classes, plotted as runtime (or step count) versus input size <m>n</m></caption>
+		</figure>
+		<table>
+			<title>Common Runtime Classes</title>
+			<tabular>
+				<row bottom="medium">
+					<cell right="medium"><em>Notation</em></cell>
+					<cell right="medium"><em>Name</em></cell>
+					<cell><em>Example</em></cell>
+				</row>
+				<row>
+					<cell right="medium"><m>O(1)</m></cell>
+					<cell right="medium">constant</cell>
+					<cell>accessing an array element</cell>
+				</row>
+				<row>
+					<cell right="medium"><m>O(\log n)</m></cell>
+					<cell right="medium">logarithmic</cell>
+					<cell>binary/bisection search</cell>
+				</row>
+				<row>
+					<cell right="medium"><m>O(n)</m></cell>
+					<cell right="medium">linear</cell>
+					<cell>linear search</cell>
+				</row>
+				<row>
+					<cell right="medium"><m>O(n \log n)</m></cell>
+					<cell right="medium">linearithmic</cell>
+					<cell>merge sort, heapsort, QuickSort (average case)</cell>
+				</row>
+				<row>
+					<cell right="medium"><m>O(n^2)</m></cell>
+					<cell right="medium">quadratic</cell>
+					<cell>bubble sort, selection sort, insertion sort, QuickSort (worst case)</cell>
+				</row>
+				<row>
+					<cell right="medium"><m>O(n^3)</m></cell>
+					<cell right="medium">cubic</cell>
+					<cell>naive matrix multiplication</cell>
+				</row>
+				<row>
+					<cell right="medium"><m>O(2^n)</m></cell>
+					<cell right="medium">exponential</cell>
+					<cell>brute-force subset-sum</cell>
+				</row>
+				<row>
+					<cell right="medium"><m>O(n!)</m></cell>
+					<cell right="medium">factorial</cell>
+					<cell>traveling-salesperson brute force</cell>
+				</row>
+			</tabular>
+		</table>
+
+		<p>Where does QuickSort fit in? On average, each partitioning step is <m>O(n)</m>, and the list roughly halves in size each time, giving <m>O(n \log n)</m> overall&#8212; much better than bubble sort's <m>O(n^2)</m>! But in the <em>worst</em> case (for example, an already-sorted list with a poorly-chosen pivot) QuickSort degrades to <m>O(n^2)</m>, which is exactly why the median-of-three pivot strategy from the previous section is worth using in practice.</p>
+
+		<reading-questions>
+			<exercise xml:id="quiz-quicksort-1">
+				<statement>
+					<p>An algorithm has two nested loops, each of which runs <m>n</m> times regardless of the input. What is its Big-O runtime?</p>
+				</statement>
+				<choices randomize="yes">
+					<choice correct="yes">
+						<statement><p><m>O(n^2)</m></p></statement>
+						<feedback><p>Correct&#8212; two nested loops each running <m>n</m> times gives roughly <m>n \times n = n^2</m> operations.</p></feedback>
+					</choice>
+					<choice>
+						<statement><p><m>O(n)</m></p></statement>
+						<feedback><p>Not quite&#8212; that would be the case for a single loop, not two nested ones. Try again!</p></feedback>
+					</choice>
+					<choice>
+						<statement><p><m>O(\log n)</m></p></statement>
+						<feedback><p>Not quite. Try again!</p></feedback>
+					</choice>
+					<choice>
+						<statement><p><m>O(1)</m></p></statement>
+						<feedback><p>Not quite. Try again!</p></feedback>
+					</choice>
+				</choices>
+			</exercise>
+		</reading-questions>
 	</section>
 
 	<section xml:id="sortsearch-sort-practice">
@@ -463,7 +667,7 @@
 				  printf("%d, ", numbers[sort[i]]);
 				}
 			</code></program>
-			<p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+			<p><em>Record your answer below.</em></p>
             <response/>
 		</activity>
 	</section>
@@ -477,7 +681,7 @@
 				<statement>
 					<p>Please write a function <c>printArray()</c>, to which you pass the number of elements in your list to be sorted as well as the list and the sort array. The function should print the list in the order defined by the sort array. </p>
 					<cmecode startPoint="engs20p_NsortArrayPrinting" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -490,7 +694,7 @@
 				<statement>
 					<p>Please implement the function <c>sortArray()</c>, to which you pass the number of elements in your list to be sorted, the unsorted array as well as a sort array, and which sorts the array, using bubble sort, by making changes only to the sort array.</p>
 					<cmecode startPoint="engs20p_NsortArrayPractice" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -503,6 +707,8 @@
 		<ul>
 			<li>Linear and bisection search methods</li>
 			<li>Bubble, selection, and insertion sort methods</li>
+			<li>The QuickSort algorithm: pivots, partitioning, and recursion (including debugging it, sorting characters, and choosing a smarter pivot with median-of-three)</li>
+			<li>Big-O notation and runtime analysis, including best/average/worst case</li>
 			<li>Sorting records of data (parallel arrays)</li>
 			<li>Sort arrays</li>
 		</ul>

@@ -13,6 +13,29 @@
       <output-dir>output/web</output-dir>
       <xsl>xsl/c-programming-html.xsl</xsl>
     </target>
+    <target name="web-static">
+      <!-- Same as "web", but every cmecode window is rendered as a plain, read-only,
+           copy-pasteable code block (pulled from CMeCodeDir) instead of the live Thayer
+           iframe. Use this to preview/proofread new content before its starting points are
+           registered on code.thayer.dartmouth.edu, or to share a version of the book with
+           readers who don't have Thayer network access. -->
+      <format>html</format>
+      <source>source/main.ptx</source>
+      <publication>publication/publication.ptx</publication>
+      <output-dir>output/web-static</output-dir>
+      <xsl>xsl/c-programming-html.xsl</xsl>
+      <!-- No <deploy-dir> here on purpose: PreTeXt's own deploy-dir/site mechanism requires
+           EVERY deployed target to have one and always reserves the root for a site/ landing
+           page, so it can't keep "web" unchanged at root while adding this one as a subfolder.
+           Instead, deploy.sh builds this target and assembles both into gh-pages itself
+           (this one under /static/, "web" untouched at root) via a git worktree. -->
+      <stringparam key="cmecode.mode" value="static"/>
+      <!-- Must be an ABSOLUTE path (see comment in xsl/c-programming-html.xsl for why).
+           This is machine-specific: update it if this project is cloned somewhere else,
+           or override per-build using pretext's stringparam command line option for
+           cmecode.root, pointed at the desired absolute path. -->
+      <stringparam key="cmecode.root" value="/Users/dz00762/repos/C-Programming/CMeCodeDir/"/>
+    </target>
     <target name="latex">
       <format>latex</format>
       <source>source/main.ptx</source>

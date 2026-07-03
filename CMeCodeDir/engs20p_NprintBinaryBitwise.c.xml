@@ -1,0 +1,22 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+
+int main(void){
+	unsigned int num;
+
+	printf("Please enter a positive integer: ");
+	scanf("%d", &amp;num);
+
+	printf("Decimal numnber: %d \n", num);
+
+	printf("binary number: ");
+	printBinary(num);
+	printf("\n");
+
+	return 0;
+}
+
+//Write your function here
+
+</cme>

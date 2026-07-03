@@ -16,6 +16,23 @@
 <xsl:import href="./core/pretext-html.xsl"/>
 <!-- <xsl:import href="c-programming-preprocessing.xsl" /> -->
 
+<!-- Set via project.ptx <stringparam key="cmecode.mode" value="static"/> on a build target.
+     "live" (default): render the interactive Thayer code window (requires Thayer network access
+       and the starting point to already be registered on code.thayer.dartmouth.edu).
+     "static": render the code itself, read from the local CMeCodeDir/<startPoint>.c.xml file,
+       as a plain read-only, copy-pasteable code block. Useful for previewing/proofreading the
+       book before starting points are registered, and for readers without Thayer access. -->
+<xsl:param name="cmecode.mode" select="'live'"/>
+
+<!-- Absolute path (with trailing slash) to this project's CMeCodeDir, used only when
+     cmecode.mode = 'static'. Must be absolute: PreTeXt stages this stylesheet into a temp
+     directory before running the transform, so a path relative to the project root (like
+     plain "CMeCodeDir/") resolves relative to that temp directory instead and silently fails
+     to find every file. Override per-machine using pretext's stringparam command line
+     option for cmecode.root pointed at the absolute path to CMeCodeDir, or set it directly
+     in project.ptx's web-static target (see project.ptx for a placeholder). -->
+<xsl:param name="cmecode.root" select="'CMeCodeDir/'"/>
+
 <!-- 
 Example:
 
@@ -41,6 +58,17 @@ Example:
  </xsl:template>
 
 <xsl:template match="cmecode">
+    <xsl:choose>
+        <xsl:when test="$cmecode.mode = 'static'">
+            <xsl:call-template name="cmecode-static"/>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:call-template name="cmecode-live"/>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+<xsl:template name="cmecode-live">
     <xsl:variable name="dummy">
         <xsl:value-of select="@height"/>
     </xsl:variable>
@@ -70,6 +98,25 @@ Example:
     <iframe title="Coding Assignment" style="position: absolute; top: -9999em; visibility: hidden;" onload="this.style.position='static'; this.style.visibility='visible';" src="{$the-url}" frameborder="0" width="100%" height="{$height}"></iframe>
 </xsl:template>
 
+<xsl:template name="cmecode-static">
+    <xsl:variable name="filename" select="concat($cmecode.root, @startPoint, '.c.xml')"/>
+    <xsl:variable name="cmefile" select="document($filename)"/>
+    <xsl:variable name="the-display">
+        <program language="c"><code><xsl:value-of select="$cmefile/cme"/></code></program>
+    </xsl:variable>
+    <div style="border:1px solid #ccc; border-radius:5px; padding:8px 12px; margin-bottom:8px; background-color:#f7f7f7;">
+        <p style="margin:0;"><em>Compile and run the code below in your own C environment.</em></p>
+    </div>
+    <xsl:choose>
+        <xsl:when test="not($cmefile)">
+            <p><em>Warning: no local starting-point file was found at <xsl:value-of select="$filename"/>.</em></p>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:apply-templates select="exsl:node-set($the-display)/*"/>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
 <xsl:template match="gdoc">
     <xsl:variable name="the-url">
         <xsl:text>https://docs.google.com/document/d/e/</xsl:text>
@@ -81,6 +128,17 @@ Example:
 </xsl:template>
 
 <xsl:template match="server">
+    <xsl:choose>
+        <xsl:when test="$cmecode.mode = 'static'">
+            <xsl:call-template name="server-static"/>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:call-template name="server-live"/>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+<xsl:template name="server-live">
     <xsl:variable name="dummy">
         <xsl:value-of select="@height"/>
     </xsl:variable>
@@ -101,6 +159,17 @@ Example:
 <!--    <iframe src="{$the-url}" width="105%" height="{$height}" allowfullscreen="true" style="background: #000000; padding-center: 10px; border:1px solid lightgrey;" frameborder="0" ></iframe> -->
     <iframe title="Linux Practice Window" style="position: absolute; top: -9999em; visibility: hidden;" onload="this.style.position='static'; this.style.visibility='visible';" src="{$the-url}" width="105%" height="{$height}" frameborder="0" ></iframe>
     <p>If the server window does not load, please click <a href="{$the-url}" target="_blank"><font color="blue">here</font></a>.</p>
+</xsl:template>
+
+<!-- Unlike cmecode (one fixed C program, so its source can be shown as static text), a server
+     window is a live interactive Linux terminal session, so there is no fixed "source" to display.
+     So the static build just shows a short notice instead, optionally extended per-instance via
+     a @staticNote attribute (e.g. explaining what file/folder to create to follow along locally,
+     since these exercises often rely on files the Thayer server pre-provisions for the student). -->
+<xsl:template name="server-static">
+    <div style="border:1px solid #ccc; border-radius:5px; padding:8px 12px; margin-bottom:8px; background-color:#f7f7f7;">
+        <p style="margin:0;"><em>Try these commands yourself in a Linux terminal.<xsl:if test="@staticNote"><xsl:text> </xsl:text><xsl:value-of select="@staticNote"/></xsl:if></em></p>
+    </div>
 </xsl:template>
 
 <xsl:template match="cmecodehere">

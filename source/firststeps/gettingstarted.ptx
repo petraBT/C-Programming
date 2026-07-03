@@ -60,7 +60,7 @@ int main(void) {
             <p>At the end of coding activities in class, you may be prompted to submit your code. This will be done through a specific in-class response system that we use in class. In case you'd like to keep track of your submissions inside this book we'll provde text submission boxes of the following form for these purposes. Please note that your submissions will be saved on the particular device you use but will not be visible for anyone else or persist when you switch devices or browsers.</p>
             <activity xml:id="example">
                 <statement>
-                    <p><em>When you are done, please paste your code into the code submission box below.</em></p>
+                    <p><em>Record your code below.</em></p>
                 </statement>
                 <response/>
             </activity>
@@ -71,7 +71,7 @@ int main(void) {
             <p>In addition to submitting some of your code during class, text responses are sometimes collected as well. For these cases, you will see a very similar submission box as with Code Submissions in class. In case you wish to keep track of your responses here in this book we'll again provdide submission boxes as before:</p>
             <activity xml:id="example-submission-no-output">
                 <statement>
-                <p><em>Please paste your text submission into the box below.</em></p>
+                <p><em>Record your answer below.</em></p>
                 </statement>
                 <response/>
             </activity>

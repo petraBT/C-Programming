@@ -56,7 +56,7 @@
 				<statement>
 					<p>Let's start by defining a new data type <c>fraction_t</c>, designed to store the numerator and denominator of a fraction (as integers). Try implementing this below:</p>
 					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -68,7 +68,7 @@
 				<statement>
 					<p>Now that we have our fraction type, let's declare two variables, <c>frac1</c> and <c>frac2</c>, of this type, and make them correspond to the fractions <m>\frac{5}{3}</m> and <m>\frac{-2}{5}</m>.</p>
 					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -81,7 +81,7 @@
 				<statement>
 					<p>What's the best way to go about that?</p>
 					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -94,7 +94,7 @@
 					<p>Since we are working on a fraction calculator, how would we go about adding these two fractions? Let's store the result in a third variable, result. Can we simply say the following?</p>
 					<pre>result = frac1 + frac2</pre>
 					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -107,7 +107,7 @@
 				<statement>
 					<p>Let's try to write a function that prints a fraction.</p>
 					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -119,7 +119,7 @@
 				<statement>
 					<p>Now let's try our luck with a function that adds two fractions...</p>
 					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -131,7 +131,7 @@
 				<statement>
 					<p>Now we need a function that allows the user to enter a fraction. Be sure to prevent the user from entering a denominator of zero! </p>
 					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -144,7 +144,7 @@
 				<statement>
 					<p>Let's multiply two fractions!</p>
 					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -156,7 +156,7 @@
 				<statement>
 					<p>What else do we need to make our fraction calculator work?</p>
 					<cmecode startPoint="engs20p_NstructuresFractionCalc" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>

@@ -756,7 +756,7 @@
 					</pre>
 					<p>Does this problem look familiar? You have worked on this before, just not using functions. Below is the code we wrote previously for this problem.</p>
 					<cmecode startPoint="engs20p_Narrays5Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -778,7 +778,7 @@
 					<p>at the top of your program where the other <c>#include</c> directives are located.</p>
 					<p>Does this problem look familiar? You have worked on this before, just not using functions. Below is the code we wrote previously for this problem.</p>
 					<cmecode startPoint="engs20p_Narrays6Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -797,7 +797,7 @@
 					<p>Does this problem look familiar? You have worked on this before, just not using functions. Below is the code we wrote previously for this problem.
 					</p>
 					<cmecode startPoint="engs20p_Narrays7Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -821,7 +821,7 @@
 				<p>Your program should use a function, to which you pass the two relevant arrays along with their sizes, as well as the weight entered by the user, and which returns the corresponding postage. The final version of your program should <alert>use pointer arithmetic</alert>.</p>
 				<p>Does this problem look familiar? You have worked on this before, just not using functions or pointer arithmetic. Below is the code we wrote previously for this problem.</p>
 				<cmecode startPoint="engs20p_Narrays8Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
-				<p><em>When you are done, please put your code into the code submission box below:</em></p>
+				<p><em>Record your code below.</em></p>
 			</statement>
     			<response/>
 			</activity>
@@ -834,7 +834,7 @@
 				<p>Write a C-program that finds the largest integer stored in an array of integers. You can write your code so that the array values are entered by the user (use a function for this), or you may simply hardcode an integer array for test purposes. For the main task you should definitely use a function, to which you pass the array as well as its size, and which returns the largest integer stored in the array. Your function should not access any array elements using <c>[]</c>, but rather you should <alert>use pointer arithmetic</alert>.</p>
 				<p>Does this problem look familiar? You have worked on this before, just not using functions or pointer arithmetic. Below is the code we wrote previously for this problem.</p>
 				<cmecode startPoint="engs20p_Narrays9Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
-				<p><em>When you are done, please put your code into the code submission box below:</em></p>
+				<p><em>Record your code below.</em></p>
 			</statement>
     			<response/>
 			</activity>
@@ -847,7 +847,7 @@
 				<p>Write a C program that finds the average of integer numbers stored in an array. You may have the user enter the array values via a function, or you can simply hard-code the array for testing purposes. For the main task you should definitely use a function to which you pass the array as well as its size, and which returns the average of the numbers stored in the array. Your function should <alert>use pointer arithmetic</alert>.</p>
 				<p>Does this problem look familiar? You have worked on this before, just not using functions or pointer arithmetic. Below is the code we wrote previously for this problem.</p>
 				<cmecode startPoint="engs20p_Narrays10Advanced" addOn="&amp;nocheck=true" height="500"></cmecode>
-				<p><em>When you are done, please put your code into the code submission box below:</em></p>
+				<p><em>Record your code below.</em></p>
 			</statement>
     			<response/>
 			</activity>

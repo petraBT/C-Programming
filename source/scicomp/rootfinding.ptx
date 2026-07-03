@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="newton">
+    <title>Newton's Method and Comparing Root-Finding Algorithms</title>
+    <introduction>
+        <p>We want to write a program that finds the solution to equations <m>f(x) = 0</m>, but this time using <term>Newton's method</term> instead of bisection. Newton's method is very widely used in scientific computing, and provides a powerful (and often much faster) way to solve equations of this form. Here's what we'll cover:
+        <ul>
+            <li>Deriving Newton's method</li>
+            <li>Building a reusable root-finding library</li>
+            <li>Comparing Newton's method to bisection</li>
+        </ul>
+        </p>
+    </introduction>
+
+    <section xml:id="newton-intro">
+        <title>Deriving Newton's Method</title>
+        <p><idx><h>Newton's method</h></idx>We start from an initial guess <m>x_0</m> and rely on a Taylor expansion of <m>f</m>, truncated to first order, to estimate where <m>f(x) = 0</m>:</p>
+        <p>The idea is to follow the tangent line to <m>f</m> at our current guess down to where <em>it</em> crosses the <m>x</m>-axis, and use that as our next, hopefully better, guess. Repeating this generally walks us toward the true root <m>x^*</m> very quickly:</p>
+        <figure>
+            <image source="images/NewtonMethodTangentLines.jpg" width="70%"/>
+            <caption>Successive tangent-line approximations <m>x_0, x_1, x_2, \ldots</m> converging toward the root <m>x^*</m></caption>
+        </figure>
+        <p><m>f(x_1) \approx f(x_0) + (x_1 - x_0) f'(x_0) = 0</m></p>
+        <p>Solving for <m>x_1</m> gives:</p>
+        <p><m>\displaystyle x_1 = x_0 - \frac{f(x_0)}{f'(x_0)}</m></p>
+        <p>and, more generally, we iterate:</p>
+        <p><m>\displaystyle x_{i+1} = x_i - \frac{f(x_i)}{f'(x_i)}</m></p>
+        <p>If we are lucky, this converges quickly! Note that Newton's method does not always converge&#8212; a poor initial guess, or a derivative that is zero (or close to zero) somewhere along the way, can cause trouble.</p>
+        <p>We want to find the root of <m>f(x) = x^3 - 8</m>, starting from the initial guess <m>x_0 = 10</m>. Since Newton's method needs both <m>f(x)</m> <em>and</em> <m>f'(x)</m> at every step, we'll write a function with the prototype <c>void poly(double x, double *f, double *df);</c> that computes both at once, writing its results back through pointers:</p>
+        <cmecode startPoint="engs20p_NnewtonPoly" addOn="&amp;nocheck=true" height="450"></cmecode>
+    </section>
+
+    <section xml:id="newton-library">
+        <title>Building a Root-Finding Library</title>
+        <p>Rather than hard-coding Newton's method for one specific function, let's write a <em>generic</em> Newton's method that accepts any math equation via a callback&#8212; this way it can be reused for any function <m>f</m>, as long as we can supply its value and derivative. We'll put it in its own library, <c>rootfinding</c>, made up of a header file and a source file, with the following prototype:</p>
+        <cd>void newton(void (*func) (double, double *, double*), double x0, double *root);</cd>
+        <p>Here is the header file:</p>
+        <cmecode startPoint="engs20p_NrootfindingHeader" addOn="&amp;nocheck=true&amp;hide_run=true" height="200"></cmecode>
+        <p>And here is the source file, which finds the root iteratively using the formula from the previous section:</p>
+        <cmecode startPoint="engs20p_NrootfindingSource" addOn="&amp;nocheck=true&amp;hide_run=true" height="500"></cmecode>
+        <p>Call your <c>newton()</c> function from <c>main()</c> and print the result. Since this involves multiple files, we cannot use the compile script for this exercise&#8212; you'll need to compile manually, the same way we did for the Complex Number Library:</p>
+        <cd>gcc -c -o rootfinding.o rootfinding.c
+gcc -c -o main.o main.c
+gcc -o main main.o rootfinding.o -lm</cd>
+        <p>Test your code with a second function, <m>g(x) = e^x - 10</m>, starting again from <m>x_0 = 10</m>.</p>
+    </section>
+
+    <section xml:id="newton-improve">
+        <title>Improving and Comparing the Algorithms</title>
+        <p>What happens if <m>f'(x) = 0</m> at some point during the iteration? Dividing by zero is never good news. Adjust your <c>newton()</c> function so that if <m>f'(x) = 0</m>, it stops the loop and returns <m>0</m> (failure); if it successfully finds the root, it should return <m>1</m> (success) instead. Test both cases in <c>main()</c>.</p>
+        <p>Next, add the bisection function you wrote in the previous chapter into your <c>rootfinding</c> library as well&#8212; this time using a function pointer, exactly as <c>newton()</c> does, so both algorithms share the same style of interface.</p>
+        <p>Finally, let's see which algorithm converges faster! Add an integer counter to both your <c>newton()</c> and <c>bisection()</c> functions that tracks how many times their <c>while</c> loop runs. In <c>main()</c>, run both methods to find the root of <m>f(x) = x^3 - 8</m>, and print the final root together with the number of iterations each method took.</p>
+        <cmecode startPoint="engs20p_NnewtonCompare" addOn="&amp;nocheck=true" height="500"></cmecode>
+        <p><em>Which method converges faster&#8212; and by how much?</em></p>
+    </section>
+
+    <section xml:id="newton-summary">
+        <title>Summary</title>
+        <p>In this chapter, we covered the following topics:</p>
+        <ul>
+            <li>Deriving Newton's method from a first-order Taylor expansion</li>
+            <li>Writing a generic, callback-based root-finding library</li>
+            <li>Handling failure cases (zero derivative)</li>
+            <li>Comparing the convergence speed of Newton's method and bisection</li>
+        </ul>
+    </section>
+</chapter>

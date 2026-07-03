@@ -414,7 +414,7 @@
 		<activity xml:id="activity-27-5-1-Data_Type_Limits-no-output">
 			<statement>
 			<p>Recall that the data types <c>int</c> and <c>long int</c> have limits on the size of numbers they can store. Why again is this so?</p>
-			<p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+			<p><em>Record your answer below.</em></p>
 			</statement>
         	<response/>
 		</activity>
@@ -422,7 +422,7 @@
 		<activity xml:id="activity-27-5-2-Linked_List_Large_Ints-no-output">
 			<statement>
 				<p>Define a structure struct digit suitable for this purpose.</p>
-				<p><em>When you are done, please paste your structure into the code submission box below:</em></p>
+				<p><em>Record your code below.</em></p>
 			</statement>
 			<response/>
 		</activity>
@@ -435,7 +435,7 @@
 			<statement>
 				<p>Please write the function <c>createDigit()</c> which receives an integer (0-9) as an argument and which creates space in memory for a digit of type <c>digit_t</c>. The function should store the integer passed into it in this newly created digit and then return the address of this digit to the calling function. The function should furthermore initialize the pointer <c>next</c> as the NULL pointer, just to be safe.</p>
 				<cmecode startPoint="engs20p_NLinkedListsNumbers1" addOn="&amp;nocheck=true" height="900"></cmecode>
-				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				<p><em>Record your code below.</em></p>
 			</statement>
 			<response/>
 		</activity>
@@ -453,7 +453,7 @@
 				</ul>
 				<p>Since by appending a new digit the end of the list will change, the function needs to return a pointer to the new last element of the list. Please also print the (three-digit) number stored in the newly created list and next free the space reserved for all digits.</p>
 				<cmecode startPoint="engs20p_NLinkedListsNumbers2" addOn="&amp;nocheck=true" height="900"></cmecode>
-				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				<p><em>Record your code below.</em></p>
 			</statement>
 			<response/>
 		</activity>
@@ -466,7 +466,7 @@
 			<statement>
 				<p>Let's move the printing of our number into a function. The function should work for arbitrarily long numbers, not just for our 3-digit number. Please write a function <c>printNumber()</c> to which you pass a pointer to the first digit of your number and which prints all of the digits of the number to the screen. The function does not need to return anything.</p>
 				<cmecode startPoint="engs20p_NLinkedListsNumbers3" addOn="&amp;nocheck=true" height="900"></cmecode>
-				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				<p><em>Record your code below.</em></p>
 			</statement>
 			<response/>
 		</activity>
@@ -479,7 +479,7 @@
 			<statement>
 				<p>Next, let's move the freeing of all allocated space for a number into a function. The function should again work for arbitrarily long numbers, not just for our 3-digit number. Please write a function <c>freeNumber()</c> to which you pass a pointer to the first digit of your number and which frees the space allocated for all of the digits of the number. The function does not need to return anything.</p>
 				<cmecode startPoint="engs20p_NLinkedListsNumbers4" addOn="&amp;nocheck=true" height="900"></cmecode>
-				<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+				<p><em>Record your code below.</em></p>
 			</statement>
 			<response/>
 		</activity>

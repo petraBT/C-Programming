@@ -266,7 +266,7 @@
 						}
 					</code></program>
 					<cmecode startPoint="engs20p_NmallocPractice1" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -279,7 +279,7 @@
 					<p>Write a simple C-program with a main function and a function <c>allocateString()</c> that allocates memory for strings. The <c>allocateString()</c> function should be declared as returning a pointer to a char type (namely holding the location of the string), and it takes as argument an integer, representing the number of characters to allocate space for in memory.</p>
 					<p>Your main function should call <c>allocateString()</c> with an argument large enough to hold the sentence <q>I love programming!</q> (don't forget about needing space for the null terminator), and then copy this sentence into the space pointed to by the returned pointer. Next, you should print the sentence (using the pointer) and then free the pointer.</p>
 					<cmecode startPoint="engs20p_NmallocPractice2" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -302,7 +302,7 @@
 					<p>should print</p>
 					<pre>I   l o v e   c h o c o l a t e !</pre>
 					<cmecode startPoint="engs20p_NstringPractice1" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -317,7 +317,7 @@
 					<pre>countWords("Today is Wednesday!");</pre>
 					<p>should return the number 3.</p>
 					<cmecode startPoint="engs20p_NstringPractice2" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+					<p><em>Record your code below.</em></p>
 				</statement>
 				<response/>
 			</activity>
@@ -331,7 +331,7 @@
 			<p>Write a C program that reads a list of first names from the file <c>"names.txt"</c> (a test file can be accessed in the coding window below if you are using our code tool - if you work on the servers directly, please simply create your own input file <c>"names.txt"</c>). For each name that you read you need to reserve space in memory using <c>malloc()</c> to store the name. To do so, you can either read the name first into a temporary variable, find its length, and then allocate the relevant memory (don't forget about the null terminator), or you may assume that no name has more than 50 characters and allocate that same amount of space for each name read. In addition to allocating space for the name read and placing the name read into that space, you also need to store the pointer to the name in an array of pointers. You may assume that there are no more than 20 names in the file.</p>
 			<p>When you are done reading all of the names, call a function <c>printNames()</c>, to which you pass the array of pointers along with the number of names you read, and which prints out the list of names. Finally, call a function <c>freeNames()</c>, to which you again pass the array of pointers as well as the number of names stored in it, and which frees the space allocated for each name.</p>
 			<cmecode startPoint="engs20p_NarrayOfStringPtrs" addOn="&amp;nocheck=true" height="500"></cmecode>
-			<p><em>When you are done, please paste your code into the code submission box below:</em></p>
+			<p><em>Record your code below.</em></p>
 			<response/>
 		</activity>
 	</section>

@@ -279,6 +279,10 @@
             <p><xref ref="sortsearch-linear-practice" text="title"/></p>
             <p><xref ref="sortsearch-selection" text="title"/></p>
             <p><xref ref="sortsearch-insertiion" text="title"/></p>
+            <p><xref ref="quicksort-algorithm" text="title"/></p>
+            <p><xref ref="quicksort-debug" text="title"/></p>
+            <p><xref ref="quicksort-characters" text="title"/></p>
+            <p><xref ref="quicksort-runtime-analysis" text="title"/></p>
             <p><xref ref="sortsearch-sort-practice" text="title"/></p>
             <p><xref ref="sortsearch-parallel-arrays" text="title"/></p>
             <p><xref ref="sortsearch-arrays" text="title"/></p>
@@ -367,6 +371,37 @@
         <li>
             <title>Off to MATLAB!</title>
             <p><m>\Longrightarrow</m></p>
+        </li>
+    </dl>
+
+    <p><alert>------------------------------------Scientific Computing in C (new material, weeks TBD)------------------------------------</alert></p>
+    <dl>
+        <li>
+            <title>Function Pointers and Callback Functions</title>
+            <p><xref ref="funcptr-basics" text="title"/></p>
+            <p><xref ref="funcptr-callbacks" text="title"/></p>
+            <p><xref ref="funcptr-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Plotting, Bisection, and Least Squares</title>
+            <p><xref ref="plotting-gnuplot" text="title"/></p>
+            <p><xref ref="plotting-bisection" text="title"/></p>
+            <p><xref ref="plotting-leastsquares" text="title"/></p>
+            <p><xref ref="plotting-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Newton's Method and Comparing Root-Finding Algorithms</title>
+            <p><xref ref="newton-intro" text="title"/></p>
+            <p><xref ref="newton-library" text="title"/></p>
+            <p><xref ref="newton-improve" text="title"/></p>
+            <p><xref ref="newton-summary" text="title"/></p>
+        </li>
+        <li>
+            <title>Bitwise Operations and Enumerated Types</title>
+            <p><xref ref="bitwise-operators" text="title"/></p>
+            <p><xref ref="bitwise-enum" text="title"/></p>
+            <p><xref ref="bitwise-combined" text="title"/></p>
+            <p><xref ref="bitwise-summary" text="title"/></p>
         </li>
     </dl>
 </preface>

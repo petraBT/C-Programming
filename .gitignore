@@ -5,6 +5,9 @@
 # don't track unpublished builds
 output
 
+# local worktree used by deploy.sh to assemble/push the gh-pages branch
+.gh-pages-worktree
+
 # don't track assets generated from source
 generated-assets
 

@@ -424,7 +424,7 @@ cash = 20;</code></program> </li>
           <p>If you'd like our autograder to check your program for correctness, please do not change the <c>printf()</c> statement.</p>
           <cmecode startPoint="engs20p_NvariablesErrors1" height="300"></cmecode>
           <p>What was wrong with the given code?</p>
-          <p><em>Please paste your text submission into the box below.</em></p>
+          <p><em>Record your answer below.</em></p>
           </statement>
           <response/>
     </activity>
@@ -438,7 +438,7 @@ cash = 20;</code></program> </li>
         <p>If you'd like our autograder to check your program for correctness, please do not change the <c>printf()</c> statement.</p>
         <cmecode startPoint="engs20p_NvariablesErrors2" height="300"></cmecode>
         <p>What was wrong with the given code?</p>
-        <p><em>Please paste your text submission into the box below.</em></p>
+        <p><em>Record your answer below.</em></p>
         </statement>
         <response/>
     </activity>
@@ -452,7 +452,7 @@ cash = 20;</code></program> </li>
         <p>If you'd like our autograder to check your program for correctness, please do not change the printf statement.</p>
         <cmecode startPoint="engs20p_NvariablesErrors3" height="300"></cmecode>
         <p>What was wrong with the given code?</p>
-        <p><em>Please paste your text submission into the box below.</em></p>
+        <p><em>Record your answer below.</em></p>
         </statement>
         <response/>
     </activity>
@@ -506,7 +506,7 @@ cash = 20;</code></program> </li>
       </code></program>
       Through this loop, the variable <c>i</c> successively gets assigned values from 1 to 10. In the first run through the loop <c>i</c> has the value 1, in the next run-through that value is increased to 2, then to 3, all the way up to and including 10.
       <cmecode startPoint="engs20p_NmultiplicationTable1" addOn="&amp;nocheck=true" height="300"></cmecode>
-      <p><em>When you are done, please put your code into the box below:</em></p>
+      <p><em>Record your code below.</em></p>
     </statement>
     <response/>
   </activity>
@@ -546,7 +546,7 @@ cash = 20;</code></program> </li>
         <input prompt="The numbers you entered add up to 30."></input>
       </console>
       <cmecode startPoint="engs20p_NuserInput4" addOn="&amp;nocheck=true" height="500"></cmecode>
-      <p><em>When you are done, please copy the code you</em> added <em>into the box below:</em></p>
+      <p><em>Record your code below.</em></p>
     </statement>
     <response/>
   </activity>
@@ -578,7 +578,7 @@ cash = 20;</code></program> </li>
         Please do not make any changes to the <c>printf</c> statement since the autograder will not function correctly if you do.
       </p>
       <cmecode startPoint="engs20p_NprintChars" height="300"></cmecode>
-      <p><em>When you are done, please put your code into the box below:</em></p>
+      <p><em>Record your code below.</em></p>
     </statement>
     <response/>
   </activity>

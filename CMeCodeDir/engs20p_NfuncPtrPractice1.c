@@ -1,0 +1,25 @@
+#include <stdio.h>
+/* Prototypes for square and cube functions */
+
+int main(void){
+	float number, result;
+	int choice;
+	float (*operation)(float);
+
+
+	printf("Please enter a number: ");
+	scanf("%f", &number);
+
+	printf("Do you want to square (2) or cube (3) this number: ");
+	scanf("%d", &choice);
+
+	/* Use an if statement to assign the correct function pointer to operation*/ 
+	if(...
+
+	/* Calculate the result using the function pointer operation and print it */
+	result = ...
+	printf("The result of the operation is %.2f.\n", result);
+
+	return 0;
+}
+//functions go here

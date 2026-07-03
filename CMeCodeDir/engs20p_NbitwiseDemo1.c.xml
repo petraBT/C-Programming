@@ -1,0 +1,43 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+//prototypes
+void printBinary(unsigned number);
+     
+int main (void){
+    unsigned number, number_neg, number_shift;
+    
+    printf("Please enter a positive integer: ");
+    scanf("%d", &amp;number);
+    printf("The number you entered is: %d\n", number);
+    printBinary(number);
+    //bitwise negation: ~
+    printf("Bitwise negation of number:\n");
+    number_neg = ~number;
+    printBinary(number_neg);
+    //left shift: &lt;&lt;
+    printf("Shifting to the left:\n");
+    number_shift = number &lt;&lt; 4;
+    printBinary(number_shift);
+    //right shift: &gt;&gt;
+    printf("Shifting to the right\n");
+    printBinary(number_neg &gt;&gt; 3);
+    
+    return 0;
+}
+void printBinary(unsigned number){
+    int i;
+    int array[sizeof(unsigned)*8];
+    for(i=0; i&lt;sizeof(unsigned)*8; i++){
+        array[i] = number%2;
+        number = number/2;
+    }
+    for(i=sizeof(unsigned)*8-1; i&gt;=0; i--){
+        printf("%d", array[i]);
+        if(i%8 == 0){
+            printf(" ");
+        }
+    }
+    printf("\n");
+}
+</cme>

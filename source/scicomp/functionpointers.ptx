@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="funcptr">
+    <title>Function Pointers and Callback Functions</title>
+    <introduction>
+        <p>We already know that pointers can point to variables, and even to array elements. It turns out that in C, functions themselves have addresses in memory, and we can store those addresses in <term>function pointers</term>. This lets us decide, <em>at runtime</em>, which function to call&#8212; a surprisingly powerful idea. Here's what we'll cover:
+        <ul>
+            <li>Function pointer syntax</li>
+            <li>Callback functions</li>
+        </ul>
+        </p>
+    </introduction>
+
+    <section xml:id="funcptr-basics">
+        <title>Function Pointers</title>
+        <p><idx><h>function pointer</h></idx>Just like <c>int *p;</c> declares <c>p</c> as a pointer to an <c>int</c>, we can declare a pointer to a function. The syntax looks a little unusual at first:</p>
+        <cd>void (*functionptr)(int);</cd>
+        <p>This declares <c>functionptr</c> as a pointer to a function that takes a single <c>int</c> argument and returns nothing (<c>void</c>). Just like arrays, function names themselves act as addresses, so both of the following work to assign a function pointer:</p>
+        <cd>functionptr = &amp;printNumber;   /* explicit address-of */
+functionptr = printNumber;    /* implicit conversion, same effect */</cd>
+        <p>To actually call the function through the pointer, we <term>dereference</term> it (though C is forgiving here, and <c>functionptr(x)</c> works too):</p>
+        <cd>(*functionptr)(my_number);</cd>
+        <p>Let's see this in action:</p>
+        <cmecode startPoint="engs20p_NfuncPtrBasic" addOn="&amp;nocheck=true" height="400"></cmecode>
+        <p>A function pointer can be reassigned to point to a <em>different</em> function at any time, as long as that function has a matching prototype (same return type and same parameter types). This is exactly what lets us pick a function based on user input, rather than hard-coding an <c>if</c>/<c>else</c> that calls one function or the other directly:</p>
+        <cmecode startPoint="engs20p_NfuncPtrMore" addOn="&amp;nocheck=true" height="500"></cmecode>
+
+        <p>Time to practice!</p>
+        <activity xml:id="activity-funcptr-practice-1">
+            <statement>
+                <p>Define two functions, <c>float square(float x)</c> and <c>float cube(float x)</c>. Ask the user to enter a number and choose whether they want to square (2) or cube (3) it. Declare a function pointer, and use an <c>if</c>/<c>else</c> statement to assign it to the correct function based on the user's choice. Finally, use your function pointer to calculate and print the result.</p>
+                <cmecode startPoint="engs20p_NfuncPtrPractice1" addOn="&amp;nocheck=true" height="500"></cmecode>
+                <p><em>Record your code below.</em></p>
+            </statement>
+            <response/>
+        </activity>
+
+        <activity xml:id="activity-funcptr-practice-2">
+            <statement>
+                <p>Let's use a function pointer to convert a whole <em>batch</em> of temperatures! We have two functions, <c>float cTof(float c)</c> and <c>float fToc(float f)</c>. Ask the user which conversion they want to do (1 for Celsius&#8594;Fahrenheit, 2 for Fahrenheit&#8594;Celsius), declare a function pointer, and assign it to the correct function based on the user's choice. Then write a <c>for</c> loop that iterates through the temperature array, passing each value to your function pointer and printing the result.</p>
+                <cmecode startPoint="engs20p_NfuncPtrPractice2" addOn="&amp;nocheck=true" height="500"></cmecode>
+                <p><em>Record your code below.</em></p>
+            </statement>
+            <response/>
+        </activity>
+    </section>
+
+    <section xml:id="funcptr-callbacks">
+        <title>Callback Functions</title>
+        <p><idx><h>callback function</h></idx>A <term>callback function</term> is simply a function that is passed as an argument into another function, so that the other function can <q>call it back</q> when it needs it&#8212; this is done using function pointers. Callbacks let us write generic, reusable code once, and then reuse it many times by passing in a different callback to handle the custom computation. The only strict rule is that the functions being swapped around must all share the same prototype.</p>
+        <p>Here's the simplest possible example&#8212; a function that repeats <em>any</em> no-argument, no-return function three times:</p>
+        <cmecode startPoint="engs20p_NcallbackDemo1" addOn="&amp;nocheck=true" height="450"></cmecode>
+        <p>Callbacks become more useful once the callback itself takes and returns values. In the example below, <c>calculate()</c> doesn't know or care whether it's squaring, cubing, or taking a square root&#8212; it just calls whatever function <c>op</c> currently points to:</p>
+        <cmecode startPoint="engs20p_NcallbackDemo2" addOn="&amp;nocheck=true" height="500"></cmecode>
+
+        <activity xml:id="activity-funcptr-callback-practice">
+            <statement>
+                <p>Let's upgrade our Bubble Sort code so that it can sort numbers in either ascending or descending order. The only thing that determines the sort order is the comparison <c>if (array[i] &gt; array[i+1])</c>. Write two callback functions:</p>
+                <ul>
+                    <li><c>int ascending(int a, int b)</c>&#8212; returns 1 if <c>a &gt; b</c></li>
+                    <li><c>int descending(int a, int b)</c>&#8212; returns 1 if <c>a &lt; b</c></li>
+                </ul>
+                <p>Modify your Bubble Sort function to accept a callback as an extra argument, and inside the sort, replace your hardcoded <c>if</c> statement with a call to that callback. Test your code to sort in both ascending and descending order.</p>
+                <cmecode startPoint="engs20p_NcallbackPractice" addOn="&amp;nocheck=true" height="600"></cmecode>
+                <p><em>Record your code below.</em></p>
+            </statement>
+            <response/>
+        </activity>
+    </section>
+
+    <section xml:id="funcptr-summary">
+        <title>Summary</title>
+        <p>In this chapter, we covered the following topics:</p>
+        <ul>
+            <li>Function pointer syntax: declaring, assigning, and calling through a function pointer</li>
+            <li>Callback functions: passing a function as an argument to another function</li>
+        </ul>
+    </section>
+</chapter>

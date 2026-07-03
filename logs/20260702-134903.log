@@ -1,0 +1,289 @@
+INFO    : Building target web-static
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.43.0/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.43.0/core/xsl/utilities/pretext-enhanced-source.xsl
+WARNING : Schema validation could not be completed: no validator was available (jing is not installed and lxml could not compile the schema). Continuing with build.
+INFO    : Generating any needed assets.
+WARNING : Now generating QR codes
+WARNING : You are trying to generate qrcodes, but the publication file does not have a base URL. This will result in qrcodes that do not point to anything meaningful.
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.43.0/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.43.0/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : discovering source file's directory name: /Users/dz00762/repos/C-Programming/source
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../generated-assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/generated-assets
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/assets
+INFO    : manufacturing QR codes from /Users/dz00762/repos/C-Programming/source/main.ptx for placement in /Users/dz00762/repos/C-Programming/generated-assets/qrcode
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.43.0/core/xsl/extract-qrcode.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.43.0/core/xsl/extract-qrcode.xsl
+INFO    : creating URL with content "https://www.youtube.com/watch?v=Gw2Nh9umWnQ" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/Gw2Nh9umWnQ.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=HGPItnA7P4U" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/HGPItnA7P4U.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=PTUCVHbSYQY" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/PTUCVHbSYQY.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=QEMODOAw4Fk" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/QEMODOAw4Fk.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=UqfbrVH9EAA" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/UqfbrVH9EAA.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=YdY0a4e3Xmg" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/YdY0a4e3Xmg.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=4Ss4AvS2c1Y" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/_4Ss4AvS2c1Y.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=5jKIQbbs0zc" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/_5jKIQbbs0zc.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=5pfi_e7VyOc" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/_5pfi_e7VyOc.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=6IdQgAivpvk" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/_6IdQgAivpvk.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=9AvLxDsvUBY" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/_9AvLxDsvUBY.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=eR49ZU8Y4Ag" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/eR49ZU8Y4Ag.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=feIY5ElGvL0" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/feIY5ElGvL0.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=gr7DLw5i-1E" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/gr7DLw5i-1E.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=iaZ5_8obpJU" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/iaZ5_8obpJU.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=kkx3IMBgND0" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/kkx3IMBgND0.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=lwn2e3QqUqQ" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/lwn2e3QqUqQ.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=nF0gbyPfhj4" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/nF0gbyPfhj4.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=rWcrLz4sfPs" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/rWcrLz4sfPs.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=zeXIB23dnCU" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/zeXIB23dnCU.png...
+INFO    : QR code creation complete
+INFO    : Removing temporary directory /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-45frbm0i
+INFO    : Finished generating assets.
+
+INFO    : Building with custom xsl /Users/dz00762/repos/C-Programming/xsl/c-programming-html.xsl
+INFO    : Preparing to build into /Users/dz00762/repos/C-Programming/output/web-static.
+INFO    : discovering source file's directory name: /Users/dz00762/repos/C-Programming/source
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../generated-assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/generated-assets
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/assets
+INFO    : discovering source file's directory name: /Users/dz00762/repos/C-Programming/source
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.43.0/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.43.0/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : Downloading rs services file from https://runestone.academy/cdn/runestone/latest/webpack_static_imports.xml.
+INFO    : Runestone Services via online CDN query: version 8.1.7
+INFO    : Downloading Runestone Services, version 8.1.7
+INFO    : Extracting Runestone Services from archive file
+INFO    : Building custom css theme: theme-denver
+INFO    : converting /Users/dz00762/repos/C-Programming/source/main.ptx to HTML in /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-3voaz0lu
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptxcli_35s_hvfb/cli_xsl/c-programming-html.xsl
+INFO    : messages from the log for XSL processing:
+INFO    : * PTX:INFO:   checking all deprecated elements.
+INFO    : * failed to load "CMeCodeDir/engs20p_NhelloWorld.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NAGprinting.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NprintingQuotes.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nloop1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nloop2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nloop3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nloop3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nloop4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Ncomments.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NAGprintNumbers.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NvariablesErrors1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NvariablesErrors2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NvariablesErrors3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NmultiplicationTable1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NuserInput1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NuserInput2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NuserInput3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NuserInput4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NprintChar.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NprintChars.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NscanChar.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NprintScanFloat.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Ndivision1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Ndivision1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Ndivision1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Ndivision2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Ndivision3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NAGAverage.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NRemainder.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NASCIIdemo.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NAGLowerToUpperASCII.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NAGbranching4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nbranching5.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nbranching6.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_selection1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nbranching8.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nbranching9.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nbranching10.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nbranching7.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NvowelOrConsonant.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NlogicPrecedence.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nswitch1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nswitch2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nbranching11.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NNestedLoops1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NNestedLoops1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NNestedLoops3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NNestedLoops3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NNestedLoops2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NNestedLoopsErrors.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NNestedLoopsErrors2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NswitchErrors.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_basicIO1play.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_basicIO5play.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_basicIO3play.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_basicIO4play.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_basicIO2play.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NAGFunctions3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NAGFunctions4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_functions1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFunctions5.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFunctions6.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFunctions7.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NRecursion1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NRecursion2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NRecursion3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_loops1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_loops3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NWhile2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nloop9.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nloop10.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_loops4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NIncrementDecrementCRAZY.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NIncrementDecrementCRAZY.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NIncrementDecrementCRAZY.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nloop5.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nloop6.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nloop7.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nloop8.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_recursion1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFileIO0.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFileIO1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFileIO2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFileIO3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFileIO4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFileIO5.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFileIO6.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFileIO7.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFileIO0.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFileIO8.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NAGdebug4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NAGdebug5.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Ndebug7.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Ndebug8.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Ndebug6.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NSpinner.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NSpinner.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFileIO9.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_arrays1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays5.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays6.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays7.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays8.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays9.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays10.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_scope1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_scope2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nscope1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nscope2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nscope2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nscope3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nscope4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nscope5.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nroundoff.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nrounding.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Noverflow.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_functions2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_functions4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NFractionCalc.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_pointers1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_pointers2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_pointers3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_functions4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays5Advanced.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays6Advanced.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays7Advanced.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays8Advanced.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays9Advanced.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Narrays10Advanced.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nstrings1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nstrings1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nstrings2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nstrings3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nstrings4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nstrings5.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nstrings6.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nstrings7.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NmallocPractice1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NmallocPractice2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NstringPractice1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NstringPractice2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NarrayOfStringPtrs.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_strings1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_strings2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_sorting1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NlinearSearchPractice.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_sorting3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_sorting2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NselectionSortPractice.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NinsertionSort.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NquickSortDemo.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NquickSortDebug1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NquickSortDebug2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NquickSortChars.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NsortPractice.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NsortArrayPrinting.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NsortArrayPractice.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NmenuSelection.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NmultidimensionalArraysFunctions0.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NmultidimensionalArraysFunctions1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nstructures1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nstructures2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nstructures3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NstructuresFractionCalc.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NstructuresFractionCalc.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NstructuresFractionCalc.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NstructuresFractionCalc.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NstructuresFractionCalc.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NstructuresFractionCalc.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NstructuresFractionCalc.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NstructuresFractionCalc.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NstructuresFractionCalc.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_multiArrays1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_structs1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_structs2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NarraysOfStructures.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NarraysOfStructures.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NarraysOfStructures.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NarraysOfStructures.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NarraysOfStructures.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NarraysOfStructures.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NarraysOfStructures.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NarraysOfStructures.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NLinkedListsNumbers1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NLinkedListsNumbers2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NLinkedListsNumbers3.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NLinkedListsNumbers4.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NLinkedListsNumbers5.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NLinkedListsNumbers6.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NComplexNumberLibFunctions.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NComplexNumberLibHeader.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_InClassComplexLibrary.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NfuncPtrBasic.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NfuncPtrMore.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NfuncPtrPractice1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NfuncPtrPractice2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NcallbackDemo1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NcallbackDemo2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NcallbackPractice.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NplotBasic.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NplotAdvanced.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NbisectionPractice.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NleastSquaresDemo.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NnewtonPoly.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NrootfindingHeader.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NrootfindingSource.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NnewtonCompare.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NbitwiseDemo1.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NbitwiseDemo2.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NprintBinaryBitwise.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NbitChecking.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NbitCounting.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NenumDemo.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NenumCasting.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NenumMonthPractice.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NenumPrintState.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_NbitwiseEnumDemo.c.xml": No such file or directory
+INFO    : * failed to load "CMeCodeDir/engs20p_Nbranching6.c.xml": No such file or directory
+ERROR   : processing with /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptxcli_35s_hvfb/cli_xsl/c-programming-html.xsl has failed
+
+CRITICAL: Cannot resolve URI CMeCodeDir/engs20p_Nbranching6.c.xml
+INFO    : ------------------------
+CRITICAL: Failed to build without errors.  Exiting...
+INFO    : 
+----------------------------------------------------
+INFO    : While running pretext, the following errors occurred:
+
+INFO    : (see log messages above or in the 'logs' folder for more information)
+INFO    : ----------------------------------------------------

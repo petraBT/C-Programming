@@ -1,0 +1,46 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+
+/* callback functions */
+float fsquare(int num);
+float fcube(int num);
+float fsquareroot(int num);
+
+/* master function */
+float calculate(int num, float (*op)(int));
+
+int main(void) {
+	int num = 6;
+	float result;
+
+	result = calculate(num, &amp;fsquare);
+	printf("Square of %d: %f\n", num, result);
+	result = calculate(num, &amp;fcube);
+	printf("Cube of %d: %f\n", num, result);
+	printf("Square roof of %d: %f\n", num, calculate(num,&amp;fsquareroot));
+
+	return (0);
+}
+
+float calculate(int num, float (*op)(int)){
+	float result;
+	result = (*op)(num);
+	return result;
+}
+
+float fcube(int num){
+	return num * num * num;
+}
+
+float fsquare(int num){
+	return num * num;
+}
+
+float fsquareroot(int num){
+	return sqrt(num);
+}
+
+
+</cme>

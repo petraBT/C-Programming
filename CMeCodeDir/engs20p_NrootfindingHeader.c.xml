@@ -1,0 +1,5 @@
+<?xml version='1.0'?>
+<cme>
+void newton( void (* func) (double, double *, double *), double x0, double *root);
+
+</cme>

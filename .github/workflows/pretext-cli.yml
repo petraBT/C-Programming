@@ -38,6 +38,9 @@ jobs:
             - name: install local ptx files
               run: pretext --version
 
+            - name: point cmecode.root at this checkout
+              run: sed -i "s#/Users/dz00762/repos/C-Programming/CMeCodeDir/#$GITHUB_WORKSPACE/CMeCodeDir/#" project.ptx
+
             - name: build deploy targets
               run: |
                 version="$(pretext --version)"
@@ -50,6 +53,13 @@ jobs:
                     echo "PreTeXt version is less than 2.5, using old build command"
                     pretext build
                 fi
+
+            - name: inject sorting-algorithm applets
+              run: |
+                chmod +x scripts/add-applets.sh
+                [ -d output/web ] && ./scripts/add-applets.sh output/web
+                [ -d output/web-static ] && ./scripts/add-applets.sh output/web-static
+
             - name: stage deployment
               run: pretext deploy --stage-only
 

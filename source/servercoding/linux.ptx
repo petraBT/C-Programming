@@ -271,7 +271,7 @@
     	<activity>
 	    	<p>In the Linux window <alert>below</alert>, change into the directory <c>~/engs20</c> (from your home directory, type <c>cd engs20</c>). Then, type <c>ls</c>. Now, delete the file "toBeDeleted.txt" by typing <c>rm toBeDeleted.txt</c>. Type <c>ls</c> and observe that the file is now gone.</p>
 		    <p>There must be a waste basket somewhere? Where is the trash folder? Where did the file "toBeDeleted.txt" go?</p>
-	    	<server startPoint="engs20p_rmPractice" height="300"/>
+	    	<server startPoint="engs20p_rmPractice" height="300" staticNote="Create a test file first (e.g. touch toBeDeleted.txt) so you have something to remove."/>
 	    </activity>
 	</section>
 
@@ -292,7 +292,7 @@
     			<li>Coffee</li>
     			<li>Coconuts</li>
     		</ul>
-    		<server startPoint="engs20p_lessPractice" height="300"/>
+    		<server startPoint="engs20p_lessPractice" height="300" staticNote="This activity depends on a file already sitting on the server, so it isn't reproducible offline. Come back to it once you have Thayer network access."/>
     	</activity>
     </section>
 
@@ -306,7 +306,7 @@
 	    	<pre>mv myLongAssignment.c workspace/LA1</pre>
 	    	<p>Now, check that "myLongAssignment.c" no longer resides in <c>~/engs20</c> but has moved to <c>~/engs20/workspace/LA1</c>.</p>
 	    	<p>You can also rename a file using <c>mv</c>. Navigate into the folder <c>~/engs20/workspace/LA1</c> and type <c>mv myLongAssignment.c myLA.c</c>. Type <c>ls</c> to verify the name change.</p>
-    		<server startPoint="engs20p_mvPractice" height="300"/>
+    		<server startPoint="engs20p_mvPractice" height="300" staticNote="Create a file myLongAssignment.c and a folder workspace/LA1 first, then try moving and renaming it."/>
     	</activity>
     </section>
  
@@ -315,7 +315,7 @@
     	<p>The command <c>cp</c> makes a copy of a file, so you'll have two independent copies of the same file.</p>
     	<activity>
     		<p>In the Practice Linux Window below, copy the file <c>~/engs20/workspace/hello.c</c> to the folder <c>~/ens20/workspace/LA1</c> What is the code to do so?</p>
-        	<server startPoint="engs20p_cpPractice" height="300"/>
+        	<server startPoint="engs20p_cpPractice" height="300" staticNote="Create a file hello.c and a folder workspace/LA1 first, then try copying it."/>
     	</activity>
 	</section>
 
@@ -327,7 +327,7 @@
 			<p>Type <c>compile hello.c</c>, which will translate your code into machine language. The compiler names the resulting executable program "hello". In order to run this code, type <c>hello</c> (the name of the executable file resulting from compiling "hello.c").</p>
 			<p>Open your editor (NotePad++ on a PC or BBEdit on a Mac) and establish a connection to the ENGS20 server. Next, open "hello.c" in your editor. Make a change to your code, such as printing out your pet's name, and <alert>save</alert> the changes on the server.</p>
 			<p>Verify in the code window below that your code has indeed changed (hint: use the <c>less</c> command). Now, recompile and run your code to observe your printed changes.</p>
-			<server startPoint="engs20p_engs20Server" height="300"/>
+			<server startPoint="engs20p_engs20Server" height="300" staticNote="This step uses your real ENGS20 account rather than a practice sandbox, so there's nothing to simulate here -- just follow these steps once you have Thayer network access."/>
 		</activity>
 	</section>
  

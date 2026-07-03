@@ -1,0 +1,24 @@
+<?xml version='1.0'?>
+<cme>
+#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#include "rootfinding.h"
+
+void newton( void (* func) (double, double *, double *), double x0, double *root){
+	int iter = 0;
+	double fn, dfn, xn;
+	double eps = 0.001;
+
+	func(x0, &amp;fn, &amp;dfn);
+
+	while(fn &gt; eps || fn &lt; -eps){
+		xn = xn - fn/dfn;
+		func(xn, &amp;fn, &amp;dfn);
+		printf("iter %d: xn = %f and f(xn) = %f\n", iter, xn, fn);
+		iter ++;
+	}
+
+	*root = xn;
+}
+
+</cme>

@@ -238,7 +238,7 @@
         <activity>
             <p>What do you think happens the the value of the number when you cast an <c>int</c> to a <c>float</c>? Are digits beyond the decimal point added on?</p>
             <cmecode startPoint="engs20p_Ndivision2" addOn="&amp;nocheck=true" height="400"></cmecode>
-            <p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+            <p><em>Record your answer below.</em></p>
             <program xml:id="activity-6-2-1-Int-to-Float-no-output" language="octave" interactive="yes"/>
         </activity>
         <reading-questions>
@@ -351,7 +351,7 @@
             </console>
             <p>Recall that the average needs to be of type float, please store it in the variable <c>ave</c> which has already been declared for your convenience.</p>
             <cmecode startPoint="engs20p_NAGAverage" height="500"></cmecode>
-            <p><em>When you are done, please paste your code into the box below:</em></p>
+            <p><em>Record your code below.</em></p>
         </statement>
             <response/>
         </activity>

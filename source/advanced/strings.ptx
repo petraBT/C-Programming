@@ -47,7 +47,7 @@
 			<p>Can you assign a new string value to <c>firstName</c> in the code? For example, can you use the following line?</p>
 			<pre>firstName = "Alex";</pre>
 			<cmecode startPoint="engs20p_Nstrings1" addOn="&amp;nocheck=true" height="300"></cmecode>
-			<p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+			<p><em>Record your answer below.</em></p>
             <response/>
 		</activity>
 		<investigation>
@@ -80,7 +80,7 @@
 		<activity xml:id="activity-20-4-1-String_Practice-no-output">
 			<p>Take a look at the code and then hit the <c>Run</c> button. Is that the output you expected? What is going on with the code here?</p>
 			<cmecode startPoint="engs20p_Nstrings3" addOn="&amp;nocheck=true" height="300"></cmecode>
-			<p><em>Please paste your text submission into the box below, then select <c>Run</c> to submit it:</em></p>
+			<p><em>Record your answer below.</em></p>
             <response/>
 		</activity>
 	</section>

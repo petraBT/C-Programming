@@ -76,6 +76,14 @@
         <xi:include href="enriched/libraries.ptx"/>
     </part>
 
+    <part xml:id="part-scicomp">
+        <title>Scientific Computing in C</title>
+        <xi:include href="./scicomp/functionpointers.ptx"/>
+        <xi:include href="./scicomp/plotting.ptx"/>
+        <xi:include href="./scicomp/rootfinding.ptx"/>
+        <xi:include href="./scicomp/bitwise.ptx"/>
+    </part>
+
     <xi:include href="./meta_backmatter.ptx" />
 
   </book>

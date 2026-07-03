@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--   This file is part of the C-programming book.           -->
+<!--                                                          -->
+<!--      Introduction to C-programming                       -->
+<!--                                                          -->
+<!-- Copyright (C) 2019  Petra Bonfert-Taylor                 -->
+<!-- See the file COPYING for copying conditions.             -->
+
+<chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="bitwise">
+    <title>Bitwise Operations and Enumerated Types</title>
+    <introduction>
+        <p>We've seen that computers store everything&#8212; integers, characters, even floats&#8212; as patterns of bits. In this chapter we'll learn to manipulate those bits directly using C's <term>bitwise operators</term>, and we'll also meet <term>enumerated types</term> (<c>enum</c>), which let us give meaningful names to sets of integer constants. Here's what we'll cover:
+        <ul>
+            <li>Bitwise operators: <c>~</c>, <c>&lt;&lt;</c>, <c>&gt;&gt;</c>, <c>&amp;</c>, <c>|</c></li>
+            <li>Enumerated types (<c>enum</c>)</li>
+            <li>Combining bitwise operators and enums</li>
+        </ul>
+        </p>
+    </introduction>
+
+    <section xml:id="bitwise-operators">
+        <title>Bitwise Operators</title>
+        <p><idx><h>bitwise operators</h></idx>C gives us direct access to the individual bits of an integer through a family of <term>bitwise operators</term>:</p>
+        <table>
+            <title>Bitwise Operators</title>
+            <tabular>
+                <row bottom="medium">
+                    <cell right="medium"><em>Operator</em></cell>
+                    <cell><em>Meaning</em></cell>
+                </row>
+                <row>
+                    <cell right="medium"><c>~</c></cell>
+                    <cell>bitwise NOT (negation): flips every bit</cell>
+                </row>
+                <row>
+                    <cell right="medium"><c>&lt;&lt;</c></cell>
+                    <cell>left shift: shifts all bits left, filling with 0s</cell>
+                </row>
+                <row>
+                    <cell right="medium"><c>&gt;&gt;</c></cell>
+                    <cell>right shift: shifts all bits right</cell>
+                </row>
+                <row>
+                    <cell right="medium"><c>&amp;</c></cell>
+                    <cell>bitwise AND: 1 only where both operands have a 1</cell>
+                </row>
+                <row>
+                    <cell right="medium"><c>|</c></cell>
+                    <cell>bitwise OR: 1 where either operand has a 1</cell>
+                </row>
+            </tabular>
+        </table>
+        <p>These are entirely different from the logical operators <c>&amp;&amp;</c>, <c>||</c>, and <c>!</c>, which operate on whole truth values rather than individual bits&#8212; don't mix them up!</p>
+        <p>Let's see the bitwise operators in action. The helper function <c>printBinary()</c> below prints out the binary representation of an <c>unsigned</c> integer, one bit at a time, using the division/remainder approach you may have already seen:</p>
+        <cmecode startPoint="engs20p_NbitwiseDemo1" addOn="&amp;nocheck=true" height="500"></cmecode>
+        <p>Now let's add the AND (<c>&amp;</c>) and OR (<c>|</c>) operators to the mix, applied to two numbers at once:</p>
+        <cmecode startPoint="engs20p_NbitwiseDemo2" addOn="&amp;nocheck=true" height="600"></cmecode>
+
+        <p>Time to practice&#8212; this time, instead of using division and remainders, use the bitwise operators themselves to read and print each bit directly.</p>
+        <activity xml:id="activity-bitwise-print-binary">
+            <statement>
+                <p>Write a C function that prints the binary representation of an unsigned integer entered by the user. Instead of using division and remainders, you must use bitwise operators (specifically, right-shift and AND) to read and print the bits directly.</p>
+                <cmecode startPoint="engs20p_NprintBinaryBitwise" addOn="&amp;nocheck=true" height="450"></cmecode>
+                <p><em>Record your code below.</em></p>
+            </statement>
+            <response/>
+        </activity>
+
+        <activity xml:id="activity-bitwise-bit-checking">
+            <statement>
+                <p>Write a C function that checks whether the <m>k</m>-th bit of an integer <m>n</m> is set (1) or not (0). The convention is to count bits from the right, starting at 0. In <c>main()</c>, ask the user to enter an integer as well as the bit position they want to check, call your function to evaluate the bit, and print the conclusion to the screen.</p>
+                <cmecode startPoint="engs20p_NbitChecking" addOn="&amp;nocheck=true" height="450"></cmecode>
+                <p><em>Record your code below.</em></p>
+            </statement>
+            <response/>
+        </activity>
+
+        <activity xml:id="activity-bitwise-bit-counting">
+            <statement>
+                <p>Write a C program to count the number of 1s in the binary representation of a number. Ask the user for an integer, pass it to a function <c>countBits()</c> that counts the set bits and returns this count, and print the result in <c>main()</c>.</p>
+                <cmecode startPoint="engs20p_NbitCounting" addOn="&amp;nocheck=true" height="450"></cmecode>
+                <p><em>Record your code below.</em></p>
+            </statement>
+            <response/>
+        </activity>
+    </section>
+
+    <section xml:id="bitwise-enum">
+        <title>Enumerated Types</title>
+        <p><idx><h>enum</h></idx>Imagine you are programming a traffic light, and you decide that <c>0</c> means red, <c>1</c> means yellow, and <c>2</c> means green. Somewhere in your code you write <c>if (light == 1) { ... }</c>. Three months later, you (or a teammate) look at that line and have to ask: <q>wait, what did 1 mean again?</q> These bare numbers, with no obvious meaning attached, are sometimes called <term>magic numbers</term>, and they are a common source of bugs and confusion.</p>
+        <p>An <term>enum</term> (short for <em>enumeration</em>) solves this by letting us assign human-readable names to a set of related integer constants:</p>
+        <cd>enum day { MON, TUE, WED, THU, FRI, SAT, SUN };
+// MON == 0, SUN == 6</cd>
+        <p>By default, the constants start at 0 and increase by 1, but under the hood the computer still just sees plain integers&#8212; an <c>enum</c> takes up the same amount of memory and runs exactly as fast as an <c>int</c>. It's purely there for <em>us</em>, to make the code more readable. A variable of an <c>enum</c> type can be used just like any other integer variable:</p>
+        <cmecode startPoint="engs20p_NenumDemo" addOn="&amp;nocheck=true" height="350"></cmecode>
+        <p>You can also assign specific values to some or all of the constants, rather than relying on the automatic 0, 1, 2, <ellipsis/> numbering. This is especially handy when, for example, an <c>enum</c> needs to match status codes coming from an external sensor or device. Since such raw codes typically arrive as plain <c>int</c>s, we <term>cast</term> them into our <c>enum</c> type:</p>
+        <cmecode startPoint="engs20p_NenumCasting" addOn="&amp;nocheck=true" height="400"></cmecode>
+        <p>Enums are perfect for anything with a limited, specific set of options: days of the week, months of the year, difficulty levels, or the states of a machine (like <c>ON</c>, <c>OFF</c>, <c>STANDBY</c>). They also pair naturally with <c>switch</c> statements, since each case can use a readable constant name instead of a bare number.</p>
+
+        <activity xml:id="activity-bitwise-enum-month">
+            <statement>
+                <p>We want to write code that helps us figure out whether it is currently summer. Declare an enum <c>month</c> with all twelve months (think about what value you want the first month to have). Ask the user to enter the number of the current month, and cast their integer input into your enum type. Finally, write a <c>switch</c> statement using your enum constants that prints <q>It's the summer</q> during June, July, August, or September, and <q>It's not summer</q> otherwise.</p>
+                <cmecode startPoint="engs20p_NenumMonthPractice" addOn="&amp;nocheck=true" height="450"></cmecode>
+                <p><em>Record your code below.</em></p>
+            </statement>
+            <response/>
+        </activity>
+
+        <activity xml:id="activity-bitwise-enum-printstate">
+            <statement>
+                <p>Improve the <q>Machine State</q> example from above so that it prints the actual <em>name</em> of the state as text, rather than just printing the integer. To do this, add a function <c>printStateName()</c> that takes the machine state as an input parameter, and, inside the function, uses a <c>switch</c> statement to print the correct text for each case.</p>
+                <cmecode startPoint="engs20p_NenumPrintState" addOn="&amp;nocheck=true" height="400"></cmecode>
+                <p><em>Record your code below.</em></p>
+            </statement>
+            <response/>
+        </activity>
+    </section>
+
+    <section xml:id="bitwise-combined">
+        <title>Combining Bitwise Operators and Enums</title>
+        <p>Bitwise operators and enums pair especially well together when each enum constant represents a single bit&#8212; a technique often used to represent a set of independent on/off options (called <term>flags</term>) packed into a single integer. For example:</p>
+        <cmecode startPoint="engs20p_NbitwiseEnumDemo" addOn="&amp;nocheck=true" height="400"></cmecode>
+        <p>Since <c>READ</c>, <c>WRITE</c>, and <c>EXECUTE</c> each occupy a different bit position (<m>0001</m>, <m>0010</m>, <m>0100</m>), we can combine several permissions into one integer using bitwise OR (<c>|</c>), and later test whether a specific permission is set using bitwise AND (<c>&amp;</c>)&#8212; all without needing a separate variable for each flag.</p>
+    </section>
+
+    <section xml:id="bitwise-summary">
+        <title>Summary</title>
+        <p>In this chapter, we covered the following topics:</p>
+        <ul>
+            <li>Bitwise operators: <c>~</c>, <c>&lt;&lt;</c>, <c>&gt;&gt;</c>, <c>&amp;</c>, <c>|</c></li>
+            <li>Reading, checking, and counting individual bits</li>
+            <li>Enumerated types (<c>enum</c>), including assigning custom values and casting</li>
+            <li>Using enums together with bitwise operators to represent flags</li>
+        </ul>
+    </section>
+</chapter>
