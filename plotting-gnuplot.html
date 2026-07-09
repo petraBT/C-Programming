@@ -9,7 +9,7 @@
 <!--******************************************-->
 <!--*  Authored with PreTeXt                 *-->
 <!--*  pretextbook.org                       *-->
-<!--*  Theme: denver                         *-->
+<!--*  Theme: salem                          *-->
 <!--*  Palette: leaves                       *-->
 <!--******************************************-->
 <head xmlns:og="http://ogp.me/ns#" xmlns:book="https://ogp.me/ns/book#">
@@ -57,15 +57,15 @@ eBookConfig.allow_pairs = false;
 eBookConfig.enableScratchAC = false;
 eBookConfig.build_info = "";
 eBookConfig.python3 = null;
-eBookConfig.runestone_version = '8.1.7';
+eBookConfig.runestone_version = '8.1.9';
 eBookConfig.jobehost = '';
 eBookConfig.proxyuri_runs = '';
 eBookConfig.proxyuri_files = '';
 eBookConfig.enable_chatcodes =  false;
 </script>
 <!--*** Runestone Services ***-->
-<script src="_static/prefix-runtime.917dfc3cfe0bb764.bundle.js"></script><script src="_static/prefix-713.de0ab26248766350.bundle.js"></script><script src="_static/prefix-runestone.39f982db166f319d.bundle.js"></script><link rel="stylesheet" type="text/css" href="_static/prefix-713.f43ced6a6134ea74.css">
-<link rel="stylesheet" type="text/css" href="_static/prefix-runestone.87414d180ebeebd6.css">
+<script src="_static/prefix-runtime.846a0d6fafaa99e0.bundle.js"></script><script src="_static/prefix-926.5c7038c8ef173faf.bundle.js"></script><script src="_static/prefix-runestone.bbcfc02849ebc023.bundle.js"></script><link rel="stylesheet" type="text/css" href="_static/prefix-926.229729d09512acc9.css">
+<link rel="stylesheet" type="text/css" href="_static/prefix-runestone.66fa8a682a32c0ac.css">
 <script src="_static/pretext/js/dist/lti_iframe_resizer.js"></script><link rel="icon" type="image/png" sizes="32x32" href="external/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="external/favicon/favicon-16x16.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.26.0/components/prism-core.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.26.0/plugins/autoloader/prism-autoloader.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.26.0/plugins/line-numbers/prism-line-numbers.min.js" integrity="sha512-dubtf8xMHSQlExGRQ5R7toxHLgSDZ0K7AunqPWHXmJQ8XyVIG19S1T95gBxlAeGOK02P4Da2RTnQz0Za0H0ebQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.26.0/plugins/line-highlight/prism-line-highlight.min.js" integrity="sha512-93uCmm0q+qO5Lb1huDqr7tywS8A2TFA+1/WHvyiWaK6/pvsFl6USnILagntBx8JnVbQH5s3n0vQZY6xNthNfKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.9/lunr.min.js" integrity="sha512-4xUl/d6D6THrAnXAwGajXkoWaeMNwEKK4iNfq5DotEbLPAfk6FSxSP3ydNxqDgCw1c/0Z1Jg6L8h2j+++9BZmg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script src="lunr-pretext-search-index.js" async=""></script><script src="_static/pretext/js/dist/pretext_search.js"></script><!--knowl.js code controls Sage Cells within knowls--><script>sagecellEvalName='Evaluate (Sage)';
@@ -124,7 +124,6 @@ eBookConfig.enable_chatcodes =  false;
 <ul id="ptx-toc-group-meta_frontmatter" class="structural toc-item-list">
 <li class="toc-item toc-colophon"><div class="toc-title-box"><a href="front-colophon.html" class="internal"><span class="title">Colophon</span></a></div></li>
 <li class="toc-item toc-preface"><div class="toc-title-box"><a href="meta_frontmatter-preface.html" class="internal"><span class="title">Introduction</span></a></div></li>
-<li class="toc-item toc-preface"><div class="toc-title-box"><a href="meta_frontmatter-toc.html" class="internal"><span class="title">Table of Contents</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-part">
@@ -1006,14 +1005,70 @@ fprintf(gfile, "plot '-'\n");        /* '-' means: data follows inline */
 /* ... write x,y pairs, one per line ... */
 fprintf(gfile, "e\n");               /* 'e' ends the inline data       */
 pclose(gfile);</pre>
-<div class="para" id="plotting-gnuplot-4">Here is a complete, minimal example that plots a single array of data points:<div class="autopermalink" aria-hidden="true" data-description="Paragraph"><a tabindex="-1" href="#plotting-gnuplot-4" title="Copy heading and permalink for Paragraph" aria-label="Copy heading and permalink for Paragraph">🔗</a></div>
+<div class="para" id="plotting-gnuplot-4">Here is a complete, minimal example that plots a single array of data points. Since this code opens a plot window via <code class="code-inline tex2jax_ignore">popen()</code>, which the embedded coding window can’t display, it’s shown below as read-only: copy it into your own Linux environment and run it there.<div class="autopermalink" aria-hidden="true" data-description="Paragraph"><a tabindex="-1" href="#plotting-gnuplot-4" title="Copy heading and permalink for Paragraph" aria-label="Copy heading and permalink for Paragraph">🔗</a></div>
 </div>
-<p xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings" style="text-align: right;\"><a href="https://code.thayer.dartmouth.edu/admin.php?starting_point=engs20p_NplotBasic.c" target="_blank"><font color="#AED6F1">admin</font></a><font color="#FFFFFF">.....</font><a href="https://code.thayer.dartmouth.edu/?starting_point=engs20p_NplotBasic.c&amp;nocheck=true" target="_blank"><font color="#1B279F">open in new window</font></a></p>
-<iframe xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings" title="Coding Assignment" style="position: absolute; top: -9999em; visibility: hidden;" onload="this.style.position='static'; this.style.visibility='visible';" src="https://code.thayer.dartmouth.edu/?starting_point=engs20p_NplotBasic.c&amp;nocheck=true" frameborder="0" width="100%" height="450"></iframe>
-<div class="para" id="plotting-gnuplot-6">We can plot multiple curves on the same figure, and add titles and axis labels, by extending the gnuplot commands we send through the pipe:<div class="autopermalink" aria-hidden="true" data-description="Paragraph"><a tabindex="-1" href="#plotting-gnuplot-6" title="Copy heading and permalink for Paragraph" aria-label="Copy heading and permalink for Paragraph">🔗</a></div>
+<div xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings" style="border:1px solid #ccc; border-radius:5px; padding:8px 12px; margin-bottom:8px; background-color:#f7f7f7;"><p style="margin:0;"><em>Compile and run the code below in your own C environment.</em></p></div>
+<div class="code-box"><pre class="program clipboardable"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(void){
+    float data[5] = {1.2, 2.5, 4.0, 3.1, 5.5};
+    int i;
+    int size = 5;
+    
+    FILE *gfile = popen("gnuplot", "w");
+
+    fprintf(gfile, "set terminal png\n");
+    fprintf(gfile, "set output 'plot_graph.png'\n");
+
+    fprintf(gfile, "plot '-'\n");
+    for(i=0; i&lt;size; i++){
+        fprintf(gfile, "%d %f\n", i, data[i]); // coordinates x and y
+    }
+
+    fprintf(gfile, "e\n");
+    pclose(gfile);
+
+    return 0;
+}
+</code></pre></div>
+<div class="para" id="plotting-gnuplot-6">We can plot multiple curves on the same figure, and add titles and axis labels, by extending the gnuplot commands we send through the pipe. Again, copy this into your own Linux environment to run it and see the plot:<div class="autopermalink" aria-hidden="true" data-description="Paragraph"><a tabindex="-1" href="#plotting-gnuplot-6" title="Copy heading and permalink for Paragraph" aria-label="Copy heading and permalink for Paragraph">🔗</a></div>
 </div>
-<p xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings" style="text-align: right;\"><a href="https://code.thayer.dartmouth.edu/admin.php?starting_point=engs20p_NplotAdvanced.c" target="_blank"><font color="#AED6F1">admin</font></a><font color="#FFFFFF">.....</font><a href="https://code.thayer.dartmouth.edu/?starting_point=engs20p_NplotAdvanced.c&amp;nocheck=true" target="_blank"><font color="#1B279F">open in new window</font></a></p>
-<iframe xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings" title="Coding Assignment" style="position: absolute; top: -9999em; visibility: hidden;" onload="this.style.position='static'; this.style.visibility='visible';" src="https://code.thayer.dartmouth.edu/?starting_point=engs20p_NplotAdvanced.c&amp;nocheck=true" frameborder="0" width="100%" height="600"></iframe><div class="autopermalink" aria-hidden="true" data-description="Section 30.1: Plotting with gnuplot"><a tabindex="-1" href="#plotting-gnuplot" title="Copy heading and permalink for Section 30.1: Plotting with gnuplot" aria-label="Copy heading and permalink for Section 30.1: Plotting with gnuplot">🔗</a></div>
+<div xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings" style="border:1px solid #ccc; border-radius:5px; padding:8px 12px; margin-bottom:8px; background-color:#f7f7f7;"><p style="margin:0;"><em>Compile and run the code below in your own C environment.</em></p></div>
+<div class="code-box"><pre class="program clipboardable"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(void){
+    float data[5] = {1.2, 2.5, 4.0, 3.1, 5.5};
+    float data2[5] ={5.4, 0.2, 3.9, 8.2, 4.6};
+    int i;
+    int size = 5;
+    
+    FILE *gfile = popen("gnuplot", "w");
+
+    fprintf(gfile, "set terminal png\n");
+    fprintf(gfile, "set output 'plot_multiple_curves.png'\n");
+
+    fprintf(gfile, "set title 'Comparison data and data2'\n");
+    fprintf(gfile, "set xlabel 'time (seconds)'\n");
+    fprintf(gfile, "set ylabel 'position (m)'\n");
+
+    fprintf(gfile, "plot '-' with lines title 'data', '-' with lines title 'data 2'\n");
+    for(i=0; i&lt;size; i++){
+        fprintf(gfile, "%d %f\n", i, data[i]); // coordinates x and y
+    }
+    fprintf(gfile, "e\n");
+
+    for(i=0; i&lt;size; i++){
+        fprintf(gfile, "%d %f\n", i, data2[i]); //coordinates of x and y for second curve
+    }
+    fprintf(gfile, "e\n");
+    pclose(gfile);
+
+    return 0;
+}
+</code></pre></div>
+<div class="autopermalink" aria-hidden="true" data-description="Section 30.1: Plotting with gnuplot"><a tabindex="-1" href="#plotting-gnuplot" title="Copy heading and permalink for Section 30.1: Plotting with gnuplot" aria-label="Copy heading and permalink for Section 30.1: Plotting with gnuplot">🔗</a></div>
 </section>
 </div>
 <div id="ptx-content-footer" class="ptx-content-footer">
