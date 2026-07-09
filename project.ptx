@@ -12,6 +12,13 @@
       <publication>publication/publication.ptx</publication>
       <output-dir>output/web</output-dir>
       <xsl>xsl/c-programming-html.xsl</xsl>
+      <!-- Needed even though this target's cmecode.mode stays "live": a few individual
+           cmecode instances (gnuplot/popen examples) are marked forceStatic="yes" and
+           always render as a static, read-only code block regardless of mode, which
+           requires cmecode.root to resolve. Must be an ABSOLUTE path (see comment in
+           xsl/c-programming-html.xsl for why). Machine-specific: update if this project
+           is cloned somewhere else. -->
+      <stringparam key="cmecode.root" value="/Users/dz00762/repos/C-Programming/CMeCodeDir/"/>
     </target>
     <target name="web-static">
       <!-- Same as "web", but every cmecode window is rendered as a plain, read-only,

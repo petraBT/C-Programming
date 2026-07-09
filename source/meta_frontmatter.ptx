@@ -35,7 +35,7 @@
       <!-- include a license, such as the cc-by-sa license shown below -->
       <!-- so people reading your book know how they can use it.       -->
       <holder>Petra Bonfert-Taylor</holder>
-      <year>2021<ndash/>2022</year>
+      <year>2021<ndash/>2026</year>
       <minilicense>Creative Commons BY-SA</minilicense>
       <!-- <minilicense><image source="../images/by-sa.png" /></minilicense> -->
       <shortlicense>
@@ -65,12 +65,16 @@
     <title>Introduction</title>
     <p><alert>Welcome to ENGS 20: Introduction to Scientific Computing!</alert></p>
     <p>From the Dartmouth course catalog:</p>
-    <p><em>This course introduces concepts and techniques for creating computational solutions to problems in engineering and science. The essentials of computer programming are developed using the C and MATLAB languages, with the goal of enabling the student to use the computer effectively in subsequent courses. Programming topics include problem decomposition, control structures, recursion, arrays and other data structures, file I/O, graphics, and code libraries. Applications will be drawn from numerical solution of ordinary differential equations, root finding, matrix operations, searching and sorting, simulation, and data analysis. Good programming style and computational efficiency are emphasized. Although no previous programming experience is assumed, a significant time commitment is required.</em></p>
-    <p><em>Students planning to pursue the engineering sciences major are advised to take ENGS 20. Students considering the computer science major or majors modified with computer science should take COSC 1 and COSC 10.</em></p>
-    <p>This textbook contains the course materials for only the C-programming portion of the class, which generally is covered within the first seven weeks of the class. There are homework assignments, in-class activities, and various other materials in this textbook.</p>
-    <p>The easiest way to know which sections of this book are assigned for homework, or which will be explored during class, is to use the <xref ref="meta_frontmatter-toc" text="title"/>. There, all the sections are grouped into their respective <em>class</em> or <em>pre-class</em>. Be sure to complete all <em>pre-class</em> sections prior to the subsequent class meeting, as these are homework. On the other hand, if searching for a specific topic, the <xref ref="index-page" text="title"/> or the embedded search bar at the top of the page will be of use.</p>
+    <p><em>In this course, students learn how to solve problems in engineering and sciences by writing computer programs. To this end, students learn general concepts to design programming solutions to problems and gain experience implementing these solutions in the commonly used programming language C. Programming topics include problem decomposition, control structures, recursion, arrays and other data structures, file I/O, and code modularization. Applications will be drawn from numerical solutions of ordinary differential equations, root finding, searching and sorting, simulation, and data analysis. Good programming style, debugging techniques and computational efficiency are emphasized. Although no previous programming experience is assumed, a significant time commitment is required.</em></p>
+    <p><em>Students planning to pursue the engineering sciences major are advised to take ENGS 20. Students considering the computer science major should take COSC 1 and COSC 10. Students considering both majors should consider taking ENGS 20 and COSC 10.</em></p>
+    <!-- The class-day-mapped table of contents (toc.ptx) is temporarily disabled below,
+         since content has moved around and the day-by-day mapping is now out of date.
+         Re-enable both the <xi:include> and this paragraph's reference to it once the
+         mapping has been rebuilt. -->
+    <!-- <p>The easiest way to know which sections of this book are assigned for homework, or which will be explored during class, is to use the <xref ref="meta_frontmatter-toc" text="title"/>. There, all the sections are grouped into their respective <em>class</em> or <em>pre-class</em>. Be sure to complete all <em>pre-class</em> sections prior to the subsequent class meeting, as these are homework. On the other hand, if searching for a specific topic, the <xref ref="index-page" text="title"/> or the embedded search bar at the top of the page will be of use.</p> -->
+    <p>If searching for a specific topic, the <xref ref="index-page" text="title"/> or the embedded search bar at the top of the page will be of use.</p>
     <p>In the next chapter, <xref ref="gettingstarted" text="title"/>, the various tools and features of this book will be introduced and explained.</p>
   </preface>
 
-  <xi:include href="./toc.ptx"/>
+  <!-- <xi:include href="./toc.ptx"/> -->
 </frontmatter>

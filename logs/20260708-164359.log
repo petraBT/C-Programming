@@ -1,0 +1,36 @@
+INFO    : Building target web
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.43.1/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.43.1/core/xsl/utilities/pretext-enhanced-source.xsl
+WARNING : Schema validation could not be completed: no validator was available (jing is not installed and lxml could not compile the schema). Continuing with build.
+INFO    : Generating any needed assets.
+INFO    : Finished generating assets.
+
+INFO    : Building with custom xsl /Users/dz00762/repos/C-Programming/xsl/c-programming-html.xsl
+INFO    : Preparing to build into /Users/dz00762/repos/C-Programming/output/web.
+INFO    : discovering source file's directory name: /Users/dz00762/repos/C-Programming/source
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../generated-assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/generated-assets
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/assets
+INFO    : discovering source file's directory name: /Users/dz00762/repos/C-Programming/source
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.43.1/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.43.1/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : Downloading rs services file from https://runestone.academy/cdn/runestone/latest/webpack_static_imports.xml.
+INFO    : Runestone Services via online CDN query: version 8.1.9
+INFO    : Downloading Runestone Services, version 8.1.9
+INFO    : Extracting Runestone Services from archive file
+INFO    : Building custom css theme: theme-denver
+INFO    : converting /Users/dz00762/repos/C-Programming/source/main.ptx to HTML in /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-nn0md3i9
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptxcli_r4lvh6it/cli_xsl/c-programming-html.xsl
+INFO    : messages from the log for XSL processing:
+INFO    : * PTX:INFO:   checking all deprecated elements.
+INFO    : successful application of /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptxcli_r4lvh6it/cli_xsl/c-programming-html.xsl
+INFO    : Removing temporary directory /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-nn0md3i9
+INFO    : Removing temporary directory /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-b_qtzv_j
+INFO    : 
+Finished build for target web. Run `pretext view web` to see the results.
+
+INFO    : 
+Success!  Built requested target(s) without errors.
+
+INFO    : 

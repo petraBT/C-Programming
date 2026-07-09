@@ -112,8 +112,8 @@
        <css style="oscarlevin" colors="green_blue"/>  
     -->
     
-    <!--<css theme="salem" palette="leaves"/>-->
-    <css theme="denver" palette="leaves"/>
+    <css theme="salem" palette="leaves"/>
+    <!--<css theme="denver" palette="leaves"/>-->
     <!--<css theme="default-modern" palette="green-blue"/>-->
     
     <search variant="default"/>

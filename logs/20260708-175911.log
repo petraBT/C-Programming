@@ -1,0 +1,70 @@
+INFO    : Building target web
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.43.1/core/xsl/utilities/pretext-enhanced-source.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.43.1/core/xsl/utilities/pretext-enhanced-source.xsl
+WARNING : Schema validation could not be completed: no validator was available (jing is not installed and lxml could not compile the schema). Continuing with build.
+INFO    : Generating any needed assets.
+WARNING : Now generating QR codes
+WARNING : You are trying to generate qrcodes, but the publication file does not have a base URL. This will result in qrcodes that do not point to anything meaningful.
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.43.1/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.43.1/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : discovering source file's directory name: /Users/dz00762/repos/C-Programming/source
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../generated-assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/generated-assets
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/assets
+INFO    : manufacturing QR codes from /Users/dz00762/repos/C-Programming/source/main.ptx for placement in /Users/dz00762/repos/C-Programming/generated-assets/qrcode
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.43.1/core/xsl/extract-qrcode.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.43.1/core/xsl/extract-qrcode.xsl
+INFO    : creating URL with content "https://www.youtube.com/watch?v=Gw2Nh9umWnQ" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/Gw2Nh9umWnQ.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=HGPItnA7P4U" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/HGPItnA7P4U.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=PTUCVHbSYQY" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/PTUCVHbSYQY.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=QEMODOAw4Fk" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/QEMODOAw4Fk.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=UqfbrVH9EAA" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/UqfbrVH9EAA.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=YdY0a4e3Xmg" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/YdY0a4e3Xmg.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=4Ss4AvS2c1Y" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/_4Ss4AvS2c1Y.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=5jKIQbbs0zc" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/_5jKIQbbs0zc.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=5pfi_e7VyOc" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/_5pfi_e7VyOc.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=6IdQgAivpvk" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/_6IdQgAivpvk.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=9AvLxDsvUBY" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/_9AvLxDsvUBY.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=eR49ZU8Y4Ag" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/eR49ZU8Y4Ag.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=feIY5ElGvL0" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/feIY5ElGvL0.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=gr7DLw5i-1E" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/gr7DLw5i-1E.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=iaZ5_8obpJU" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/iaZ5_8obpJU.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=kkx3IMBgND0" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/kkx3IMBgND0.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=lwn2e3QqUqQ" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/lwn2e3QqUqQ.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=nF0gbyPfhj4" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/nF0gbyPfhj4.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=rWcrLz4sfPs" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/rWcrLz4sfPs.png...
+INFO    : creating URL with content "https://www.youtube.com/watch?v=zeXIB23dnCU" as /Users/dz00762/repos/C-Programming/generated-assets/qrcode/zeXIB23dnCU.png...
+INFO    : QR code creation complete
+INFO    : Removing temporary directory /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-l9jalt7m
+INFO    : Finished generating assets.
+
+INFO    : Building with custom xsl /Users/dz00762/repos/C-Programming/xsl/c-programming-html.xsl
+INFO    : Preparing to build into /Users/dz00762/repos/C-Programming/output/web.
+INFO    : discovering source file's directory name: /Users/dz00762/repos/C-Programming/source
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../generated-assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/generated-assets
+INFO    : verifying and expanding input directory: /Users/dz00762/repos/C-Programming/source/../assets
+INFO    : input directory expanded to absolute path: /Users/dz00762/repos/C-Programming/assets
+INFO    : discovering source file's directory name: /Users/dz00762/repos/C-Programming/source
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /Users/dz00762/.ptx/2.43.1/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : successful application of /Users/dz00762/.ptx/2.43.1/core/xsl/utilities/report-publisher-variables.xsl
+INFO    : Downloading rs services file from https://runestone.academy/cdn/runestone/latest/webpack_static_imports.xml.
+INFO    : Runestone Services via online CDN query: version 8.1.9
+INFO    : Downloading Runestone Services, version 8.1.9
+INFO    : Extracting Runestone Services from archive file
+INFO    : Building custom css theme: theme-denver
+INFO    : converting /Users/dz00762/repos/C-Programming/source/main.ptx to HTML in /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-id_e3gci
+INFO    : XSL conversion of /Users/dz00762/repos/C-Programming/source/main.ptx by /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptxcli_gzjjz1r9/cli_xsl/c-programming-html.xsl
+INFO    : messages from the log for XSL processing:
+INFO    : * PTX:INFO:   checking all deprecated elements.
+INFO    : successful application of /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptxcli_gzjjz1r9/cli_xsl/c-programming-html.xsl
+INFO    : Removing temporary directory /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-id_e3gci
+INFO    : Removing temporary directory /var/folders/2f/vq_5qtc905q90sdy04j6dd8r0000gq/T/ptx-uw4m3l60
+INFO    : 
+Finished build for target web. Run `pretext view web` to see the results.
+
+INFO    : 
+Success!  Built requested target(s) without errors.
+
+INFO    : 

@@ -57,9 +57,15 @@ Example:
     <p>If you cannot see this codecast, please click <a href="{$the-url}" target="_blank"><font color="blue">here</font></a>.</p>
  </xsl:template>
 
+<!-- Most cmecode instances should follow cmecode.mode (live vs static per build target).
+     Some, though, can never work as a live coding window regardless of build target,
+     e.g. anything that calls popen("gnuplot", ...) to open a plot, since the embedded
+     Thayer terminal has no way to display that plot in any mode. For those, set
+     forceStatic="yes" on the individual <cmecode> element to always render it as a
+     plain read-only code block, even in a "live" build. -->
 <xsl:template match="cmecode">
     <xsl:choose>
-        <xsl:when test="$cmecode.mode = 'static'">
+        <xsl:when test="$cmecode.mode = 'static' or @forceStatic = 'yes'">
             <xsl:call-template name="cmecode-static"/>
         </xsl:when>
         <xsl:otherwise>
