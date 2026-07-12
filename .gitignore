@@ -18,6 +18,9 @@ generated-assets
 # don't track node packages
 node_modules
 
+# don't track pretext's own per-run build logs
+logs
+
 # don't track error logs
 .error_schema.log
 cli.log

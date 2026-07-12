@@ -84,11 +84,23 @@ Example:
      e.g. anything that calls popen("gnuplot", ...) to open a plot, since the embedded
      Thayer terminal has no way to display that plot in any mode. For those, set
      forceStatic="yes" on the individual <cmecode> element to always render it as a
-     plain read-only code block, even in a "live" build. -->
+     plain read-only code block, even in a "live" build.
+
+     Separately: addOn="...hide_run=true" was the author's old way (Thayer-specific URL
+     param) of showing code the student is meant to read and analyze, not run - Thayer
+     hides its Run button when it sees that param. That's untouched here: "live" mode
+     still passes addOn straight through to Thayer same as always. But the new client
+     tool has no such param to hand off to (no Thayer, and this tool doesn't have a way
+     to hide its own Run button), so under "client" mode specifically, hide_run=true
+     elements render as the same plain read-only display as forceStatic, instead of the
+     live tool. -->
 <xsl:template match="cmecode">
     <xsl:choose>
         <xsl:when test="$cmecode.mode = 'static' or @forceStatic = 'yes'">
             <xsl:call-template name="cmecode-static"/>
+        </xsl:when>
+        <xsl:when test="$cmecode.mode = 'client' and contains(@addOn, 'hide_run=true')">
+            <xsl:call-template name="cmecode-readonly"/>
         </xsl:when>
         <xsl:when test="$cmecode.mode = 'client'">
             <xsl:call-template name="cmecode-client"/>
@@ -101,10 +113,7 @@ Example:
 
 <!-- New client-side coding window: compiles and runs C entirely in the browser, no server.
      Unlike cmecode-live, there's no "admin" / "open in new window" links row (out of scope
-     for this tool by design) and no addOn passthrough (Thayer-specific nocheck/hide_run
-     flags have no equivalent here - some cmecode elements using hide_run="true" will show
-     a Run button here where they didn't on Thayer; that's a known, deliberate difference,
-     not a bug). -->
+     for this tool by design). -->
 <!-- Extra vertical space this tool's chrome needs beyond what the @height attributes were
      originally tuned for (those numbers came from the old Thayer window's layout). Measured
      directly, not guessed: same starting-point file rendered at height=400 needed 561px
@@ -136,12 +145,21 @@ Example:
        </xsl:choose>
     </xsl:variable>
     <xsl:variable name="height" select="$base-height + $cmecode.client.height-buffer"/>
+    <!-- Always emit "?src=", even with nothing after it for a startPoint-less element:
+         an explicit empty value tells the tool "start blank, don't prepopulate anything"
+         (distinct from omitting the param entirely, which the tool takes to mean "not
+         embedded by this book, show the default demo starter" - see loadStartingCode()
+         in the tool's own src/main.ts). Doesn't currently arise - every <cmecode> in this
+         book's source has a startPoint - but this keeps a stray/future startPoint-less one
+         from either erroring or confusingly prepopulating unrelated demo content. -->
     <xsl:variable name="the-url">
         <xsl:value-of select="$cmecode.client.tool"/>
         <xsl:text>?src=</xsl:text>
-        <xsl:value-of select="$cmecode.client.root"/>
-        <xsl:value-of select="@startPoint"/>
-        <xsl:text>.c</xsl:text>
+        <xsl:if test="@startPoint != ''">
+            <xsl:value-of select="$cmecode.client.root"/>
+            <xsl:value-of select="@startPoint"/>
+            <xsl:text>.c</xsl:text>
+        </xsl:if>
     </xsl:variable>
     <iframe title="Coding Assignment" allow="cross-origin-isolated" style="position: absolute; top: -9999em; visibility: hidden; border: none;" onload="this.style.position='static'; this.style.visibility='visible';" src="{$the-url}" width="100%" height="{$height}"></iframe>
 </xsl:template>
@@ -185,6 +203,27 @@ Example:
     <div style="border:1px solid #ccc; border-radius:5px; padding:8px 12px; margin-bottom:8px; background-color:#f7f7f7;">
         <p style="margin:0;"><em>Compile and run the code below in your own C environment.</em></p>
     </div>
+    <xsl:choose>
+        <xsl:when test="not($cmefile)">
+            <p><em>Warning: no local starting-point file was found at <xsl:value-of select="$filename"/>.</em></p>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:apply-templates select="exsl:node-set($the-display)/*"/>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+<!-- Same file-reading approach as cmecode-static, minus the "compile and run this
+     yourself" messaging: this is specifically for hide_run=true content, which was
+     never meant to be run at all, only read - that message would be actively wrong
+     advice for it. Only reached from "client" mode (see the dispatch template above);
+     "live" mode keeps sending hide_run straight through to Thayer as it always has. -->
+<xsl:template name="cmecode-readonly">
+    <xsl:variable name="filename" select="concat($cmecode.root, @startPoint, '.c.xml')"/>
+    <xsl:variable name="cmefile" select="document($filename)"/>
+    <xsl:variable name="the-display">
+        <program language="c"><code><xsl:value-of select="$cmefile/cme"/></code></program>
+    </xsl:variable>
     <xsl:choose>
         <xsl:when test="not($cmefile)">
             <p><em>Warning: no local starting-point file was found at <xsl:value-of select="$filename"/>.</em></p>
@@ -250,7 +289,59 @@ Example:
     </div>
 </xsl:template>
 
+<!-- Standard XSLT 1.0 recursive whitespace trim (str:trim, from the same EXSLT strings
+     module as str:replace/str:encode-uri below, turned out not to be implemented in this
+     particular libexslt build - confirmed by testing before writing this). Used below to
+     drop the leading/trailing blank line that PreTeXt's own source indentation puts around
+     cmecodehere's inline text content, without touching the code's actual internal
+     formatting (only strips the outer whitespace, recursion bottoms out immediately for
+     everything in between). -->
+<xsl:template name="string-trim">
+    <xsl:param name="text"/>
+    <xsl:variable name="whitespace" select="'&#9;&#10;&#13;&#32;'"/>
+    <xsl:variable name="trimmed-start">
+        <xsl:choose>
+            <xsl:when test="$text != '' and contains($whitespace, substring($text, 1, 1))">
+                <xsl:call-template name="string-trim">
+                    <xsl:with-param name="text" select="substring($text, 2)"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$text"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+    <xsl:choose>
+        <xsl:when test="$trimmed-start != '' and contains($whitespace, substring($trimmed-start, string-length($trimmed-start), 1))">
+            <xsl:call-template name="string-trim">
+                <xsl:with-param name="text" select="substring($trimmed-start, 1, string-length($trimmed-start) - 1)"/>
+            </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:value-of select="$trimmed-start"/>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+<!-- cmecodehere is like cmecode, but the starting code is written inline as this
+     element's own text content instead of referencing a registered CMeCodeDir/Thayer
+     starting point - used for small one-off snippets not worth registering separately
+     (as of this writing, exactly two: gettingstarted.ptx and loops.ptx). -->
 <xsl:template match="cmecodehere">
+    <xsl:choose>
+        <xsl:when test="$cmecode.mode = 'static'">
+            <xsl:call-template name="cmecodehere-static"/>
+        </xsl:when>
+        <xsl:when test="$cmecode.mode = 'client'">
+            <xsl:call-template name="cmecodehere-client"/>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:call-template name="cmecodehere-live"/>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+<xsl:template name="cmecodehere-live">
     <xsl:variable name="mycode" select="text()" />
     <xsl:variable name="percent" select="str:replace($mycode, '%',  '%25')"/>
     <xsl:variable name="lessthan" select="str:replace($percent, '&lt;',  '%3C')"/>
@@ -264,6 +355,59 @@ Example:
     <xsl:variable name="equal" select="str:replace($exclamation, '=', '%3D')"/>
     <xsl:variable name="cleancode" select="str:replace($exclamation, '+',  '%2B')"/>
     <iframe title="Coding Assignment" src="https://code.thayer.dartmouth.edu/?starting_point={$cleancode}" marginwidth="0" scrolling="yes" allowfullscreen="true" style="background: #FFFFFF; padding-center: 10px; border:1px solid lightgrey;" frameborder="0" width="100%" height="300"></iframe>
+</xsl:template>
+
+<!-- Static-mode fallback for cmecodehere. Was previously missing entirely (this element
+     had no mode dispatch at all - it always rendered the live Thayer iframe, even under
+     the "static" build target, unlike every other cmecode-family element). Fixed here
+     alongside adding "client" mode support, for consistency: both gaps had the same root
+     cause (no <xsl:choose> on cmecode.mode), so fixing one without the other seemed like
+     it'd just be trading one inconsistency for another. -->
+<xsl:template name="cmecodehere-static">
+    <xsl:variable name="trimmed">
+        <xsl:call-template name="string-trim">
+            <xsl:with-param name="text" select="."/>
+        </xsl:call-template>
+    </xsl:variable>
+    <div style="border:1px solid #ccc; border-radius:5px; padding:8px 12px; margin-bottom:8px; background-color:#f7f7f7;">
+        <p style="margin:0;"><em>Compile and run the code below in your own C environment.</em></p>
+    </div>
+    <program language="c"><code><xsl:value-of select="$trimmed"/></code></program>
+</xsl:template>
+
+<!-- New client-side coding window (see cmecode-client above for the general approach).
+     The code lives inline here rather than in a CMeCodeDir file, so there's no file to
+     fetch by URL - instead the trimmed text is percent-encoded (str:encode-uri, the real
+     thing, unlike cmecodehere-live's hand-rolled partial character replacement above -
+     that one's Thayer-specific and intentionally untouched) directly into a data: URL,
+     passed as the tool's ?src=. The tool's loading code doesn't need to know or care that
+     this "file" was never actually served from anywhere - fetch(), which is what src=
+     already triggers, resolves data: URLs natively.
+
+     Encoded TWICE, not once - confirmed by testing this actually breaks with a single
+     encoding pass, silently truncating the code at its first "#" (e.g. right before
+     "#include", corrupting every real C file this way): the tool reads ?src= via
+     URLSearchParams.get(), which auto-decodes one percent-encoding layer before the
+     value ever reaches fetch(). A single-encoded payload comes out of that decode with
+     its "#"/"&"/etc. already bare, which a URL parser then reads as a fragment separator
+     (or similar), silently dropping everything after it. Encoding twice means the string
+     surviving that first auto-decode is still exactly one layer of valid percent-encoding
+     - safe for fetch()'s own URL parsing to decode correctly, same as a real (non-inline)
+     ?src= file reference always was. -->
+<xsl:template name="cmecodehere-client">
+    <xsl:variable name="trimmed">
+        <xsl:call-template name="string-trim">
+            <xsl:with-param name="text" select="."/>
+        </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="encoded" select="str:encode-uri(str:encode-uri($trimmed, true()), true())"/>
+    <xsl:variable name="the-url">
+        <xsl:value-of select="$cmecode.client.tool"/>
+        <xsl:text>?src=data:text/plain,</xsl:text>
+        <xsl:value-of select="$encoded"/>
+    </xsl:variable>
+    <xsl:variable name="height" select="400 + $cmecode.client.height-buffer"/>
+    <iframe title="Coding Assignment" allow="cross-origin-isolated" style="position: absolute; top: -9999em; visibility: hidden; border: none;" onload="this.style.position='static'; this.style.visibility='visible';" src="{$the-url}" width="100%" height="{$height}"></iframe>
 </xsl:template>
 
 <xsl:template match="repl">
