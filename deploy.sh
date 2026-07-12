@@ -8,6 +8,11 @@ set -e
 # rather than via `pretext deploy`, since PreTeXt's own deploy-dir/site mechanism
 # can't keep one target unchanged at root while adding another as a subfolder (see
 # the comment on the web-static target in project.ptx).
+#
+# Opt-in third target: DEPLOY_CLIENT=1 ./deploy.sh also builds and publishes "web-client"
+# (the new client-side coding-window tool, evaluation stage) under /client-preview/,
+# alongside "web" and "web-static" without touching either. Off by default so a plain
+# ./deploy.sh behaves exactly as it always has.
 
 WORKTREE_DIR=".gh-pages-worktree"
 
@@ -29,6 +34,10 @@ pretext build web-static
 ./scripts/add-applets.sh output/web
 ./scripts/add-applets.sh output/web-static
 
+if [ "${DEPLOY_CLIENT:-}" = "1" ]; then
+    pretext build web-client
+fi
+
 # Set up a persistent worktree checked out to gh-pages, so publishing never touches
 # your actual working directory or your current branch.
 if [ ! -d "$WORKTREE_DIR" ]; then
@@ -47,6 +56,18 @@ find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 cp -R ../output/web/. .
 mkdir -p static
 cp -R ../output/web-static/. static/
+
+if [ "${DEPLOY_CLIENT:-}" = "1" ]; then
+    # coding-window/ and CMeCodeDir/ need to be siblings of the built pages themselves
+    # (not nested inside each other) -- that's what the relative paths the XSL generates
+    # (coding-window/index.html?src=../CMeCodeDir/<name>.c) assume. See the cmecode.client.*
+    # param comments in xsl/c-programming-html.xsl for why.
+    mkdir -p client-preview
+    cp -R ../output/web-client/. client-preview/
+    cp -R ../coding-window client-preview/
+    mkdir -p client-preview/CMeCodeDir
+    find ../CMeCodeDir -maxdepth 1 -name '*.c' -exec cp {} client-preview/CMeCodeDir/ \;
+fi
 
 # GitHub Pages runs Jekyll by default, which ignores underscore-prefixed folders
 # like PreTeXt's _static/ -- this file tells it not to.

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>C Coding Window (prototype)</title>
+    <script type="module" crossorigin src="./assets/index-Ctka2Ydh.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BgYXHcnl.css">
+  </head>
+  <body>
+    <div id="app">
+      <div id="editor"></div>
+      <div id="stdin-row" hidden>
+        <label for="stdin-box">Input <span class="hint">(this program reads input — type it here first, one value per line, then click Run)</span></label>
+        <textarea id="stdin-box" rows="2" placeholder="e.g.&#10;Ada&#10;21"></textarea>
+      </div>
+      <div id="controls">
+        <button id="run-btn" type="button">Run</button>
+        <a id="download-link" href="#" download="program.c">Download .c file</a>
+      </div>
+      <div id="output-panel" hidden>
+        <pre id="warnings" hidden></pre>
+        <pre id="output"></pre><span id="cursor" aria-hidden="true"></span>
+        <input id="stdin-capture" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Program input" />
+        <button id="close-output" type="button">Close</button>
+      </div>
+    </div>
+  </body>
+</html>

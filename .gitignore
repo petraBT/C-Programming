@@ -8,6 +8,10 @@ output
 # local worktree used by deploy.sh to assemble/push the gh-pages branch
 .gh-pages-worktree
 
+# Wrangler (Cloudflare CLI) local state, and pretext's own build cache
+.wrangler
+.cache
+
 # don't track assets generated from source
 generated-assets
 

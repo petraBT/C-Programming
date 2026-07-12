@@ -43,6 +43,26 @@
            cmecode.root, pointed at the desired absolute path. -->
       <stringparam key="cmecode.root" value="/Users/dz00762/repos/C-Programming/CMeCodeDir/"/>
     </target>
+    <target name="web-client">
+      <!-- Same as "web", but every cmecode window renders the new client-side coding tool
+           (compiles and runs C entirely in the student's browser, no server) instead of the
+           live Thayer iframe. Evaluation/prototype stage - see coding-window/README.md and
+           that tool's own DEPLOYMENT.md. Not deployed by deploy.sh yet; build and preview
+           locally with `pretext build web-client` / `pretext view web-client` until this is
+           ready to fold into the real deploy. -->
+      <format>html</format>
+      <source>source/main.ptx</source>
+      <publication>publication/publication.ptx</publication>
+      <output-dir>output/web-client</output-dir>
+      <xsl>xsl/c-programming-html.xsl</xsl>
+      <stringparam key="cmecode.mode" value="client"/>
+      <!-- Needed for the same reason "web" needs it despite staying "live": forceStatic="yes"
+           elements (gnuplot/popen examples) always render statically regardless of mode, which
+           requires cmecode.root to resolve. Must be an ABSOLUTE path (see comment in
+           xsl/c-programming-html.xsl for why). Machine-specific: update if this project is
+           cloned somewhere else. -->
+      <stringparam key="cmecode.root" value="/Users/dz00762/repos/C-Programming/CMeCodeDir/"/>
+    </target>
     <target name="latex">
       <format>latex</format>
       <source>source/main.ptx</source>

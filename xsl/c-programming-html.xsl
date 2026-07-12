@@ -21,7 +21,11 @@
        and the starting point to already be registered on code.thayer.dartmouth.edu).
      "static": render the code itself, read from the local CMeCodeDir/<startPoint>.c.xml file,
        as a plain read-only, copy-pasteable code block. Useful for previewing/proofreading the
-       book before starting points are registered, and for readers without Thayer access. -->
+       book before starting points are registered, and for readers without Thayer access.
+     "client": render the new client-side coding window (compiles and runs C entirely in the
+       student's browser, no server) - see coding-window/README.md in this repo, and that
+       tool's own README.md / DEPLOYMENT.md for how it works. Evaluation/prototype stage as of
+       this writing - not yet the default. -->
 <xsl:param name="cmecode.mode" select="'live'"/>
 
 <!-- Absolute path (with trailing slash) to this project's CMeCodeDir, used only when
@@ -32,6 +36,24 @@
      option for cmecode.root pointed at the absolute path to CMeCodeDir, or set it directly
      in project.ptx's web-static target (see project.ptx for a placeholder). -->
 <xsl:param name="cmecode.root" select="'CMeCodeDir/'"/>
+
+<!-- Used only when cmecode.mode = 'client'. Unlike cmecode.root above, these are ordinary
+     relative paths resolved by the BROWSER at view time (not XSLT's document() at build
+     time), so they don't need to be absolute - and can't be hardcoded per-machine, since
+     they need to work on whatever server this book actually gets deployed to.
+
+     cmecode.client.tool: path to the coding-window tool's index.html, relative to a book
+       page. All book pages currently sit flat at the same directory level in the published
+       site (chunking doesn't nest them into subfolders), so one relative path works for all
+       of them; revisit if that ever changes.
+     cmecode.client.root: path the TOOL should fetch each starting-point .c file from,
+       relative to the TOOL's own location (not the book page's) - a fetch() inside the
+       iframe resolves against the iframe's own document, not its parent. CMeCodeDir is a
+       sibling of coding-window/ at the published site root, hence the leading "../".
+       deploy.sh copies the plain (non-.c.xml) files from this project's CMeCodeDir into the
+       published CMeCodeDir/ this points at. -->
+<xsl:param name="cmecode.client.tool" select="'coding-window/index.html'"/>
+<xsl:param name="cmecode.client.root" select="'../CMeCodeDir/'"/>
 
 <!-- 
 Example:
@@ -68,10 +90,60 @@ Example:
         <xsl:when test="$cmecode.mode = 'static' or @forceStatic = 'yes'">
             <xsl:call-template name="cmecode-static"/>
         </xsl:when>
+        <xsl:when test="$cmecode.mode = 'client'">
+            <xsl:call-template name="cmecode-client"/>
+        </xsl:when>
         <xsl:otherwise>
             <xsl:call-template name="cmecode-live"/>
         </xsl:otherwise>
     </xsl:choose>
+</xsl:template>
+
+<!-- New client-side coding window: compiles and runs C entirely in the browser, no server.
+     Unlike cmecode-live, there's no "admin" / "open in new window" links row (out of scope
+     for this tool by design) and no addOn passthrough (Thayer-specific nocheck/hide_run
+     flags have no equivalent here - some cmecode elements using hide_run="true" will show
+     a Run button here where they didn't on Thayer; that's a known, deliberate difference,
+     not a bug). -->
+<!-- Extra vertical space this tool's chrome needs beyond what the @height attributes were
+     originally tuned for (those numbers came from the old Thayer window's layout). Measured
+     directly, not guessed: same starting-point file rendered at height=400 needed 561px
+     actual content, and at height=500 needed 545px, once an error/output was showing and the
+     "Input" fallback box was visible (which it will be on every exercise once deployed - see
+     the interactiveStdin comment on the "Stdin is interactive..." bullet in the coding-window
+     tool's own README.md - GitHub Pages can't provide the headers that unlock the live
+     terminal, so the fallback box is the deployed reality here, not just a local-preview
+     artifact). +180 covers the largest observed gap (161px) with some margin. Iframes still
+     scroll internally rather than break if a given exercise's actual output is unusually
+     long - this isn't trying to guarantee zero scrolling in every case, just fix the common
+     one. Bumped from an initial 180 to 230 after re-measuring with a two-line error message
+     (180 left only 3px of margin against a real exercise's actual content height - too close
+     for comfort given output length varies). -->
+<xsl:param name="cmecode.client.height-buffer" select="230"/>
+
+<xsl:template name="cmecode-client">
+    <xsl:variable name="dummy">
+        <xsl:value-of select="@height"/>
+    </xsl:variable>
+    <xsl:variable name="base-height">
+       <xsl:choose>
+          <xsl:when test="$dummy &gt; 200">
+             <xsl:value-of select="@height"/>
+          </xsl:when>
+          <xsl:otherwise>
+             <xsl:text>400</xsl:text>
+          </xsl:otherwise>
+       </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="height" select="$base-height + $cmecode.client.height-buffer"/>
+    <xsl:variable name="the-url">
+        <xsl:value-of select="$cmecode.client.tool"/>
+        <xsl:text>?src=</xsl:text>
+        <xsl:value-of select="$cmecode.client.root"/>
+        <xsl:value-of select="@startPoint"/>
+        <xsl:text>.c</xsl:text>
+    </xsl:variable>
+    <iframe title="Coding Assignment" allow="cross-origin-isolated" style="position: absolute; top: -9999em; visibility: hidden; border: none;" onload="this.style.position='static'; this.style.visibility='visible';" src="{$the-url}" width="100%" height="{$height}"></iframe>
 </xsl:template>
 
 <xsl:template name="cmecode-live">
