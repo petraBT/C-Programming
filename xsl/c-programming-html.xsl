@@ -55,6 +55,18 @@
 <xsl:param name="cmecode.client.tool" select="'coding-window/index.html'"/>
 <xsl:param name="cmecode.client.root" select="'../CMeCodeDir/'"/>
 
+<!-- Same idea as cmecode.client.tool/root above, for the client-side Linux
+     shell tool (a <server> element instead of <cmecode>). linux.html is
+     built by the same vite project as index.html (see that project's
+     vite.config.ts multi-page build), so it lands as a sibling of
+     coding-window/index.html - same directory, just a different file.
+     LinuxStartDir is this project's equivalent of CMeCodeDir for this tool:
+     one <startPoint>.json file per exercise (shape documented in the tool's
+     own src/shell-runner.ts StartingPoint interface), published as a
+     sibling of coding-window/ the same way CMeCodeDir is. -->
+<xsl:param name="server.client.tool" select="'coding-window/linux.html'"/>
+<xsl:param name="server.client.root" select="'../LinuxStartDir/'"/>
+
 <!-- 
 Example:
 
@@ -244,10 +256,20 @@ Example:
     <p>If you cannot see this document, please click <a href="{$the-url}" target="_blank"><font color="blue">here</font></a>.</p>
 </xsl:template>
 
+<!-- Same three-way split as <cmecode> above, plus the same forceStatic escape
+     hatch: engs20p_engs20Server (the "log into your real Thayer account,
+     this is no longer a practice sandbox" exercise in linux.ptx) has
+     forceStatic="yes" since there's nothing to simulate for it in client
+     mode either - it'd otherwise render the tool's own bare default sandbox,
+     which is actively misleading for an exercise about the student's real
+     account. -->
 <xsl:template match="server">
     <xsl:choose>
-        <xsl:when test="$cmecode.mode = 'static'">
+        <xsl:when test="$cmecode.mode = 'static' or @forceStatic = 'yes'">
             <xsl:call-template name="server-static"/>
+        </xsl:when>
+        <xsl:when test="$cmecode.mode = 'client'">
+            <xsl:call-template name="server-client"/>
         </xsl:when>
         <xsl:otherwise>
             <xsl:call-template name="server-live"/>
@@ -276,6 +298,41 @@ Example:
 <!--    <iframe src="{$the-url}" width="105%" height="{$height}" allowfullscreen="true" style="background: #000000; padding-center: 10px; border:1px solid lightgrey;" frameborder="0" ></iframe> -->
     <iframe title="Linux Practice Window" style="position: absolute; top: -9999em; visibility: hidden;" onload="this.style.position='static'; this.style.visibility='visible';" src="{$the-url}" width="105%" height="{$height}" frameborder="0" ></iframe>
     <p>If the server window does not load, please click <a href="{$the-url}" target="_blank"><font color="blue">here</font></a>.</p>
+</xsl:template>
+
+<!-- New client-side Linux shell tool: runs the sandboxed terminal entirely in the
+     student's browser, no Thayer server. Mirrors cmecode-client below (same
+     "position:absolute offscreen until onload" trick to avoid a layout jump, same
+     reused height buffer - both tools share the same terminal-panel chrome, just a
+     continuous command loop instead of a single compile-then-run). -->
+<xsl:template name="server-client">
+    <xsl:variable name="dummy">
+        <xsl:value-of select="@height"/>
+    </xsl:variable>
+    <xsl:variable name="base-height">
+       <xsl:choose>
+          <xsl:when test="$dummy &gt; 200">
+             <xsl:value-of select="@height"/>
+          </xsl:when>
+          <xsl:otherwise>
+             <xsl:text>300</xsl:text>
+          </xsl:otherwise>
+       </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="height" select="$base-height + $cmecode.client.height-buffer"/>
+    <!-- Always emit "?startingPoint=", even with nothing after it for a startPoint-less
+         element, mirroring cmecode-client's identical reasoning for "?src=" below - not
+         that it currently arises, every <server> in this book has a startPoint. -->
+    <xsl:variable name="the-url">
+        <xsl:value-of select="$server.client.tool"/>
+        <xsl:text>?startingPoint=</xsl:text>
+        <xsl:if test="@startPoint != ''">
+            <xsl:value-of select="$server.client.root"/>
+            <xsl:value-of select="@startPoint"/>
+            <xsl:text>.json</xsl:text>
+        </xsl:if>
+    </xsl:variable>
+    <iframe title="Linux Practice Window" allow="cross-origin-isolated" style="position: absolute; top: -9999em; visibility: hidden; border: none;" onload="this.style.position='static'; this.style.visibility='visible';" src="{$the-url}" width="100%" height="{$height}"></iframe>
 </xsl:template>
 
 <!-- Unlike cmecode (one fixed C program, so its source can be shown as static text), a server

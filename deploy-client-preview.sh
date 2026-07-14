@@ -40,6 +40,7 @@ PROJECT_NAME="cprog-client-preview"
 STAGE_DIR="output/cloudflare-client-preview"
 
 pretext build web-client
+./scripts/add-applets.sh output/web-client
 
 # coding-window/ and CMeCodeDir/ need to be siblings of the built pages, not
 # nested inside each other - matches the relative paths the XSL generates

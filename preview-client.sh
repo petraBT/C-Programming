@@ -17,6 +17,7 @@ set -e
 PORT="${1:-8299}"
 
 pretext build web-client
+./scripts/add-applets.sh output/web-client
 
 # coding-window/ and CMeCodeDir/ need to be siblings of the built pages - see
 # the cmecode.client.* param comments in xsl/c-programming-html.xsl for why.

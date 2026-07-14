@@ -36,6 +36,7 @@ pretext build web-static
 
 if [ "${DEPLOY_CLIENT:-}" = "1" ]; then
     pretext build web-client
+    ./scripts/add-applets.sh output/web-client
 fi
 
 # Set up a persistent worktree checked out to gh-pages, so publishing never touches

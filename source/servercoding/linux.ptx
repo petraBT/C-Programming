@@ -327,7 +327,7 @@
 			<p>Type <c>compile hello.c</c>, which will translate your code into machine language. The compiler names the resulting executable program "hello". In order to run this code, type <c>hello</c> (the name of the executable file resulting from compiling "hello.c").</p>
 			<p>Open your editor (NotePad++ on a PC or BBEdit on a Mac) and establish a connection to the ENGS20 server. Next, open "hello.c" in your editor. Make a change to your code, such as printing out your pet's name, and <alert>save</alert> the changes on the server.</p>
 			<p>Verify in the code window below that your code has indeed changed (hint: use the <c>less</c> command). Now, recompile and run your code to observe your printed changes.</p>
-			<server startPoint="engs20p_engs20Server" height="300" staticNote="This step uses your real ENGS20 account rather than a practice sandbox, so there's nothing to simulate here -- just follow these steps once you have Thayer network access."/>
+			<server startPoint="engs20p_engs20Server" height="300" forceStatic="yes" staticNote="This step uses your real ENGS20 account rather than a practice sandbox, so there's nothing to simulate here -- just follow these steps once you have Thayer network access."/>
 		</activity>
 	</section>
  
