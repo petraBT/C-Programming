@@ -7,16 +7,20 @@ isolated deployment (e.g. the Cloudflare Pages preview) would, instead of
 the non-interactive "Input" box fallback.
 
 Only applies these headers to pages that actually embed the coding-window
-tool (same allow-list approach as generate-headers.py, which produces the
-real Cloudflare _headers file - see that script's docstring for the full
-reasoning). Cross-origin isolation blocks any cross-origin subresource
-without a matching Cross-Origin-Resource-Policy header, which silently
-breaks things like YouTube video embeds and Google Docs embeds elsewhere in
-the book - confirmed live. Applying the headers blanket-wide was tried
-first and is exactly what caused that breakage; scoping to only the pages
-that need it avoids the problem entirely, including for embed types not
-yet audited. The page list is computed once at startup by scanning the
-served directory, so it can't drift out of sync with the actual content.
+tool (same allow-list approach as generate-middleware.py, which produces the
+real Cloudflare Pages Function used in production - see that script's
+docstring for the full reasoning, including why isolating pages that don't
+need it stays unsafe regardless of COEP mode chosen). Cross-origin isolation
+blocks any cross-origin subresource without a matching
+Cross-Origin-Resource-Policy header, which silently breaks things like
+YouTube video embeds and Google Docs embeds elsewhere in the book -
+confirmed live. Applying the headers blanket-wide was tried first and is
+exactly what caused that breakage; scoping to only the pages that need it
+avoids the problem entirely, including for embed types not yet audited. The
+page list is computed once at startup by scanning the served directory, so
+it can't drift out of sync with the actual content. No rule-count cap here
+(this is plain Python, not a declarative rules file), so unlike the
+production Function this script never needed to change for that reason.
 
 Usage: python3 serve-with-headers.py <port> <directory>
 """

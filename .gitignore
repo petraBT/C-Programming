@@ -5,6 +5,10 @@
 # don't track unpublished builds
 output
 
+# generated fresh by generate-middleware.py on every deploy-client-preview.sh
+# run - would drift out of sync with the book's content if committed
+functions/_middleware.js
+
 # local worktree used by deploy.sh to assemble/push the gh-pages branch
 .gh-pages-worktree
 
