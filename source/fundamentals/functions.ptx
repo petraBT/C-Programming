@@ -43,6 +43,10 @@
                 <c>c = sum(a,b)</c>
             </p>
         </aside>
+    </section>
+
+    <section xml:id="functions-single-practice">
+        <title>Practice: Single Functions</title>
         <reading-questions>
             <exercise xml:id="quiz-functions-1">
                 <statement>
@@ -77,6 +81,10 @@
                 </ul>
             </p>
         </aside>
+    </section>
+
+    <section xml:id="functions-multiple-practice">
+        <title>Practice: Multiple Functions</title>
         <reading-questions>
             <exercise xml:id="quiz-functions-3">
                 <statement>

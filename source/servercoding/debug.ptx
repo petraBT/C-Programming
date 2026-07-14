@@ -329,6 +329,10 @@
 		       </ul>
 		    </p>
 		</aside>
+	</section>
+
+	<section xml:id="debug-conditional-practice">
+		<title>Practice: Conditional Compilation</title>
 		<reading-questions>
 			<exercise xml:id="quiz-debug-7">
 				<statement>

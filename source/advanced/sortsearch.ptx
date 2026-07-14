@@ -34,6 +34,10 @@
 		       </ul>
 		    </p>
 		</aside>
+	</section>
+
+	<section xml:id="sortsearch-linear-quiz">
+		<title>Practice: Linear Search</title>
 		<reading-questions>
 			<exercise xml:id="quiz-sortsearch-1">
 				<statement>
@@ -229,6 +233,10 @@
 		       </ul>
 		    </p>
 		</aside>
+	</section>
+
+	<section xml:id="sortsearch-bisection-practice">
+		<title>Practice: Bisection Search</title>
 		<reading-questions>
 			<exercise xml:id="quiz-sortsearch-5">
 				<statement>
@@ -318,6 +326,10 @@
 		</aside>
 		<p>The animation below might help you visualize how bubble sort functions.</p>
 		<p>ADAMSAPPLET style="width:50%; height:150px; margin-left:auto; margin-right:auto;" data-program="sorters" data-types="bub-uno" data-size="20" data-duplicates="2" data-order="319,locked" ENDADAMSAPPLET</p>
+	</section>
+
+	<section xml:id="sortsearch-bubble-practice">
+		<title>Practice: Bubble Sort</title>
 		<reading-questions>
 			<exercise xml:id="quiz-sortsearch-6">
 				<statement>

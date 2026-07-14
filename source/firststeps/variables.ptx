@@ -111,6 +111,10 @@
                 printf("Result = %d", 5+10);
             </p>
         </aside>
+    </section>
+
+    <section xml:id="variables-calculations-practice">
+    	<title>Practice: Simple Calculations</title>
         <reading-questions>
             <exercise xml:id="quiz-printing-2">
                 <statement>

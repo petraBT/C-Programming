@@ -45,6 +45,10 @@
                 while (condition) { do this };
             </p>
         </aside>
+    </section>
+
+    <section xml:id="loops-while-practice">
+    	<title>Practice: The while Loop</title>
         <reading-questions>
             <exercise xml:id="quiz-loops-1">
                 <statement>
@@ -206,6 +210,10 @@ int main(void) {
                </ul>
             </p>
         </aside>
+    </section>
+
+    <section xml:id="loops-compound-practice">
+    	<title>Practice: Compound Assignment Operators</title>
         <reading-questions>
             <exercise xml:id="quiz-loops-5">
                 <statement>

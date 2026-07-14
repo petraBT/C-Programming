@@ -427,4 +427,26 @@ Example:
     <p>If you cannot see this MATLAB window, please click <a href="{$the-url}" target="_blank"><font color="blue">here</font></a>.</p>
 </xsl:template>
 
+<!-- Override core's runestone-link/mathjax-link (see pretext-html.xsl): those
+     reference runestone.academy/mathjax.org directly, and neither sends a
+     Cross-Origin-Resource-Policy header, so both logos get silently blocked
+     by the browser on any page that's cross-origin isolated (COOP/COEP,
+     needed for the coding-window tool's interactive stdin - see
+     cmecode-client below and this project's _headers file). Self-hosting
+     local copies (downloaded once into assets/images/) sidesteps this
+     entirely, since a same-origin image was never subject to COEP in the
+     first place. Same visual result either way - these are just two footer
+     attribution logos. -->
+<xsl:template name="runestone-link">
+    <a class="runestone-link" href="https://runestone.academy" title="Runestone Academy">
+        <img class="logo" src="external/images/RAIcon_cropped.png" alt="Runstone Academy logo"/>
+    </a>
+</xsl:template>
+
+<xsl:template name="mathjax-link">
+    <a class="mathjax-link" href="https://www.mathjax.org" title="MathJax">
+        <img class="logo" src="external/images/mathjax-badge-square-2.png" alt="MathJax logo"/>
+    </a>
+</xsl:template>
+
 </xsl:stylesheet>

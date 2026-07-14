@@ -67,6 +67,12 @@ if [ "${DEPLOY_CLIENT:-}" = "1" ]; then
     cp -R ../coding-window client-preview/
     mkdir -p client-preview/CMeCodeDir
     find ../CMeCodeDir -maxdepth 1 -name '*.c' -exec cp {} client-preview/CMeCodeDir/ \;
+    # .datafile.json: simulated file-input data for the handful of exercises
+    # that need it (fopen/fscanf against a pre-populated file) - see
+    # coding-window/README.md and loadStartingCode() in the tool's own
+    # src/main.ts. Harmless to copy for every exercise: the tool only reads
+    # one if its startPoint has a matching one, silently does nothing otherwise.
+    find ../CMeCodeDir -maxdepth 1 -name '*.datafile.json' -exec cp {} client-preview/CMeCodeDir/ \;
 fi
 
 # GitHub Pages runs Jekyll by default, which ignores underscore-prefixed folders

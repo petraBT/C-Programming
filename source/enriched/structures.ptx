@@ -419,6 +419,10 @@
 		       </ul>
 		    </p>
 		</aside>
+	</section>
+
+	<section xml:id="structures-pointers-practice">
+		<title>Practice: Structures and Pointers</title>
 		<reading-questions>
 			<exercise xml:id="quiz-structfunction-4">
 				<statement>

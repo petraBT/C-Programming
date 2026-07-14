@@ -23,6 +23,7 @@ pretext build web-client
 cp -R coding-window output/web-client/
 mkdir -p output/web-client/CMeCodeDir
 find CMeCodeDir -maxdepth 1 -name '*.c' -exec cp {} output/web-client/CMeCodeDir/ \;
+find CMeCodeDir -maxdepth 1 -name '*.datafile.json' -exec cp {} output/web-client/CMeCodeDir/ \;
 
 echo ""
 echo "Serving at http://localhost:$PORT/ (Ctrl-C to stop)"

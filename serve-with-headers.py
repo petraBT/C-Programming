@@ -6,19 +6,48 @@ preview actually shows the same interactive terminal a real cross-origin
 isolated deployment (e.g. the Cloudflare Pages preview) would, instead of
 the non-interactive "Input" box fallback.
 
+Only applies these headers to pages that actually embed the coding-window
+tool (same allow-list approach as generate-headers.py, which produces the
+real Cloudflare _headers file - see that script's docstring for the full
+reasoning). Cross-origin isolation blocks any cross-origin subresource
+without a matching Cross-Origin-Resource-Policy header, which silently
+breaks things like YouTube video embeds and Google Docs embeds elsewhere in
+the book - confirmed live. Applying the headers blanket-wide was tried
+first and is exactly what caused that breakage; scoping to only the pages
+that need it avoids the problem entirely, including for embed types not
+yet audited. The page list is computed once at startup by scanning the
+served directory, so it can't drift out of sync with the actual content.
+
 Usage: python3 serve-with-headers.py <port> <directory>
 """
 import http.server
 import sys
+from pathlib import Path
+
+NEEDLE = "coding-window/index.html"
 
 port = int(sys.argv[1]) if len(sys.argv) > 1 else 8299
 directory = sys.argv[2] if len(sys.argv) > 2 else "."
 
+isolated_pages = set()
+for html_file in Path(directory).glob("*.html"):
+    if NEEDLE in html_file.read_text(errors="ignore"):
+        isolated_pages.add("/" + html_file.name)
+print(f"Applying isolation headers to {len(isolated_pages)} page(s) that embed the coding-window tool.")
+
 
 class IsolatedRequestHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
-        self.send_header("Cross-Origin-Opener-Policy", "same-origin")
-        self.send_header("Cross-Origin-Embedder-Policy", "require-corp")
+        path_only = self.path.split("?", 1)[0]
+        # Cross-origin isolation must propagate through every frame in the
+        # ancestor chain (empirically confirmed earlier), so the
+        # coding-window tool's own files need these headers too, on top of
+        # whichever parent page embeds it. Safe to always isolate this path
+        # regardless of which page loaded it: only allow-listed pages ever
+        # embed the coding-window iframe in the first place.
+        if path_only in isolated_pages or "/coding-window/" in path_only:
+            self.send_header("Cross-Origin-Opener-Policy", "same-origin")
+            self.send_header("Cross-Origin-Embedder-Policy", "require-corp")
         super().end_headers()
 
 

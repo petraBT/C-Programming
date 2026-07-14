@@ -1,4 +1,3 @@
-/* Use the function showMyFile("filename") to display your file!*/
 #include <stdio.h>
 
 int main(void) {

@@ -87,6 +87,10 @@
 		       </ul>
 		    </p>
 		</aside>
+	</section>
+
+	<section xml:id="memory-functions-practice">
+		<title>Practice: Functions And The Stack</title>
 		<reading-questions>
 			<exercise xml:id="quiz-memory-2">
 				<statement>

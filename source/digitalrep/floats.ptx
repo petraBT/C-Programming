@@ -16,7 +16,7 @@
     </introduction>
 
     <section xml:id="floats-intro">
-        <title>Digital Representation of Floats</title>
+        <title>Review: Integer Division</title>
         <p>Recall the funny division behavior we notice in the C programming language when using integers. Feel free to play around in this code window to refresh your memory and experiment in order to analyze this behavior.</p>
         <cmecode startPoint="engs20p_Ndivision1" addOn="&amp;nocheck=true" height="300"></cmecode>
         <reading-questions>
@@ -148,6 +148,10 @@
             </hint>
             </exercise>
         </reading-questions>
+    </section>
+
+    <section xml:id="floats-representation">
+        <title>Digital Representation of Floats</title>
         <p>So far we have learned how integers (positive and negative) are stored in the computer's memory. How about decimal numbers, also known as floats?</p>
         <p>In this next video you'll find out how floats are stored in memory!</p>
         <aside>

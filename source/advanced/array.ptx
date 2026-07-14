@@ -237,6 +237,10 @@
 		       </ul>
 		    </p>
 		</aside>
+	</section>
+
+	<section xml:id="array-initialize-practice">
+		<title>Practice: Initializing Arrays</title>
 		<reading-questions>
 			<exercise xml:id="quiz-array-4">
 				<statement>

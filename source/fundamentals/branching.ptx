@@ -233,6 +233,10 @@
 		       </ul>
 		    </p>
 		</aside>
+	</section>
+
+	<section xml:id="branching-operators-practice">
+		<title>Practice: Relational and Equality Operators</title>
 		<reading-questions>
             <exercise xml:id="quiz-branching-3">
                 <statement>

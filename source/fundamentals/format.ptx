@@ -33,6 +33,10 @@
             <idx><h>format</h><h>specifiers</h><h>other</h></idx>
             <video xml:id="gr7DLw5i-1E" youtube="gr7DLw5i-1E" play-at="select"/>
         </figure>
+    </section>
+
+    <section xml:id="format-io-practice1">
+        <title>Practice with Format Specifiers</title>
         <reading-questions>
             <exercise xml:id="quiz-format-1">
                 <statement>
@@ -120,6 +124,10 @@
             </choices>
             </exercise>
         </reading-questions>
+    </section>
+
+    <section xml:id="format-io-formatting">
+        <title>Formatting Options</title>
         <p>Sometimes it is useful to use additional formatting options that are
         available for format specifiers in order to control the output more precisely.</p>
         <aside>
@@ -138,6 +146,10 @@
             </p>
         </aside>
         <video xml:id="YdY0a4e3Xmg" youtube="YdY0a4e3Xmg" play-at="select"/>
+    </section>
+
+    <section xml:id="format-io-practice2">
+        <title>Practice with Formatting Options</title>
         <reading-questions>
             <exercise xml:id="quiz-format-3">
                 <statement>
@@ -241,6 +253,10 @@
             <idx><c>scanf()</c></idx>
             <video xml:id="_5pfi_e7VyOc" youtube="5pfi_e7VyOc" play-at="select"/>
         </figure>
+    </section>
+
+    <section xml:id="format-scanf-practice">
+        <title>Practice with <c>scanf()</c></title>
         <reading-questions>
             <exercise xml:id="quiz-format-5">
                 <statement>

@@ -346,6 +346,10 @@
 		    </p>
 		</aside>
 		<video xml:id="_9AvLxDsvUBY" youtube="9AvLxDsvUBY" play-at="select"/>
+	</section>
+
+	<section xml:id="linux-languages-practice">
+		<title>Practice: Computer Languages</title>
 		<reading-questions>
 			<exercise xml:id="quiz-languages-1">
 				<statement>

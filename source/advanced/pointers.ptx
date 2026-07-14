@@ -49,6 +49,10 @@
 		       </ul>
 		    </p>
 		</aside>
+	</section>
+
+	<section xml:id="pointers-dereference-practice">
+		<title>Practice: Dereferencing a Pointer</title>
 		<reading-questions>
 			<exercise xml:id="quiz-pointers-1">
 				<statement>
@@ -160,6 +164,10 @@
 		       </ul>
 		    </p>
 		</aside>
+	</section>
+
+	<section xml:id="pointers-example-practice">
+		<title>Practice: Pointer Example</title>
 		<reading-questions>
 			<exercise xml:id="quiz-pointers-3">
 				<statement>
@@ -305,6 +313,10 @@
 		       </ul>
 		    </p>
 		</aside>
+	</section>
+
+	<section xml:id="pointers-arrays-practice">
+		<title>Practice: Arrays and Pointers</title>
 		<reading-questions>
 			<exercise xml:id="quiz-arithmetic-1">
 				<statement>
@@ -626,6 +638,10 @@
 		       </ul>
 		    </p>
 		</aside>
+	</section>
+
+	<section xml:id="pointers-functions-quiz">
+		<title>Practice: Passing Arrays to Functions</title>
 		<reading-questions>
 			<exercise xml:id="quiz-arrayfunction-1">
 				<statement>
