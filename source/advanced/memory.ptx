@@ -9,7 +9,7 @@
 
 
 <chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="memory">
-	<title>Memory</title>
+	<title>The Stack, Scope, and Numerical Errors</title>
 	<introduction>
 		<p>In this chapter, we will take a look at how variables are stored in memory, how much space is needed to store different types of variables and the limitations that come with having a finite amount of memory yet an infinite possibility of different numbers. We will also take a closer look at what happens to variables during a function call and with that, the "scope" of variables, that is those parts of your program that can see and use your variables.</p>
     </introduction>

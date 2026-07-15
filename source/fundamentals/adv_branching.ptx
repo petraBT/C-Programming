@@ -9,7 +9,7 @@
 
 
 <chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="adv-branching">
-	<title>Advanced Branching</title>
+	<title>Advanced Branching: switch and Nested Loops</title>
 	<introduction>
 		<p>In this chapter, we'll cover the following topics:</p>
 		<ul>

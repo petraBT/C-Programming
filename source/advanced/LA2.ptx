@@ -9,7 +9,7 @@
 
 
 <chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="la2">
-	<title>Long Assignment 2</title>
+	<title>Long Assignment 2: A Menu-Driven Program</title>
 	<section xml:id="la2-menu">
 		<title>LA2: Menu Selection</title>
 		<p>In your second Longer Assignment you'll be asked to implement a menu of choices for the user. In order to help you out we'll give you some sample code that you are welcome to use or modify.</p>

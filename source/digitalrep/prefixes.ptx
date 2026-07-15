@@ -8,7 +8,7 @@
 <!-- See the file COPYING for copying conditions.             -->
 
 <chapter xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="prefixes">
-	<title>Prefixes</title>
+	<title>Memory-Size Prefixes: Kilo, Mega, Giga</title>
 	<introduction>
         <p>Now that we have learned how three common data types (int, float, and char) are stored in memory, we will take a look at the memory itself and learn about some associated vocabulary conventions such as the use of the prefixes kilo, mega, giga, etc.</p>
 <!--        <p>Next, we will explore how logical operators and expressions work in C (and in coding, more generally). It turns out, our English language often makes certain assumptions when it comes to logic with which we are all familiar. But when talking to the computer we need to be more explicit so that our logic gets interpreted correctly.</p>
