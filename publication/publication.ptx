@@ -115,7 +115,14 @@
     <!--<css theme="salem" palette="leaves"/>-->
     <css theme="denver" palette="leaves"/>
     <!--<css theme="default-modern" palette="green-blue"/>-->
-    
+
+    <!-- Denver defaults to a "focused" sidebar ToC (only the current chapter's
+         entries are shown), which is why it looked collapsed - not a bug, just
+         a default. preexpanded-levels controls how many levels deep that
+         focused view auto-expands: 1 would show just chapter titles (the
+         default), 2 shows section titles under the current chapter too. -->
+    <tableofcontents focused="yes" preexpanded-levels="2"/>
+
     <search variant="default"/>
     <feedback href="https://docs.google.com/forms/d/e/1FAIpQLSdHJlbWz2sc8DrOMYa81E5mRqDKIgulXXfqEq-d48TcuzL9mw/viewform?usp=sf_link">
       <text>Report Errors</text>
