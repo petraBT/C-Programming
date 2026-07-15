@@ -97,6 +97,28 @@ the above CSS rule should block all output and error messages from those windows
    border: transparent !important;
 }
 
+/* Runestone wraps free-response ("journal"/shortanswer) questions in a bare
+   <form><fieldset>, which gets the browser's default 2px groove border with
+   no theme override. That fieldset wraps the ENTIRE activity statement,
+   not just the answer box - including any embedded coding-window iframe -
+   so the default border renders as a second, misaligned box cutting
+   through the middle of the activity, clashing with the activity's own
+   themed border. Some themes happen to reset fieldset borders elsewhere in
+   their own CSS and hide this; others (e.g. denver) don't. Also resets the
+   outer ".runestone" container's own 1px border for the same reason: in
+   this book's authoring style that container wraps the whole activity
+   statement too, not just the interactive widget, so its border is the
+   same kind of redundant double-box against the activity's own border -
+   confirmed live, this remained visible even after the fieldset fix above
+   until this was added too. */
+.runestone fieldset {
+  border: none !important;
+}
+
+.runestone.shortanswer_section {
+  border: none !important;
+}
+
 .ac_question {
   background-color: transparent !important;
 } /*removes the random green background from activities*/
