@@ -65,7 +65,7 @@
             <p>Try printing <c>Today is "Monday"!</c> to the screen. What happens?</p>
             <p>What is the correct way to print quotation marks?</p>
             <hint>
-                Be adventurous and try out various ideas! You can't break anything.
+                <p>Be adventurous and try out various ideas! You can't break anything.</p>
             </hint>
             <answer>
                 <ol>
