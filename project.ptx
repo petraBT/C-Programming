@@ -62,13 +62,10 @@
            xsl/c-programming-html.xsl for why). Machine-specific: update if this project is
            cloned somewhere else. -->
       <stringparam key="cmecode.root" value="/Users/dz00762/repos/C-Programming/CMeCodeDir/"/>
-      <!-- assets/_custom-styles.css was never actually wired into any build target (found
-           while chasing a Denver-theme rendering bug) - PreTeXt copies everything under
-           assets/ into <output>/external/ regardless, so the file silently existed in every
-           build's output without ever being <link>'d into a page. This is the documented
-           mechanism (see that file's own header comment) for including it: a relative URL,
-           since the XSL emits it directly as a <link href="..."> for the browser to resolve,
-           not a build-time filesystem path (unlike cmecode.root above). -->
+      <!-- assets/_custom-styles.css: a relative URL, not a filesystem path - the XSL emits
+           it directly as a <link href="..."> for the browser to resolve (unlike cmecode.root
+           above), and PreTeXt already copies everything under assets/ into
+           <output-dir>/external/ regardless of whether it's linked anywhere. -->
       <stringparam key="html.css.extra" value="external/_custom-styles.css"/>
     </target>
     <target name="latex">
