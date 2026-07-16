@@ -37,18 +37,14 @@ functionptr = printNumber;    /* implicit conversion, same effect */</cd>
             <statement>
                 <p>Define two functions, <c>float square(float x)</c> and <c>float cube(float x)</c>. Ask the user to enter a number and choose whether they want to square (2) or cube (3) it. Declare a function pointer, and use an <c>if</c>/<c>else</c> statement to assign it to the correct function based on the user's choice. Finally, use your function pointer to calculate and print the result.</p>
                 <cmecode startPoint="engs20p_NfuncPtrPractice1" addOn="&amp;nocheck=true" height="500"></cmecode>
-                <p><em>Record your code below.</em></p>
             </statement>
-            <response/>
         </activity>
 
         <activity xml:id="activity-funcptr-practice-2">
             <statement>
                 <p>Let's use a function pointer to convert a whole <em>batch</em> of temperatures! We have two functions, <c>float cTof(float c)</c> and <c>float fToc(float f)</c>. Ask the user which conversion they want to do (1 for Celsius&#8594;Fahrenheit, 2 for Fahrenheit&#8594;Celsius), declare a function pointer, and assign it to the correct function based on the user's choice. Then write a <c>for</c> loop that iterates through the temperature array, passing each value to your function pointer and printing the result.</p>
                 <cmecode startPoint="engs20p_NfuncPtrPractice2" addOn="&amp;nocheck=true" height="500"></cmecode>
-                <p><em>Record your code below.</em></p>
             </statement>
-            <response/>
         </activity>
     </section>
 
@@ -69,9 +65,7 @@ functionptr = printNumber;    /* implicit conversion, same effect */</cd>
                 </ul>
                 <p>Modify your Bubble Sort function to accept a callback as an extra argument, and inside the sort, replace your hardcoded <c>if</c> statement with a call to that callback. Test your code to sort in both ascending and descending order.</p>
                 <cmecode startPoint="engs20p_NcallbackPractice" addOn="&amp;nocheck=true" height="600"></cmecode>
-                <p><em>Record your code below.</em></p>
             </statement>
-            <response/>
         </activity>
     </section>
 

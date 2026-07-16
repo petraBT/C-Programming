@@ -361,9 +361,7 @@ int main(void) {
                     <p>A quick way to check that your program works is to ensure that the sum of the numbers from 1 to <em>n</em> equals <m>\frac{n(n+1)}{2}</m>.</p>
                     <p>Write two versions of this program: One using a <c>while</c>-loop, and another one using a <c>for</c>-loop.</p>
                     <cmecode startPoint="engs20p_Nloop5" height="400"></cmecode>
-                    <p><em>Record your code below.</em></p>
                 </statement>
-                <response/>
             </activity>
         </subsection>
 
@@ -381,9 +379,7 @@ int main(void) {
                         <output>The numbers you entered add up to 13.</output>
                     </console>
                     <cmecode startPoint="engs20p_Nloop6" height="400"></cmecode>
-                    <p><em>Record your code below.</em></p>
                 </statement>
-                <response/>
             </activity>
         </subsection>
 
@@ -394,9 +390,7 @@ int main(void) {
                     <p>Write a program that prompts the user for two numbers <em>p</em> and <em>q</em>, then calculates the greatest common divisor of <em>p</em> and <em>q</em>. You may do so using the "brute force" method: If <em>q</em> <m>\leq</m> <em>p</em>, for example, you simply check each of the divisors <em>q, q-1, q-2, ..., 1</em>, until you find one that divides both <em>p</em> and <em>q</em>.</p>
                     <p><em>Challenge: implement the Euclidean algorithm!</em></p>
                     <cmecode startPoint="engs20p_Nloop7" height="400"></cmecode>
-                    <p><em>Record your code below.</em></p>
                 </statement>
-                <response/>
             </activity>
         </subsection>
 
@@ -407,9 +401,7 @@ int main(void) {
                     <p>Write a program that determines whether a number entered by the user is prime (again, you may use the <lq/>brute force<rq/> method, going through all possible divisors 2, 3, 4, <ellipsis/>, <em>n</em>).</p>
                     <p>(You only really need to check factors up to <m>\sqrt{n}</m>.)</p>
                     <cmecode startPoint="engs20p_Nloop8" addOn="&amp;nocheck=true" height="400"></cmecode>
-                    <p><em>Record your code below.</em></p>
                 </statement>
-                <response/>
             </activity>
         </subsection>
     </section>

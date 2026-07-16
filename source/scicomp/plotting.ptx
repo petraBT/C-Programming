@@ -50,9 +50,7 @@ pclose(gfile);</cd>
                 </ol>
                 <p><em>This starting point plots via <c>popen()</c>, so it's shown read-only below &#8212; copy it into your own Linux environment to run it and see the plot.</em></p>
                 <cmecode startPoint="engs20p_NbisectionPractice" addOn="&amp;nocheck=true" height="500" forceStatic="yes"></cmecode>
-                <p><em>Record your code below.</em></p>
             </statement>
-            <response/>
         </activity>
     </section>
 

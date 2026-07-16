@@ -355,9 +355,7 @@
             </console>
             <p>Recall that the average needs to be of type float, please store it in the variable <c>ave</c> which has already been declared for your convenience.</p>
             <cmecode startPoint="engs20p_NAGAverage" height="500"></cmecode>
-            <p><em>Record your code below.</em></p>
         </statement>
-            <response/>
         </activity>
     </section>
 

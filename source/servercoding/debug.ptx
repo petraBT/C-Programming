@@ -505,9 +505,7 @@
 				</ul>
 				<p>The code window below contains a file <c>"sampleBarcode.txt"</c>. If you'd rather work on the server then you need to create your own such file and fill it with 12 integers.</p>
 				<cmecode startPoint="engs20p_NFileIO9" addOn="&amp;nocheck=true" height="500"></cmecode>
-				<p><em>Record your code below.</em></p>
 			</statement>
-			<response/>
 		</activity>
 	    
 		<subsection>

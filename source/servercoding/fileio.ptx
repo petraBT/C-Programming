@@ -73,9 +73,7 @@
 						<li>Take the square root of that average squared difference and you are done!</li>
 					</ol>
 					<cmecode startPoint="engs20p_NFileIO2" addOn="&amp;nocheck=true" height="400"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 
@@ -85,9 +83,7 @@
 				<statement>
 					<p>Modify the program we just wrote so that, instead of finding the average of the numbers in the file, it finds the largest number in the file.</p>
 					<cmecode startPoint="engs20p_NFileIO3" addOn="&amp;nocheck=true" height="400"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 
@@ -99,9 +95,7 @@
 					<p>As before, for now we are telling you how many characters are in the file, namely 9. So that you know what to expect, here is what the contents of the file looks like:</p>
 					<pre>chocolate</pre>
 					<cmecode startPoint="engs20p_NFileIO4" addOn="&amp;nocheck=true" height="400"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 	</section>

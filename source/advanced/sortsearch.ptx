@@ -302,9 +302,7 @@
 					<input prompt="Output: ">1</input>
 				</console>
 				<cmecode startPoint="engs20p_NlinearSearchPractice" addOn="&amp;nocheck=true" height="600"></cmecode>
-				<p><em>Record your code below.</em></p>
 			</statement>
-			<response/>
 		</activity>
 	</section>
 
@@ -408,9 +406,7 @@
 			<statement>
 				<p>Please implement the selection sort algorithm to sort the given array of numbers. Use a function to which you pass the unsorted array as well as its number of elements, and which sorts the array 'in place', meaning that the unsorted array is replaced by the sorted array (rather than creating a sorted copy). You can use the given function printArray() to check whether your algorithm performed correctly.</p>
 				<cmecode startPoint="engs20p_NselectionSortPractice" addOn="&amp;nocheck=true" height="500"></cmecode>
-				<p><em>Record your code below.</em></p>
 			</statement>
-			<response/>
 		</activity>
 	</section>
 
@@ -476,9 +472,7 @@
 					<li>Before partitioning, swap whichever of the first, last, and middle elements is the <em>median</em> of the three into the last position, so that value is used as the pivot.</li>
 				</ol>
 				<cmecode startPoint="engs20p_NquickSortChars" addOn="&amp;nocheck=true" height="500"></cmecode>
-				<p><em>Record your code below.</em></p>
 			</statement>
-			<response/>
 		</activity>
 	</section>
 
@@ -693,9 +687,7 @@ int main(void) {
 				<statement>
 					<p>Please write a function <c>printArray()</c>, to which you pass the number of elements in your list to be sorted as well as the list and the sort array. The function should print the list in the order defined by the sort array. </p>
 					<cmecode startPoint="engs20p_NsortArrayPrinting" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 
@@ -706,9 +698,7 @@ int main(void) {
 				<statement>
 					<p>Please implement the function <c>sortArray()</c>, to which you pass the number of elements in your list to be sorted, the unsorted array as well as a sort array, and which sorts the array, using bubble sort, by making changes only to the sort array.</p>
 					<cmecode startPoint="engs20p_NsortArrayPractice" addOn="&amp;nocheck=true" height="500"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 	</section>

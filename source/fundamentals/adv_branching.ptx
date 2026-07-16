@@ -33,9 +33,7 @@
 					<pre>We are in the month of March.</pre>
 					<p>Your program should use a <c>switch()</c> statement.</p>
 					<cmecode startPoint="engs20p_Nswitch2" addOn="&amp;nocheck=true" height="600"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 	</section>
@@ -137,9 +135,7 @@
 					</pre>
 					<p><em>Your program should use nested loops to accomplish this task.</em></p>
 					<cmecode startPoint="engs20p_NNestedLoops2" addOn="&amp;nocheck=true" height="400"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
     </section>

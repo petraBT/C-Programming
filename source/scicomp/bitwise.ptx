@@ -62,27 +62,21 @@
             <statement>
                 <p>Write a C function that prints the binary representation of an unsigned integer entered by the user. Instead of using division and remainders, you must use bitwise operators (specifically, right-shift and AND) to read and print the bits directly.</p>
                 <cmecode startPoint="engs20p_NprintBinaryBitwise" addOn="&amp;nocheck=true" height="450"></cmecode>
-                <p><em>Record your code below.</em></p>
             </statement>
-            <response/>
         </activity>
 
         <activity xml:id="activity-bitwise-bit-checking">
             <statement>
                 <p>Write a C function that checks whether the <m>k</m>-th bit of an integer <m>n</m> is set (1) or not (0). The convention is to count bits from the right, starting at 0. In <c>main()</c>, ask the user to enter an integer as well as the bit position they want to check, call your function to evaluate the bit, and print the conclusion to the screen.</p>
                 <cmecode startPoint="engs20p_NbitChecking" addOn="&amp;nocheck=true" height="450"></cmecode>
-                <p><em>Record your code below.</em></p>
             </statement>
-            <response/>
         </activity>
 
         <activity xml:id="activity-bitwise-bit-counting">
             <statement>
                 <p>Write a C program to count the number of 1s in the binary representation of a number. Ask the user for an integer, pass it to a function <c>countBits()</c> that counts the set bits and returns this count, and print the result in <c>main()</c>.</p>
                 <cmecode startPoint="engs20p_NbitCounting" addOn="&amp;nocheck=true" height="450"></cmecode>
-                <p><em>Record your code below.</em></p>
             </statement>
-            <response/>
         </activity>
     </section>
 
@@ -102,18 +96,14 @@
             <statement>
                 <p>We want to write code that helps us figure out whether it is currently summer. Declare an enum <c>month</c> with all twelve months (think about what value you want the first month to have). Ask the user to enter the number of the current month, and cast their integer input into your enum type. Finally, write a <c>switch</c> statement using your enum constants that prints <q>It's the summer</q> during June, July, August, or September, and <q>It's not summer</q> otherwise.</p>
                 <cmecode startPoint="engs20p_NenumMonthPractice" addOn="&amp;nocheck=true" height="450"></cmecode>
-                <p><em>Record your code below.</em></p>
             </statement>
-            <response/>
         </activity>
 
         <activity xml:id="activity-bitwise-enum-printstate">
             <statement>
                 <p>Improve the <q>Machine State</q> example from above so that it prints the actual <em>name</em> of the state as text, rather than just printing the integer. To do this, add a function <c>printStateName()</c> that takes the machine state as an input parameter, and, inside the function, uses a <c>switch</c> statement to print the correct text for each case.</p>
                 <cmecode startPoint="engs20p_NenumPrintState" addOn="&amp;nocheck=true" height="400"></cmecode>
-                <p><em>Record your code below.</em></p>
             </statement>
-            <response/>
         </activity>
     </section>
 

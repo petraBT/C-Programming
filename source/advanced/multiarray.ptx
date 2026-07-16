@@ -392,9 +392,7 @@
 				<p>Your first job is to write a function <c>printText()</c>, to which you pass the array of strings as well as the number of words stored in the array, and which prints the text to the screen (thereby making the corresponding lines in the main function redundant: you can delete those lines). </p>
 				<p> You may notice that the text makes no sense. Your second job, therefore, is to print the text in reverse. You only have to reverse the order of the words, not the characters in an individual word. Please use a function <c>printReverseText()</c> for this purpose.</p>
 				<cmecode startPoint="engs20p_NmultidimensionalArraysFunctions1" addOn="&amp;nocheck=true" height="500"></cmecode>
-				<p><em>Record your code below.</em></p>
 			</statement>
-			<response/>
 		</activity>
 	</section>
 

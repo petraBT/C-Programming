@@ -191,9 +191,7 @@
 				  	<li>write a function <c>printPoint()</c> to which you pass a variable of type <c>point_t</c> (by value) and that prints out the coordinates of the variable in the form (x,y).</li>
 				</ul>
 				<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="700"></cmecode>
-				<p><em>Record your code below.</em></p>
 			</statement>
-			<response/>
 		</activity>
 	</section>
 
@@ -206,9 +204,7 @@
 				<statement>
 					<p>So let’s declare a triangle. To do so, all we need is an array that holds three points, thus an array with three elements of type <c>point_t</c>. Declare a variable triangle with these features.</p>
 					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 
@@ -218,9 +214,7 @@
 				<statement>
 					<p>Now store the vertices (0,0), (2,0), (1,3) in the variable triangle, using the function <c>initializePoint()</c>.</p>
 					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 
@@ -230,9 +224,7 @@
 				<statement>
 					<p>Write a function <c>printTriangle()</c> to which you pass an array of three points, and which prints out the coordinates of these three points. The function <c>printTriangle()</c> should call the function <c>printPoint()</c>.</p>
 					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 	</section>
@@ -253,9 +245,7 @@
 			<statement>
 				<p>Write a function <c>createPolygon()</c> to which you can pass an integer and that reserves space in memory for an array of points of that size and returns a pointer to that array. Just to be on the safe side, have this function also initialize all coordinates to (0.0,0.0).</p>
 				<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
-				<p><em>Record your code below.</em></p>
 			</statement>
-			<response/>
 		</activity>
 	</section>
 
@@ -267,9 +257,7 @@
 				<statement>
 					<p>Use the function <c>createPolygon</c> to create a pentagon (5 vertices) with vertices (0,0), (1,0), (2,1), (1,3), (0,1).</p>
 					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 
@@ -279,9 +267,7 @@
 				<statement>
 					<p>Finally... Write a function <c>printPoly()</c> to which you pass a polygon and a number (its number of vertices), and which prints out these vertices.</p>
 					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 
@@ -291,9 +277,7 @@
 				<statement>
 					<p>One last step, free the allocated memory!</p>
 					<cmecode startPoint="engs20p_NarraysOfStructures" addOn="&amp;nocheck=true" height="600"></cmecode>
-					<p><em>Record your code below.</em></p>
 				</statement>
-				<response/>
 			</activity>
 		</subsection>
 	</section>
