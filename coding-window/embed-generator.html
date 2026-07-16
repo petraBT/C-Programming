@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas Embed Generator</title>
+    <style>
+      :root { color-scheme: light; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        color: #222;
+      }
+      #app { max-width: 900px; margin: 0 auto; }
+      h1 { font-size: 22px; margin-bottom: 4px; }
+      .subtitle { color: #666; margin-top: 0; margin-bottom: 24px; }
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 6px;
+        margin-top: 20px;
+      }
+      .hint { font-weight: 400; color: #888; }
+      input[type="text"], input[type="number"] {
+        width: 100%;
+        font-family: inherit;
+        font-size: 14px;
+        padding: 8px 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .dims { display: flex; gap: 16px; }
+      .dims > div { flex: 1; }
+      textarea {
+        width: 100%;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        font-size: 13px;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        resize: vertical;
+      }
+      #code-input { height: 220px; }
+      #generate-btn {
+        margin-top: 20px;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 10px 24px;
+        background: #2b6cb0;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      #generate-btn:hover { background: #24578f; }
+      #output-section { display: none; margin-top: 28px; border-top: 1px solid #eee; padding-top: 20px; }
+      .output-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+      .output-row label { margin: 0; flex: 1; }
+      #snippet-output { height: 100px; background: #f7f7f7; }
+      button.copy-btn {
+        font-size: 12px;
+        color: #555;
+        background: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      button.copy-btn:hover { background: #e6e6e6; }
+      button.copy-btn.copied { background: #dff0d8; border-color: #b7dfb0; color: #3c763d; }
+      #preview-frame {
+        margin-top: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .note {
+        font-size: 12px;
+        color: #999;
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Canvas Embed Generator</h1>
+      <p class="subtitle">Paste a one-off starting point below to get iframe HTML for Canvas — nothing gets hosted or saved anywhere, everything lives in the URL itself.</p>
+
+      <label for="base-url">Coding window URL <span class="hint">(where this tool is deployed)</span></label>
+      <input type="text" id="base-url" value="https://cprog-client-preview.pages.dev/coding-window/index.html" />
+
+      <label for="code-input">Starting C code</label>
+      <textarea id="code-input" spellcheck="false">#include &lt;stdio.h&gt;
+
+int main(void) {
+    printf("Hello, world!\n");
+    return 0;
+}
+</textarea>
+
+      <label for="dims">Embed size</label>
+      <div class="dims" id="dims">
+        <div>
+          <input type="number" id="width" value="850" min="200" />
+        </div>
+        <div>
+          <input type="number" id="height" value="650" min="200" />
+        </div>
+      </div>
+
+      <button id="generate-btn" type="button">Generate</button>
+
+      <div id="output-section">
+        <div class="output-row">
+          <label for="snippet-output">Paste this into Canvas (HTML editor view)</label>
+          <button class="copy-btn" id="copy-btn" type="button">Copy</button>
+        </div>
+        <textarea id="snippet-output" readonly spellcheck="false"></textarea>
+        <p class="note">Interactive typing won't work inside Canvas (Canvas doesn't isolate its pages) — students get a small "type your input first" box instead of a live terminal. Code auto-saves per-browser; the Download button is still the safe way to keep a permanent copy.</p>
+
+        <label>Live preview</label>
+        <iframe id="preview-frame" allow="cross-origin-isolated" style="border: none;"></iframe>
+      </div>
+    </div>
+
+    <script>
+      // Matches decodeInlineCode() in src/main.ts exactly - base64url (URL-safe
+      // alphabet, no padding) so the result drops straight into a query string
+      // with no percent-encoding needed.
+      function encodeInlineCode(code) {
+        const bytes = new TextEncoder().encode(code)
+        let binary = ''
+        bytes.forEach(b => { binary += String.fromCharCode(b) })
+        const base64 = btoa(binary)
+        return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+      }
+
+      const generateBtn = document.getElementById('generate-btn')
+      const copyBtn = document.getElementById('copy-btn')
+      const outputSection = document.getElementById('output-section')
+      const snippetOutput = document.getElementById('snippet-output')
+      const previewFrame = document.getElementById('preview-frame')
+
+      generateBtn.addEventListener('click', () => {
+        const baseUrl = document.getElementById('base-url').value.trim()
+        const code = document.getElementById('code-input').value
+        const width = document.getElementById('width').value || '850'
+        const height = document.getElementById('height').value || '650'
+
+        const encoded = encodeInlineCode(code)
+        const src = `${baseUrl}?code=${encoded}`
+        const html = `<iframe\n  src="${src}"\n  allow="cross-origin-isolated"\n  width="${width}"\n  height="${height}"\n  style="border: none;">\n</iframe>`
+
+        snippetOutput.value = html
+        previewFrame.src = src
+        previewFrame.width = width
+        previewFrame.height = height
+        outputSection.style.display = 'block'
+        copyBtn.textContent = 'Copy'
+        copyBtn.classList.remove('copied')
+      })
+
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(snippetOutput.value)
+          copyBtn.textContent = 'Copied!'
+          copyBtn.classList.add('copied')
+        } catch (e) {
+          snippetOutput.select()
+          copyBtn.textContent = 'Select-all instead'
+        }
+      })
+    </script>
+  </body>
+</html>
