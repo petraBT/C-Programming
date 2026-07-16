@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+typedef struct {
+            char name[30];
+            long id;
+            int class;
+} student_t;
+
+int main(void)
+{
+    student_t me = {"Petra", 123456L, 1994};
+       
+    /* Complete the commands to have the user enter a new 
+       student name, id and class year: */
+       
+    printf("Name: ");
+    scanf("%s", );
+    
+    printf("id: ");
+    scanf("%ld", );
+    
+    printf("class: ");
+    scanf("%d",  );
+    
+    /* Test whether the input worked: */          
+    printf("Student %s ", );
+    printf("with id %ld ", );
+    printf("belongs to the class of %d.", );
+    
+    return(0);
+}
