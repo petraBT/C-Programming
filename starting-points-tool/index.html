@@ -101,11 +101,14 @@
       .sp-detail .edit-status { font-size: 12px; }
       .sp-detail .edit-status.error { color: #b3413a; }
       .sp-detail .edit-status.success { color: #2f7a3d; }
+      button.secondary {
+        background: transparent;
+      }
 
       .scope-toggle { display: flex; gap: 16px; margin-top: 16px; }
       .scope-toggle label { display: flex; align-items: center; gap: 6px; font-weight: 400; margin: 0; }
 
-      #topic-new-row { display: none; margin-top: 10px; }
+      #category-new-row { display: none; margin-top: 10px; }
 
       button.primary {
         margin-top: 20px;
@@ -151,7 +154,7 @@
   <body>
     <div id="app">
       <h1>Starting Points</h1>
-      <p class="subtitle">Browse everything in <code>CMeCodeDir/</code> (book) and <code>QuizStartDir/</code> (Canvas/quiz), create new ones, and generate Canvas embed HTML.</p>
+      <p class="subtitle">Browse everything in <code>CMeCodeDir/</code> (book) and <code>CanvasStartDir/</code> (Canvas short assignments, quizzes, tests), create new ones, and generate Canvas embed HTML.</p>
 
       <label for="origin-input">Deployed site origin <span class="hint">(used to build embed URLs - files must be committed + deployed to actually work there)</span></label>
       <input type="text" id="origin-input" value="https://cprog-client-preview.pages.dev" />
@@ -170,16 +173,14 @@
       <div id="panel-create" class="panel">
         <div class="scope-toggle">
           <label><input type="radio" name="scope" value="book" checked /> Book (CMeCodeDir)</label>
-          <label><input type="radio" name="scope" value="quiz" /> Canvas / quiz (QuizStartDir)</label>
+          <label><input type="radio" name="scope" value="canvas" /> Canvas (CanvasStartDir)</label>
         </div>
 
-        <div id="topic-row" style="display:none;">
-          <label for="topic-select">Topic</label>
-          <select id="topic-select">
-            <option value="__new__">+ New topic...</option>
-          </select>
-          <div id="topic-new-row">
-            <input type="text" id="topic-new-input" placeholder="e.g. arrays" />
+        <div id="category-row" style="display:none;">
+          <label for="category-select">Category <span class="hint">(e.g. Short Assignment, Canvas Quiz, Test - whatever categories already exist, plus any new one you type)</span></label>
+          <select id="category-select"></select>
+          <div id="category-new-row">
+            <input type="text" id="category-new-input" placeholder="e.g. Short Assignment" />
           </div>
         </div>
 
@@ -202,13 +203,17 @@ int main(void) {
     </div>
 
     <script>
-      let data = {book: [], quiz: {}}
+      // Categories always offered even if nothing's been saved under them yet -
+      // merged with whatever category folders already exist on disk.
+      const SUGGESTED_CATEGORIES = ['Short Assignment', 'Canvas Quiz', 'Test']
+
+      let data = {book: [], canvas: {}}
 
       async function loadData() {
         const res = await fetch('/api/starting-points')
         data = await res.json()
         renderBrowse()
-        renderTopicOptions()
+        renderCategoryOptions()
       }
 
       // --- tabs ----------------------------------------------------------
@@ -257,21 +262,21 @@ int main(void) {
           }
         }
 
-        // Quiz, grouped by topic folder.
-        const quizEntries = Object.entries(data.quiz)
-          .map(([topic, items]) => [topic, items.filter(sp => !filter || sp.name.toLowerCase().includes(filter))])
+        // Canvas, grouped by category folder.
+        const canvasEntries = Object.entries(data.canvas)
+          .map(([category, items]) => [category, items.filter(sp => !filter || sp.name.toLowerCase().includes(filter))])
           .filter(([, items]) => items.length > 0)
-        if (quizEntries.length > 0) {
+        if (canvasEntries.length > 0) {
           const h2 = document.createElement('h2')
-          h2.textContent = 'Canvas / Quiz (QuizStartDir)'
+          h2.textContent = 'Canvas (CanvasStartDir)'
           h2.style.marginTop = '24px'
           browseListEl.appendChild(h2)
-          for (const [topic, items] of quizEntries.sort()) {
-            appendGroup(topic, items)
+          for (const [category, items] of canvasEntries.sort()) {
+            appendGroup(category, items)
           }
         }
 
-        if (Object.keys(bookGroups).length === 0 && quizEntries.length === 0) {
+        if (Object.keys(bookGroups).length === 0 && canvasEntries.length === 0) {
           const p = document.createElement('p')
           p.className = 'note'
           p.textContent = filter ? 'No starting points match that filter.' : 'No starting points found.'
@@ -321,6 +326,11 @@ int main(void) {
         saveBtn.type = 'button'
         saveBtn.textContent = 'Save changes'
         editRow.appendChild(saveBtn)
+        const closeBtn = document.createElement('button')
+        closeBtn.type = 'button'
+        closeBtn.className = 'secondary'
+        closeBtn.textContent = 'Close'
+        editRow.appendChild(closeBtn)
         const editStatus = document.createElement('span')
         editStatus.className = 'edit-status'
         editRow.appendChild(editStatus)
@@ -330,15 +340,28 @@ int main(void) {
         detail.appendChild(embedContainer)
 
         let loaded = false
+        let lastSavedContent = ''
+
         editBtn.addEventListener('click', async () => {
           const open = detail.classList.toggle('open')
           if (open && !loaded) {
             const res = await fetch(`/api/file?path=${encodeURIComponent(sp.path)}`)
             const json = await res.json()
-            codeArea.value = json.content || ''
+            lastSavedContent = json.content || ''
+            codeArea.value = lastSavedContent
             if (json.error) { editStatus.textContent = json.error; editStatus.className = 'edit-status error' }
             loaded = true
           }
+        })
+
+        // Just looking, not saving anything: reverts any typed-but-unsaved
+        // edits back to what's actually on disk and closes, rather than
+        // leaving stray changes sitting in the textarea if it's reopened.
+        closeBtn.addEventListener('click', () => {
+          codeArea.value = lastSavedContent
+          editStatus.textContent = ''
+          editStatus.className = 'edit-status'
+          detail.classList.remove('open')
         })
 
         saveBtn.addEventListener('click', async () => {
@@ -352,6 +375,7 @@ int main(void) {
             })
             const json = await res.json()
             if (!res.ok) throw new Error(json.error || 'Save failed')
+            lastSavedContent = codeArea.value
             editStatus.textContent = 'Saved.'
             editStatus.className = 'edit-status success'
           } catch (e) {
@@ -378,10 +402,18 @@ int main(void) {
         return document.getElementById('origin-input').value.trim().replace(/\/$/, '')
       }
 
+      // Percent-encodes each path segment separately (not the "/" separators),
+      // since categories can contain spaces ("Short Assignment") - a raw
+      // space in a URL is invalid, but naively encoding the whole relPath
+      // would also mangle the "/"s.
+      function urlForRelPath(origin, relPath) {
+        return origin + '/' + relPath.split('/').map(encodeURIComponent).join('/')
+      }
+
       function buildEmbedSection(relPath) {
         const origin = originValue()
         const toolUrl = `${origin}/coding-window/index.html`
-        const fileUrl = `${origin}/${relPath}`
+        const fileUrl = urlForRelPath(origin, relPath)
         const src = `${toolUrl}?src=${fileUrl}`
 
         const container = document.createElement('div')
@@ -454,10 +486,10 @@ int main(void) {
       // --- create ----------------------------------------------------------
 
       const scopeRadios = document.querySelectorAll('input[name="scope"]')
-      const topicRow = document.getElementById('topic-row')
-      const topicSelect = document.getElementById('topic-select')
-      const topicNewRow = document.getElementById('topic-new-row')
-      const topicNewInput = document.getElementById('topic-new-input')
+      const categoryRow = document.getElementById('category-row')
+      const categorySelect = document.getElementById('category-select')
+      const categoryNewRow = document.getElementById('category-new-row')
+      const categoryNewInput = document.getElementById('category-new-input')
       const nameInput = document.getElementById('name-input')
       const codeInput = document.getElementById('code-input')
       const saveBtn = document.getElementById('save-btn')
@@ -466,39 +498,35 @@ int main(void) {
 
       for (const r of scopeRadios) {
         r.addEventListener('change', () => {
-          topicRow.style.display = currentScope() === 'quiz' ? 'block' : 'none'
+          categoryRow.style.display = currentScope() === 'canvas' ? 'block' : 'none'
         })
       }
 
-      topicSelect.addEventListener('change', () => {
-        topicNewRow.style.display = topicSelect.value === '__new__' ? 'block' : 'none'
+      categorySelect.addEventListener('change', () => {
+        categoryNewRow.style.display = categorySelect.value === '__new__' ? 'block' : 'none'
       })
 
       function currentScope() {
         return document.querySelector('input[name="scope"]:checked').value
       }
 
-      function renderTopicOptions() {
-        const topics = Object.keys(data.quiz).sort()
-        topicSelect.innerHTML = ''
-        for (const t of topics) {
+      function renderCategoryOptions() {
+        const categories = Array.from(new Set([...SUGGESTED_CATEGORIES, ...Object.keys(data.canvas)])).sort()
+        categorySelect.innerHTML = ''
+        for (const c of categories) {
           const opt = document.createElement('option')
-          opt.value = t
-          opt.textContent = t
-          topicSelect.appendChild(opt)
+          opt.value = c
+          opt.textContent = c
+          categorySelect.appendChild(opt)
         }
         const newOpt = document.createElement('option')
         newOpt.value = '__new__'
-        newOpt.textContent = '+ New topic...'
-        topicSelect.appendChild(newOpt)
-        if (topics.length === 0) {
-          topicSelect.value = '__new__'
-          topicNewRow.style.display = 'block'
-        }
+        newOpt.textContent = '+ New category...'
+        categorySelect.appendChild(newOpt)
       }
 
-      function currentTopic() {
-        return topicSelect.value === '__new__' ? topicNewInput.value.trim() : topicSelect.value
+      function currentCategory() {
+        return categorySelect.value === '__new__' ? categoryNewInput.value.trim() : categorySelect.value
       }
 
       saveBtn.addEventListener('click', async () => {
@@ -509,11 +537,11 @@ int main(void) {
         const scope = currentScope()
         const name = nameInput.value.trim()
         const code = codeInput.value
-        const topic = scope === 'quiz' ? currentTopic() : undefined
+        const category = scope === 'canvas' ? currentCategory() : undefined
 
         const existingNames = scope === 'book'
           ? data.book.map(sp => sp.name)
-          : (data.quiz[topic] || []).map(sp => sp.name)
+          : (data.canvas[category] || []).map(sp => sp.name)
         let overwrite = false
         if (existingNames.includes(name)) {
           if (!confirm(`"${name}" already exists in this location. Overwrite it?`)) return
@@ -524,7 +552,7 @@ int main(void) {
           const res = await fetch('/api/save', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({scope, topic, name, code, overwrite}),
+            body: JSON.stringify({scope, category, name, code, overwrite}),
           })
           const json = await res.json()
           if (!res.ok) throw new Error(json.error || 'Save failed')

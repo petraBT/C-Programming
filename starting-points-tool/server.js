@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 // Small local authoring tool for C starting points - browse everything in
-// CMeCodeDir/ (book) and QuizStartDir/ (Canvas/quiz one-offs), create new
-// ones, and generate Canvas embed HTML for any of them. No dependencies -
-// plain Node http/fs/path only, so `node starting-points-tool/server.js` is
-// the entire setup. Binds to 127.0.0.1 only: this reads and writes the book
-// repo's working tree, so it's not meant to be reachable from anywhere but
-// this machine.
+// CMeCodeDir/ (book) and CanvasStartDir/ (Canvas one-offs: short
+// assignments, quizzes, tests), create new ones, and generate Canvas embed
+// HTML for any of them. No dependencies - plain Node http/fs/path only, so
+// `node starting-points-tool/server.js` is the entire setup. Binds to
+// 127.0.0.1 only: this reads and writes the book repo's working tree, so
+// it's not meant to be reachable from anywhere but this machine.
 //
-// This only ever writes into CMeCodeDir/ or QuizStartDir/ - it doesn't touch
-// git (no add/commit/push) and doesn't touch source/**/*.ptx. For a new BOOK
-// starting point, this gets the .c file in place; you still add the actual
-// <cmecode startPoint="..."> to the relevant chapter yourself - that's
-// authoring the book's content, not something this tool should guess at.
+// This only ever writes into CMeCodeDir/ or CanvasStartDir/ - it doesn't
+// touch git (no add/commit/push) and doesn't touch source/**/*.ptx. For a
+// new BOOK starting point, this gets the .c file in place; you still add
+// the actual <cmecode startPoint="..."> to the relevant chapter yourself -
+// that's authoring the book's content, not something this tool should
+// guess at.
 
 const http = require('http')
 const fs = require('fs')
@@ -19,7 +20,7 @@ const path = require('path')
 
 const ROOT = path.resolve(__dirname, '..')
 const CME_CODE_DIR = path.join(ROOT, 'CMeCodeDir')
-const QUIZ_START_DIR = path.join(ROOT, 'QuizStartDir')
+const CANVAS_START_DIR = path.join(ROOT, 'CanvasStartDir')
 const SOURCE_DIR = path.join(ROOT, 'source')
 const PORT = 5050
 
@@ -28,10 +29,25 @@ const PORT = 5050
 // than trying to allow-and-escape a wider character set.
 const SAFE_NAME = /^[A-Za-z0-9_-]+$/
 
-function assertSafeName(name, label) {
-  if (typeof name !== 'string' || !SAFE_NAME.test(name)) {
-    throw new Error(`${label} must contain only letters, digits, "_", "-" (got: ${JSON.stringify(name)})`)
+// Categories are a folder name too, but they're meant to be read as a label
+// ("Short Assignment", "Canvas Quiz") rather than a code identifier, so this
+// allows spaces - still excludes "/", ".", and other path-traversal-risky
+// characters. Embed URLs percent-encode each path segment separately (see
+// urlForRelPath in index.html) so a space here doesn't produce a broken URL.
+const SAFE_CATEGORY = /^[A-Za-z0-9 _-]+$/
+
+function assertSafe(value, label, pattern, allowedDesc) {
+  if (typeof value !== 'string' || value.trim() === '' || !pattern.test(value)) {
+    throw new Error(`${label} must contain only ${allowedDesc} (got: ${JSON.stringify(value)})`)
   }
+}
+
+function assertSafeName(name, label) {
+  assertSafe(name, label, SAFE_NAME, 'letters, digits, "_", "-"')
+}
+
+function assertSafeCategory(category, label) {
+  assertSafe(category, label, SAFE_CATEGORY, 'letters, digits, spaces, "_", "-"')
 }
 
 // --- listing -----------------------------------------------------------
@@ -80,23 +96,23 @@ function listBookStartingPoints() {
     .sort((a, b) => a.name.localeCompare(b.name))
 }
 
-function listQuizStartingPoints() {
-  const byTopic = {}
-  if (!fs.existsSync(QUIZ_START_DIR)) return byTopic
-  for (const entry of fs.readdirSync(QUIZ_START_DIR, {withFileTypes: true})) {
+function listCanvasStartingPoints() {
+  const byCategory = {}
+  if (!fs.existsSync(CANVAS_START_DIR)) return byCategory
+  for (const entry of fs.readdirSync(CANVAS_START_DIR, {withFileTypes: true})) {
     if (!entry.isDirectory()) continue
-    const topicDir = path.join(QUIZ_START_DIR, entry.name)
-    byTopic[entry.name] = fs.readdirSync(topicDir)
+    const categoryDir = path.join(CANVAS_START_DIR, entry.name)
+    byCategory[entry.name] = fs.readdirSync(categoryDir)
       .filter(f => f.endsWith('.c'))
-      .map(f => ({name: f.slice(0, -2), path: `QuizStartDir/${entry.name}/${f}`}))
+      .map(f => ({name: f.slice(0, -2), path: `CanvasStartDir/${entry.name}/${f}`}))
       .sort((a, b) => a.name.localeCompare(b.name))
   }
-  return byTopic
+  return byCategory
 }
 
 // --- saving --------------------------------------------------------------
 
-function saveStartingPoint({scope, topic, name, code, overwrite}) {
+function saveStartingPoint({scope, category, name, code, overwrite}) {
   assertSafeName(name, 'Name')
   if (typeof code !== 'string' || code.trim().length === 0) throw new Error('Code is empty')
 
@@ -104,14 +120,14 @@ function saveStartingPoint({scope, topic, name, code, overwrite}) {
   if (scope === 'book') {
     full = path.join(CME_CODE_DIR, `${name}.c`)
     relPath = `CMeCodeDir/${name}.c`
-  } else if (scope === 'quiz') {
-    assertSafeName(topic, 'Topic')
-    const topicDir = path.join(QUIZ_START_DIR, topic)
-    fs.mkdirSync(topicDir, {recursive: true})
-    full = path.join(topicDir, `${name}.c`)
-    relPath = `QuizStartDir/${topic}/${name}.c`
+  } else if (scope === 'canvas') {
+    assertSafeCategory(category, 'Category')
+    const categoryDir = path.join(CANVAS_START_DIR, category)
+    fs.mkdirSync(categoryDir, {recursive: true})
+    full = path.join(categoryDir, `${name}.c`)
+    relPath = `CanvasStartDir/${category}/${name}.c`
   } else {
-    throw new Error('scope must be "book" or "quiz"')
+    throw new Error('scope must be "book" or "canvas"')
   }
 
   if (fs.existsSync(full) && !overwrite) {
@@ -123,11 +139,11 @@ function saveStartingPoint({scope, topic, name, code, overwrite}) {
 
 function resolveContentPath(rel) {
   // rel is always one of the paths this same server just handed back from
-  // /api/starting-points, not an arbitrary client-supplied path - still
-  // double-checked here rather than trusted blindly.
+  // /api/starting-points or /api/file - not an arbitrary client-supplied
+  // path - still double-checked here rather than trusted blindly.
   const full = path.resolve(ROOT, rel)
-  if (!full.startsWith(CME_CODE_DIR + path.sep) && !full.startsWith(QUIZ_START_DIR + path.sep)) {
-    throw new Error('Refusing to read outside CMeCodeDir/QuizStartDir')
+  if (!full.startsWith(CME_CODE_DIR + path.sep) && !full.startsWith(CANVAS_START_DIR + path.sep)) {
+    throw new Error('Refusing to read outside CMeCodeDir/CanvasStartDir')
   }
   return full
 }
@@ -178,7 +194,7 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, 'http://localhost')
 
     if (url.pathname === '/api/starting-points' && req.method === 'GET') {
-      sendJson(res, 200, {book: listBookStartingPoints(), quiz: listQuizStartingPoints()})
+      sendJson(res, 200, {book: listBookStartingPoints(), canvas: listCanvasStartingPoints()})
       return
     }
 
@@ -196,7 +212,7 @@ const server = http.createServer(async (req, res) => {
     // Overwrites an EXISTING file in place, given one of the paths this same
     // server already handed back from /api/starting-points or /api/file -
     // separate from /api/save, which is about creating a new entry (name/
-    // topic validation, collision checks) rather than editing one that's
+    // category validation, collision checks) rather than editing one that's
     // already there.
     if (url.pathname === '/api/file' && req.method === 'POST') {
       const body = JSON.parse(await readBody(req))
