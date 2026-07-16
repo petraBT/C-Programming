@@ -62,7 +62,7 @@
         border-radius: 4px;
         resize: vertical;
       }
-      #filter-input { margin-top: 0; }
+      #canvas-filter-input, #book-filter-input { margin-top: 0; }
       #origin-input { margin-top: 0; }
 
       .sp-row {
@@ -160,14 +160,21 @@
       <input type="text" id="origin-input" value="https://cprog-client-preview.pages.dev" />
 
       <div id="tabs">
-        <button id="tab-browse-btn" class="active" type="button">Browse</button>
+        <button id="tab-canvas-btn" class="active" type="button">Canvas</button>
+        <button id="tab-book-btn" type="button">Book</button>
         <button id="tab-create-btn" type="button">Create New</button>
       </div>
 
-      <div id="panel-browse" class="panel active">
-        <label for="filter-input">Filter</label>
-        <input type="text" id="filter-input" placeholder="Filter by name..." />
-        <div id="browse-list"></div>
+      <div id="panel-canvas" class="panel active">
+        <label for="canvas-filter-input">Filter</label>
+        <input type="text" id="canvas-filter-input" placeholder="Filter by name..." />
+        <div id="canvas-list"></div>
+      </div>
+
+      <div id="panel-book" class="panel">
+        <label for="book-filter-input">Filter</label>
+        <input type="text" id="book-filter-input" placeholder="Filter by name..." />
+        <div id="book-list"></div>
       </div>
 
       <div id="panel-create" class="panel">
@@ -212,38 +219,71 @@ int main(void) {
       async function loadData() {
         const res = await fetch('/api/starting-points')
         data = await res.json()
-        renderBrowse()
+        renderCanvas()
+        renderBook()
         renderCategoryOptions()
       }
 
       // --- tabs ----------------------------------------------------------
 
-      const tabBrowseBtn = document.getElementById('tab-browse-btn')
+      const tabCanvasBtn = document.getElementById('tab-canvas-btn')
+      const tabBookBtn = document.getElementById('tab-book-btn')
       const tabCreateBtn = document.getElementById('tab-create-btn')
-      const panelBrowse = document.getElementById('panel-browse')
+      const panelCanvas = document.getElementById('panel-canvas')
+      const panelBook = document.getElementById('panel-book')
       const panelCreate = document.getElementById('panel-create')
 
-      tabBrowseBtn.addEventListener('click', () => switchTab('browse'))
+      tabCanvasBtn.addEventListener('click', () => switchTab('canvas'))
+      tabBookBtn.addEventListener('click', () => switchTab('book'))
       tabCreateBtn.addEventListener('click', () => switchTab('create'))
 
       function switchTab(name) {
-        tabBrowseBtn.classList.toggle('active', name === 'browse')
+        tabCanvasBtn.classList.toggle('active', name === 'canvas')
+        tabBookBtn.classList.toggle('active', name === 'book')
         tabCreateBtn.classList.toggle('active', name === 'create')
-        panelBrowse.classList.toggle('active', name === 'browse')
+        panelCanvas.classList.toggle('active', name === 'canvas')
+        panelBook.classList.toggle('active', name === 'book')
         panelCreate.classList.toggle('active', name === 'create')
       }
 
-      // --- browse ----------------------------------------------------------
+      // --- browse: canvas ----------------------------------------------------
 
-      const browseListEl = document.getElementById('browse-list')
-      const filterInput = document.getElementById('filter-input')
-      filterInput.addEventListener('input', renderBrowse)
+      const canvasListEl = document.getElementById('canvas-list')
+      const canvasFilterInput = document.getElementById('canvas-filter-input')
+      canvasFilterInput.addEventListener('input', renderCanvas)
 
-      function renderBrowse() {
-        const filter = filterInput.value.trim().toLowerCase()
-        browseListEl.innerHTML = ''
+      function renderCanvas() {
+        const filter = canvasFilterInput.value.trim().toLowerCase()
+        canvasListEl.innerHTML = ''
 
-        // Book, grouped by the first chapter that references it (or "Unreferenced").
+        // Grouped by category folder.
+        const canvasEntries = Object.entries(data.canvas)
+          .map(([category, items]) => [category, items.filter(sp => !filter || sp.name.toLowerCase().includes(filter))])
+          .filter(([, items]) => items.length > 0)
+
+        for (const [category, items] of canvasEntries.sort()) {
+          appendGroup(canvasListEl, category, items)
+        }
+
+        if (canvasEntries.length === 0) {
+          const p = document.createElement('p')
+          p.className = 'note'
+          p.textContent = filter ? 'No starting points match that filter.' : 'No starting points found.'
+          canvasListEl.appendChild(p)
+        }
+      }
+
+      // --- browse: book --------------------------------------------------
+
+      const bookListEl = document.getElementById('book-list')
+      const bookFilterInput = document.getElementById('book-filter-input')
+      bookFilterInput.addEventListener('input', renderBook)
+
+      function renderBook() {
+        const filter = bookFilterInput.value.trim().toLowerCase()
+        bookListEl.innerHTML = ''
+
+        // Grouped by the first chapter that references it (or "Unreferenced").
         const bookGroups = {}
         for (const sp of data.book) {
           if (filter && !sp.name.toLowerCase().includes(filter)) continue
@@ -252,44 +292,25 @@ int main(void) {
           if (!bookGroups[label]) bookGroups[label] = []
           bookGroups[label].push(sp)
         }
-        if (Object.keys(bookGroups).length > 0) {
-          const h2 = document.createElement('h2')
-          h2.textContent = 'Book (CMeCodeDir)'
-          h2.style.marginTop = '20px'
-          browseListEl.appendChild(h2)
-          for (const [label, items] of Object.entries(bookGroups).sort()) {
-            appendGroup(label, items)
-          }
+
+        for (const [label, items] of Object.entries(bookGroups).sort()) {
+          appendGroup(bookListEl, label, items)
         }
 
-        // Canvas, grouped by category folder.
-        const canvasEntries = Object.entries(data.canvas)
-          .map(([category, items]) => [category, items.filter(sp => !filter || sp.name.toLowerCase().includes(filter))])
-          .filter(([, items]) => items.length > 0)
-        if (canvasEntries.length > 0) {
-          const h2 = document.createElement('h2')
-          h2.textContent = 'Canvas (CanvasStartDir)'
-          h2.style.marginTop = '24px'
-          browseListEl.appendChild(h2)
-          for (const [category, items] of canvasEntries.sort()) {
-            appendGroup(category, items)
-          }
-        }
-
-        if (Object.keys(bookGroups).length === 0 && canvasEntries.length === 0) {
+        if (Object.keys(bookGroups).length === 0) {
           const p = document.createElement('p')
           p.className = 'note'
           p.textContent = filter ? 'No starting points match that filter.' : 'No starting points found.'
-          browseListEl.appendChild(p)
+          bookListEl.appendChild(p)
         }
       }
 
-      function appendGroup(label, items) {
+      function appendGroup(containerEl, label, items) {
         const h3 = document.createElement('h3')
         h3.textContent = label
-        browseListEl.appendChild(h3)
+        containerEl.appendChild(h3)
         for (const sp of items) {
-          browseListEl.appendChild(buildRow(sp))
+          containerEl.appendChild(buildRow(sp))
         }
       }
 
