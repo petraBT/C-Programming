@@ -58,10 +58,24 @@
         cursor: pointer;
       }
       #generate-btn:hover { background: #24578f; }
-      #output-section { display: none; margin-top: 28px; border-top: 1px solid #eee; padding-top: 20px; }
+      #output-section { display: none; margin-top: 28px; }
+      .option {
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+        margin-top: 20px;
+      }
+      .option h2 {
+        font-size: 16px;
+        margin: 0 0 2px 0;
+      }
+      .option .option-desc {
+        font-size: 13px;
+        color: #666;
+        margin: 0 0 14px 0;
+      }
       .output-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
       .output-row label { margin: 0; flex: 1; }
-      #snippet-output { height: 100px; background: #f7f7f7; }
+      #snippet-output, #link-snippet-output { height: 100px; background: #f7f7f7; }
       button.copy-btn {
         font-size: 12px;
         color: #555;
@@ -83,6 +97,12 @@
         font-size: 12px;
         color: #999;
         margin-top: 4px;
+      }
+      #try-link {
+        display: inline-block;
+        margin-top: 8px;
+        font-size: 13px;
+        color: #2b6cb0;
       }
     </style>
   </head>
@@ -116,15 +136,31 @@ int main(void) {
       <button id="generate-btn" type="button">Generate</button>
 
       <div id="output-section">
-        <div class="output-row">
-          <label for="snippet-output">Paste this into Canvas (HTML editor view)</label>
-          <button class="copy-btn" id="copy-btn" type="button">Copy</button>
-        </div>
-        <textarea id="snippet-output" readonly spellcheck="false"></textarea>
-        <p class="note">Interactive typing won't work inside Canvas (Canvas doesn't isolate its pages) — students get a small "type your input first" box instead of a live terminal. Code auto-saves per-browser; the Download button is still the safe way to keep a permanent copy.</p>
+        <div class="option">
+          <h2>Option A — Inline (iframe)</h2>
+          <p class="option-desc">Embedded directly in the Canvas page. Canvas doesn't isolate its own pages, so this always falls back to a "type your input first" box instead of a live terminal — fine for exercises with little or no stdin, otherwise use Option B.</p>
+          <div class="output-row">
+            <label for="snippet-output">Paste this into Canvas (HTML editor view)</label>
+            <button class="copy-btn" id="copy-btn" type="button">Copy</button>
+          </div>
+          <textarea id="snippet-output" readonly spellcheck="false"></textarea>
 
-        <label>Live preview</label>
-        <iframe id="preview-frame" allow="cross-origin-isolated" style="border: none;"></iframe>
+          <label>Live preview</label>
+          <iframe id="preview-frame" allow="cross-origin-isolated" style="border: none;"></iframe>
+        </div>
+
+        <div class="option">
+          <h2>Option B — Opens in a new tab (fully interactive)</h2>
+          <p class="option-desc">A plain link instead of an iframe. Opened this way, the exercise is its own top-level tab with no parent frame in the way, so it gets real interactive typing - same as the book. Trade-off: it opens outside the Canvas page rather than sitting inline in it.</p>
+          <div class="output-row">
+            <label for="link-snippet-output">Paste this into Canvas (HTML editor view)</label>
+            <button class="copy-btn" id="link-copy-btn" type="button">Copy</button>
+          </div>
+          <textarea id="link-snippet-output" readonly spellcheck="false"></textarea>
+          <a id="try-link" href="#" target="_blank" rel="noopener">Try it in a new tab &rarr;</a>
+        </div>
+
+        <p class="note">Either way, code auto-saves per-browser as the student types; the Download button is still the safe way to keep a permanent copy.</p>
       </div>
     </div>
 
@@ -141,10 +177,27 @@ int main(void) {
       }
 
       const generateBtn = document.getElementById('generate-btn')
-      const copyBtn = document.getElementById('copy-btn')
       const outputSection = document.getElementById('output-section')
       const snippetOutput = document.getElementById('snippet-output')
       const previewFrame = document.getElementById('preview-frame')
+      const linkSnippetOutput = document.getElementById('link-snippet-output')
+      const tryLink = document.getElementById('try-link')
+
+      function wireCopyButton(buttonId, sourceEl) {
+        const btn = document.getElementById(buttonId)
+        btn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(sourceEl.value)
+            btn.textContent = 'Copied!'
+            btn.classList.add('copied')
+          } catch (e) {
+            sourceEl.select()
+            btn.textContent = 'Select-all instead'
+          }
+        })
+      }
+      wireCopyButton('copy-btn', snippetOutput)
+      wireCopyButton('link-copy-btn', linkSnippetOutput)
 
       generateBtn.addEventListener('click', () => {
         const baseUrl = document.getElementById('base-url').value.trim()
@@ -154,25 +207,20 @@ int main(void) {
 
         const encoded = encodeInlineCode(code)
         const src = `${baseUrl}?code=${encoded}`
-        const html = `<iframe\n  src="${src}"\n  allow="cross-origin-isolated"\n  width="${width}"\n  height="${height}"\n  style="border: none;">\n</iframe>`
 
-        snippetOutput.value = html
+        snippetOutput.value = `<iframe\n  src="${src}"\n  allow="cross-origin-isolated"\n  width="${width}"\n  height="${height}"\n  style="border: none;">\n</iframe>`
         previewFrame.src = src
         previewFrame.width = width
         previewFrame.height = height
-        outputSection.style.display = 'block'
-        copyBtn.textContent = 'Copy'
-        copyBtn.classList.remove('copied')
-      })
 
-      copyBtn.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(snippetOutput.value)
-          copyBtn.textContent = 'Copied!'
-          copyBtn.classList.add('copied')
-        } catch (e) {
-          snippetOutput.select()
-          copyBtn.textContent = 'Select-all instead'
+        linkSnippetOutput.value = `<a href="${src}" target="_blank" rel="noopener">Open coding exercise</a>`
+        tryLink.href = src
+
+        outputSection.style.display = 'block'
+        for (const id of ['copy-btn', 'link-copy-btn']) {
+          const btn = document.getElementById(id)
+          btn.textContent = 'Copy'
+          btn.classList.remove('copied')
         }
       })
     </script>
