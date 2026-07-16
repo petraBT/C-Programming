@@ -41,7 +41,7 @@
     </part>
 
     <part xml:id="part-fundamentals">
-        <title>Fundamentals</title>
+        <title>Control Flow and Functions</title>
         <xi:include href="fundamentals/branching.ptx"/>
         <xi:include href="fundamentals/adv_branching.ptx"/>
         <xi:include href="fundamentals/format.ptx"/>
@@ -57,7 +57,7 @@
     </part>
 
     <part xml:id="part-advanced">
-        <title>Advanced Concepts</title>
+        <title>Arrays, Pointers, and Memory Management</title>
         <xi:include href="advanced/array.ptx"/>
         <xi:include href="advanced/memory.ptx"/>
         <xi:include href="advanced/pointers.ptx"/>
@@ -69,7 +69,7 @@
     </part>
 
     <part xml:id="part-enriched">
-        <title>Enriched Concepts</title>
+        <title>Structures, Linked Lists, and Libraries</title>
         <xi:include href="enriched/structures.ptx"/>
         <xi:include href="enriched/array_structures.ptx"/>
         <xi:include href="enriched/linked_lists.ptx"/>
