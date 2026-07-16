@@ -193,6 +193,21 @@ const server = http.createServer(async (req, res) => {
       return
     }
 
+    // Overwrites an EXISTING file in place, given one of the paths this same
+    // server already handed back from /api/starting-points or /api/file -
+    // separate from /api/save, which is about creating a new entry (name/
+    // topic validation, collision checks) rather than editing one that's
+    // already there.
+    if (url.pathname === '/api/file' && req.method === 'POST') {
+      const body = JSON.parse(await readBody(req))
+      const full = resolveContentPath(body.path || '')
+      if (!fs.existsSync(full)) throw new Error(`${body.path} doesn't exist - use /api/save to create it`)
+      if (typeof body.code !== 'string' || body.code.trim().length === 0) throw new Error('Code is empty')
+      fs.writeFileSync(full, body.code)
+      sendJson(res, 200, {path: body.path})
+      return
+    }
+
     serveStatic(req, res)
   } catch (e) {
     sendJson(res, 400, {error: e.message})

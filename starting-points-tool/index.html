@@ -93,12 +93,14 @@
         border-radius: 4px;
       }
       .sp-detail.open { display: block; }
-      .sp-detail pre {
-        margin: 0 0 10px 0;
-        white-space: pre-wrap;
-        font-family: "SFMono-Regular", Consolas, monospace;
-        font-size: 12.5px;
+      .sp-detail textarea.edit-code {
+        height: 220px;
+        margin-bottom: 8px;
       }
+      .sp-detail .edit-row { display: flex; align-items: center; gap: 10px; }
+      .sp-detail .edit-status { font-size: 12px; }
+      .sp-detail .edit-status.error { color: #b3413a; }
+      .sp-detail .edit-status.success { color: #2f7a3d; }
 
       .scope-toggle { display: flex; gap: 16px; margin-top: 16px; }
       .scope-toggle label { display: flex; align-items: center; gap: 6px; font-weight: 400; margin: 0; }
@@ -295,10 +297,10 @@ int main(void) {
         nameEl.textContent = sp.name
         row.appendChild(nameEl)
 
-        const viewBtn = document.createElement('button')
-        viewBtn.type = 'button'
-        viewBtn.textContent = 'View'
-        row.appendChild(viewBtn)
+        const editBtn = document.createElement('button')
+        editBtn.type = 'button'
+        editBtn.textContent = 'Edit'
+        row.appendChild(editBtn)
 
         const embedBtn = document.createElement('button')
         embedBtn.type = 'button'
@@ -307,17 +309,54 @@ int main(void) {
 
         const detail = document.createElement('div')
         detail.className = 'sp-detail'
-        const pre = document.createElement('pre')
-        detail.appendChild(pre)
+
+        const codeArea = document.createElement('textarea')
+        codeArea.className = 'edit-code'
+        codeArea.spellcheck = false
+        detail.appendChild(codeArea)
+
+        const editRow = document.createElement('div')
+        editRow.className = 'edit-row'
+        const saveBtn = document.createElement('button')
+        saveBtn.type = 'button'
+        saveBtn.textContent = 'Save changes'
+        editRow.appendChild(saveBtn)
+        const editStatus = document.createElement('span')
+        editStatus.className = 'edit-status'
+        editRow.appendChild(editStatus)
+        detail.appendChild(editRow)
+
         const embedContainer = document.createElement('div')
         detail.appendChild(embedContainer)
 
-        viewBtn.addEventListener('click', async () => {
+        let loaded = false
+        editBtn.addEventListener('click', async () => {
           const open = detail.classList.toggle('open')
-          if (open && !pre.textContent) {
+          if (open && !loaded) {
             const res = await fetch(`/api/file?path=${encodeURIComponent(sp.path)}`)
             const json = await res.json()
-            pre.textContent = json.content || json.error || ''
+            codeArea.value = json.content || ''
+            if (json.error) { editStatus.textContent = json.error; editStatus.className = 'edit-status error' }
+            loaded = true
+          }
+        })
+
+        saveBtn.addEventListener('click', async () => {
+          editStatus.textContent = ''
+          editStatus.className = 'edit-status'
+          try {
+            const res = await fetch('/api/file', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({path: sp.path, code: codeArea.value}),
+            })
+            const json = await res.json()
+            if (!res.ok) throw new Error(json.error || 'Save failed')
+            editStatus.textContent = 'Saved.'
+            editStatus.className = 'edit-status success'
+          } catch (e) {
+            editStatus.textContent = e.message
+            editStatus.className = 'edit-status error'
           }
         })
 
