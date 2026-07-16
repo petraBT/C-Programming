@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Starting Points</title>
+    <style>
+      :root { color-scheme: light; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        color: #222;
+      }
+      #app { max-width: 960px; margin: 0 auto; }
+      h1 { font-size: 22px; margin-bottom: 4px; }
+      h2 { font-size: 15px; margin: 0 0 10px 0; }
+      h3 { font-size: 14px; margin: 22px 0 6px 0; color: #444; }
+      .subtitle { color: #666; margin-top: 0; margin-bottom: 20px; }
+
+      #tabs { display: flex; gap: 8px; border-bottom: 1px solid #eee; margin-bottom: 20px; }
+      #tabs button {
+        font-size: 14px;
+        font-weight: 600;
+        padding: 10px 16px;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: #888;
+        cursor: pointer;
+      }
+      #tabs button.active { color: #2b6cb0; border-bottom-color: #2b6cb0; }
+
+      .panel { display: none; }
+      .panel.active { display: block; }
+
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 6px;
+        margin-top: 16px;
+      }
+      .hint { font-weight: 400; color: #888; }
+      input[type="text"], select {
+        width: 100%;
+        font-family: inherit;
+        font-size: 14px;
+        padding: 8px 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      textarea {
+        width: 100%;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+        font-size: 13px;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        resize: vertical;
+      }
+      #filter-input { margin-top: 0; }
+      #origin-input { margin-top: 0; }
+
+      .sp-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 0;
+        border-bottom: 1px solid #f3f3f3;
+        font-size: 13px;
+      }
+      .sp-row .sp-name { font-family: "SFMono-Regular", Consolas, monospace; flex: 1; }
+      .sp-row button {
+        font-size: 12px;
+        color: #555;
+        background: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 4px 9px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .sp-row button:hover { background: #e6e6e6; }
+      .sp-detail {
+        display: none;
+        margin: 6px 0 12px 0;
+        padding: 12px;
+        background: #f7f7f7;
+        border-radius: 4px;
+      }
+      .sp-detail.open { display: block; }
+      .sp-detail pre {
+        margin: 0 0 10px 0;
+        white-space: pre-wrap;
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 12.5px;
+      }
+
+      .scope-toggle { display: flex; gap: 16px; margin-top: 16px; }
+      .scope-toggle label { display: flex; align-items: center; gap: 6px; font-weight: 400; margin: 0; }
+
+      #topic-new-row { display: none; margin-top: 10px; }
+
+      button.primary {
+        margin-top: 20px;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 10px 24px;
+        background: #2b6cb0;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button.primary:hover { background: #24578f; }
+
+      #create-status { margin-top: 14px; font-size: 13px; }
+      #create-status.error { color: #b3413a; }
+      #create-status.success { color: #2f7a3d; }
+
+      .embed-output {
+        margin-top: 16px;
+        border-top: 1px solid #eee;
+        padding-top: 16px;
+      }
+      .embed-output h4 { font-size: 13px; margin: 14px 0 4px 0; }
+      .embed-output .desc { font-size: 12px; color: #888; margin: 0 0 6px 0; }
+      .embed-output textarea { height: 90px; background: #f7f7f7; }
+      .embed-output .copy-row { display: flex; align-items: center; gap: 10px; }
+      .embed-output .copy-row label { margin: 0; flex: 1; }
+      button.copy-btn {
+        font-size: 12px;
+        color: #555;
+        background: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px 10px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      button.copy-btn.copied { background: #dff0d8; border-color: #b7dfb0; color: #3c763d; }
+      .note { font-size: 12px; color: #999; margin-top: 4px; }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Starting Points</h1>
+      <p class="subtitle">Browse everything in <code>CMeCodeDir/</code> (book) and <code>QuizStartDir/</code> (Canvas/quiz), create new ones, and generate Canvas embed HTML.</p>
+
+      <label for="origin-input">Deployed site origin <span class="hint">(used to build embed URLs - files must be committed + deployed to actually work there)</span></label>
+      <input type="text" id="origin-input" value="https://cprog-client-preview.pages.dev" />
+
+      <div id="tabs">
+        <button id="tab-browse-btn" class="active" type="button">Browse</button>
+        <button id="tab-create-btn" type="button">Create New</button>
+      </div>
+
+      <div id="panel-browse" class="panel active">
+        <label for="filter-input">Filter</label>
+        <input type="text" id="filter-input" placeholder="Filter by name..." />
+        <div id="browse-list"></div>
+      </div>
+
+      <div id="panel-create" class="panel">
+        <div class="scope-toggle">
+          <label><input type="radio" name="scope" value="book" checked /> Book (CMeCodeDir)</label>
+          <label><input type="radio" name="scope" value="quiz" /> Canvas / quiz (QuizStartDir)</label>
+        </div>
+
+        <div id="topic-row" style="display:none;">
+          <label for="topic-select">Topic</label>
+          <select id="topic-select">
+            <option value="__new__">+ New topic...</option>
+          </select>
+          <div id="topic-new-row">
+            <input type="text" id="topic-new-input" placeholder="e.g. arrays" />
+          </div>
+        </div>
+
+        <label for="name-input">Name <span class="hint">(becomes the filename, and for book mode the startPoint value)</span></label>
+        <input type="text" id="name-input" placeholder="e.g. engs20p_NquizArrays1" />
+
+        <label for="code-input">Starting C code</label>
+        <textarea id="code-input" spellcheck="false" style="height:220px;">#include &lt;stdio.h&gt;
+
+int main(void) {
+    printf("Hello, world!\n");
+    return 0;
+}
+</textarea>
+
+        <button class="primary" id="save-btn" type="button">Save</button>
+        <div id="create-status"></div>
+        <div id="create-embed-output"></div>
+      </div>
+    </div>
+
+    <script>
+      let data = {book: [], quiz: {}}
+
+      async function loadData() {
+        const res = await fetch('/api/starting-points')
+        data = await res.json()
+        renderBrowse()
+        renderTopicOptions()
+      }
+
+      // --- tabs ----------------------------------------------------------
+
+      const tabBrowseBtn = document.getElementById('tab-browse-btn')
+      const tabCreateBtn = document.getElementById('tab-create-btn')
+      const panelBrowse = document.getElementById('panel-browse')
+      const panelCreate = document.getElementById('panel-create')
+
+      tabBrowseBtn.addEventListener('click', () => switchTab('browse'))
+      tabCreateBtn.addEventListener('click', () => switchTab('create'))
+
+      function switchTab(name) {
+        tabBrowseBtn.classList.toggle('active', name === 'browse')
+        tabCreateBtn.classList.toggle('active', name === 'create')
+        panelBrowse.classList.toggle('active', name === 'browse')
+        panelCreate.classList.toggle('active', name === 'create')
+      }
+
+      // --- browse ----------------------------------------------------------
+
+      const browseListEl = document.getElementById('browse-list')
+      const filterInput = document.getElementById('filter-input')
+      filterInput.addEventListener('input', renderBrowse)
+
+      function renderBrowse() {
+        const filter = filterInput.value.trim().toLowerCase()
+        browseListEl.innerHTML = ''
+
+        // Book, grouped by the first chapter that references it (or "Unreferenced").
+        const bookGroups = {}
+        for (const sp of data.book) {
+          if (filter && !sp.name.toLowerCase().includes(filter)) continue
+          const ref = sp.referencedBy[0]
+          const label = ref ? (ref.title || ref.file) : 'Unreferenced'
+          if (!bookGroups[label]) bookGroups[label] = []
+          bookGroups[label].push(sp)
+        }
+        if (Object.keys(bookGroups).length > 0) {
+          const h2 = document.createElement('h2')
+          h2.textContent = 'Book (CMeCodeDir)'
+          h2.style.marginTop = '20px'
+          browseListEl.appendChild(h2)
+          for (const [label, items] of Object.entries(bookGroups).sort()) {
+            appendGroup(label, items)
+          }
+        }
+
+        // Quiz, grouped by topic folder.
+        const quizEntries = Object.entries(data.quiz)
+          .map(([topic, items]) => [topic, items.filter(sp => !filter || sp.name.toLowerCase().includes(filter))])
+          .filter(([, items]) => items.length > 0)
+        if (quizEntries.length > 0) {
+          const h2 = document.createElement('h2')
+          h2.textContent = 'Canvas / Quiz (QuizStartDir)'
+          h2.style.marginTop = '24px'
+          browseListEl.appendChild(h2)
+          for (const [topic, items] of quizEntries.sort()) {
+            appendGroup(topic, items)
+          }
+        }
+
+        if (Object.keys(bookGroups).length === 0 && quizEntries.length === 0) {
+          const p = document.createElement('p')
+          p.className = 'note'
+          p.textContent = filter ? 'No starting points match that filter.' : 'No starting points found.'
+          browseListEl.appendChild(p)
+        }
+      }
+
+      function appendGroup(label, items) {
+        const h3 = document.createElement('h3')
+        h3.textContent = label
+        browseListEl.appendChild(h3)
+        for (const sp of items) {
+          browseListEl.appendChild(buildRow(sp))
+        }
+      }
+
+      function buildRow(sp) {
+        const row = document.createElement('div')
+        row.className = 'sp-row'
+
+        const nameEl = document.createElement('span')
+        nameEl.className = 'sp-name'
+        nameEl.textContent = sp.name
+        row.appendChild(nameEl)
+
+        const viewBtn = document.createElement('button')
+        viewBtn.type = 'button'
+        viewBtn.textContent = 'View'
+        row.appendChild(viewBtn)
+
+        const embedBtn = document.createElement('button')
+        embedBtn.type = 'button'
+        embedBtn.textContent = 'Generate Embed HTML'
+        row.appendChild(embedBtn)
+
+        const detail = document.createElement('div')
+        detail.className = 'sp-detail'
+        const pre = document.createElement('pre')
+        detail.appendChild(pre)
+        const embedContainer = document.createElement('div')
+        detail.appendChild(embedContainer)
+
+        viewBtn.addEventListener('click', async () => {
+          const open = detail.classList.toggle('open')
+          if (open && !pre.textContent) {
+            const res = await fetch(`/api/file?path=${encodeURIComponent(sp.path)}`)
+            const json = await res.json()
+            pre.textContent = json.content || json.error || ''
+          }
+        })
+
+        embedBtn.addEventListener('click', () => {
+          detail.classList.add('open')
+          embedContainer.innerHTML = ''
+          embedContainer.appendChild(buildEmbedSection(sp.path))
+        })
+
+        const wrapper = document.createDocumentFragment()
+        wrapper.appendChild(row)
+        wrapper.appendChild(detail)
+        return wrapper
+      }
+
+      // --- embed HTML generation ----------------------------------------
+
+      function originValue() {
+        return document.getElementById('origin-input').value.trim().replace(/\/$/, '')
+      }
+
+      function buildEmbedSection(relPath) {
+        const origin = originValue()
+        const toolUrl = `${origin}/coding-window/index.html`
+        const fileUrl = `${origin}/${relPath}`
+        const src = `${toolUrl}?src=${fileUrl}`
+
+        const container = document.createElement('div')
+        container.className = 'embed-output'
+
+        const iframeHtml = `<iframe\n  src="${src}"\n  allow="cross-origin-isolated"\n  width="850"\n  height="650"\n  style="border: none;">\n</iframe>`
+        const linkHtml = `<a href="${src}" target="_blank" rel="noopener">Open coding exercise</a>`
+
+        container.appendChild(embedBlock(
+          'Option A — Inline (iframe)',
+          'Falls back to a "type your input first" box in Canvas (Canvas doesn\'t isolate its pages).',
+          iframeHtml,
+        ))
+        container.appendChild(embedBlock(
+          'Option B — Opens in a new tab (fully interactive)',
+          'A plain link. Real interactive typing, but opens outside the Canvas page.',
+          linkHtml,
+        ))
+
+        const note = document.createElement('p')
+        note.className = 'note'
+        note.textContent = `Uses ?src= pointing at ${fileUrl} - only works once this file is committed, pushed, and deployed (./deploy-client-preview.sh).`
+        container.appendChild(note)
+
+        return container
+      }
+
+      function embedBlock(title, desc, html) {
+        const block = document.createElement('div')
+        const h4 = document.createElement('h4')
+        h4.textContent = title
+        block.appendChild(h4)
+        const descEl = document.createElement('p')
+        descEl.className = 'desc'
+        descEl.textContent = desc
+        block.appendChild(descEl)
+
+        const copyRow = document.createElement('div')
+        copyRow.className = 'copy-row'
+        const label = document.createElement('label')
+        label.textContent = 'Paste into Canvas (HTML editor view)'
+        copyRow.appendChild(label)
+        const copyBtn = document.createElement('button')
+        copyBtn.className = 'copy-btn'
+        copyBtn.type = 'button'
+        copyBtn.textContent = 'Copy'
+        copyRow.appendChild(copyBtn)
+        block.appendChild(copyRow)
+
+        const ta = document.createElement('textarea')
+        ta.readOnly = true
+        ta.spellcheck = false
+        ta.value = html
+        block.appendChild(ta)
+
+        copyBtn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(ta.value)
+            copyBtn.textContent = 'Copied!'
+            copyBtn.classList.add('copied')
+          } catch (e) {
+            ta.select()
+            copyBtn.textContent = 'Select-all instead'
+          }
+        })
+
+        return block
+      }
+
+      // --- create ----------------------------------------------------------
+
+      const scopeRadios = document.querySelectorAll('input[name="scope"]')
+      const topicRow = document.getElementById('topic-row')
+      const topicSelect = document.getElementById('topic-select')
+      const topicNewRow = document.getElementById('topic-new-row')
+      const topicNewInput = document.getElementById('topic-new-input')
+      const nameInput = document.getElementById('name-input')
+      const codeInput = document.getElementById('code-input')
+      const saveBtn = document.getElementById('save-btn')
+      const createStatus = document.getElementById('create-status')
+      const createEmbedOutput = document.getElementById('create-embed-output')
+
+      for (const r of scopeRadios) {
+        r.addEventListener('change', () => {
+          topicRow.style.display = currentScope() === 'quiz' ? 'block' : 'none'
+        })
+      }
+
+      topicSelect.addEventListener('change', () => {
+        topicNewRow.style.display = topicSelect.value === '__new__' ? 'block' : 'none'
+      })
+
+      function currentScope() {
+        return document.querySelector('input[name="scope"]:checked').value
+      }
+
+      function renderTopicOptions() {
+        const topics = Object.keys(data.quiz).sort()
+        topicSelect.innerHTML = ''
+        for (const t of topics) {
+          const opt = document.createElement('option')
+          opt.value = t
+          opt.textContent = t
+          topicSelect.appendChild(opt)
+        }
+        const newOpt = document.createElement('option')
+        newOpt.value = '__new__'
+        newOpt.textContent = '+ New topic...'
+        topicSelect.appendChild(newOpt)
+        if (topics.length === 0) {
+          topicSelect.value = '__new__'
+          topicNewRow.style.display = 'block'
+        }
+      }
+
+      function currentTopic() {
+        return topicSelect.value === '__new__' ? topicNewInput.value.trim() : topicSelect.value
+      }
+
+      saveBtn.addEventListener('click', async () => {
+        createStatus.textContent = ''
+        createStatus.className = ''
+        createEmbedOutput.innerHTML = ''
+
+        const scope = currentScope()
+        const name = nameInput.value.trim()
+        const code = codeInput.value
+        const topic = scope === 'quiz' ? currentTopic() : undefined
+
+        const existingNames = scope === 'book'
+          ? data.book.map(sp => sp.name)
+          : (data.quiz[topic] || []).map(sp => sp.name)
+        let overwrite = false
+        if (existingNames.includes(name)) {
+          if (!confirm(`"${name}" already exists in this location. Overwrite it?`)) return
+          overwrite = true
+        }
+
+        try {
+          const res = await fetch('/api/save', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({scope, topic, name, code, overwrite}),
+          })
+          const json = await res.json()
+          if (!res.ok) throw new Error(json.error || 'Save failed')
+
+          createStatus.textContent = `Saved ${json.path}`
+          createStatus.className = 'success'
+          createEmbedOutput.appendChild(buildEmbedSection(json.path))
+          if (scope === 'book') {
+            const reminder = document.createElement('p')
+            reminder.className = 'note'
+            reminder.textContent = `Don't forget: this only creates the file. Add <cmecode startPoint="${name}"></cmecode> wherever it belongs in the book's source to actually use it.`
+            createEmbedOutput.appendChild(reminder)
+          }
+          await loadData()
+        } catch (e) {
+          createStatus.textContent = e.message
+          createStatus.className = 'error'
+        }
+      })
+
+      loadData()
+    </script>
+  </body>
+</html>

@@ -70,6 +70,14 @@ mkdir -p "$STAGE_DIR/CMeCodeDir"
 find CMeCodeDir -maxdepth 1 -name '*.c' -exec cp {} "$STAGE_DIR/CMeCodeDir/" \;
 find CMeCodeDir -maxdepth 1 -name '*.datafile.json' -exec cp {} "$STAGE_DIR/CMeCodeDir/" \;
 
+# QuizStartDir/ (Canvas/quiz-only starting points, see starting-points-tool/)
+# isn't referenced by any XSL param - it just needs to be reachable at a
+# stable, predictable URL for the embed HTML that tool generates
+# (?src=<origin>/QuizStartDir/<topic>/<name>.c) to actually resolve.
+if [ -d QuizStartDir ]; then
+  cp -R QuizStartDir "$STAGE_DIR/"
+fi
+
 python3 generate-middleware.py output/web-client functions/_middleware.js
 
 npx wrangler pages deploy "$STAGE_DIR" --project-name="$PROJECT_NAME"
