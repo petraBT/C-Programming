@@ -29,10 +29,10 @@ fprintf(gfile, "plot '-'\n");        /* '-' means: data follows inline */
 /* ... write x,y pairs, one per line ... */
 fprintf(gfile, "e\n");               /* 'e' ends the inline data       */
 pclose(gfile);</cd>
-        <p>Here is a complete, minimal example that plots a single array of data points. Since this code opens a plot window via <c>popen()</c>, which the embedded coding window can't display, it's shown below as read-only: copy it into your own Linux environment and run it there.</p>
-        <cmecode startPoint="engs20p_NplotBasic" addOn="&amp;nocheck=true" height="450" forceStatic="yes"></cmecode>
-        <p>We can plot multiple curves on the same figure, and add titles and axis labels, by extending the gnuplot commands we send through the pipe. Again, copy this into your own Linux environment to run it and see the plot:</p>
-        <cmecode startPoint="engs20p_NplotAdvanced" addOn="&amp;nocheck=true" height="600" forceStatic="yes"></cmecode>
+        <p>Here is a complete, minimal example that plots a single array of data points. Click <c>Run</c> to see the plot appear below the code.</p>
+        <cmecode startPoint="engs20p_NplotBasic" addOn="&amp;nocheck=true" height="450"></cmecode>
+        <p>We can plot multiple curves on the same figure, and add titles and axis labels, by extending the gnuplot commands we send through the pipe:</p>
+        <cmecode startPoint="engs20p_NplotAdvanced" addOn="&amp;nocheck=true" height="600"></cmecode>
     </section>
 
     <section xml:id="plotting-bisection">
@@ -48,8 +48,7 @@ pclose(gfile);</cd>
                     <li>Compute a first estimate <m>x_1 = (a+b)/2</m>. Determine whether the true solution lies between <m>a</m> and <m>x_1</m>, or between <m>x_1</m> and <m>b</m>, by comparing the signs of <m>f(a)</m>, <m>f(x_1)</m>, and <m>f(b)</m>, then replace <m>a</m> or <m>b</m> with <m>x_1</m> to obtain a shorter interval that still contains the solution, and repeat.</li>
                     <li>Come up with a reasonable way to stop once your approximation is <q>good enough</q>, and display the solution both in the terminal and on your graph.</li>
                 </ol>
-                <p><em>This starting point plots via <c>popen()</c>, so it's shown read-only below &#8212; copy it into your own Linux environment to run it and see the plot.</em></p>
-                <cmecode startPoint="engs20p_NbisectionPractice" addOn="&amp;nocheck=true" height="500" forceStatic="yes"></cmecode>
+                <cmecode startPoint="engs20p_NbisectionPractice" addOn="&amp;nocheck=true" height="500"></cmecode>
             </statement>
         </activity>
     </section>
@@ -63,8 +62,8 @@ pclose(gfile);</cd>
         </figure>
         <p><m>\displaystyle m = \frac{N \sum(x_iy_i) - \sum(x_i) \sum(y_i)}{N \sum(x_i^2) - \left(\sum(x_i)\right)^2}</m></p>
         <p><m>\displaystyle b = \frac{\sum(y_i) - m\sum(x_i)}{N}</m></p>
-        <p>The example below plots a set of data points along with their least-squares line of best fit. As with the earlier gnuplot examples, this opens a plot window via <c>popen()</c>, so it's shown read-only here &#8212; copy it into your own Linux environment to run it and see the plot.</p>
-        <cmecode startPoint="engs20p_NleastSquaresDemo" addOn="&amp;nocheck=true" height="600" forceStatic="yes"></cmecode>
+        <p>The example below plots a set of data points along with their least-squares line of best fit.</p>
+        <cmecode startPoint="engs20p_NleastSquaresDemo" addOn="&amp;nocheck=true" height="600"></cmecode>
     </section>
 
     <section xml:id="plotting-summary">
