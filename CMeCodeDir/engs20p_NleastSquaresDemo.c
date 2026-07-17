@@ -7,7 +7,7 @@ int main(void){
 	 float xsol[] = {0, 6};
 	 float ysol[2];
     int i;
-	 int size = 7;
+	 int size = 5;
 	 float sumx = 0;
 	 float sumy = 0;
 	 float sumxx = 0;
