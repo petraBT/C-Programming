@@ -1,0 +1,18 @@
+# Pages configuration for the cprog-client-preview project. Exists for ONE
+# reason: Durable Object bindings for Pages Functions can only be declared
+# here, not on the `wrangler pages deploy` command line - this is how
+# functions/session/[code].js reaches the ClassSession Durable Object hosted
+# by the separate engs20-classroom Worker (classroom-worker/).
+#
+# `name` and `pages_build_output_dir` deliberately mirror what
+# deploy-client-preview.sh already passes (PROJECT_NAME / STAGE_DIR) - if you
+# change them there, change them here too, or wrangler will complain about
+# the mismatch at deploy time.
+name = "cprog-client-preview"
+pages_build_output_dir = "output/cloudflare-client-preview"
+compatibility_date = "2026-07-01"
+
+[[durable_objects.bindings]]
+name = "SESSIONS"
+class_name = "ClassSession"
+script_name = "engs20-classroom"

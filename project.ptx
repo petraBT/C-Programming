@@ -67,6 +67,10 @@
            above), and PreTeXt already copies everything under assets/ into
            <output-dir>/external/ regardless of whether it's linked anywhere. -->
       <stringparam key="html.css.extra" value="external/_custom-styles.css"/>
+      <!-- The JS twin of html.css.extra: emitted as a <script src="..."> on every page.
+           assets/classroom.js is the in-class "follow me" session client - inert unless the
+           tab has joined a session via ?classroom=... (see that file's own comments). -->
+      <stringparam key="html.js.extra" value="external/classroom.js"/>
     </target>
     <target name="latex">
       <format>latex</format>

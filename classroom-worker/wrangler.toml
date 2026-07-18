@@ -1,0 +1,27 @@
+# The realtime backend for in-class "follow me" sessions (see
+# assets/classroom.js for the client side, and AUTHORING_GUIDE.md).
+# Deployed as its own Worker, separate from the Pages site:
+#   cd classroom-worker && npx wrangler deploy
+# One Durable Object instance exists per session code; it holds the
+# instructor's current page and the set of connected browsers, and
+# relays page turns. new_sqlite_classes (not new_classes) so this works
+# on the Workers free plan, which only supports SQLite-backed DOs.
+
+name = "engs20-classroom"
+main = "src/index.js"
+compatibility_date = "2026-07-01"
+
+# No public URL at all: this Worker only exists to HOST the Durable Object
+# class. The actual WebSocket endpoint the browsers talk to is a Pages
+# Function on the book's own origin (functions/session/[code].js), which
+# reaches the DO through a cross-script binding (see the repo-root
+# wrangler.toml). Same-origin WebSockets, no workers.dev subdomain needed.
+workers_dev = false
+
+[[durable_objects.bindings]]
+name = "SESSIONS"
+class_name = "ClassSession"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ClassSession"]
