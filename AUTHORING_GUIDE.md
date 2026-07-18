@@ -206,7 +206,44 @@ deliberately left untracked here.)
 Then rebuild the book (`pretext build web-client`) if the change affects
 book pages, and redeploy (§6).
 
-## 8. Known gotchas
+## 8. In-class "follow me" sessions
+
+Every `web-client` page carries `assets/classroom.js` (wired via the
+`html.js.extra` stringparam), inert unless a tab joins a session:
+
+- **Lead a session**: open any book page with `?classroom=start`. A bottom
+  banner shows a 4-character code and the join link (read it to the class /
+  put it on a slide). Every page you navigate to — and every in-page anchor
+  jump — is mirrored to everyone following, live. The banner shows how many
+  are connected.
+- **Join**: open the join link (any book page with `?classroom=<CODE>`).
+  The tab follows the lead until Leave is clicked or the tab closes.
+  Sessions are per-tab, so students' popped-out coding windows stay put.
+- Followers can only ever be sent to same-origin book pages (enforced on
+  both server and client), and there are no accounts — joining is anonymous.
+
+Moving parts: `assets/classroom.js` (client) → `functions/session/[code].js`
+(same-origin WebSocket endpoint, a Pages Function) → `ClassSession` Durable
+Object hosted by the `classroom-worker/` Worker (deployed separately:
+`cd classroom-worker && npx wrangler deploy`).
+
+**One-time activation** (not yet done as of this writing):
+
+1. Open the Cloudflare dashboard → Workers & Pages. Visiting the Workers
+   area the first time registers the account's `workers.dev` subdomain —
+   required before ANY Worker can be uploaded (API error 10063), and only
+   doable from the dashboard.
+2. `cd classroom-worker && npx wrangler deploy`
+3. `mv wrangler.toml.pending wrangler.toml` (repo root — it holds the
+   Durable Object binding for the Pages Functions; it's parked as
+   `.pending` because a Pages deploy FAILS if the binding names a Worker
+   that doesn't exist yet, which would break all normal deploys)
+4. `./deploy-client-preview.sh`
+
+Until then everything degrades gracefully: `/session/<CODE>` answers 503,
+and a session banner just shows an amber "connecting" dot.
+
+## 9. Known gotchas
 
 - **Canvas can't be made interactive via iframe, ever** — Canvas doesn't
   send the COOP/COEP headers required for the browser's interactive-stdin
@@ -219,16 +256,15 @@ book pages, and redeploy (§6).
 - **Category/topic names with spaces are fine** — `CanvasStartDir/Short
   Assignment/` is a real, correct path. Generated embed URLs percent-encode
   each path segment separately, so this doesn't produce a broken URL.
-- **`popen()`/`pclose()` (gnuplot) aren't supported at all** in the
-  client-side compiler's libc — not a toggle, genuinely absent. This is why
-  the plotting exercises in `source/scicomp/plotting.ptx` are marked
-  `forceStatic="yes"` (rendered as read-only code, not run live). Making
-  this work would mean patching the vendored compiler's runtime to
-  special-case `popen("gnuplot", ...)` and building a small JS-side
-  interpreter for the narrow gnuplot-script subset those exercises actually
-  use, plus teaching the tool's output-file display to render an image
-  instead of dumping text. Real, scoped, non-trivial work — not attempted
-  yet, flagged here as a known possibility if it's ever worth prioritizing.
+- **`popen()` only works for gnuplot, and only fake-ly** — the client-side
+  compiler's libc has no real subprocess support; its `popen()` recognizes
+  exactly a write-mode `"gnuplot"` command and backs it with a virtual file
+  the tool then parses and renders as an SVG chart (`src/gnuplot.ts` in the
+  tool repo — only the narrow script subset the book's plotting exercises
+  use: `set title/xlabel/ylabel/grid/output`, `plot '-' [with lines]
+  [title ...]` with inline data). Any other `popen()` returns NULL. A new
+  plotting exercise using fancier gnuplot features will need that parser
+  extended.
 - **The old Django/SQLite tool** (`~/Documents/CMeCode`) is retired but
   still holds historical Canvas-tagged content if more of it needs pulling
   into `CanvasStartDir/` later. Its `canvas` column (free text, no fixed
