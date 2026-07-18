@@ -25,6 +25,13 @@ node_modules
 # don't track pretext's own per-run build logs
 logs
 
+# Reference material for building the "classroom" target: exported slides from
+# the retired LCS system (plus newer .pptx from co-taught content, and the
+# current term's schedule). Working copies only - the canonical set lives
+# outside this repo - and large binaries that would bloat history for content
+# that only ever gets read, never built from.
+LCSpdfs
+
 # don't track error logs
 .error_schema.log
 cli.log
@@ -101,3 +108,5 @@ GitHub.sublime-settings
 .dropbox
 .dropbox.attr
 .dropbox.cache
+# Python bytecode cache from scripts/ (edit-server.py and friends)
+__pycache__
