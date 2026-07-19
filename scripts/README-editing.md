@@ -7,9 +7,11 @@ making a small change. This lets you start from the rendered book instead:
 | --- | --- |
 | **alt-click** a paragraph | opens that exact spot in your text editor |
 | **alt-shift-click** a paragraph | edit the text right there; ⌘⏎ saves it to the source |
+| **alt-click** a coding window | opens that exercise in the starting points tool |
 
-Hold <kbd>alt</kbd> and everything clickable outlines in green, so you can see
-what a click would land on before you commit to it.
+Hold <kbd>alt</kbd> and everything clickable outlines — green for prose, blue for
+coding windows — so you can see what a click would land on before you commit
+to it.
 
 ## Running it
 
@@ -27,6 +29,30 @@ able to rewrite source files.
 
 Pair it with a rebuild watcher (ENGS28 has `watch.py`) and an in-place edit
 shows up in the preview a few seconds after you save it.
+
+For the coding windows, also run the starting points tool — it is what the
+alt-click opens into, and it is a separate process on its own port:
+
+```bash
+node starting-points-tool/server.js     # port 5050
+```
+
+Without it the click still opens a tab; that tab just won't connect.
+
+### Coding windows
+
+Alt-clicking a coding window opens `starting-points-tool` already scrolled to
+that exercise with its editor open, rather than leaving you to find it in the
+list. It works off a `?file=<startPoint>` deep link, which is also worth
+bookmarking on its own.
+
+Two things make this less obvious than it looks. A click inside an iframe never
+reaches the page around it, so while alt is held each coding window gets a
+transparent overlay that the page *can* see clicks on; the overlays only exist
+while armed, so a reader can never hit one. And the exercise's name doesn't need
+to be emitted anywhere new — PreTeXt already puts it in the iframe's own `src`
+(`coding-window/index.html?src=../CMeCodeDir/engs20p_NNestedLoops.c`), so it is
+just parsed back out.
 
 ### The other books
 

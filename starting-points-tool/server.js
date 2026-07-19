@@ -159,7 +159,11 @@ function sendJson(res, status, data) {
 const STATIC_TYPES = {'.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript'}
 
 function serveStatic(req, res) {
-  const reqPath = req.url === '/' ? '/index.html' : req.url
+  // Path only. A query string is for the page's own JS to read - index.html uses
+  // ?file=... to open straight onto one starting point - and leaving it attached
+  // would make "/?file=x" look like a request for a file literally named that.
+  const {pathname} = new URL(req.url, 'http://localhost')
+  const reqPath = pathname === '/' ? '/index.html' : pathname
   const full = path.join(__dirname, path.normalize(reqPath))
   if (!full.startsWith(__dirname)) {
     res.writeHead(403)

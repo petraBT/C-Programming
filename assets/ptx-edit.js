@@ -14,6 +14,8 @@
   'use strict'
 
   var SERVER = 'http://127.0.0.1:8927'
+  // starting-points-tool/server.js, run separately from the book's own preview.
+  var STARTING_POINTS = 'http://127.0.0.1:5050'
 
   // Blocks PreTeXt gives an id to and that hold prose worth editing. Anything
   // else the click bubbles up from until it reaches one of these.
@@ -175,6 +177,10 @@
 
   document.addEventListener('click', function (event) {
     if (!event.altKey || editing) return
+    // This listener is on the capture phase, so it would otherwise beat a
+    // coding window's overlay to its own click and treat it as a click on the
+    // surrounding block. Let overlays handle themselves.
+    if (event.target.closest('.ptx-edit-overlay')) return
     var block = blockFor(event.target)
     if (!block) return
     event.preventDefault()
@@ -183,22 +189,108 @@
     else openInEditor(block)
   }, true)
 
+  // --- coding windows --------------------------------------------------
+  //
+  // A coding window is an iframe, and a click inside an iframe never reaches
+  // this document - so alt-clicking one can't be caught the way a paragraph is.
+  // Instead, while alt is held, each coding window gets a transparent overlay
+  // that this page CAN see clicks on. The overlays only exist while armed, so
+  // they never sit between a reader and the editor.
+  //
+  // The exercise's name is already in the iframe's own src, which PreTeXt built
+  // from <cmecode startPoint="...">:
+  //   coding-window/index.html?src=../CMeCodeDir/engs20p_NNestedLoops.c
+  // so nothing extra has to be emitted for this to work.
+  function startingPointOf (iframe) {
+    var match = /[?&]src=[^&]*?([^/&]+)\.c(?:&|$)/.exec(iframe.getAttribute('src') || '')
+    return match ? decodeURIComponent(match[1]) : null
+  }
+
+  function codingWindows () {
+    return [].slice.call(document.querySelectorAll('#ptx-content iframe[src*="coding-window/"]'))
+  }
+
+  function addOverlays () {
+    codingWindows().forEach(function (iframe) {
+      if (iframe.dataset.ptxOverlay) return
+      var name = startingPointOf(iframe)
+      if (!name) return
+
+      var overlay = document.createElement('div')
+      overlay.className = 'ptx-edit-overlay'
+      overlay.title = 'Alt-click: edit "' + name + '" in the starting points tool'
+      overlay.addEventListener('click', function (event) {
+        event.preventDefault()
+        event.stopPropagation()
+        // A new tab rather than this one: losing the page you were reading
+        // (and any in-progress edit) to open a side tool would be a bad trade.
+        window.open(STARTING_POINTS + '/?file=' + encodeURIComponent(name), '_blank')
+        toast('Opening ' + name + ' in the starting points tool', 'ok')
+      })
+
+      // Positioned against the iframe's own offset parent so the overlay tracks
+      // it through reflows, rather than being pinned to page coordinates.
+      var holder = iframe.parentElement
+      if (getComputedStyle(holder).position === 'static') holder.style.position = 'relative'
+      holder.appendChild(overlay)
+      iframe.dataset.ptxOverlay = '1'
+      overlay.dataset.for = name
+
+      // Vertical extent is measured from the iframe, but horizontally the
+      // overlay is pinned to the holder's edges (left:0/right:0 via the
+      // stylesheet) rather than to a measured width. A coding window is always
+      // width="100%" of its holder, so the two agree - and not measuring means
+      // the overlay is still right if it gets positioned before layout has
+      // settled, when offsetWidth can briefly read 0.
+      var place = function () {
+        overlay.style.top = iframe.offsetTop + 'px'
+        overlay.style.height = iframe.offsetHeight + 'px'
+      }
+      place()
+      // A coding window starts parked off-screen and is moved into flow by an
+      // onload handler PreTeXt emits, so its position isn't final until then.
+      iframe.addEventListener('load', place)
+      overlay._place = place
+    })
+  }
+
+  function repositionOverlays () {
+    document.querySelectorAll('.ptx-edit-overlay').forEach(function (overlay) {
+      if (overlay._place) overlay._place()
+    })
+  }
+
+  function arm (on) {
+    document.body.classList.toggle('ptx-edit-armed', on)
+    if (on) {
+      addOverlays()
+      repositionOverlays()
+    }
+  }
+
   // Hold alt to see what a click would land on.
   document.addEventListener('keydown', function (event) {
-    if (event.key === 'Alt') document.body.classList.add('ptx-edit-armed')
+    if (event.key === 'Alt') arm(true)
   })
   document.addEventListener('keyup', function (event) {
-    if (event.key === 'Alt') document.body.classList.remove('ptx-edit-armed')
+    if (event.key === 'Alt') arm(false)
   })
-  window.addEventListener('blur', function () {
-    document.body.classList.remove('ptx-edit-armed')
-  })
+  window.addEventListener('blur', function () { arm(false) })
+  window.addEventListener('resize', repositionOverlays)
 
   var style = document.createElement('style')
   style.textContent = [
     '.ptx-edit-armed #ptx-content :is(' + BLOCKS + '):hover {',
     '  outline: 2px solid #2b8a3e; outline-offset: 3px;',
     '  border-radius: 2px; cursor: pointer;',
+    '}',
+    // Only interactive while alt is held; inert and invisible otherwise, so a
+    // reader can never end up clicking it instead of the coding window.
+    '.ptx-edit-overlay { position: absolute; left: 0; right: 0; z-index: 50; display: none; }',
+    '.ptx-edit-armed .ptx-edit-overlay {',
+    '  display: block; cursor: pointer; border-radius: 2px;',
+    '  outline: 2px dashed #1c7ed6; outline-offset: -2px;',
+    '  background: rgba(28,126,214,.08);',
     '}',
     '.ptx-edit-active {',
     '  outline: 2px solid #1c7ed6 !important; outline-offset: 3px;',

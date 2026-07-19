@@ -85,6 +85,9 @@
         white-space: nowrap;
       }
       .sp-row button:hover { background: #e6e6e6; }
+      /* The row a ?file=... link landed on, so it's obvious which one of these
+         the link meant. */
+      .sp-row.sp-linked { background: #fff8dd; box-shadow: inset 3px 0 0 #e0b400; }
       .sp-detail {
         display: none;
         margin: 6px 0 12px 0;
@@ -317,6 +320,9 @@ int main(void) {
       function buildRow(sp) {
         const row = document.createElement('div')
         row.className = 'sp-row'
+        // Lets revealStartingPoint() find this row after a render, which is how
+        // a ?file=... deep link opens the right editor.
+        row.dataset.spName = sp.name
 
         const nameEl = document.createElement('span')
         nameEl.className = 'sp-name'
@@ -326,6 +332,7 @@ int main(void) {
         const editBtn = document.createElement('button')
         editBtn.type = 'button'
         editBtn.textContent = 'Edit'
+        editBtn.dataset.role = 'edit'
         row.appendChild(editBtn)
 
         const embedBtn = document.createElement('button')
@@ -594,7 +601,74 @@ int main(void) {
         }
       })
 
-      loadData()
+      // --- deep linking --------------------------------------------------
+
+      // Open straight onto one starting point with ?file=<name> (the startPoint
+      // value, no .c). Mainly for the book's web-edit preview: alt-clicking a
+      // coding window there opens this tool already pointed at that exercise,
+      // instead of leaving you to find it in the list by hand. Also fine to
+      // bookmark. See scripts/README-editing.md in the repo root.
+      function revealStartingPoint(name) {
+        const inBook = data.book.some(sp => sp.name === name)
+        const inCanvas = Object.values(data.canvas)
+          .some(items => items.some(sp => sp.name === name))
+        if (!inBook && !inCanvas) return false
+
+        const book = inBook
+        switchTab(book ? 'book' : 'canvas')
+
+        // Filtering to the name guarantees the row is actually rendered, so
+        // this works regardless of how long the list has grown.
+        const filterInput = book ? bookFilterInput : canvasFilterInput
+        filterInput.value = name
+        if (book) renderBook()
+        else renderCanvas()
+
+        const listEl = book ? bookListEl : canvasListEl
+        const row = listEl.querySelector(`[data-sp-name="${CSS.escape(name)}"]`)
+        if (!row) return false
+
+        row.querySelector('button[data-role="edit"]').click()
+        row.scrollIntoView({block: 'center'})
+        row.classList.add('sp-linked')
+
+        // The filter box is now pre-filled with one name, which looks like the
+        // list is broken until you notice why - so say what happened, and make
+        // getting back to the full list one click rather than a puzzle.
+        const note = document.createElement('p')
+        note.className = 'note'
+        note.textContent = `Filtered to "${name}" from a link. `
+        const clear = document.createElement('button')
+        clear.type = 'button'
+        clear.textContent = 'Show all'
+        clear.addEventListener('click', () => {
+          filterInput.value = ''
+          if (book) renderBook()
+          else renderCanvas()
+          note.remove()
+        })
+        note.appendChild(clear)
+        listEl.parentElement.insertBefore(note, listEl)
+        return true
+      }
+
+      function applyDeepLink() {
+        const name = new URLSearchParams(location.search).get('file')
+        if (!name) return
+        if (!revealStartingPoint(name)) {
+          const warning = document.createElement('p')
+          warning.className = 'note'
+          warning.style.color = '#a94442'
+          warning.textContent =
+            `No starting point named "${name}" was found in CMeCodeDir/ or ` +
+            `CanvasStartDir/. It may not have been created yet.`
+          document.getElementById('app').insertBefore(
+            warning, document.getElementById('tabs')
+          )
+        }
+      }
+
+      loadData().then(applyDeepLink)
     </script>
   </body>
 </html>
