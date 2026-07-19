@@ -62,20 +62,54 @@
     ].join('\n')
     ;(document.head || document.documentElement).appendChild(deckCss)
 
-    // "?focus=<id>" narrows the slide to one activity instead of the whole
-    // section - the book's sections are sized for reading, and a projector
-    // wants one thing at a time. Implemented by hiding the focused element's
-    // siblings up the tree rather than by moving it, so nothing inside it
-    // (coding-window iframes especially) gets torn out and re-inserted,
-    // which would reload them.
-    if (focusId) {
+    // Three ways to narrow a slide - the book's sections are sized for
+    // reading, a projector wants one thing at a time:
+    //   ?focus=<id>       just that element (an xml:id from the source)
+    //   ?only=<selector>  just the elements matching a CSS selector
+    //   ?omit=<selector>  everything EXCEPT those elements
+    // "only"/"omit" exist because most activities carry no xml:id, but
+    // PreTeXt always classes them - so `only=.activity` / `omit=.activity`
+    // splits practice from theory on any page without editing the source.
+    //
+    // All of them work by hiding other elements, never by moving the kept
+    // one: relocating a subtree would tear out and re-insert the
+    // coding-window iframes inside it, reloading them and losing student work.
+    var onlySel = deckParams.get('only')
+    var omitSel = deckParams.get('omit')
+    if (focusId || onlySel || omitSel) {
       document.addEventListener('DOMContentLoaded', function () {
-        var el = document.getElementById(focusId)
-        if (!el) return
-        for (var node = el; node && node !== document.body; node = node.parentElement) {
-          var sibs = node.parentElement ? node.parentElement.children : []
-          for (var i = 0; i < sibs.length; i++) {
-            if (sibs[i] !== node) sibs[i].style.display = 'none'
+        var keep = []
+        if (focusId) {
+          var byId = document.getElementById(focusId)
+          if (byId) keep.push(byId)
+        }
+        if (onlySel) {
+          try {
+            keep = keep.concat([].slice.call(document.querySelectorAll(onlySel)))
+          } catch (e) { /* malformed selector: leave the page whole */ }
+        }
+        if (omitSel) {
+          try {
+            var drop = document.querySelectorAll(omitSel)
+            for (var d = 0; d < drop.length; d++) drop[d].style.display = 'none'
+          } catch (e) { /* malformed selector: leave the page whole */ }
+        }
+        if (keep.length === 0) return
+
+        // Everything on the path from a kept element up to <body> must stay
+        // visible; anything else at each of those levels is hidden.
+        var onPath = []
+        for (var k = 0; k < keep.length; k++) {
+          for (var n = keep[k]; n && n !== document.body; n = n.parentElement) {
+            if (onPath.indexOf(n) === -1) onPath.push(n)
+          }
+        }
+        for (var j = 0; j < onPath.length; j++) {
+          var parent = onPath[j].parentElement
+          if (!parent) continue
+          for (var s = 0; s < parent.children.length; s++) {
+            var child = parent.children[s]
+            if (onPath.indexOf(child) === -1) child.style.display = 'none'
           }
         }
       })

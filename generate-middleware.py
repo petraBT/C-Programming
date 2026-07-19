@@ -108,6 +108,26 @@ def main():
     if (site_dir / "external" / "class.html").is_file():
         pages.append("external/class")
 
+    # ...and every page any deck shows as a slide, whether or not it embeds a
+    # coding window. A document sent with COEP: require-corp (which the player
+    # now is) may only frame documents that assert COEP themselves; one that
+    # doesn't is blocked outright, surfacing as "refused to connect". Slides
+    # showing pure-prose pages (integers-hex, integers-negative, ...) failed
+    # exactly this way until they were added here.
+    for deck_file in sorted((site_dir / "external" / "decks").glob("*.json")):
+        try:
+            deck = json.loads(deck_file.read_text())
+        except (ValueError, OSError):
+            continue  # icebreakers.json and friends have no slides; ignore junk
+        for slide in deck.get("slides", []):
+            page = slide.get("page")
+            if page:
+                stem = page.split("?", 1)[0]
+                if stem.endswith(".html"):
+                    stem = stem[: -len(".html")]
+                if stem not in pages:
+                    pages.append(stem)
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(TEMPLATE.format(pages_json=json.dumps(pages, indent=2)))
     print(f"Generated {output_path} with isolation headers for {len(pages)} pages plus coding-window/*.")

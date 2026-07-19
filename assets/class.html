@@ -177,8 +177,11 @@
             // ?deck=1 tells classroom.js on the book page to hide the book's
             // nav chrome and scale type up for projection.
             var src = '../' + slide.page + (slide.page.indexOf('?') === -1 ? '?' : '&') + 'deck=1'
-            // Optional: narrow the slide to a single activity on that page.
+            // Optional: narrow the slide - by xml:id, or by CSS selector to
+            // show only / hide the activities (splitting practice from theory).
             if (slide.focus) src += '&focus=' + encodeURIComponent(slide.focus)
+            if (slide.only) src += '&only=' + encodeURIComponent(slide.only)
+            if (slide.omit) src += '&omit=' + encodeURIComponent(slide.omit)
             if (frame.getAttribute('data-src') !== src) {
               frame.setAttribute('data-src', src)
               frame.src = src

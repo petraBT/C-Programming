@@ -25,6 +25,7 @@ production Function this script never needed to change for that reason.
 Usage: python3 serve-with-headers.py <port> <directory>
 """
 import http.server
+import json
 import sys
 from pathlib import Path
 
@@ -45,6 +46,22 @@ for html_file in Path(directory).glob("*.html"):
 # Without this line the nested coding windows silently drop to the
 # non-interactive "type your input first" fallback (confirmed live).
 isolated_pages.add("/external/class.html")
+
+# ...and every page any deck shows as a slide, whether or not it embeds a
+# coding window. A document sent with COEP: require-corp (which the player
+# now is) may only frame documents that assert COEP themselves; one that
+# doesn't is blocked outright, which the browser reports as "refused to
+# connect". Slides showing pure-prose pages (integers-hex, integers-negative,
+# ...) failed exactly this way until they were added here.
+for deck_file in Path(directory).glob("external/decks/*.json"):
+    try:
+        deck = json.loads(deck_file.read_text())
+    except (ValueError, OSError):
+        continue  # icebreakers.json and friends have no slides; ignore junk
+    for slide in deck.get("slides", []):
+        page = slide.get("page")
+        if page:
+            isolated_pages.add("/" + page.split("?", 1)[0])
 
 print(f"Applying isolation headers to {len(isolated_pages)} page(s) that embed the coding-window tool.")
 

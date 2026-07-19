@@ -25,6 +25,7 @@
       ]
     },
     { "type": "icebreaker", "id": "three-in-common" },
+    { "type": "ref", "page": "integers-intro.html", "title": "Why binary?" },
     { "type": "ref", "page": "integers-positive.html", "title": "Binary numbers" },
     {
       "type": "prompt",

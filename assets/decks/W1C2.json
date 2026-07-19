@@ -55,8 +55,10 @@
       ]
     },
     { "type": "ref", "page": "variables-loop-practice.html", "title": "Practice: multiplication table" },
-    { "type": "ref", "page": "variables-user-input.html", "title": "User input with scanf()" },
-    { "type": "ref", "page": "variables-char-datatype.html", "title": "The char datatype" },
+    { "type": "ref", "page": "variables-user-input.html", "omit": ".activity", "title": "User input with scanf()" },
+    { "type": "ref", "page": "variables-user-input.html", "only": ".activity", "title": "Practice: adding integers" },
+    { "type": "ref", "page": "variables-char-datatype.html", "omit": ".activity", "title": "The char datatype" },
+    { "type": "ref", "page": "variables-char-datatype.html", "only": ".activity", "title": "Practice: printing characters" },
     { "type": "ref", "page": "variables-float-datatype.html", "title": "The float datatype" },
     {
       "type": "recap",
