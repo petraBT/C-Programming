@@ -98,6 +98,16 @@ def main():
         if NEEDLE in html_file.read_text(errors="ignore"):
             pages.append(html_file.stem)
 
+    # The classroom deck player (external/class.html) shows those book pages as
+    # slides in an iframe. Cross-origin isolation only holds when EVERY frame
+    # from the top down carries the headers, so the outermost frame needs them
+    # too - even though the player embeds no coding window directly, only pages
+    # that do. Without this the nested coding windows silently drop to the
+    # non-interactive "type your input first" fallback (confirmed live).
+    # No ".html" and no leading slash: that is the shape normalize() produces.
+    if (site_dir / "external" / "class.html").is_file():
+        pages.append("external/class")
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(TEMPLATE.format(pages_json=json.dumps(pages, indent=2)))
     print(f"Generated {output_path} with isolation headers for {len(pages)} pages plus coding-window/*.")

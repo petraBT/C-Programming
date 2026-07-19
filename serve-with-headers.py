@@ -37,6 +37,15 @@ isolated_pages = set()
 for html_file in Path(directory).glob("*.html"):
     if NEEDLE in html_file.read_text(errors="ignore"):
         isolated_pages.add("/" + html_file.name)
+
+# The classroom deck player (external/class.html) shows those book pages as
+# slides in an iframe. Cross-origin isolation only holds if EVERY frame from
+# the top down has the headers, so the outermost frame needs them too - even
+# though the player itself contains no coding window, only pages that do.
+# Without this line the nested coding windows silently drop to the
+# non-interactive "type your input first" fallback (confirmed live).
+isolated_pages.add("/external/class.html")
+
 print(f"Applying isolation headers to {len(isolated_pages)} page(s) that embed the coding-window tool.")
 
 

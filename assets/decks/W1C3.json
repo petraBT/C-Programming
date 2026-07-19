@@ -1,0 +1,65 @@
+{
+  "id": "W1C3",
+  "title": "Binary, hex, casting and the modulo operation",
+  "_comment": [
+    "See decks/W1C2.json for the format and the reasoning behind it.",
+    "Reconstructed from the retired LCS deck W1C3Digitalpracticeconv.pdf.",
+    "",
+    "Two of that deck's slides (the 8-bit binary addition drills on p9/p10 and",
+    "the 2's complement subtraction on p15) have no book counterpart - they are",
+    "worked by hand, not in a coding window. They are carried here as 'prompt'",
+    "slides rather than pushed into the book, since they only make sense live."
+  ],
+  "slides": [
+    { "type": "icebreaker", "id": "weird-food" },
+    {
+      "type": "agenda",
+      "title": "Today",
+      "items": [
+        "Binary numbers",
+        "Negative number representation",
+        "Hexadecimal numbers",
+        "Converting between ints and floats",
+        "Casting",
+        "The modulo operation"
+      ]
+    },
+    { "type": "icebreaker", "id": "three-in-common" },
+    { "type": "ref", "page": "integers-positive.html", "title": "Binary numbers" },
+    {
+      "type": "prompt",
+      "title": "Practice: binary addition",
+      "body": "Add the decimal numbers 177 and 23 in 8-bit binary.",
+      "note": "To help you: 177 &rarr; 10110001, 23 &rarr; 00010111"
+    },
+    {
+      "type": "prompt",
+      "title": "Now try this one",
+      "body": "Now try 177 + 177 in 8-bit binary.",
+      "note": "Recall that 177 is 10110001. Does your result make sense?"
+    },
+    { "type": "ref", "page": "integers-negative.html", "title": "Negative numbers" },
+    {
+      "type": "prompt",
+      "title": "Practice: 2's complement",
+      "body": "Calculate 110 &minus; 77 in binary 2's complement — that is, perform the addition 110 + (&minus;77).",
+      "note": "The 2's complements are 110: 01101110 and &minus;77: 10110011"
+    },
+    { "type": "ref", "page": "integers-hex.html", "title": "Hexadecimal numbers" },
+    { "type": "ref", "page": "floats-int-to-float.html", "title": "Casting: int to float" },
+    { "type": "ref", "page": "floats-float-to-int.html", "title": "Casting: float to int" },
+    { "type": "ref", "page": "floats-average.html", "title": "Practice: averaging integers" },
+    { "type": "ref", "page": "floats-remainder.html", "title": "The modulo operation" },
+    {
+      "type": "recap",
+      "title": "What we covered today",
+      "items": [
+        "Converting between decimal and binary",
+        "Three ways to read a binary number: unsigned, signed magnitude, 2's complement",
+        "Hexadecimal as shorthand for binary",
+        "Casting between data types: <code>ave = ((float) a)/((float) b);</code>",
+        "Modulo for the remainder: <code>8 % 5 = 3</code>"
+      ]
+    }
+  ]
+}

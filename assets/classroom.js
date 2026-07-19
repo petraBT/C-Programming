@@ -28,6 +28,60 @@
   var STORE_KEY = 'engs20-classroom'
   var CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789' // no 0/O/1/I/L lookalikes
 
+  // --- projector mode ----------------------------------------------------
+
+  // "?deck=1" means this page is being shown as a slide inside the deck
+  // player (class.html), not read on its own. Strip the book's navigation
+  // chrome and scale type up for a projector. Injected here rather than put
+  // in _custom-styles.css so the whole deck feature stays in one file, and
+  // so a normal reader can never trip it.
+  //
+  // Runs before the session code below and returns nothing: a page can be
+  // both a deck slide and part of a live session, which is the normal case.
+  var deckParams = new URLSearchParams(location.search)
+  if (deckParams.get('deck') === '1') {
+    var focusId = deckParams.get('focus')
+    var deckCss = document.createElement('style')
+    deckCss.textContent = [
+      '#ptx-masthead, #ptx-navbar, #ptx-sidebar, #ptx-content-footer,',
+      '#ptx-page-footer, .ptx-banner { display: none !important; }',
+      '.ptx-page, .ptx-main, #ptx-content { margin: 0 !important; padding: 0 !important;',
+      '  max-width: none !important; width: 100% !important; }',
+      'body { font-size: 19px !important; }',
+      '#ptx-content { padding: 2.2rem 3rem !important; }',
+      // The book caps activity/figure widths for readability on a laptop;
+      // on a projector that just wastes the screen.
+      '#ptx-content > * { max-width: none !important; }',
+      // The book's theme follows prefers-color-scheme. On a projector that
+      // means the instructor's machine and each student's machine can render
+      // the SAME slide differently, and the coding window (always light)
+      // clashes with the dark variant. Pin deck mode to light so everyone in
+      // the room sees one thing.
+      ':root { color-scheme: light !important; }',
+      'html, body, .ptx-page, .ptx-main, #ptx-content { background: #fff !important; }',
+    ].join('\n')
+    ;(document.head || document.documentElement).appendChild(deckCss)
+
+    // "?focus=<id>" narrows the slide to one activity instead of the whole
+    // section - the book's sections are sized for reading, and a projector
+    // wants one thing at a time. Implemented by hiding the focused element's
+    // siblings up the tree rather than by moving it, so nothing inside it
+    // (coding-window iframes especially) gets torn out and re-inserted,
+    // which would reload them.
+    if (focusId) {
+      document.addEventListener('DOMContentLoaded', function () {
+        var el = document.getElementById(focusId)
+        if (!el) return
+        for (var node = el; node && node !== document.body; node = node.parentElement) {
+          var sibs = node.parentElement ? node.parentElement.children : []
+          for (var i = 0; i < sibs.length; i++) {
+            if (sibs[i] !== node) sibs[i].style.display = 'none'
+          }
+        }
+      })
+    }
+  }
+
   // --- join / start via URL parameter, then hide it from the URL ---------
 
   var params = new URLSearchParams(location.search)
