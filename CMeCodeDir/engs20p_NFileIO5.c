@@ -2,7 +2,7 @@
 
 int main(void) {
     FILE *ifile;  
-    int i, num, sum;
+    int num, sum;
     int N, done, message;
     
     ifile = fopen("my_third_file.txt", "r"); 
