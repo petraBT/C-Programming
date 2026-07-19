@@ -15,12 +15,17 @@ to it.
 
 ## Running it
 
-Two things, in either order:
+One command, from the project root:
 
 ```bash
-pretext build web-edit && pretext view web-edit   # the preview
-python3 scripts/edit-server.py                    # the helper, in another shell
+./preview-edit.sh
 ```
+
+That builds the target, serves it, and starts both helper processes — the edit
+server on 8927 (which finds and rewrites the source) and the starting points
+tool on 5050 (which coding-window clicks open into). Ctrl-C stops all three. If
+a port is already taken it says so and carries on rather than failing silently,
+so a second copy won't fight the first.
 
 Both are local-only. `web-edit` is the only target that carries
 `assets/ptx-edit.js`, and it is deliberately kept out of `build.sh` and
@@ -30,14 +35,14 @@ able to rewrite source files.
 Pair it with a rebuild watcher (ENGS28 has `watch.py`) and an in-place edit
 shows up in the preview a few seconds after you save it.
 
-For the coding windows, also run the starting points tool — it is what the
-alt-click opens into, and it is a separate process on its own port:
+The helpers can also be run on their own, which is occasionally useful — the
+starting points tool is worth having up by itself, and the edit server takes a
+`--project` for the other books:
 
 ```bash
+python3 scripts/edit-server.py          # port 8927
 node starting-points-tool/server.js     # port 5050
 ```
-
-Without it the click still opens a tab; that tab just won't connect.
 
 ### Coding windows
 
