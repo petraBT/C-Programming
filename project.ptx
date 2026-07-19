@@ -72,6 +72,32 @@
            tab has joined a session via ?classroom=... (see that file's own comments). -->
       <stringparam key="html.js.extra" value="external/classroom.js"/>
     </target>
+    <target name="web-edit">
+      <!-- Authoring build: "web-client" (the in-browser coding environment, NOT
+           the Thayer-hosted iframes) plus the click-to-source helper,
+           assets/ptx-edit.js. Alt-click any paragraph to open it in your editor;
+           alt-shift-click to edit its text in place. Requires
+           scripts/edit-server.py to be running - see scripts/README-editing.md.
+           Keep this target's settings in step with "web-client" above, so that
+           what you proofread here is what readers actually get.
+           Local only, and deliberately so: this is the one target carrying a
+           script that talks to a server able to rewrite source files, so it is
+           kept out of build.sh and deploy.sh. -->
+      <format>html</format>
+      <source>source/main.ptx</source>
+      <publication>publication/publication.ptx</publication>
+      <output-dir>output/web-edit</output-dir>
+      <xsl>xsl/c-programming-html.xsl</xsl>
+      <stringparam key="cmecode.mode" value="client"/>
+      <stringparam key="cmecode.root" value="/Users/dz00762/repos/C-Programming/CMeCodeDir/"/>
+      <stringparam key="html.css.extra" value="external/_custom-styles.css"/>
+      <!-- Unlike html.css.extra, html.js.extra takes exactly ONE file, and
+           web-client already spends it on classroom.js. assets/web-edit-loader.js
+           is a shim that pulls in both that and ptx-edit.js - see its comments.
+           PreTeXt copies everything under assets/ into <output-dir>/external/,
+           so these resolve without any extra build step. -->
+      <stringparam key="html.js.extra" value="external/web-edit-loader.js"/>
+    </target>
     <target name="latex">
       <format>latex</format>
       <source>source/main.ptx</source>
