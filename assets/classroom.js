@@ -59,6 +59,18 @@
       // the room sees one thing.
       ':root { color-scheme: light !important; }',
       'html, body, .ptx-page, .ptx-main, #ptx-content { background: #fff !important; }',
+      // Headings on book slides pick up the deck player's blue, so a slide
+      // built from the book and one written in the deck file read as the same
+      // deck rather than two different documents.
+      '#ptx-content h1, #ptx-content h2, #ptx-content h3, #ptx-content h4,',
+      '#ptx-content .heading, #ptx-content .heading .title,',
+      '#ptx-content .para .heading, #ptx-content article > .heading {',
+      '  color: #256abf !important; }',
+      // "Activity 4.5." numbering is for a reader navigating the book; in
+      // class the slide title already says what this is. The number's
+      // neighbouring space and period are separate PreTeXt spans, so they go
+      // too - otherwise the heading reads "Activity ." with an orphan period.
+      '#ptx-content .codenumber, #ptx-content .heading-divison-mark { display: none !important; }',
     ].join('\n')
     ;(document.head || document.documentElement).appendChild(deckCss)
 
