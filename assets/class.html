@@ -40,6 +40,18 @@
       /* --- book-page slides --------------------------------------------- */
       #frame { width: 100%; height: 100%; border: 0; display: block; background: #fff; }
 
+      /* --- demo slides: a little text over one coding window ------------- */
+      #demo { width: 100%; height: 100%; display: none; flex-direction: column; padding: 3.2% 4% 2.2% 4%; }
+      #demo.on { display: flex; }
+      #demo h2 { margin: 0 0 .35em 0; font-size: 3.2vmin; font-weight: 600; color: #256abf; }
+      #demo .body { font-size: 2.5vmin; line-height: 1.45; margin: 0 0 .7em 0; }
+      #demo .body p { margin: 0 0 .35em 0; }
+      #demo code {
+        font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+        font-size: .92em; background: #f0efec; padding: .1em .35em; border-radius: 4px;
+      }
+      #demo iframe { flex: 1; width: 100%; border: 0; min-height: 0; }
+
       /* --- rendered slides ---------------------------------------------- */
       #rendered {
         width: 100%; height: 100%;
@@ -92,6 +104,11 @@
     <div id="stage-wrap">
       <div id="stage">
         <iframe id="frame" title="Class content" allow="cross-origin-isolated"></iframe>
+        <div id="demo">
+          <h2 id="demo-title"></h2>
+          <div class="body" id="demo-body"></div>
+          <iframe id="demo-frame" title="Coding window" allow="cross-origin-isolated"></iframe>
+        </div>
         <div id="rendered"></div>
         <div id="err"></div>
         <div id="bar">
@@ -116,6 +133,10 @@
         var deckId = params.get('deck') || 'W1C2'
 
         var frame = document.getElementById('frame')
+        var demoEl = document.getElementById('demo')
+        var demoTitle = document.getElementById('demo-title')
+        var demoBody = document.getElementById('demo-body')
+        var demoFrame = document.getElementById('demo-frame')
         var rendered = document.getElementById('rendered')
         var errEl = document.getElementById('err')
         var titleEl = document.getElementById('title')
@@ -171,8 +192,33 @@
           var slide = deck.slides[n - 1]
           posEl.textContent = n + ' / ' + deck.slides.length
 
+          // A "demo" slide is a few lines of in-class phrasing over ONE coding
+          // window, embedded straight from CMeCodeDir - the shape every
+          // content slide in the retired LCS decks actually had. It
+          // deliberately does NOT pull in the book page around it: that prose
+          // is the pre-class reading, and re-projecting it in class is exactly
+          // what we don't want.
+          if (slide.type === 'demo') {
+            rendered.classList.remove('on')
+            frame.style.display = 'none'
+            demoEl.classList.add('on')
+            titleEl.textContent = slide.title || ''
+            demoTitle.textContent = slide.title || ''
+            demoBody.innerHTML = slide.body ? '<p>' + [].concat(slide.body).join('</p><p>') + '</p>' : ''
+            // "?src=" is resolved by the coding-window page itself, so the
+            // path is relative to /coding-window/, not to this player.
+            var dsrc = '../coding-window/index.html?src=' +
+                       '../CMeCodeDir/' + encodeURIComponent(slide.startPoint) + '.c'
+            if (demoFrame.getAttribute('data-src') !== dsrc) {
+              demoFrame.setAttribute('data-src', dsrc)
+              demoFrame.src = dsrc
+            }
+            return
+          }
+
           if (slide.type === 'ref') {
             rendered.classList.remove('on')
+            demoEl.classList.remove('on')
             frame.style.display = 'block'
             // ?deck=1 tells classroom.js on the book page to hide the book's
             // nav chrome and scale type up for projection.
@@ -191,6 +237,7 @@
           }
 
           frame.style.display = 'none'
+          demoEl.classList.remove('on')
           rendered.classList.add('on')
           titleEl.textContent = slide.title || ''
 
