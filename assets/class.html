@@ -276,7 +276,20 @@
         font-size: 10pt; line-height: 1.4; margin: .5em 0 0 0;
         background: #f7f6f3; border: 1px solid #ddd9d0; border-radius: 4px;
         padding: 3mm 4mm; white-space: pre-wrap; overflow-wrap: break-word;
+        /* Text colour prints by default, but the code listing's whole value
+           is the colour, so force it rather than trust the print pipeline. */
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
       }
+      /* Syntax colours lifted from the coding window's own CodeMirror default
+         theme (cm-keyword etc.), so the printed listing and the live editor
+         agree. Highlighting is done by highlightC() in the script; there is
+         no CodeMirror here, in keeping with the no-build-step handout. */
+      .sheet pre .t-keyword { color: #708; }
+      .sheet pre .t-type    { color: #085; }
+      .sheet pre .t-number  { color: #164; }
+      .sheet pre .t-comment { color: #a50; }
+      .sheet pre .t-string  { color: #a11; }
+      .sheet pre .t-meta    { color: #555; }
       .sheet .kind {
         font-size: 9pt; color: #86847c; text-transform: uppercase;
         letter-spacing: .05em; margin: 0 0 .8em 0;
@@ -1205,6 +1218,79 @@
            it frames, since that page is a separate document we cannot inline.
            Every slide gets a sheet regardless, so sheet N is slide N and
            "look at slide 12" means the same thing on paper and on screen. */
+        /* A small, self-contained C syntax highlighter for the printed code
+           listings. Deliberately not CodeMirror: the handout has no build
+           step and pulls in nothing, and a listing does not need the editor's
+           full grammar - just keywords, types, numbers, strings, comments and
+           preprocessor lines, coloured to match the live window (see the
+           .t-* rules above). It is a left-to-right scanner rather than a pile
+           of regexes so that, e.g., a keyword inside a string or comment is
+           not miscoloured. Output is escaped as it goes. */
+        function highlightC(src) {
+          var KEYWORDS = { 'if':1,'else':1,'for':1,'while':1,'do':1,'switch':1,
+            'case':1,'default':1,'break':1,'continue':1,'return':1,'goto':1,
+            'sizeof':1,'typedef':1,'struct':1,'union':1,'enum':1,'static':1,
+            'const':1,'extern':1,'register':1,'volatile':1,'auto':1,'inline':1 }
+          var TYPES = { 'int':1,'char':1,'float':1,'double':1,'void':1,'short':1,
+            'long':1,'unsigned':1,'signed':1,'bool':1,'size_t':1,'FILE':1 }
+          var i = 0, n = src.length, out = ''
+          var atLineStart = true   // only whitespace seen since the last newline
+          function emit(cls, text) { out += '<span class="t-' + cls + '">' + esc(text) + '</span>' }
+          var isIdent = /[A-Za-z0-9_]/, isDigit = /[0-9]/, isNum = /[0-9a-fA-FxX.uUlLfF]/
+
+          while (i < n) {
+            var c = src.charAt(i)
+            if (c === '\n') { out += '\n'; i++; atLineStart = true; continue }
+            if (c === ' ' || c === '\t') { out += c; i++; continue }
+
+            // Preprocessor directive: '#' as the first non-space on its line.
+            // The angle-bracket or quoted header gets the string colour.
+            if (c === '#' && atLineStart) {
+              var e = i; while (e < n && src.charAt(e) !== '\n') e++
+              var line = src.slice(i, e)
+              var m = line.match(/^(#\s*[a-z]+\s*)(<[^>]*>|"[^"]*")?([\s\S]*)$/)
+              if (m) {
+                emit('meta', m[1])
+                if (m[2]) emit('string', m[2])
+                if (m[3]) emit('meta', m[3])
+              } else { emit('meta', line) }
+              i = e; atLineStart = false; continue
+            }
+            atLineStart = false
+
+            if (c === '/' && src.charAt(i + 1) === '/') {
+              var le = i; while (le < n && src.charAt(le) !== '\n') le++
+              emit('comment', src.slice(i, le)); i = le; continue
+            }
+            if (c === '/' && src.charAt(i + 1) === '*') {
+              var be = i + 2
+              while (be < n && !(src.charAt(be) === '*' && src.charAt(be + 1) === '/')) be++
+              be = Math.min(n, be + 2)
+              emit('comment', src.slice(i, be)); i = be; continue
+            }
+            if (c === '"' || c === "'") {
+              var se = i + 1
+              while (se < n && src.charAt(se) !== c) { if (src.charAt(se) === '\\') se++; se++ }
+              se = Math.min(n, se + 1)
+              emit('string', src.slice(i, se)); i = se; continue
+            }
+            if (isDigit.test(c) || (c === '.' && isDigit.test(src.charAt(i + 1)))) {
+              var ne = i; while (ne < n && isNum.test(src.charAt(ne))) ne++
+              emit('number', src.slice(i, ne)); i = ne; continue
+            }
+            if (/[A-Za-z_]/.test(c)) {
+              var we = i; while (we < n && isIdent.test(src.charAt(we))) we++
+              var word = src.slice(i, we)
+              if (KEYWORDS[word]) emit('keyword', word)
+              else if (TYPES[word]) emit('type', word)
+              else out += esc(word)
+              i = we; continue
+            }
+            out += esc(c); i++
+          }
+          return out
+        }
+
         function buildHandout() {
           document.documentElement.classList.add('printing')
           document.body.classList.add('printing')
@@ -1236,7 +1322,7 @@
                   '<p class="kind">Program</p>' +
                   '<h2>' + html(slide.title || '') + '</h2>' +
                   (slide.body ? '<p class="big">' + [].concat(slide.body).join('</p><p class="big">') + '</p>' : '') +
-                  '<pre>' + esc(codeFor[slide.startPoint] || '') + '</pre>'
+                  '<pre>' + highlightC(codeFor[slide.startPoint] || '') + '</pre>'
               } else if (slide.type === 'ref') {
                 body =
                   '<p class="kind">From the book</p>' +
