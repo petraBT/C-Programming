@@ -6,6 +6,67 @@ that help with that. See `README.md` for the plain build/deploy basics of
 the `web`/`web-static` targets; this file covers everything built up around
 the client-side coding window and Canvas integration.
 
+## 0. If you only read one section
+
+The short version of everything below, for when you just want to get on with
+it. Each line links to the section with the caveats.
+
+**Working on the book:**
+
+```sh
+./preview-edit.sh          # build, serve, and start every helper. Ctrl-C stops all.
+```
+
+Open <http://localhost:8931/>, then hold <kbd>alt</kbd>:
+
+| | |
+| --- | --- |
+| **alt-click** a paragraph | opens it in your editor at the right line |
+| **alt-shift-click** a paragraph | edit the text in place; ⌘⏎ saves to source |
+| **alt-click** a coding window | opens that exercise in the starting points tool |
+
+It rebuilds automatically when you save a `.ptx` — about 7 seconds, so a refresh
+shows your change. Pass `--no-watch` to hold the preview still at one build.
+Full details in `scripts/README-editing.md`.
+
+**Adding a starting point:** use the starting points tool (already running at
+<http://localhost:5050/>). For a *book* one, it creates the `.c` file but you
+still add the `<cmecode startPoint="...">` to the chapter yourself — §3. For a
+*Canvas* one, it also generates the embed HTML to paste — §4.
+
+**Making it live:**
+
+```sh
+./deploy-client-preview.sh
+```
+
+**This, not git, is what publishes.** It reads your working tree directly, so
+uncommitted changes deploy fine — and committing alone changes nothing on the
+live site. Redeploy after *any* change to `CMeCodeDir/` or `CanvasStartDir/`,
+or the book will fetch a Cloudflare fallback page instead of your file. That is
+the most common "why isn't this working". Wait ~10s before testing. §6.
+
+**Git:** independent of deploying — it is your history and backup, not your
+publish step.
+
+```sh
+git status                 # check what you actually changed
+git add -A && git commit -m "..."
+git push
+```
+
+Worth a look at `git status` before committing: builds, slides, and PDFs can
+appear as large untracked files, and binaries are permanent once committed.
+
+**Which script does what:**
+
+| Script | For |
+| --- | --- |
+| `./preview-edit.sh` | authoring — the one to reach for by default |
+| `./preview-client.sh` | previewing `web-client` without the editing helpers |
+| `./build.sh` | building `web` + `web-static` (the Thayer-window targets) |
+| `./deploy-client-preview.sh` | publishing to Cloudflare Pages |
+
 ## 1. The moving pieces
 
 - **The book itself** — PreTeXt source in `source/`, built via `pretext build

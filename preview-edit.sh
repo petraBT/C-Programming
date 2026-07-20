@@ -17,20 +17,24 @@ set -e
 # web-edit is deliberately absent from build.sh and deploy.sh, because it is the
 # one target carrying a script that talks to a server able to rewrite source.
 #
-# Usage: ./preview-edit.sh [port]   (defaults to 8931)
+# Usage: ./preview-edit.sh [port] [--no-watch]   (port defaults to 8931)
+#
+# --no-watch skips the rebuild-on-save watcher, for when you want the preview
+# held still at a known build. A warm rebuild is a few seconds; the first one
+# after a PreTeXt upgrade is much slower, since it re-fetches Runestone.
 
-PORT="${1:-8931}"
+PORT=8931
+WATCH=yes
+for arg in "$@"; do
+  case "$arg" in
+    --no-watch) WATCH=no ;;
+    *) PORT="$arg" ;;
+  esac
+done
 
-pretext build web-edit
-./scripts/add-applets.sh output/web-edit
-
-# coding-window/ and CMeCodeDir/ need to be siblings of the built pages - see
-# the cmecode.client.* param comments in xsl/c-programming-html.xsl for why.
-# Same steps as preview-client.sh; keep the two in step.
-cp -R coding-window output/web-edit/
-mkdir -p output/web-edit/CMeCodeDir
-find CMeCodeDir -maxdepth 1 -name '*.c' -exec cp {} output/web-edit/CMeCodeDir/ \;
-find CMeCodeDir -maxdepth 1 -name '*.datafile.json' -exec cp {} output/web-edit/CMeCodeDir/ \;
+# The build and its post-build steps live in scripts/build-edit.sh, so that the
+# watcher below re-runs exactly what happens here rather than a partial copy.
+./scripts/build-edit.sh
 
 # Everything this script starts goes in here and is torn down together, so that
 # authoring is one command rather than three terminals. Collecting PIDs as they
@@ -80,6 +84,18 @@ if command -v node >/dev/null 2>&1; then
   start_helper "starting points tool" 5050 node starting-points-tool/server.js
 else
   echo "  ! starting points tool: node not found - coding-window clicks won't land."
+fi
+
+# Rebuilds on every .ptx save, so an edit made in your editor - or in place in
+# the preview - shows up after a refresh instead of needing a manual build. It
+# runs scripts/build-edit.sh rather than "pretext build", because the post-build
+# steps matter as much as the build here.
+if [ "$WATCH" = "yes" ]; then
+  python3 watch.py --command ./scripts/build-edit.sh &
+  STARTED+=($!)
+  echo "  - file watcher (rebuilds on save; --no-watch to skip)"
+else
+  echo "  - file watcher off (--no-watch)"
 fi
 
 echo ""
