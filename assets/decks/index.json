@@ -1,0 +1,4 @@
+{
+  "_comment": "The list of lecture decks the player offers when opened with no ?deck= parameter. Deliberately just ids: the player fetches each deck for its own title and slide count, so a deck's title lives in exactly one place (the deck file) and cannot drift out of sync with a copy here. Add a line when you add a deck. icebreakers.json is not listed - it is a shared pool, not a deck, and has no slides array.",
+  "decks": ["W1C2", "W1C3"]
+}
