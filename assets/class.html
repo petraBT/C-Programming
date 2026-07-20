@@ -48,6 +48,15 @@
         background: #fff;
         overflow: hidden;
         container-type: size;
+        /* A hand resting on an iPad while writing is a long press on the
+           slide text: iOS selected the whole slide blue and raised the
+           "Copy / Search with Google" callout over it. The pen filter rejects
+           the touch for drawing, but rejecting it does not stop the browser's
+           own default gesture. A projected slide is not text anyone needs to
+           select, so turn both off. Book pages on 'ref' slides are a separate
+           document inside an iframe and keep their normal behaviour. */
+        -webkit-user-select: none; user-select: none;
+        -webkit-touch-callout: none;
       }
 
       /* --- book-page slides --------------------------------------------- */
@@ -507,6 +516,7 @@
         var inkFull = false
 
         function saveInk(n) {
+          if (savePending === n) { savePending = null; clearTimeout(saveTimer); saveTimer = null }
           var list = strokes[n] || []
           try {
             if (!list.length) localStorage.removeItem(inkKey(n))
@@ -518,11 +528,44 @@
           updateNote()
         }
 
-        // Saving happens once per finished stroke rather than on every sampled
-        // point (the coding windows debounce instead, because a keystroke has
-        // no natural end - a pen stroke does). Every way a stroke can end,
-        // including pointercancel and leaving the stage, goes through
-        // endStroke, so at most one in-progress stroke is ever unsaved.
+        /* Saving is debounced, like the coding windows.
+
+           It first saved synchronously on every pointerup, which seemed safe
+           because a pen stroke - unlike a keystroke - has a natural end. On
+           the iPad that was wrong and plainly so: localStorage is synchronous,
+           and stringifying the whole slide's ink runs at the exact moment the
+           pen lifts, which is the exact moment you are starting the next
+           letter. Handwriting became "pause between symbols", and got worse as
+           the slide filled up because the blocking write grows with it.
+
+           So: coalesce the writes, and flush on the way out. pagehide is the
+           reliable one on iOS Safari (unload is not), and visibilitychange
+           covers app-switching, which is how an iPad usually leaves a page. */
+        var saveTimer = null
+        var savePending = null
+
+        function saveInkSoon(n) {
+          // Changing slide with a write still pending would otherwise cancel
+          // it and save the new slide instead, losing the old slide's ink.
+          if (savePending != null && savePending !== n) flushInk()
+          savePending = n
+          clearTimeout(saveTimer)
+          saveTimer = setTimeout(flushInk, 500)
+        }
+
+        function flushInk() {
+          clearTimeout(saveTimer)
+          saveTimer = null
+          if (savePending == null) return
+          var n = savePending
+          savePending = null
+          saveInk(n)
+        }
+
+        window.addEventListener('pagehide', flushInk)
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'hidden') flushInk()
+        })
 
         // Stroke width is normalized too (a fraction of stage height), so a
         // line drawn on the iPad is the same visual weight on the projector.
@@ -547,28 +590,63 @@
           inkCtx.strokeStyle = PEN_COLOR
         }
 
+        // Paint one complete stroke at the given stage size.
+        //
+        // A stroke drawn live and the same stroke redrawn from storage differ
+        // by well under 2% of their edge pixels: live drawing emits each
+        // coalesced batch as its own round-capped polyline, while this emits
+        // the stroke as one continuous path, so the antialiasing at the joins
+        // is marginally different. Measured, not assumed. It is invisible at
+        // any size, and the alternative - repainting the finished stroke on
+        // pen-lift to make them converge - puts work back at the exact moment
+        // that made handwriting stutter in the first place.
+        function paintStroke(s, r) {
+          if (s.pts.length < 2) {
+            // A tap with no movement: draw a dot, or it vanishes.
+            inkCtx.beginPath()
+            inkCtx.arc(s.pts[0][0] * r.width, s.pts[0][1] * r.height, (s.w * r.height) / 2, 0, Math.PI * 2)
+            inkCtx.fillStyle = PEN_COLOR
+            inkCtx.fill()
+            return
+          }
+          inkCtx.lineWidth = s.w * r.height
+          inkCtx.beginPath()
+          inkCtx.moveTo(s.pts[0][0] * r.width, s.pts[0][1] * r.height)
+          for (var i = 1; i < s.pts.length; i++) {
+            inkCtx.lineTo(s.pts[i][0] * r.width, s.pts[i][1] * r.height)
+          }
+          inkCtx.stroke()
+        }
+
+        /* A full repaint: clears the canvas and draws every stroke. Only for
+           the things that genuinely invalidate everything - changing slide,
+           resizing, undo, clear.
+
+           Explicitly NOT for drawing. The canvas backing store is stage x dpr,
+           which is 2560x1440 on a retina iPad: clearing and repainting 3.7
+           million pixels for every sampled point, at the rate a Pencil
+           samples, is most of why handwriting needed a pause between symbols.
+           A live stroke only ever adds to what is already on the canvas, so it
+           just draws the new segment - see drawLiveSegment. */
         function redrawInk() {
           sizeInk()
           var r = stage.getBoundingClientRect()
           inkCtx.clearRect(0, 0, r.width, r.height)
-          var list = loadInk(currentIndex())
-          list.forEach(function (s) {
-            if (s.pts.length < 2) {
-              // A tap with no movement: draw a dot, or it vanishes.
-              inkCtx.beginPath()
-              inkCtx.arc(s.pts[0][0] * r.width, s.pts[0][1] * r.height, (s.w * r.height) / 2, 0, Math.PI * 2)
-              inkCtx.fillStyle = PEN_COLOR
-              inkCtx.fill()
-              return
-            }
-            inkCtx.lineWidth = s.w * r.height
-            inkCtx.beginPath()
-            inkCtx.moveTo(s.pts[0][0] * r.width, s.pts[0][1] * r.height)
-            for (var i = 1; i < s.pts.length; i++) {
-              inkCtx.lineTo(s.pts[i][0] * r.width, s.pts[i][1] * r.height)
-            }
-            inkCtx.stroke()
-          })
+          loadInk(currentIndex()).forEach(function (s) { paintStroke(s, r) })
+        }
+
+        // Extend the stroke in progress by the points just added, drawing only
+        // the new segments. `from` is the index of the last point already on
+        // the canvas.
+        function drawLiveSegment(s, from, r) {
+          if (s.pts.length < 2) return
+          inkCtx.lineWidth = s.w * r.height
+          inkCtx.beginPath()
+          inkCtx.moveTo(s.pts[from][0] * r.width, s.pts[from][1] * r.height)
+          for (var i = from + 1; i < s.pts.length; i++) {
+            inkCtx.lineTo(s.pts[i][0] * r.width, s.pts[i][1] * r.height)
+          }
+          inkCtx.stroke()
         }
 
         function syncInk() {
@@ -601,10 +679,10 @@
         // anyone can see, and roughly half the JSON of full float precision,
         // which matters against a ~5MB origin quota shared with saved code.
         function r4(v) { return Math.round(v * 1e4) / 1e4 }
-        function point(e) {
-          var r = stage.getBoundingClientRect()
+        function pointIn(e, r) {
           return [r4((e.clientX - r.left) / r.width), r4((e.clientY - r.top) / r.height)]
         }
+        function point(e) { return pointIn(e, stage.getBoundingClientRect()) }
         // Pens sample far faster than the ink needs to be described. Dropping
         // points closer together than this loses nothing visible and keeps
         // stored strokes substantially smaller.
@@ -633,17 +711,24 @@
           // polygonal. Older engines just give back the one event.
           var evs = (typeof e.getCoalescedEvents === 'function' && e.getCoalescedEvents().length)
                     ? e.getCoalescedEvents() : [e]
+          // One rect for the whole batch: getBoundingClientRect forces layout,
+          // and a coalesced batch can hold a dozen points.
+          var r = stage.getBoundingClientRect()
+          var drawnTo = live.pts.length - 1
           for (var i = 0; i < evs.length; i++) {
-            var p = point(evs[i])
+            var p = pointIn(evs[i], r)
             if (farEnough(p, live.pts[live.pts.length - 1])) live.pts.push(p)
           }
-          redrawInk()
+          drawLiveSegment(live, drawnTo, r)
         })
 
         function endStroke(e) {
           if (!live) return
+          // A stroke that never moved left nothing on the canvas, because
+          // drawLiveSegment only draws segments. Paint its dot now.
+          if (live.pts.length < 2) paintStroke(live, stage.getBoundingClientRect())
           live = null
-          saveInk(currentIndex())
+          saveInkSoon(currentIndex())
           if (e && e.pointerId != null && ink.hasPointerCapture(e.pointerId)) {
             ink.releasePointerCapture(e.pointerId)
           }
