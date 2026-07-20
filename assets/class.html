@@ -2,7 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- maximum-scale/user-scalable are here to kill iOS Safari's
+         double-tap-to-zoom, not to be controlling about layout. With it
+         enabled, Safari delays every tap-like contact ~300ms to decide
+         whether a second one is coming - and two quick pen-downs, which is
+         what writing two letters IS, look exactly like a double tap. That
+         delay was the "brief pause between individual symbols".
+         Normally suppressing pinch-zoom is an accessibility regression and
+         not worth it. Here the page is a 16:9 slide letterboxed into the
+         screen with type sized as a fraction of the stage: zooming cannot
+         reveal anything, because there is nothing outside the stage and
+         nothing in it that scales independently. The book itself, where
+         zoom does matter, is a different document and is untouched. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ENGS 20 — Class</title>
     <style>
       /* 16:9 projector view of a lecture deck. The deck is a playlist (see
@@ -57,6 +69,13 @@
            document inside an iframe and keep their normal behaviour. */
         -webkit-user-select: none; user-select: none;
         -webkit-touch-callout: none;
+        /* The targeted half of the same fix as the viewport meta above:
+           "manipulation" keeps panning and pinch-zoom but drops double-tap
+           zoom, and so drops the delay Safari holds every contact for while
+           it waits to see whether a second one is coming. Belt and braces -
+           the meta tag is the one that works today, this is the one that
+           keeps working if the meta tag is ever loosened. */
+        touch-action: manipulation;
       }
 
       /* --- book-page slides --------------------------------------------- */
@@ -480,6 +499,49 @@
 
         function isPen(e) { return PEN_POINTER_TYPES[e.pointerType] === true }
 
+        /* ?inkdebug=1 - an on-screen pointer-event log, for diagnosing input
+           problems on a device with no console.
+
+           The column that matters is "late": performance.now() minus the
+           event's own timeStamp, i.e. how long the browser sat on the event
+           before handing it to us. It separates the two explanations for
+           sluggish writing that otherwise look identical:
+             - late is small, gaps are large  -> the pen genuinely was not
+               down; nothing to fix in software.
+             - late is large                  -> the browser held the event,
+               which is the double-tap-zoom delay (or another gesture
+               recogniser) and is fixed in the page, not in our handlers.
+           Our own handler cost is "work". If that is small and "late" is
+           large, the problem is not our code - which is exactly the question
+           two rounds of guessing failed to answer. */
+        var inkDebug = params.get('inkdebug') === '1'
+        var dbgBox = null, dbgRows = [], dbgPrev = 0
+        if (inkDebug) {
+          dbgBox = document.createElement('div')
+          dbgBox.setAttribute('style',
+            'position:absolute;top:0;right:0;z-index:9;max-width:46%;max-height:60%;overflow:hidden;' +
+            'background:rgba(13,13,13,.88);color:#c3c2b7;font:11px/1.35 SFMono-Regular,Menlo,monospace;' +
+            'padding:6px 8px;white-space:pre;pointer-events:none;border-bottom-left-radius:6px')
+          document.getElementById('stage').appendChild(dbgBox)
+        }
+        function dbg(e, workMs) {
+          if (!dbgBox) return
+          var now = performance.now()
+          var gap = dbgPrev ? now - dbgPrev : 0
+          dbgPrev = now
+          var late = now - e.timeStamp
+          dbgRows.unshift(
+            (e.type.replace('pointer', '') + '      ').slice(0, 6) +
+            (e.pointerType + '    ').slice(0, 5) +
+            ' gap' + String(Math.round(gap)).padStart(5) +
+            ' late' + String(Math.round(late)).padStart(5) +
+            ' work' + workMs.toFixed(1).padStart(6))
+          if (dbgRows.length > 26) dbgRows.pop()
+          dbgBox.textContent =
+            'type  ptr   gap   late  work\n' +
+            '(ms; late = browser held it)\n' + dbgRows.join('\n')
+        }
+
         var stage = document.getElementById('stage')
         var ink = document.getElementById('ink')
         var inkCtx = ink.getContext('2d')
@@ -692,7 +754,10 @@
         }
 
         ink.addEventListener('pointerdown', function (e) {
-          if (!isPen(e) || !inkEnabled()) return
+          var t0 = performance.now()
+          // Logged even when rejected, so a palm or a finger that never draws
+          // is still visible in the trace.
+          if (!isPen(e) || !inkEnabled()) { dbg(e, performance.now() - t0); return }
           e.preventDefault()
           // Capture keeps a stroke coming to the canvas even if the pen
           // strays over the bar. Not fatal if it fails, so don't let it
@@ -701,6 +766,7 @@
           live = { w: PEN_WIDTH, pts: [point(e)] }
           loadInk(currentIndex()).push(live)
           bar.classList.add('inking')
+          dbg(e, performance.now() - t0)
         })
 
         ink.addEventListener('pointermove', function (e) {
@@ -723,7 +789,8 @@
         })
 
         function endStroke(e) {
-          if (!live) return
+          var t0 = performance.now()
+          if (!live) { if (e) dbg(e, performance.now() - t0); return }
           // A stroke that never moved left nothing on the canvas, because
           // drawLiveSegment only draws segments. Paint its dot now.
           if (live.pts.length < 2) paintStroke(live, stage.getBoundingClientRect())
@@ -732,6 +799,7 @@
           if (e && e.pointerId != null && ink.hasPointerCapture(e.pointerId)) {
             ink.releasePointerCapture(e.pointerId)
           }
+          if (e) dbg(e, performance.now() - t0)
         }
         ink.addEventListener('pointerup', endStroke)
         ink.addEventListener('pointercancel', endStroke)
