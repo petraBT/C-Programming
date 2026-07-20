@@ -891,6 +891,36 @@
             dbgStroke = null
           }
         }
+        /* The Scribble workaround.
+
+           iPadOS 14 introduced Scribble (handwriting to text), and with it a
+           long-standing regression: while a Pencil writes quickly on a web
+           page, Safari swallows whole pointer sequences. The contact never
+           reaches the page at all - not as a pointer event and not as a touch
+           event - so no amount of care in the handlers can recover it. It is
+           why Apple Notes writes perfectly while a browser drops symbols: the
+           native app never goes through that path.
+
+           Diagnosed on Petra's iPad by elimination: writing fast dropped
+           symbols identically on a 100-line diagnostic page with none of this
+           file's machinery, with and without a palm resting, while Apple
+           Notes was flawless. Every stylus contact that DID reach the page
+           produced a stroke - a clean 1:1 in the trace - so nothing here was
+           losing them; they simply never arrived.
+
+           Registering a non-passive touchmove listener that preventDefaults
+           is the community workaround: it opts this element out of the
+           gesture path Scribble hooks, and the pointer events stop going
+           missing. passive:false is the whole point - a passive listener may
+           not preventDefault, and would do nothing.
+
+           Nothing is scrolled by this. The canvas already carries
+           touch-action:none, and it only covers slides that do not scroll.
+           Students can also turn Scribble off in Settings > Apple Pencil,
+           which fixes it at the source, but nobody should have to change a
+           system setting to write on a slide. */
+        ink.addEventListener('touchmove', function (e) { e.preventDefault() }, { passive: false })
+
         ink.addEventListener('pointerup', endStroke)
         ink.addEventListener('pointercancel', endStroke)
         // A stroke dragged off the stage should end there, not resume when the
