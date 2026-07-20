@@ -177,15 +177,11 @@
           refEl.classList.remove('on')
         }
 
-        function esc(s) {
-          return String(s == null ? '' : s).replace(/[<>&"]/g, function (c) {
-            return {'<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;'}[c]
-          })
-        }
-
         // Slide text in the deck files is authored by us (not by students or
         // any other untrusted source) and intentionally carries small bits of
         // markup - <code>, &rarr; and the like - so it is inserted as HTML.
+        // Titles go through here too: escaping them printed a literal
+        // "&rarr;" on any slide whose title contained an entity.
         // Anything derived from elsewhere would need escaping first.
         function html(s) { return String(s == null ? '' : s) }
 
@@ -228,8 +224,8 @@
             rendered.classList.remove('on')
             refEl.classList.remove('on')
             demoEl.classList.add('on')
-            titleEl.textContent = slide.title || ''
-            demoTitle.textContent = slide.title || ''
+            titleEl.innerHTML = html(slide.title || '')
+            demoTitle.innerHTML = html(slide.title || '')
             demoBody.innerHTML = slide.body ? '<p>' + [].concat(slide.body).join('</p><p>') + '</p>' : ''
             // "?src=" is resolved by the coding-window page itself, so the
             // path is relative to /coding-window/, not to this player.
@@ -246,7 +242,7 @@
             rendered.classList.remove('on')
             demoEl.classList.remove('on')
             refEl.classList.add('on')
-            refTitle.textContent = slide.title || ''
+            refTitle.innerHTML = html(slide.title || '')
             // ?deck=1 tells classroom.js on the book page to hide the book's
             // nav chrome and scale type up for projection.
             var src = '../' + slide.page + (slide.page.indexOf('?') === -1 ? '?' : '&') + 'deck=1'
@@ -269,32 +265,32 @@
               revealTimer = setTimeout(revealFrame, 1200)
               frame.src = src
             }
-            titleEl.textContent = slide.title || ''
+            titleEl.innerHTML = html(slide.title || '')
             return
           }
 
           refEl.classList.remove('on')
           demoEl.classList.remove('on')
           rendered.classList.add('on')
-          titleEl.textContent = slide.title || ''
+          titleEl.innerHTML = html(slide.title || '')
 
           var parts = []
           if (slide.type === 'icebreaker') {
             var ib = resolveIcebreaker(slide)
             if (!ib) { parts.push('<p class="big">(no icebreakers defined)</p>') }
             else {
-              titleEl.textContent = ib.title || 'Warm-up'
-              parts.push('<h2>' + esc(ib.title || 'Warm-up') + '</h2>')
+              titleEl.innerHTML = html(ib.title || 'Warm-up')
+              parts.push('<h2>' + html(ib.title || 'Warm-up') + '</h2>')
               parts.push('<p class="big">' + html(ib.prompt) + '</p>')
               if (ib.note) parts.push('<p class="note">' + html(ib.note) + '</p>')
             }
           } else if (slide.type === 'prompt') {
-            parts.push('<h2>' + esc(slide.title || '') + '</h2>')
+            parts.push('<h2>' + html(slide.title || '') + '</h2>')
             parts.push('<p class="big">' + html(slide.body) + '</p>')
             if (slide.note) parts.push('<p class="note">' + html(slide.note) + '</p>')
           } else {
             // recap / agenda / anything else with a title + items
-            parts.push('<h2>' + esc(slide.title || '') + '</h2>')
+            parts.push('<h2>' + html(slide.title || '') + '</h2>')
             if (slide.items) {
               parts.push('<ul>')
               slide.items.forEach(function (it) { parts.push('<li>' + html(it) + '</li>') })
