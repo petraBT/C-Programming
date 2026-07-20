@@ -108,6 +108,27 @@
         font-size: .92em; background: #f0efec; padding: .12em .38em; border-radius: 4px;
       }
 
+      /* --- pen annotation ------------------------------------------------ */
+      /* Sits over the slide, under #bar (which follows it in the DOM, so it
+         wins both paint and hit testing at the same z-index). Only turned on
+         for 'rendered' slides for now: 'ref' and 'demo' slides put an iframe
+         underneath, and covering it would make the coding window inert - that
+         needs a pen/interact toggle, which is a later step.
+
+         Annotations are the student's own and are deliberately NOT part of
+         the follow-me session: nothing here touches classroom.js. */
+      /* width/height are not redundant with inset: a canvas is a replaced
+         element, so `inset: 0` alone leaves width:auto resolving to the
+         canvas's intrinsic (backing-store) size - which is stage x dpr, so
+         the layer silently rendered at 2x and every stroke landed off-stage. */
+      #ink {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        display: none; touch-action: none;
+      }
+      #ink.on { display: block; }
+      #bar .ink-tool { display: none; }
+      #bar.inking .ink-tool { display: inline-block; }
+
       /* --- chrome -------------------------------------------------------- */
       #bar {
         position: absolute; left: 0; right: 0; bottom: 0; height: 34px;
@@ -139,9 +160,12 @@
         </div>
         <div id="rendered"></div>
         <div id="err"></div>
+        <canvas id="ink"></canvas>
         <div id="bar">
           <span id="title"></span>
           <span class="spacer"></span>
+          <button id="undo" class="ink-tool" type="button" title="Undo last stroke">Undo</button>
+          <button id="clear" class="ink-tool" type="button" title="Erase this slide's ink">Clear</button>
           <span id="pos"></span>
           <button id="prev" type="button">&larr;</button>
           <button id="next" type="button">&rarr;</button>
@@ -242,7 +266,14 @@
           return list[Math.floor(Math.random() * list.length)]
         }
 
+        // render() has several early returns, one per slide type, so the ink
+        // layer is refreshed by a wrapper rather than at the end of each.
         function render() {
+          renderSlide()
+          syncInk()
+        }
+
+        function renderSlide() {
           if (!deck) return
           var n = currentIndex()
           var slide = deck.slides[n - 1]
@@ -336,6 +367,150 @@
           }
           rendered.innerHTML = parts.join('')
         }
+
+        /* --- pen annotation ------------------------------------------------
+           Students write on their own copy of a slide. This is deliberately
+           invisible to the follow-me session (see classroom.js): Petra's
+           annotations must not be broadcast, and a student's must not be
+           overwritten by anyone else's. Nothing below touches the session.
+
+           Strokes are kept as points normalized 0-1 against #stage, never as
+           pixels or images: the deck is vmin-scaled, so the same slide is a
+           different pixel size on a phone, a laptop and the projector, and
+           normalized points redraw correctly on all of them. (It also keeps
+           the eventual localStorage form small - a rasterized PNG dataURL per
+           slide would eat the origin quota that saved student code shares.) */
+
+        // THE assumption this whole feature rests on: that iPadOS Safari
+        // reports an Apple Pencil as pointerType 'pen'. It cannot be tested
+        // from a Mac - open assets/pointer-check.html on the iPad to confirm.
+        // It is isolated here on purpose: if the Pencil turns out to report
+        // something else, this map is the only thing that has to change.
+        var PEN_POINTER_TYPES = { pen: true }
+
+        // Escape hatch for developing on a machine with no stylus:
+        // ?ink=all lets a mouse or finger draw. Not for classroom use - it
+        // costs the palm rejection that filtering to 'pen' gives for free.
+        if (params.get('ink') === 'all') PEN_POINTER_TYPES = { pen: true, mouse: true, touch: true }
+
+        function isPen(e) { return PEN_POINTER_TYPES[e.pointerType] === true }
+
+        var stage = document.getElementById('stage')
+        var ink = document.getElementById('ink')
+        var inkCtx = ink.getContext('2d')
+        var bar = document.getElementById('bar')
+        var strokes = {}          // slide number -> array of strokes
+        var live = null           // stroke in progress
+
+        // Stroke width is normalized too (a fraction of stage height), so a
+        // line drawn on the iPad is the same visual weight on the projector.
+        var PEN_WIDTH = 0.004
+        var PEN_COLOR = '#d92b2b'
+
+        function inkEnabled() {
+          // Only 'rendered' slides for now - see the #ink CSS comment.
+          if (!deck) return false
+          var slide = deck.slides[currentIndex() - 1]
+          return !!slide && slide.type !== 'ref' && slide.type !== 'demo'
+        }
+
+        function sizeInk() {
+          var r = stage.getBoundingClientRect()
+          var dpr = window.devicePixelRatio || 1
+          var w = Math.max(1, Math.round(r.width * dpr))
+          var h = Math.max(1, Math.round(r.height * dpr))
+          if (ink.width !== w || ink.height !== h) { ink.width = w; ink.height = h }
+          inkCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
+          inkCtx.lineCap = inkCtx.lineJoin = 'round'
+          inkCtx.strokeStyle = PEN_COLOR
+        }
+
+        function redrawInk() {
+          sizeInk()
+          var r = stage.getBoundingClientRect()
+          inkCtx.clearRect(0, 0, r.width, r.height)
+          var list = strokes[currentIndex()] || []
+          list.forEach(function (s) {
+            if (s.pts.length < 2) {
+              // A tap with no movement: draw a dot, or it vanishes.
+              inkCtx.beginPath()
+              inkCtx.arc(s.pts[0][0] * r.width, s.pts[0][1] * r.height, (s.w * r.height) / 2, 0, Math.PI * 2)
+              inkCtx.fillStyle = PEN_COLOR
+              inkCtx.fill()
+              return
+            }
+            inkCtx.lineWidth = s.w * r.height
+            inkCtx.beginPath()
+            inkCtx.moveTo(s.pts[0][0] * r.width, s.pts[0][1] * r.height)
+            for (var i = 1; i < s.pts.length; i++) {
+              inkCtx.lineTo(s.pts[i][0] * r.width, s.pts[i][1] * r.height)
+            }
+            inkCtx.stroke()
+          })
+        }
+
+        function syncInk() {
+          var on = inkEnabled()
+          ink.classList.toggle('on', on)
+          bar.classList.toggle('inking', on && (strokes[currentIndex()] || []).length > 0)
+          if (on) redrawInk()
+        }
+
+        function point(e) {
+          var r = stage.getBoundingClientRect()
+          return [(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height]
+        }
+
+        ink.addEventListener('pointerdown', function (e) {
+          if (!isPen(e) || !inkEnabled()) return
+          e.preventDefault()
+          // Capture keeps a stroke coming to the canvas even if the pen
+          // strays over the bar. Not fatal if it fails, so don't let it
+          // throw away the stroke.
+          try { ink.setPointerCapture(e.pointerId) } catch (err) {}
+          live = { w: PEN_WIDTH, pts: [point(e)] }
+          var n = currentIndex()
+          if (!strokes[n]) strokes[n] = []
+          strokes[n].push(live)
+          bar.classList.add('inking')
+        })
+
+        ink.addEventListener('pointermove', function (e) {
+          if (!live || !isPen(e)) return
+          e.preventDefault()
+          // Safari coalesces pointermove at the Pencil's higher sample rate;
+          // taking the coalesced events keeps fast strokes smooth instead of
+          // polygonal. Older engines just give back the one event.
+          var evs = (typeof e.getCoalescedEvents === 'function' && e.getCoalescedEvents().length)
+                    ? e.getCoalescedEvents() : [e]
+          for (var i = 0; i < evs.length; i++) live.pts.push(point(evs[i]))
+          redrawInk()
+        })
+
+        function endStroke(e) {
+          if (!live) return
+          live = null
+          if (e && e.pointerId != null && ink.hasPointerCapture(e.pointerId)) {
+            ink.releasePointerCapture(e.pointerId)
+          }
+        }
+        ink.addEventListener('pointerup', endStroke)
+        ink.addEventListener('pointercancel', endStroke)
+        // A stroke dragged off the stage should end there, not resume when the
+        // pen comes back.
+        ink.addEventListener('pointerleave', endStroke)
+
+        document.getElementById('undo').addEventListener('click', function () {
+          var list = strokes[currentIndex()]
+          if (list && list.length) list.pop()
+          syncInk()
+        })
+        document.getElementById('clear').addEventListener('click', function () {
+          strokes[currentIndex()] = []
+          syncInk()
+        })
+
+        window.addEventListener('resize', function () { if (inkEnabled()) redrawInk() })
 
         window.addEventListener('hashchange', render)
         document.getElementById('prev').addEventListener('click', function () { go(currentIndex() - 1) })
