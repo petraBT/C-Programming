@@ -164,6 +164,13 @@
         var deck = null
         var banks = {}
 
+        var revealTimer = null
+        function revealFrame() {
+          clearTimeout(revealTimer)
+          frame.style.visibility = ''
+        }
+        frame.addEventListener('load', revealFrame)
+
         function fail(msg) {
           errEl.textContent = msg
           errEl.style.display = 'block'
@@ -250,6 +257,16 @@
             if (slide.omit) src += '&omit=' + encodeURIComponent(slide.omit)
             if (frame.getAttribute('data-src') !== src) {
               frame.setAttribute('data-src', src)
+              // PreTeXt injects classroom.js at the END of <body>, so a book
+              // page paints its full masthead and banner before deck mode
+              // strips them - a visible flash of the book's chrome on every
+              // page turn. We can't move the script (html.js.extra decides
+              // that), so hide the frame until the page has loaded and
+              // restyled itself. The timeout is a safety net: a page that
+              // never fires load must still end up visible.
+              frame.style.visibility = 'hidden'
+              clearTimeout(revealTimer)
+              revealTimer = setTimeout(revealFrame, 1200)
               frame.src = src
             }
             titleEl.textContent = slide.title || ''
