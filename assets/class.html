@@ -94,6 +94,15 @@
         width: .5em; height: .5em; border-radius: 50%; background: #2a78d6;
       }
       #rendered .note { font-size: 2.6vmin; color: #52514e; margin-top: .8em; line-height: 1.5; }
+      /* Blank-cell tables for students to fill in. The cells are empty on
+         purpose, so they need a minimum size to read as somewhere to write. */
+      #rendered table { border-collapse: collapse; margin: .4em 0 0 0; font-size: 2.7vmin; }
+      #rendered th, #rendered td {
+        border: 1px solid #a9a79e; padding: .5em 1.2em; text-align: left;
+      }
+      #rendered td { min-width: 9em; height: 2.4em; }
+      #rendered thead th { background: #f0efec; font-weight: 600; }
+      #rendered tbody th { font-weight: 500; }
       #rendered code {
         font-family: "SFMono-Regular", Consolas, Menlo, monospace;
         font-size: .92em; background: #f0efec; padding: .12em .38em; border-radius: 4px;
@@ -186,6 +195,29 @@
         // "&rarr;" on any slide whose title contained an entity.
         // Anything derived from elsewhere would need escaping first.
         function html(s) { return String(s == null ? '' : s) }
+
+        // Several LCS practice slides pose a question and then give the
+        // students a blank table to fill in - the answers are worked in class,
+        // so the cells stay empty on purpose. A slide declares
+        //   "table": {"columns": ["", "77", "-77"], "rows": ["8-bit signed"]}
+        // where columns[0] labels the row-header column and every other cell
+        // is left blank. Rendered as its own block rather than inside the
+        // body paragraph: a <table> inside a <p> gets hoisted out by the
+        // parser and the layout comes apart.
+        function fillTable(t) {
+          if (!t || !t.rows || !t.rows.length) return ''
+          var cols = t.columns || ['']
+          var out = ['<table><thead><tr>']
+          cols.forEach(function (c) { out.push('<th>' + html(c) + '</th>') })
+          out.push('</tr></thead><tbody>')
+          t.rows.forEach(function (r) {
+            out.push('<tr><th scope="row">' + html(r) + '</th>')
+            for (var i = 1; i < cols.length; i++) out.push('<td></td>')
+            out.push('</tr>')
+          })
+          out.push('</tbody></table>')
+          return out.join('')
+        }
 
         function currentIndex() {
           var n = parseInt(location.hash.replace('#', ''), 10)
@@ -289,6 +321,7 @@
           } else if (slide.type === 'prompt') {
             parts.push('<h2>' + html(slide.title || '') + '</h2>')
             parts.push('<p class="big">' + html(slide.body) + '</p>')
+            parts.push(fillTable(slide.table))
             if (slide.note) parts.push('<p class="note">' + html(slide.note) + '</p>')
           } else {
             // recap / agenda / anything else with a title + items
