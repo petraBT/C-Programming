@@ -144,6 +144,8 @@
       #ink.on { display: block; }
       #bar .ink-tool { display: none; }
       #bar.inking .ink-tool { display: inline-block; }
+      #note { color: #86847c; }
+      #note.warn { color: #ffab91; }
 
       /* --- index --------------------------------------------------------- */
       /* Closes the discoverability gap: the player used to be a URL you had to
@@ -230,6 +232,7 @@
           <button id="menu" type="button" title="Slides (Esc)">&#9776;</button>
           <span id="title"></span>
           <span class="spacer"></span>
+          <span id="note"></span>
           <button id="undo" class="ink-tool" type="button" title="Undo last stroke">Undo</button>
           <button id="clear" class="ink-tool" type="button" title="Erase this slide's ink">Clear</button>
           <span id="pos"></span>
@@ -472,8 +475,54 @@
         var ink = document.getElementById('ink')
         var inkCtx = ink.getContext('2d')
         var bar = document.getElementById('bar')
-        var strokes = {}          // slide number -> array of strokes
+        var strokes = {}          // slide number -> array of strokes (cache)
         var live = null           // stroke in progress
+
+        /* Persistence. localStorage, deliberately not the sessionStorage that
+           carries classroom session identity: that is per-tab and dies with
+           the tab by design, which is the exact opposite of what annotation
+           wants. Keyed by deck and slide, in the same "cw:"-style namespace
+           the coding windows use.
+
+           This is per-browser and therefore inherently private to one student
+           - which is the requirement. Instructor ink is never broadcast,
+           because there is no channel by which it could be. */
+        var INK_NS = 'deck:ink:'
+        function inkKey(n) { return INK_NS + deckId + ':' + n }
+
+        function loadInk(n) {
+          if (strokes[n]) return strokes[n]
+          var list = []
+          try {
+            var raw = localStorage.getItem(inkKey(n))
+            if (raw) { var p = JSON.parse(raw); if (Array.isArray(p)) list = p }
+          } catch (e) { /* private mode, disabled storage, corrupt JSON */ }
+          strokes[n] = list
+          return list
+        }
+
+        // Set when a write has been refused for want of room. Annotations keep
+        // working in memory - losing the current stroke because the quota is
+        // full would be worse than losing it at the end of the session.
+        var inkFull = false
+
+        function saveInk(n) {
+          var list = strokes[n] || []
+          try {
+            if (!list.length) localStorage.removeItem(inkKey(n))
+            else localStorage.setItem(inkKey(n), JSON.stringify(list))
+            inkFull = false
+          } catch (e) {
+            inkFull = true
+          }
+          updateNote()
+        }
+
+        // Saving happens once per finished stroke rather than on every sampled
+        // point (the coding windows debounce instead, because a keystroke has
+        // no natural end - a pen stroke does). Every way a stroke can end,
+        // including pointercancel and leaving the stage, goes through
+        // endStroke, so at most one in-progress stroke is ever unsaved.
 
         // Stroke width is normalized too (a fraction of stage height), so a
         // line drawn on the iPad is the same visual weight on the projector.
@@ -502,7 +551,7 @@
           sizeInk()
           var r = stage.getBoundingClientRect()
           inkCtx.clearRect(0, 0, r.width, r.height)
-          var list = strokes[currentIndex()] || []
+          var list = loadInk(currentIndex())
           list.forEach(function (s) {
             if (s.pts.length < 2) {
               // A tap with no movement: draw a dot, or it vanishes.
@@ -525,13 +574,43 @@
         function syncInk() {
           var on = inkEnabled()
           ink.classList.toggle('on', on)
-          bar.classList.toggle('inking', on && (strokes[currentIndex()] || []).length > 0)
+          bar.classList.toggle('inking', on && loadInk(currentIndex()).length > 0)
           if (on) redrawInk()
+          updateNote()
         }
 
+        // Same trust model and wording as the coding windows, so students have
+        // one story to learn rather than two. The coding windows add "download
+        // your code to keep a safe copy"; there is no annotation export yet,
+        // so promising one here would be a lie - say it when it exists.
+        function updateNote() {
+          var noteEl = document.getElementById('note')
+          if (inkFull) {
+            noteEl.textContent = 'Out of storage — new marks are not being saved.'
+            noteEl.className = 'warn'
+          } else if (inkEnabled() && loadInk(currentIndex()).length) {
+            noteEl.textContent = 'Saved in this browser only.'
+            noteEl.className = ''
+          } else {
+            noteEl.textContent = ''
+            noteEl.className = ''
+          }
+        }
+
+        // 4 decimal places is ~0.16px on a 1600px-wide stage - far finer than
+        // anyone can see, and roughly half the JSON of full float precision,
+        // which matters against a ~5MB origin quota shared with saved code.
+        function r4(v) { return Math.round(v * 1e4) / 1e4 }
         function point(e) {
           var r = stage.getBoundingClientRect()
-          return [(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height]
+          return [r4((e.clientX - r.left) / r.width), r4((e.clientY - r.top) / r.height)]
+        }
+        // Pens sample far faster than the ink needs to be described. Dropping
+        // points closer together than this loses nothing visible and keeps
+        // stored strokes substantially smaller.
+        var MIN_STEP = 0.0015
+        function farEnough(a, b) {
+          return Math.abs(a[0] - b[0]) > MIN_STEP || Math.abs(a[1] - b[1]) > MIN_STEP
         }
 
         ink.addEventListener('pointerdown', function (e) {
@@ -542,9 +621,7 @@
           // throw away the stroke.
           try { ink.setPointerCapture(e.pointerId) } catch (err) {}
           live = { w: PEN_WIDTH, pts: [point(e)] }
-          var n = currentIndex()
-          if (!strokes[n]) strokes[n] = []
-          strokes[n].push(live)
+          loadInk(currentIndex()).push(live)
           bar.classList.add('inking')
         })
 
@@ -556,13 +633,17 @@
           // polygonal. Older engines just give back the one event.
           var evs = (typeof e.getCoalescedEvents === 'function' && e.getCoalescedEvents().length)
                     ? e.getCoalescedEvents() : [e]
-          for (var i = 0; i < evs.length; i++) live.pts.push(point(evs[i]))
+          for (var i = 0; i < evs.length; i++) {
+            var p = point(evs[i])
+            if (farEnough(p, live.pts[live.pts.length - 1])) live.pts.push(p)
+          }
           redrawInk()
         })
 
         function endStroke(e) {
           if (!live) return
           live = null
+          saveInk(currentIndex())
           if (e && e.pointerId != null && ink.hasPointerCapture(e.pointerId)) {
             ink.releasePointerCapture(e.pointerId)
           }
@@ -574,12 +655,20 @@
         ink.addEventListener('pointerleave', endStroke)
 
         document.getElementById('undo').addEventListener('click', function () {
-          var list = strokes[currentIndex()]
-          if (list && list.length) list.pop()
+          var n = currentIndex()
+          var list = loadInk(n)
+          if (list.length) list.pop()
+          saveInk(n)
           syncInk()
         })
         document.getElementById('clear').addEventListener('click', function () {
-          strokes[currentIndex()] = []
+          var n = currentIndex()
+          if (!loadInk(n).length) return
+          // Now that ink outlives the tab, clearing destroys saved work - so
+          // it asks first, like the coding windows' "start fresh".
+          if (!confirm('Erase everything you have written on this slide?')) return
+          strokes[n] = []
+          saveInk(n)
           syncInk()
         })
 
@@ -636,7 +725,14 @@
           return clip(t || b || slide.type, 110)
         }
 
-        function hasInk(n) { return !!(strokes[n] && strokes[n].length) }
+        // Reads storage rather than the in-memory cache: after a reload the
+        // index is the first thing a student opens, and nothing is cached yet
+        // - marking only the slides visited this session would defeat it.
+        // saveInk() removes an emptied key, so a present key means real ink.
+        function hasInk(n) {
+          if (strokes[n]) return strokes[n].length > 0
+          try { return localStorage.getItem(inkKey(n)) !== null } catch (e) { return false }
+        }
 
         function renderSlideIndex() {
           idxTitle.innerHTML = html(deck.title || deckId)
