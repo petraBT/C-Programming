@@ -306,7 +306,7 @@
         <image source="images/SignedMagnitude.png" width="70%"/>
         <p>This allows for a range from -127 to 127 to be represented.</p>
         <p>For an n-bit binary number: <m>-(2^{n-1}-1)</m> to <m>(2^{n-1}-1)</m></p>
-        <subsection xml:id="neg-adding-binary">
+        <subsection>
           <title>Adding in Binary</title>
           <p>How do you add binary numbers?</p>
           <p>Recall addition in the <term>decimal system</term>:</p>
@@ -360,7 +360,7 @@
           </exercise>
         </reading-questions>
 
-        <subsection xml:id="neg-twos-complement">
+        <subsection>
           <title>Binary Two's Complement</title>
           <p>We noticed in the last video that arithmetic is not straight forward in the signed magnitude representation of negative numbers. We therefore introduce a different way to store negative integers, namely the <term>binary two's complement</term> representation. While this representation may seem cumbersome at first, the point is really to fix the problems we observed with binary addition when negative numbers are involved. The binary two's complement representation allows for the same process to be used in adding integers internally inside the computer, regardless of whether the numbers are positive or negative. This process is typically hard-wired in the computer's processor which makes for super fast execution time.</p>
           <aside>
@@ -391,7 +391,7 @@
           </li>
         </ol>
       </subsection>
-      <subsection xml:id="neg-twos-example">
+      <subsection>
         <title>2's Complement Example</title>
         <p>Decimal:</p>
         <pre>
@@ -425,7 +425,7 @@
         <p>Did it work? Is this the 2's complement of -87?</p>
         <p>We need a way to decode a 2's complement number...</p>
       </subsection>
-      <subsection xml:id="neg-decoding">
+      <subsection>
         <title>Decoding 2's Complement Numbers</title>
         <image source="images/TwosComplement.png" width="70%"/>
         <ol>
@@ -530,7 +530,7 @@
         <p>Example: <c>0xAC</c> means "A" * <m>16^1</m> + "C" * <m>16^0</m> = 10 * 16 + 12 * 1 = 172 in decimal</p>
         <p><em>The "0x" indicates that what follows is in hex</em></p>
         <p>Another example: <c>0x57</c> means 5 * <m>16^1</m> + 7 * <m>16^0</m> = 87 in decimal</p>
-        <subsection xml:id="hex-why">
+        <subsection>
           <title>Why Use Hexadecimal?</title>
           <p>Binary numbers can be REALLY long (used in memory location addressing for example.)</p>
           <ul>
@@ -552,7 +552,7 @@
             <li>Condenses 3 bits into one</li>
           </ul>
         </subsection>
-        <subsection xml:id="hex-dec-to-hex">
+        <subsection>
           <title>Decimal to Hexadecimal</title>
           <p>We already know how this works: keep dividing by 16, record the remainders in reverse order!</p>
           <pre>
@@ -564,7 +564,7 @@
             23,597              ->       0x5C2D
           </pre>
         </subsection>
-        <subsection xml:id="hex-bin-to-hex">
+        <subsection>
           <title>Binary to Hexadecimal and Decimal</title>
           <p>We can go directly from binary to decimal, or via hex.</p>
           <p>Example: 16-bit binary integer</p>
@@ -590,7 +590,7 @@
           <p>Binary-to-decimal:</p>
           <p>=5545</p>
         </subsection>
-        <subsection xml:id="hex-negative-example">
+        <subsection>
           <title>Another Example</title>
           <p><c>0xB5A9</c> 2-byte hexadecimal (base-16) number</p>
           <p>Hex-to-binary:</p>
