@@ -2,19 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- maximum-scale/user-scalable are here to kill iOS Safari's
-         double-tap-to-zoom, not to be controlling about layout. With it
-         enabled, Safari delays every tap-like contact ~300ms to decide
-         whether a second one is coming - and two quick pen-downs, which is
-         what writing two letters IS, look exactly like a double tap. That
-         delay was the "brief pause between individual symbols".
-         Normally suppressing pinch-zoom is an accessibility regression and
-         not worth it. Here the page is a 16:9 slide letterboxed into the
-         screen with type sized as a fraction of the stage: zooming cannot
-         reveal anything, because there is nothing outside the stage and
-         nothing in it that scales independently. The book itself, where
-         zoom does matter, is a different document and is untouched. -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!-- Deliberately does NOT suppress pinch-zoom. That was tried, to kill
+         iOS Safari's double-tap-to-zoom delay, on the theory that it was
+         what made handwriting stutter. The device said otherwise: pointer
+         events were already arriving 8-19ms after Safari generated them,
+         so no such delay existed and the restriction bought nothing. The
+         real cause was Scribble swallowing contacts - see the touchmove
+         workaround in the script. Blocking zoom is an accessibility cost,
+         so it is not worth paying for nothing. touch-action: manipulation
+         on the stage covers double-tap zoom in a targeted way if it ever
+         does matter. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ENGS 20 — Class</title>
     <style>
       /* 16:9 projector view of a lecture deck. The deck is a playlist (see
