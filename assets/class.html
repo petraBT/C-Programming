@@ -38,7 +38,21 @@
       }
 
       /* --- book-page slides --------------------------------------------- */
-      #frame { width: 100%; height: 100%; border: 0; display: block; background: #fff; }
+      /* The deck's own title for the slide sits above the framed book page,
+         styled exactly like a demo slide's heading, so a slide built from the
+         book and one written in the deck file read as the same deck. The book
+         page keeps its own heading ("Activity 4.6.3. Adding User Input") -
+         that names the item the way the book numbers it, while this one says
+         what we are doing with it in class. A deck slide with no title just
+         gets the frame. */
+      #ref { width: 100%; height: 100%; display: none; flex-direction: column; }
+      #ref.on { display: flex; }
+      #ref h2 {
+        margin: 0; padding: 2.2% 4% 0 4%;
+        font-size: 3.2vmin; font-weight: 600; color: #256abf;
+      }
+      #ref h2:empty { display: none; }
+      #frame { flex: 1; width: 100%; min-height: 0; border: 0; display: block; background: #fff; }
 
       /* --- demo slides: a little text over one coding window ------------- */
       #demo { width: 100%; height: 100%; display: none; flex-direction: column; padding: 3.2% 4% 2.2% 4%; }
@@ -103,7 +117,10 @@
   <body>
     <div id="stage-wrap">
       <div id="stage">
-        <iframe id="frame" title="Class content" allow="cross-origin-isolated"></iframe>
+        <div id="ref">
+          <h2 id="ref-title"></h2>
+          <iframe id="frame" title="Class content" allow="cross-origin-isolated"></iframe>
+        </div>
         <div id="demo">
           <h2 id="demo-title"></h2>
           <div class="body" id="demo-body"></div>
@@ -132,6 +149,8 @@
         var params = new URLSearchParams(location.search)
         var deckId = params.get('deck') || 'W1C2'
 
+        var refEl = document.getElementById('ref')
+        var refTitle = document.getElementById('ref-title')
         var frame = document.getElementById('frame')
         var demoEl = document.getElementById('demo')
         var demoTitle = document.getElementById('demo-title')
@@ -148,7 +167,7 @@
         function fail(msg) {
           errEl.textContent = msg
           errEl.style.display = 'block'
-          frame.style.display = 'none'
+          refEl.classList.remove('on')
         }
 
         function esc(s) {
@@ -200,7 +219,7 @@
           // what we don't want.
           if (slide.type === 'demo') {
             rendered.classList.remove('on')
-            frame.style.display = 'none'
+            refEl.classList.remove('on')
             demoEl.classList.add('on')
             titleEl.textContent = slide.title || ''
             demoTitle.textContent = slide.title || ''
@@ -219,7 +238,8 @@
           if (slide.type === 'ref') {
             rendered.classList.remove('on')
             demoEl.classList.remove('on')
-            frame.style.display = 'block'
+            refEl.classList.add('on')
+            refTitle.textContent = slide.title || ''
             // ?deck=1 tells classroom.js on the book page to hide the book's
             // nav chrome and scale type up for projection.
             var src = '../' + slide.page + (slide.page.indexOf('?') === -1 ? '?' : '&') + 'deck=1'
@@ -236,7 +256,7 @@
             return
           }
 
-          frame.style.display = 'none'
+          refEl.classList.remove('on')
           demoEl.classList.remove('on')
           rendered.classList.add('on')
           titleEl.textContent = slide.title || ''

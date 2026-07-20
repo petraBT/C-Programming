@@ -66,11 +66,6 @@
       '#ptx-content .heading, #ptx-content .heading .title,',
       '#ptx-content .para .heading, #ptx-content article > .heading {',
       '  color: #256abf !important; }',
-      // "Activity 4.5." numbering is for a reader navigating the book; in
-      // class the slide title already says what this is. The number's
-      // neighbouring space and period are separate PreTeXt spans, so they go
-      // too - otherwise the heading reads "Activity ." with an orphan period.
-      '#ptx-content .codenumber, #ptx-content .heading-divison-mark { display: none !important; }',
     ].join('\n')
     ;(document.head || document.documentElement).appendChild(deckCss)
 
