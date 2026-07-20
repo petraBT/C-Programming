@@ -215,6 +215,90 @@
          of the index is getting back to your own annotation. */
       #index .inked { flex: none; color: #d92b2b; font-size: .9em; }
 
+      /* --- printable handout (?print=1) ---------------------------------- */
+      /* A blank worksheet to give students before class, so their note-taking
+         happens in a real PDF annotator rather than in a browser. That is not
+         a workaround for our own shortcomings: iPadOS Safari drops Pencil
+         input while writing fast (see the Scribble note in the script), and
+         native PDF apps simply do not, so paper-shaped notes belong there.
+         The live deck stays what gets projected - a PDF cannot hold a running
+         coding window.
+         Deliberately generous with whitespace: every sheet leaves room under
+         the slide content to write, which is the entire point. */
+      #print { display: none; }
+      /* The projector styles pin html AND body to height:100%;overflow:hidden
+         so a slide never scrolls. The handout is a long document and must,
+         so both elements have to be released - overriding only body leaves
+         html clipping it at one viewport. */
+      html.printing, body.printing { height: auto; overflow: visible; }
+      html.printing { background: #f0efec; }
+      body.printing { background: #f0efec; padding: 8mm 0; }
+      body.printing #stage-wrap { display: none; }
+      body.printing #print { display: block; }
+      .sheet {
+        position: relative;
+        background: #fff; color: #1a1a19;
+        width: 260mm; min-height: 170mm;
+        margin: 0 auto 8mm auto; padding: 14mm 16mm 16mm 16mm;
+        box-shadow: 0 1px 4px rgba(0,0,0,.25);
+        display: flex; flex-direction: column;
+      }
+      .sheet .num {
+        position: absolute; top: 6mm; right: 10mm;
+        font-size: 9pt; color: #86847c;
+      }
+      .sheet h2 {
+        margin: 0 0 .5em 0; font-size: 13pt; font-weight: 600;
+        color: #256abf; text-transform: uppercase; letter-spacing: .02em;
+      }
+      .sheet h2:empty { display: none; }
+      .sheet .big { font-size: 15pt; font-weight: 600; line-height: 1.35; margin: 0 0 .5em 0; }
+      .sheet ul { margin: 0; padding: 0; list-style: none; }
+      .sheet li {
+        font-size: 12.5pt; line-height: 1.5; margin-bottom: .5em;
+        padding-left: 1.4em; position: relative;
+      }
+      .sheet li::before {
+        content: ""; position: absolute; left: 0; top: .5em;
+        width: .45em; height: .45em; border-radius: 50%; background: #2a78d6;
+      }
+      .sheet .note { font-size: 10.5pt; color: #52514e; margin-top: .6em; line-height: 1.45; }
+      .sheet table { border-collapse: collapse; margin: .5em 0 0 0; font-size: 12pt; }
+      .sheet th, .sheet td { border: 1px solid #6e6c66; padding: .5em 1.1em; text-align: left; }
+      /* Taller than on screen: these are cells a student writes in by hand. */
+      .sheet td { min-width: 42mm; height: 14mm; }
+      .sheet thead th { background: #f0efec; font-weight: 600; }
+      .sheet code, .sheet pre {
+        font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      }
+      .sheet code { font-size: .9em; background: #f0efec; padding: .1em .3em; border-radius: 3px; }
+      .sheet pre {
+        font-size: 10pt; line-height: 1.4; margin: .5em 0 0 0;
+        background: #f7f6f3; border: 1px solid #ddd9d0; border-radius: 4px;
+        padding: 3mm 4mm; white-space: pre-wrap; overflow-wrap: break-word;
+      }
+      .sheet .kind {
+        font-size: 9pt; color: #86847c; text-transform: uppercase;
+        letter-spacing: .05em; margin: 0 0 .8em 0;
+      }
+      /* The space to write in. Grows to fill whatever the content leaves. */
+      .sheet .room { flex: 1; min-height: 30mm; }
+
+      @media print {
+        /* Landscape without naming a paper size, so it follows whatever the
+           printer is set to (Letter here, A4 elsewhere) instead of fighting it. */
+        @page { size: landscape; margin: 10mm; }
+        body.printing { background: #fff; }
+        .sheet {
+          width: auto; min-height: 0; margin: 0; padding: 0 4mm;
+          box-shadow: none;
+          break-after: page; page-break-after: always;
+          /* A sheet must never be split across two pages. */
+          break-inside: avoid; page-break-inside: avoid;
+        }
+        .sheet:last-child { break-after: auto; page-break-after: auto; }
+      }
+
       /* --- chrome -------------------------------------------------------- */
       #bar {
         /* Above #index (z-index 5) so the menu button stays reachable while
@@ -235,6 +319,9 @@
     </style>
   </head>
   <body>
+    <!-- Populated only by ?print=1; see buildHandout(). -->
+    <div id="print"></div>
+
     <div id="stage-wrap">
       <div id="stage">
         <div id="ref">
@@ -438,12 +525,22 @@
           rendered.classList.add('on')
           titleEl.innerHTML = html(slide.title || '')
 
-          var parts = []
+          var built = renderedSlideHTML(slide)
+          if (built.title) titleEl.innerHTML = built.title
+          rendered.innerHTML = built.html
+        }
+
+        // The markup for a 'rendered' slide, shared by the projector and the
+        // printed handout so the two cannot drift. Returns the body markup
+        // plus, for icebreakers, the resolved title (which is not in the
+        // slide - it comes from the icebreaker pool).
+        function renderedSlideHTML(slide) {
+          var parts = [], resolvedTitle = null
           if (slide.type === 'icebreaker') {
             var ib = resolveIcebreaker(slide)
             if (!ib) { parts.push('<p class="big">(no icebreakers defined)</p>') }
             else {
-              titleEl.innerHTML = html(ib.title || 'Warm-up')
+              resolvedTitle = html(ib.title || 'Warm-up')
               parts.push('<h2>' + html(ib.title || 'Warm-up') + '</h2>')
               parts.push('<p class="big">' + html(ib.prompt) + '</p>')
               if (ib.note) parts.push('<p class="note">' + html(ib.note) + '</p>')
@@ -464,7 +561,7 @@
             if (slide.body) parts.push('<p class="big">' + html(slide.body) + '</p>')
             if (slide.note) parts.push('<p class="note">' + html(slide.note) + '</p>')
           }
-          rendered.innerHTML = parts.join('')
+          return { html: parts.join(''), title: resolvedTitle }
         }
 
         /* --- pen annotation ------------------------------------------------
@@ -1096,6 +1193,70 @@
           else if (e.key === 'End') { e.preventDefault(); go(deck ? deck.slides.length : 1) }
         })
 
+        /* --- the printable handout (?print=1) -------------------------------
+           Lays every slide out as one sheet and stops. Save as PDF from the
+           browser's print dialog; there is no PDF library and no build step,
+           which is deliberate - the deck changes right up to class time and a
+           handout that needs a toolchain would not get regenerated.
+
+           Interactive slides cannot be paper. A 'demo' slide prints its
+           starting program as a listing, which is arguably better to annotate
+           by hand than a live editor is; a 'ref' slide prints which book page
+           it frames, since that page is a separate document we cannot inline.
+           Every slide gets a sheet regardless, so sheet N is slide N and
+           "look at slide 12" means the same thing on paper and on screen. */
+        function buildHandout() {
+          document.documentElement.classList.add('printing')
+          document.body.classList.add('printing')
+          document.title = (deck.title || deckId) + ' — slides'
+
+          // Demo slides need their starting program, which lives outside the
+          // built site next to coding-window/. Fetch them all before laying
+          // anything out, so the print dialog never opens on a half-built page.
+          var codeFor = {}
+          var wanted = deck.slides.filter(function (s) { return s.type === 'demo' && s.startPoint })
+          return Promise.all(wanted.map(function (s) {
+            var url = '../CMeCodeDir/' + encodeURIComponent(s.startPoint) + '.c'
+            return fetch(url)
+              .then(function (r) { return r.ok ? r.text() : null })
+              .then(function (t) {
+                // A missing file must not silently print an empty box.
+                codeFor[s.startPoint] = t == null
+                  ? '(could not load ' + s.startPoint + '.c)'
+                  : t
+              })
+              .catch(function () { codeFor[s.startPoint] = '(could not load ' + s.startPoint + '.c)' })
+          })).then(function () {
+            var out = []
+            deck.slides.forEach(function (slide, i) {
+              var n = i + 1
+              var body = ''
+              if (slide.type === 'demo') {
+                body =
+                  '<p class="kind">Program</p>' +
+                  '<h2>' + html(slide.title || '') + '</h2>' +
+                  (slide.body ? '<p class="big">' + [].concat(slide.body).join('</p><p class="big">') + '</p>' : '') +
+                  '<pre>' + esc(codeFor[slide.startPoint] || '') + '</pre>'
+              } else if (slide.type === 'ref') {
+                body =
+                  '<p class="kind">From the book</p>' +
+                  '<h2>' + html(slide.title || '') + '</h2>' +
+                  '<p class="note">This slide shows a page from the book: ' +
+                  '<code>' + esc(slide.page) + '</code></p>'
+              } else {
+                body = renderedSlideHTML(slide).html
+              }
+              out.push(
+                '<section class="sheet">' +
+                  '<span class="num">' + n + ' / ' + deck.slides.length + '</span>' +
+                  body +
+                  '<div class="room"></div>' +
+                '</section>')
+            })
+            document.getElementById('print').innerHTML = out.join('')
+          })
+        }
+
         if (!deckId) { renderDeckChooser(); return }
 
         Promise.all([
@@ -1109,6 +1270,7 @@
           banks.icebreakers = res[1]
           if (!deck.slides || !deck.slides.length) throw new Error('deck "' + deckId + '" has no slides')
           document.title = 'ENGS 20 — ' + (deck.title || deckId)
+          if (params.get('print') === '1') return buildHandout()
           if (!location.hash) location.hash = '1'
           render()
         }).catch(function (e) {
