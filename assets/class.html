@@ -29,12 +29,25 @@
         position: absolute; inset: 0;
         display: flex; align-items: center; justify-content: center;
       }
+      /* Slide type is sized against THE STAGE, not the viewport (see the
+         cqmin units below), which is what `container-type: size` here
+         enables. The stage is letterboxed to a strict 16:9 but the viewport
+         is whatever the room gives us, so viewport-relative type scaled
+         differently from the box it sits in: on a 4:3 screen the heading on
+         W1C3 slide 10 wrapped to three lines instead of two and pushed the
+         table down. That made the same slide lay out differently on the
+         projector and on an iPad - visible on its own, and fatal to pen
+         annotation, whose stroke coordinates are normalized to the stage and
+         so cannot follow reflowing text.
+         At exactly 16:9 fullscreen cqmin and vmin resolve to the same value,
+         so the projector view is unchanged. */
       #stage {
         position: relative;
         width: min(100vw, calc(100vh * 16 / 9));
         height: min(100vh, calc(100vw * 9 / 16));
         background: #fff;
         overflow: hidden;
+        container-type: size;
       }
 
       /* --- book-page slides --------------------------------------------- */
@@ -49,7 +62,10 @@
       #ref.on { display: flex; }
       #ref h2 {
         margin: 0; padding: 2.2% 4% 0 4%;
-        font-size: 3.2vmin; font-weight: 600; color: #256abf;
+        /* The vmin line is a fallback for engines without container queries
+           (pre-Safari 16); they keep the old viewport-relative behaviour. */
+        font-size: 3.2vmin; font-size: 3.2cqmin;
+        font-weight: 600; color: #256abf;
       }
       #ref h2:empty { display: none; }
       #frame { flex: 1; width: 100%; min-height: 0; border: 0; display: block; background: #fff; }
@@ -57,10 +73,10 @@
       /* --- demo slides: a little text over one coding window ------------- */
       #demo { width: 100%; height: 100%; display: none; flex-direction: column; padding: 3.2% 4% 2.2% 4%; }
       #demo.on { display: flex; }
-      #demo h2 { margin: 0 0 .35em 0; font-size: 3.2vmin; font-weight: 600; color: #256abf; }
+      #demo h2 { margin: 0 0 .35em 0; font-size: 3.2vmin; font-size: 3.2cqmin; font-weight: 600; color: #256abf; }
       /* Several LCS slides are a bare problem statement with no heading. */
       #demo h2:empty, #rendered h2:empty { display: none; }
-      #demo .body { font-size: 2.5vmin; line-height: 1.45; margin: 0 0 .7em 0; }
+      #demo .body { font-size: 2.5vmin; font-size: 2.5cqmin; line-height: 1.45; margin: 0 0 .7em 0; }
       #demo .body p { margin: 0 0 .35em 0; }
       #demo code {
         font-family: "SFMono-Regular", Consolas, Menlo, monospace;
@@ -78,25 +94,25 @@
       #rendered.on { display: flex; }
       #rendered h2 {
         margin: 0 0 0.6em 0;
-        font-size: 3.1vmin; font-weight: 600; letter-spacing: .01em;
+        font-size: 3.1vmin; font-size: 3.1cqmin; font-weight: 600; letter-spacing: .01em;
         color: #256abf; text-transform: uppercase;
       }
       #rendered .big {
-        font-size: 4.6vmin; font-weight: 600; line-height: 1.25; margin: 0 0 .5em 0;
+        font-size: 4.6vmin; font-size: 4.6cqmin; font-weight: 600; line-height: 1.25; margin: 0 0 .5em 0;
       }
       #rendered ul { margin: 0; padding: 0; list-style: none; }
       #rendered li {
-        font-size: 3.4vmin; line-height: 1.55; margin-bottom: .7em;
+        font-size: 3.4vmin; font-size: 3.4cqmin; line-height: 1.55; margin-bottom: .7em;
         padding-left: 1.4em; position: relative;
       }
       #rendered li::before {
         content: ""; position: absolute; left: 0; top: .55em;
         width: .5em; height: .5em; border-radius: 50%; background: #2a78d6;
       }
-      #rendered .note { font-size: 2.6vmin; color: #52514e; margin-top: .8em; line-height: 1.5; }
+      #rendered .note { font-size: 2.6vmin; font-size: 2.6cqmin; color: #52514e; margin-top: .8em; line-height: 1.5; }
       /* Blank-cell tables for students to fill in. The cells are empty on
          purpose, so they need a minimum size to read as somewhere to write. */
-      #rendered table { border-collapse: collapse; margin: .4em 0 0 0; font-size: 2.7vmin; }
+      #rendered table { border-collapse: collapse; margin: .4em 0 0 0; font-size: 2.7vmin; font-size: 2.7cqmin; }
       #rendered th, #rendered td {
         border: 1px solid #a9a79e; padding: .5em 1.2em; text-align: left;
       }
@@ -143,7 +159,7 @@
       }
       #bar button:hover { background: #232322; }
       #title { color: #f2f2f2; font-weight: 600; }
-      #err { padding: 8vmin; font-size: 3vmin; color: #ff8a80; display: none; }
+      #err { padding: 8vmin; padding: 8cqmin; font-size: 3vmin; font-size: 3cqmin; color: #ff8a80; display: none; }
     </style>
   </head>
   <body>
@@ -375,9 +391,12 @@
            overwritten by anyone else's. Nothing below touches the session.
 
            Strokes are kept as points normalized 0-1 against #stage, never as
-           pixels or images: the deck is vmin-scaled, so the same slide is a
-           different pixel size on a phone, a laptop and the projector, and
-           normalized points redraw correctly on all of them. (It also keeps
+           pixels or images: the same slide is a different pixel size on a
+           phone, a laptop and the projector, and normalized points redraw
+           correctly on all of them. This only holds because slide type is
+           sized against the stage too (the cqmin units above) - normalized
+           coordinates survive rescaling, but nothing can make them survive
+           text reflowing underneath them. (It also keeps
            the eventual localStorage form small - a rasterized PNG dataURL per
            slide would eat the origin quota that saved student code shares.) */
 
