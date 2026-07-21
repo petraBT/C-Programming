@@ -180,8 +180,21 @@
         display: none; touch-action: none;
       }
       #ink.on { display: block; }
-      #bar .ink-tool { display: none; }
+      #ink.erasing { cursor: cell; }
+      /* Undo/Clear need existing ink, so they show only once a slide has some
+         (bar.inking). The pen tools - colour swatches and the eraser toggle -
+         show on any inkable slide (bar.inkable), so a colour can be picked
+         before the first stroke. */
+      #bar .ink-tool, #bar .ink-pen { display: none; }
       #bar.inking .ink-tool { display: inline-block; }
+      #bar.inkable .ink-pen { display: inline-block; }
+      #bar #swatches { white-space: nowrap; }
+      #bar .swatch {
+        width: 15px; height: 15px; padding: 0; margin: 0 1px; border-radius: 50%;
+        border: 1px solid #6a6a66; vertical-align: middle; cursor: pointer;
+      }
+      #bar .swatch.active { box-shadow: 0 0 0 2px #0d0d0d, 0 0 0 3px #d9d9d9; }
+      #bar #erase.active { background: #e7e5df; color: #1a1a19; border-color: #cbc9c0; }
       #note { color: #86847c; }
       #note.warn { color: #ffab91; }
 
@@ -497,6 +510,13 @@
           <span id="title"></span>
           <span class="spacer"></span>
           <span id="note"></span>
+          <span id="swatches" class="ink-pen">
+            <button type="button" class="swatch" data-color="#d92b2b" style="background:#d92b2b" title="Red"></button>
+            <button type="button" class="swatch" data-color="#1a1a19" style="background:#1a1a19" title="Black"></button>
+            <button type="button" class="swatch" data-color="#2158a8" style="background:#2158a8" title="Blue"></button>
+            <button type="button" class="swatch" data-color="#1a7f37" style="background:#1a7f37" title="Green"></button>
+          </span>
+          <button id="erase" class="ink-pen" type="button" title="Eraser — drag over a mark to remove it">Erase</button>
           <button id="undo" class="ink-tool" type="button" title="Undo last stroke">Undo</button>
           <button id="clear" class="ink-tool" type="button" title="Erase this slide's ink">Clear</button>
           <span id="pos"></span>
@@ -1043,6 +1063,12 @@
         // line drawn on the iPad is the same visual weight on the projector.
         var PEN_WIDTH = 0.004
         var PEN_COLOR = '#d92b2b'
+        // The active pen colour (each stroke stores its own, so changing this
+        // never recolours what is already drawn) and whether the eraser is on.
+        var inkColor = PEN_COLOR
+        var eraseMode = false
+        var erasing = false      // an eraser drag is in progress
+        var eraseDirty = false   // that drag has removed at least one stroke
 
         function inkEnabled() {
           // Only 'rendered' slides for now - see the #ink CSS comment.
@@ -1076,14 +1102,16 @@
         // pen-lift to make them converge - puts work back at the exact moment
         // that made handwriting stutter in the first place.
         function paintStroke(s, r) {
+          var col = s.color || PEN_COLOR
           if (s.pts.length < 2) {
             // A tap with no movement: draw a dot, or it vanishes.
             inkCtx.beginPath()
             inkCtx.arc(s.pts[0][0] * r.width, s.pts[0][1] * r.height, (s.w * r.height) / 2, 0, Math.PI * 2)
-            inkCtx.fillStyle = PEN_COLOR
+            inkCtx.fillStyle = col
             inkCtx.fill()
             return
           }
+          inkCtx.strokeStyle = col
           inkCtx.lineWidth = s.w * r.height
           inkCtx.beginPath()
           inkCtx.moveTo(s.pts[0][0] * r.width, s.pts[0][1] * r.height)
@@ -1115,6 +1143,7 @@
         // the canvas.
         function drawLiveSegment(s, from, r) {
           if (s.pts.length < 2) return
+          inkCtx.strokeStyle = s.color || PEN_COLOR
           inkCtx.lineWidth = s.w * r.height
           inkCtx.beginPath()
           inkCtx.moveTo(s.pts[from][0] * r.width, s.pts[from][1] * r.height)
@@ -1127,7 +1156,8 @@
         function syncInk() {
           var on = inkEnabled()
           ink.classList.toggle('on', on)
-          bar.classList.toggle('inking', on && loadInk(currentIndex()).length > 0)
+          bar.classList.toggle('inkable', on)   // pen tools (colour, eraser)
+          bar.classList.toggle('inking', on && loadInk(currentIndex()).length > 0)  // undo/clear
           if (on) redrawInk()
           updateNote()
         }
@@ -1166,6 +1196,53 @@
           return Math.abs(a[0] - b[0]) > MIN_STEP || Math.abs(a[1] - b[1]) > MIN_STEP
         }
 
+        /* The eraser removes whole strokes it touches, not pixels - strokes are
+           vectors, so splitting one would be a different, much heavier feature.
+           A stroke is "touched" if any of its points is within the eraser
+           radius of the pen. Points are dense (see MIN_STEP), so point testing
+           is accurate enough, and distances are measured in stage PIXELS so the
+           radius is round rather than squashed by the 16:9 aspect. */
+        var ERASE_R = 0.03   // radius as a fraction of stage height
+        // Distance (px) from point q to the segment a-b. Testing SEGMENTS, not
+        // just the stored points, is what makes the eraser reliable: a straight
+        // stroke can store only its two endpoints, so a vertex-only test would
+        // miss the eraser passing over the long span between them.
+        function distToSeg(qx, qy, ax, ay, bx, by) {
+          var dx = bx - ax, dy = by - ay
+          var len2 = dx * dx + dy * dy
+          var t = len2 ? ((qx - ax) * dx + (qy - ay) * dy) / len2 : 0
+          t = t < 0 ? 0 : t > 1 ? 1 : t
+          var cx = ax + t * dx, cy = ay + t * dy
+          return Math.sqrt((qx - cx) * (qx - cx) + (qy - cy) * (qy - cy))
+        }
+        function strokeNear(s, px, py, r) {
+          var R = ERASE_R * r.height
+          var qx = px * r.width, qy = py * r.height
+          var pts = s.pts
+          if (pts.length === 1) {
+            var dx = pts[0][0] * r.width - qx, dy = pts[0][1] * r.height - qy
+            return Math.sqrt(dx * dx + dy * dy) <= R
+          }
+          for (var i = 1; i < pts.length; i++) {
+            if (distToSeg(qx, qy,
+                  pts[i - 1][0] * r.width, pts[i - 1][1] * r.height,
+                  pts[i][0] * r.width, pts[i][1] * r.height) <= R) return true
+          }
+          return false
+        }
+        function eraseAt(e) {
+          var r = rect()
+          var list = loadInk(currentIndex())
+          if (!list.length) return
+          var p = pointIn(e, r)
+          var kept = [], removed = false
+          list.forEach(function (s) {
+            if (strokeNear(s, p[0], p[1], r)) removed = true
+            else kept.push(s)
+          })
+          if (removed) { strokes[currentIndex()] = kept; eraseDirty = true; redrawInk() }
+        }
+
         ink.addEventListener('pointerdown', function (e) {
           var t0 = performance.now()
           // Logged even when rejected, so a palm or a finger that never draws
@@ -1176,13 +1253,14 @@
           // strays over the bar. Not fatal if it fails, so don't let it
           // throw away the stroke.
           if (USE_POINTER_CAPTURE) { try { ink.setPointerCapture(e.pointerId) } catch (err) {} }
+          if (eraseMode) { erasing = true; eraseDirty = false; eraseAt(e); return }
           // A pointerdown arriving while a stroke is still open means the
           // previous stroke never got its pointerup - the shape a dropped or
           // merged symbol takes. Worth shouting about, because it is exactly
           // the failure that writing fast is suspected of causing and it
           // cannot be seen in the averages.
           if (inkDebug && live) dbgRow('** DOWN WITH PREVIOUS STROKE STILL OPEN **')
-          live = { w: PEN_WIDTH, pts: [point(e)] }
+          live = { w: PEN_WIDTH, color: inkColor, pts: [point(e)] }
           loadInk(currentIndex()).push(live)
           bar.classList.add('inking')
           if (inkDebug) {
@@ -1195,6 +1273,12 @@
         })
 
         ink.addEventListener('pointermove', function (e) {
+          if (eraseMode) {
+            if (!erasing || !isPen(e)) return
+            if (USE_PREVENT_DEFAULT) e.preventDefault()
+            eraseAt(e)
+            return
+          }
           if (!live || !isPen(e)) return
           var mt0 = inkDebug ? performance.now() : 0
           if (USE_PREVENT_DEFAULT) e.preventDefault()
@@ -1223,6 +1307,13 @@
 
         function endStroke(e) {
           var t0 = performance.now()
+          if (erasing) {
+            erasing = false
+            if (eraseDirty) { saveInk(currentIndex()); eraseDirty = false }
+            syncInk()   // all ink erased? drop the Undo/Clear tools
+            if (e && e.pointerId != null && ink.hasPointerCapture(e.pointerId)) ink.releasePointerCapture(e.pointerId)
+            return
+          }
           if (!live) { if (e) dbg(e, performance.now() - t0); return }
           // A stroke that never moved left nothing on the canvas, because
           // drawLiveSegment only draws segments. Paint its dot now.
@@ -1298,6 +1389,29 @@
           saveInk(n)
           syncInk()
         })
+
+        // Colour swatches and the eraser toggle. Each stroke stores its own
+        // colour, so switching never recolours existing ink. Picking a colour
+        // also leaves erase mode - you reached for a colour to draw.
+        var swatchWrap = document.getElementById('swatches')
+        function setErase(on) {
+          eraseMode = on
+          document.getElementById('erase').classList.toggle('active', on)
+          ink.classList.toggle('erasing', on)
+        }
+        function setColor(c) {
+          inkColor = c
+          ;[].forEach.call(swatchWrap.querySelectorAll('.swatch'), function (b) {
+            b.classList.toggle('active', b.getAttribute('data-color') === c)
+          })
+          if (eraseMode) setErase(false)
+        }
+        swatchWrap.addEventListener('click', function (e) {
+          var b = e.target.closest && e.target.closest('.swatch')
+          if (b) setColor(b.getAttribute('data-color'))
+        })
+        document.getElementById('erase').addEventListener('click', function () { setErase(!eraseMode) })
+        setColor(PEN_COLOR)   // mark the default swatch active
 
         window.addEventListener('resize', function () {
           stageRect = null            // the cached measurement is now stale
