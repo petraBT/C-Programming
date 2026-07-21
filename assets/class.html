@@ -215,6 +215,65 @@
          of the index is getting back to your own annotation. */
       #index .inked { flex: none; color: #d92b2b; font-size: .9em; }
 
+      /* --- announcements editor (?edit) ---------------------------------- */
+      /* The instructor's in-browser panel for the announcement slides that go
+         at the front of the deck. Only revealed with ?edit in the URL, so
+         students never see the control; the real gate is the passphrase the
+         server checks on save. Editing here writes to the server-side board
+         and is live for everyone in seconds - no source edit, no deploy. */
+      #editor {
+        position: absolute; inset: 0; z-index: 7;
+        background: #fbfbf9; overflow-y: auto;
+        display: none; padding: 4cqmin 5cqmin 6cqmin 5cqmin;
+      }
+      #editor.on { display: block; }
+      #editor h2 {
+        margin: 0 0 .1em 0; font-size: 3.2vmin; font-size: 3.2cqmin;
+        font-weight: 600; color: #256abf;
+      }
+      #editor .sub { margin: 0 0 1em 0; font-size: 2vmin; font-size: 2cqmin; color: #52514e; }
+      .ed-card {
+        border: 1px solid #ddd9d0; border-radius: 8px; background: #fff;
+        padding: 2cqmin 2.4cqmin; margin-bottom: 1.6cqmin;
+      }
+      .ed-card input.ed-title, .ed-card textarea {
+        width: 100%; box-sizing: border-box; font: inherit;
+        border: 1px solid #cbc9c0; border-radius: 5px; padding: .5em .6em;
+        font-size: 2.2vmin; font-size: 2.2cqmin; color: #1a1a19; background: #fff;
+      }
+      .ed-card input.ed-title { font-weight: 600; margin-bottom: .5em; }
+      .ed-card textarea { min-height: 4.5em; resize: vertical; line-height: 1.4; }
+      .ed-card-tools { display: flex; gap: .5em; margin-top: .5em; }
+      .ed-card-tools button, #editor .ed-btn {
+        font: inherit; font-size: 1.9vmin; font-size: 1.9cqmin;
+        border: 1px solid #cbc9c0; background: #f3f2ee; color: #1a1a19;
+        border-radius: 5px; padding: .35em .8em; cursor: pointer;
+      }
+      .ed-card-tools button:hover, #editor .ed-btn:hover { background: #e9e7e1; }
+      .ed-card-tools .ed-del { margin-left: auto; color: #b3261e; }
+      #ed-add { margin: .4cqmin 0 2cqmin 0; }
+      .ed-foot {
+        display: flex; align-items: center; gap: 1em; flex-wrap: wrap;
+        border-top: 1px solid #e0ded6; padding-top: 1.4cqmin; margin-top: .5cqmin;
+      }
+      #ed-key {
+        font: inherit; font-size: 2.1vmin; font-size: 2.1cqmin;
+        border: 1px solid #cbc9c0; border-radius: 5px; padding: .5em .7em;
+        min-width: 16em;
+      }
+      #ed-save {
+        font: inherit; font-size: 2.1vmin; font-size: 2.1cqmin; font-weight: 600;
+        border: 1px solid #1f5fb0; background: #256abf; color: #fff;
+        border-radius: 5px; padding: .5em 1.4em; cursor: pointer;
+      }
+      #ed-save:hover { background: #1f5fb0; }
+      #ed-status { font-size: 2vmin; font-size: 2cqmin; color: #52514e; }
+      #ed-status.err { color: #b3261e; }
+      #ed-status.ok { color: #1a7f37; }
+      /* The bar control that opens it, shown only in ?edit mode. */
+      #bar .edit-tool { display: none; }
+      #bar.editable .edit-tool { display: inline-block; }
+
       /* --- printable handout (?print=1) ---------------------------------- */
       /* A blank worksheet to give students before class, so their note-taking
          happens in a real PDF annotator rather than in a browser. That is not
@@ -402,8 +461,21 @@
           <p class="sub" id="idx-sub"></p>
           <div id="idx-list"></div>
         </div>
+        <div id="editor">
+          <h2>Announcements — <span id="ed-deck"></span></h2>
+          <p class="sub">These slides go at the front of the deck, live for you and every student. No build, no deploy.</p>
+          <div id="ed-cards"></div>
+          <button id="ed-add" class="ed-btn" type="button">+ Add announcement slide</button>
+          <div class="ed-foot">
+            <input id="ed-key" type="password" autocomplete="off" placeholder="Instructor passphrase" />
+            <button id="ed-save" type="button">Save</button>
+            <button id="ed-cancel" class="ed-btn" type="button">Close</button>
+            <span id="ed-status"></span>
+          </div>
+        </div>
         <div id="bar">
           <button id="menu" type="button" title="Slides (Esc)">&#9776;</button>
+          <button id="edit" class="edit-tool" type="button" title="Edit announcements">✎ Announcements</button>
           <span id="title"></span>
           <span class="spacer"></span>
           <span id="note"></span>
@@ -1283,6 +1355,103 @@
           toggleIndex(false)
         })
         document.getElementById('menu').addEventListener('click', function () { toggleIndex() })
+
+        /* --- announcements editor ------------------------------------------
+           The instructor edits the deck's front-of-deck announcement slides
+           here and saves them to the server-side board, live for everyone.
+           Revealed only by ?edit in the URL, so students never see the
+           control; the actual gate is the passphrase the server checks. */
+        var EDIT_KEY_LS = 'deck:announce:key'   // remembers the passphrase on this device
+        var editorEl = document.getElementById('editor')
+        var edCards = document.getElementById('ed-cards')
+        var edKey = document.getElementById('ed-key')
+        var edStatus = document.getElementById('ed-status')
+        if (params.has('edit')) bar.classList.add('editable')
+
+        function edStatusMsg(msg, cls) { edStatus.textContent = msg || ''; edStatus.className = cls || '' }
+
+        // One card per announcement slide: a title and a textarea whose lines
+        // become the bullet list. Values are set via .value, never innerHTML,
+        // so nothing an instructor types can break the editor markup.
+        function addCard(a) {
+          a = a || {}
+          var card = document.createElement('div')
+          card.className = 'ed-card'
+          card.innerHTML =
+            '<input class="ed-title" type="text" placeholder="Slide title (e.g. Announcements)">' +
+            '<textarea class="ed-lines" placeholder="One bullet per line"></textarea>' +
+            '<div class="ed-card-tools">' +
+              '<button type="button" data-act="up" title="Move up">&uarr;</button>' +
+              '<button type="button" data-act="down" title="Move down">&darr;</button>' +
+              '<button type="button" class="ed-del" data-act="del">Remove</button>' +
+            '</div>'
+          card.querySelector('.ed-title').value = a.title || ''
+          card.querySelector('.ed-lines').value = (a.items && a.items.length) ? a.items.join('\n') : (a.body || '')
+          edCards.appendChild(card)
+        }
+
+        function readCards() {
+          var out = []
+          ;[].forEach.call(edCards.querySelectorAll('.ed-card'), function (card) {
+            var title = card.querySelector('.ed-title').value.trim()
+            var lines = card.querySelector('.ed-lines').value.split('\n')
+              .map(function (s) { return s.trim() }).filter(function (s) { return s.length })
+            if (!title && !lines.length) return   // drop empty cards
+            var o = { type: 'announcement', title: title }
+            if (lines.length) o.items = lines
+            out.push(o)
+          })
+          return out
+        }
+
+        function openEditor() {
+          document.getElementById('ed-deck').textContent = deck.title || deckId
+          edCards.innerHTML = ''
+          if (announcements.length) announcements.forEach(addCard)
+          else addCard()
+          try { edKey.value = localStorage.getItem(EDIT_KEY_LS) || '' } catch (e) {}
+          edStatusMsg('')
+          ink.classList.remove('on')   // keep the canvas from covering the editor
+          editorEl.classList.add('on')
+        }
+        function closeEditor() { editorEl.classList.remove('on'); syncInk() }
+
+        function saveEditor() {
+          var list = readCards()
+          var key = edKey.value
+          try { if (key) localStorage.setItem(EDIT_KEY_LS, key) } catch (e) {}
+          edStatusMsg('Saving…')
+          fetch('announce/' + encodeURIComponent(deckId), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Announce-Key': key },
+            body: JSON.stringify({ announcements: list })
+          }).then(function (r) {
+            if (r.status === 401) { edStatusMsg('Wrong passphrase.', 'err'); return null }
+            if (r.status === 503) { edStatusMsg('Announcements are not set up on the server yet.', 'err'); return null }
+            if (!r.ok) { edStatusMsg('Could not save (' + r.status + ').', 'err'); return null }
+            return r.json()
+          }).then(function (d) {
+            if (!d) return
+            announcements = (d.announcements && Array.isArray(d.announcements)) ? d.announcements : list
+            applyAnnouncements()
+            edStatusMsg('Saved — live for everyone.', 'ok')
+            go(1)   // show the result from the top
+            setTimeout(closeEditor, 800)
+          }).catch(function () { edStatusMsg('Network error — not saved.', 'err') })
+        }
+
+        edCards.addEventListener('click', function (e) {
+          var btn = e.target.closest && e.target.closest('button[data-act]')
+          if (!btn) return
+          var card = btn.closest('.ed-card'), act = btn.getAttribute('data-act')
+          if (act === 'del') card.parentNode.removeChild(card)
+          else if (act === 'up' && card.previousElementSibling) card.parentNode.insertBefore(card, card.previousElementSibling)
+          else if (act === 'down' && card.nextElementSibling) card.parentNode.insertBefore(card.nextElementSibling, card)
+        })
+        document.getElementById('ed-add').addEventListener('click', function () { addCard() })
+        document.getElementById('ed-save').addEventListener('click', saveEditor)
+        document.getElementById('ed-cancel').addEventListener('click', closeEditor)
+        document.getElementById('edit').addEventListener('click', openEditor)
 
         window.addEventListener('hashchange', render)
         document.getElementById('prev').addEventListener('click', function () { go(currentIndex() - 1) })
