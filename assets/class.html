@@ -863,101 +863,6 @@
 
         function isPen(e) { return PEN_POINTER_TYPES[e.pointerType] === true }
 
-        /* Two switches for bisecting a fault that cannot be reproduced off
-           the device: whole pen contacts producing no pointer events at all.
-           Both default on (today's behaviour) and both turn OFF the thing
-           they name, so a test is one URL parameter rather than one deploy.
-
-           ?inkpd=0   - stop calling preventDefault on pointer events.
-           ?inkcap=0  - stop calling setPointerCapture on pointerdown.
-
-           These are the two things this code does that can plausibly make
-           WebKit discard a *subsequent* contact rather than the current one.
-           Capture is the stronger suspect: it redirects an entire pointer
-           sequence to one element, and if the release does not land before
-           the pen comes back down, the next contact has nowhere to go.
-           preventDefault on pointerdown is the classic other one - it also
-           suppresses the compatibility touch events, which is why the
-           touchstart probe below only reports on contacts we never saw. */
-        var USE_PREVENT_DEFAULT = params.get('inkpd') !== '0'
-        var USE_POINTER_CAPTURE = params.get('inkcap') !== '0'
-
-        /* ?inkdebug=1 - an on-screen pointer-event log, for diagnosing input
-           problems on a device with no console.
-
-           The column that matters is "late": performance.now() minus the
-           event's own timeStamp, i.e. how long the browser sat on the event
-           before handing it to us. It separates the two explanations for
-           sluggish writing that otherwise look identical:
-             - late is small, gaps are large  -> the pen genuinely was not
-               down; nothing to fix in software.
-             - late is large                  -> the browser held the event,
-               which is the double-tap-zoom delay (or another gesture
-               recogniser) and is fixed in the page, not in our handlers.
-           Our own handler cost is "work". If that is small and "late" is
-           large, the problem is not our code - which is exactly the question
-           two rounds of guessing failed to answer. */
-        var inkDebug = params.get('inkdebug') === '1'
-        var dbgBox = null, dbgRows = [], dbgPrev = 0
-        var dbgStroke = null   // stats for the stroke in progress
-        var dbgLastUp = 0      // when the pen last came off the glass
-        if (inkDebug) {
-          dbgBox = document.createElement('div')
-          dbgBox.setAttribute('style',
-            'position:absolute;top:0;right:0;z-index:9;max-width:46%;max-height:60%;overflow:hidden;' +
-            'background:rgba(13,13,13,.88);color:#c3c2b7;font:11px/1.35 SFMono-Regular,Menlo,monospace;' +
-            'padding:6px 8px;white-space:pre;pointer-events:none;border-bottom-left-radius:6px')
-          document.getElementById('stage').appendChild(dbgBox)
-
-          /* The probe that tells us whether a missing symbol ever reached the
-             page at all. iPadOS fires legacy touch events for a Pencil too,
-             with touchType 'stylus'. So:
-               STYLUS row with a stroke row after it -> normal, we handled it.
-               STYLUS row and NO stroke row          -> the contact reached
-                 Safari and was then withheld from the pointer events. That is
-                 the failure, and it is upstream of anything in this file.
-               no STYLUS row at all                  -> the contact never
-                 reached the page, which points at the pen or the OS.
-             Passive, so the probe itself cannot change the behaviour it is
-             measuring. */
-          // getElementById rather than the `ink` variable: this block runs
-          // above where that variable is assigned, so it is still undefined
-          // here, and reaching for it threw and took the whole player down.
-          document.getElementById('ink').addEventListener('touchstart', function (te) {
-            for (var i = 0; i < te.changedTouches.length; i++) {
-              var t = te.changedTouches[i]
-              if (t.touchType === 'stylus') dbgRow('  STYLUS contact')
-            }
-          }, { passive: true })
-        }
-        // One row per finished stroke rather than per event: a symbol is the
-        // unit the problem is described in ("a pause between symbols"), and
-        // per-event rows scrolled the interesting numbers off the top.
-        // Anomalies get their own row, since a dropped or merged stroke is
-        // the thing worth catching and it is invisible in aggregates.
-        function dbgRow(s) {
-          if (!dbgBox) return
-          dbgRows.unshift(s)
-          if (dbgRows.length > 22) dbgRows.pop()
-          dbgBox.textContent =
-            'off = pen up to next pen down\n' +
-            'draw = ms in the move handler\n' +
-            'lag = worst ms safari held one\n\n' + dbgRows.join('\n')
-        }
-        function pad(v, n) { return String(v).padStart(n) }
-
-        function dbg(e, workMs) {
-          if (!dbgBox) return
-          var now = performance.now()
-          var gap = dbgPrev ? now - dbgPrev : 0
-          dbgPrev = now
-          // Non-pen contact is logged only when it is a fresh touch down, to
-          // show palm activity without burying the stroke rows.
-          if (e.pointerType !== 'pen' && e.type === 'pointerdown') {
-            dbgRow('palm  off' + pad(Math.round(gap), 5) + '  lag' + pad(Math.round(now - e.timeStamp), 5))
-          }
-        }
-
         var stage = document.getElementById('stage')
         // getBoundingClientRect forces a layout flush, and the drawing path
         // wanted one per pointermove - which is per sampled point, at the rate
@@ -1254,44 +1159,27 @@
         }
 
         ink.addEventListener('pointerdown', function (e) {
-          var t0 = performance.now()
-          // Logged even when rejected, so a palm or a finger that never draws
-          // is still visible in the trace.
-          if (!isPen(e) || !inkEnabled()) { dbg(e, performance.now() - t0); return }
-          if (USE_PREVENT_DEFAULT) e.preventDefault()
-          // Capture keeps a stroke coming to the canvas even if the pen
-          // strays over the bar. Not fatal if it fails, so don't let it
-          // throw away the stroke.
-          if (USE_POINTER_CAPTURE) { try { ink.setPointerCapture(e.pointerId) } catch (err) {} }
+          if (!isPen(e) || !inkEnabled()) return
+          e.preventDefault()
+          // Capture keeps a stroke coming to the canvas even if the pen strays
+          // over the bar. Not fatal if it fails, so don't let it throw away
+          // the stroke.
+          try { ink.setPointerCapture(e.pointerId) } catch (err) {}
           if (eraseMode) { erasing = true; eraseDirty = false; eraseAt(e); return }
-          // A pointerdown arriving while a stroke is still open means the
-          // previous stroke never got its pointerup - the shape a dropped or
-          // merged symbol takes. Worth shouting about, because it is exactly
-          // the failure that writing fast is suspected of causing and it
-          // cannot be seen in the averages.
-          if (inkDebug && live) dbgRow('** DOWN WITH PREVIOUS STROKE STILL OPEN **')
           live = { w: PEN_WIDTH, color: inkColor, pts: [point(e)] }
           loadInk(currentIndex()).push(live)
           bar.classList.add('inking')
-          if (inkDebug) {
-            dbgStroke = {
-              t0: t0, moves: 0, moveWork: 0, coalesced: 0,
-              maxLate: t0 - e.timeStamp,
-              off: dbgLastUp ? t0 - dbgLastUp : 0
-            }
-          }
         })
 
         ink.addEventListener('pointermove', function (e) {
           if (eraseMode) {
             if (!erasing || !isPen(e)) return
-            if (USE_PREVENT_DEFAULT) e.preventDefault()
+            e.preventDefault()
             eraseAt(e)
             return
           }
           if (!live || !isPen(e)) return
-          var mt0 = inkDebug ? performance.now() : 0
-          if (USE_PREVENT_DEFAULT) e.preventDefault()
+          e.preventDefault()
           // Safari coalesces pointermove at the Pencil's higher sample rate;
           // taking the coalesced events keeps fast strokes smooth instead of
           // polygonal. Older engines just give back the one event.
@@ -1306,17 +1194,9 @@
             if (farEnough(p, live.pts[live.pts.length - 1])) live.pts.push(p)
           }
           drawLiveSegment(live, drawnTo, r)
-          if (dbgStroke) {
-            dbgStroke.moves++
-            dbgStroke.coalesced += evs.length
-            dbgStroke.moveWork += performance.now() - mt0
-            var lateNow = mt0 - e.timeStamp
-            if (lateNow > dbgStroke.maxLate) dbgStroke.maxLate = lateNow
-          }
         })
 
         function endStroke(e) {
-          var t0 = performance.now()
           if (erasing) {
             erasing = false
             if (eraseDirty) { saveInk(currentIndex()); eraseDirty = false }
@@ -1324,7 +1204,7 @@
             if (e && e.pointerId != null && ink.hasPointerCapture(e.pointerId)) ink.releasePointerCapture(e.pointerId)
             return
           }
-          if (!live) { if (e) dbg(e, performance.now() - t0); return }
+          if (!live) return
           // A stroke that never moved left nothing on the canvas, because
           // drawLiveSegment only draws segments. Paint its dot now.
           if (live.pts.length < 2) paintStroke(live, rect())
@@ -1332,18 +1212,6 @@
           saveInkSoon(currentIndex())
           if (e && e.pointerId != null && ink.hasPointerCapture(e.pointerId)) {
             ink.releasePointerCapture(e.pointerId)
-          }
-          if (dbgStroke) {
-            var end = performance.now()
-            dbgLastUp = end
-            dbgRow(
-              'off' + pad(Math.round(dbgStroke.off), 5) +
-              ' dur' + pad(Math.round(end - dbgStroke.t0), 4) +
-              ' mv' + pad(dbgStroke.moves, 3) +
-              ' draw' + pad(dbgStroke.moveWork.toFixed(1), 6) +
-              ' lag' + pad(Math.round(dbgStroke.maxLate), 4) +
-              (e && e.type === 'pointercancel' ? ' CANCELLED' : ''))
-            dbgStroke = null
           }
         }
         /* The Scribble workaround.
@@ -1579,9 +1447,10 @@
 
         function edStatusMsg(msg, cls) { edStatus.textContent = msg || ''; edStatus.className = cls || '' }
 
-        // One card per announcement slide: a title and a textarea whose lines
-        // become the bullet list. Values are set via .value, never innerHTML,
-        // so nothing an instructor types can break the editor markup.
+        // One card per announcement slide: a title, an optional paragraph, an
+        // optional bullet list, and an optional image. Text values are set via
+        // .value, never innerHTML, so nothing an instructor types can break the
+        // editor markup.
         function addCard(a) {
           a = a || {}
           var card = document.createElement('div')
