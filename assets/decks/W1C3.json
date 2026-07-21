@@ -113,6 +113,8 @@
     },
     {
       "type": "demo",
+      "title": "Integer division, continued",
+      "body": "Can we get a real (decimal) answer? Run each version below and see which one fixes it.",
       "startPoint": "engs20p_Ndivision2"
     },
     {

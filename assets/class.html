@@ -117,6 +117,10 @@
         display: none;
         flex-direction: column; justify-content: center;
       }
+      /* Practice slides top-align their text so the lower half of the slide is
+         free to write on (set by render() for 'prompt' slides). Other rendered
+         slides - agenda, recap, announcements - stay centred. */
+      #rendered.top { justify-content: flex-start; }
       #rendered.on { display: flex; }
       #rendered h2 {
         margin: 0 0 0.6em 0;
@@ -768,6 +772,8 @@
           refEl.classList.remove('on')
           demoEl.classList.remove('on')
           rendered.classList.add('on')
+          // Practice slides sit at the top, leaving the lower half to write on.
+          rendered.classList.toggle('top', slide.type === 'prompt')
           titleEl.innerHTML = html(slide.title || '')
 
           var built = renderedSlideHTML(slide)
