@@ -13,14 +13,21 @@
 // The secret is compared here, on the server; the client never holds anything
 // but the passphrase the instructor typed, and only sends it on a save.
 
-// Length-limited constant-time-ish compare, so a wrong passphrase does not
-// leak its length through timing. Not a hard security boundary - it guards
-// classroom announcements, not secrets - but cheap to do properly.
+// Constant-time-ish compare, so a wrong passphrase does not leak its length
+// through timing. Not a hard security boundary - it guards classroom
+// announcements, not secrets - but cheap to do properly.
+//
+// Compares a[i] to b[i] (padding the short one with 0) and folds the length
+// difference into the result. An earlier version indexed b at `i % b.length
+// || 1`, which for i===0 became index 1 - it compared the first character to
+// the second and rejected almost every CORRECT passphrase. Now b[i] directly.
 function safeEqual(a, b) {
   a = String(a)
   b = String(b)
   let diff = a.length ^ b.length
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i % b.length || 1)
+  for (let i = 0; i < a.length; i++) {
+    diff |= a.charCodeAt(i) ^ (i < b.length ? b.charCodeAt(i) : 0)
+  }
   return diff === 0
 }
 
