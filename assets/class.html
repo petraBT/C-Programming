@@ -140,6 +140,11 @@
          clickable on a projector, and word-break so a long URL cannot push
          the slide wider than the stage. */
       #rendered a { color: #2158a8; text-decoration: underline; word-break: break-word; }
+      /* An announcement paragraph (the editor's Paragraph mode). Readable body
+         size rather than the big single-line style, so a longer block fits. */
+      #rendered .ann-para {
+        font-size: 3.3vmin; font-size: 3.3cqmin; line-height: 1.5; margin: 0 0 .5em 0;
+      }
       /* An announcement image. Capped to a fraction of the stage height so it
          leaves room for the text above and never overflows the slide. cqh is
          stage-relative (see the #stage size container). */
@@ -276,6 +281,10 @@
       }
       .ed-card-tools button:hover, #editor .ed-btn:hover { background: #e9e7e1; }
       .ed-card-tools .ed-del { margin-left: auto; color: #b3261e; }
+      .ed-mode {
+        display: inline-flex; align-items: center; gap: .45em;
+        margin-top: .5em; font-size: 1.9vmin; font-size: 1.9cqmin; color: #52514e; cursor: pointer;
+      }
       .ed-image-row { display: flex; align-items: center; gap: .8em; margin-top: .6em; flex-wrap: wrap; }
       .ed-thumb { display: flex; align-items: center; gap: .8em; }
       .ed-thumb-img {
@@ -785,7 +794,10 @@
               slide.items.forEach(function (it) { parts.push('<li>' + linkify(esc(it)) + '</li>') })
               parts.push('</ul>')
             }
-            if (slide.body) parts.push('<p class="big">' + linkify(esc(slide.body)) + '</p>')
+            // A paragraph body (as opposed to bullet items). Newlines the
+            // instructor typed become soft line breaks so a paragraph can be
+            // shaped, and URLs are still linked.
+            if (slide.body) parts.push('<p class="ann-para">' + linkify(esc(slide.body)).replace(/\n/g, '<br>') + '</p>')
             if (slide.note) parts.push('<p class="note">' + linkify(esc(slide.note)) + '</p>')
             // Only a validated data:image URL (base64 alphabet only) is ever
             // put in the src, so it cannot carry a quote to break out. The
@@ -1578,7 +1590,8 @@
           card.className = 'ed-card'
           card.innerHTML =
             '<input class="ed-title" type="text" placeholder="Slide title (e.g. Announcements)">' +
-            '<textarea class="ed-lines" placeholder="One bullet per line"></textarea>' +
+            '<textarea class="ed-lines"></textarea>' +
+            '<label class="ed-mode"><input type="checkbox" class="ed-para"> Paragraph (not bullets)</label>' +
             '<div class="ed-image-row">' +
               '<button type="button" class="ed-btn ed-addimg">Add image</button>' +
               '<span class="ed-thumb"></span>' +
@@ -1590,7 +1603,20 @@
               '<button type="button" class="ed-del" data-act="del">Remove</button>' +
             '</div>'
           card.querySelector('.ed-title').value = a.title || ''
-          card.querySelector('.ed-lines').value = (a.items && a.items.length) ? a.items.join('\n') : (a.body || '')
+
+          // Two shapes share one textarea: bullets (each line an item) or a
+          // paragraph (a body, line breaks kept). A card carries a body only in
+          // paragraph mode, so its presence restores the mode on edit.
+          var lines = card.querySelector('.ed-lines')
+          var paraBox = card.querySelector('.ed-para')
+          var isPara = !!(a.body && (!a.items || !a.items.length))
+          paraBox.checked = isPara
+          lines.value = isPara ? (a.body || '') : ((a.items && a.items.length) ? a.items.join('\n') : '')
+          function syncMode() {
+            lines.placeholder = paraBox.checked ? 'Type a paragraph (line breaks are kept)' : 'One bullet per line'
+          }
+          paraBox.addEventListener('change', syncMode)
+          syncMode()
 
           // The image lives on the card element as _image, restored on edit and
           // read back on save. Kept off the text fields so it round-trips
@@ -1633,12 +1659,19 @@
           var out = []
           ;[].forEach.call(edCards.querySelectorAll('.ed-card'), function (card) {
             var title = card.querySelector('.ed-title').value.trim()
-            var lines = card.querySelector('.ed-lines').value.split('\n')
-              .map(function (s) { return s.trim() }).filter(function (s) { return s.length })
+            var raw = card.querySelector('.ed-lines').value
+            var para = card.querySelector('.ed-para').checked
             var image = card._image && ANN_IMG_RE.test(card._image) ? card._image : null
-            if (!title && !lines.length && !image) return   // drop empty cards
+            // Paragraph: keep the text as one body, trimming only the outer
+            // whitespace so internal line breaks survive. Bullets: each
+            // non-empty line an item.
+            var body = para ? raw.replace(/^\s+|\s+$/g, '') : ''
+            var lines = para ? [] : raw.split('\n')
+              .map(function (s) { return s.trim() }).filter(function (s) { return s.length })
+            if (!title && !lines.length && !body && !image) return   // drop empty cards
             var o = { type: 'announcement', title: title }
             if (lines.length) o.items = lines
+            if (body) o.body = body
             if (image) o.image = image
             out.push(o)
           })

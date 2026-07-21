@@ -47,7 +47,8 @@ export default {
 // not become stored HTML/script in every student's browser.
 const ANN_MAX_ITEMS = 12          // announcement slides per deck
 const ANN_MAX_LINES = 20          // bullet lines per slide
-const ANN_MAX_LEN = 400           // chars per text field / line
+const ANN_MAX_LEN = 400           // chars per title / bullet line
+const ANN_MAX_BODY = 2000         // chars in a paragraph body (roomier than a bullet)
 const ANN_MAX_IMG = 500 * 1024    // chars in an image data URL (client downscales to fit)
 // Only these image data URLs are ever stored or rendered. base64 alphabet
 // only, so the value cannot contain a quote to break out of the img src.
@@ -65,7 +66,7 @@ function sanitizeAnnouncements(input) {
     if (Array.isArray(a.items)) {
       out.items = a.items.slice(0, ANN_MAX_LINES).map(annClamp).filter(s => s.length)
     }
-    const body = annClamp(a.body)
+    const body = typeof a.body === 'string' ? a.body.slice(0, ANN_MAX_BODY) : ''
     if (body) out.body = body
     const note = annClamp(a.note)
     if (note) out.note = note
