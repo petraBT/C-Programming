@@ -1421,7 +1421,7 @@
           var key = edKey.value
           try { if (key) localStorage.setItem(EDIT_KEY_LS, key) } catch (e) {}
           edStatusMsg('Saving…')
-          fetch('announce/' + encodeURIComponent(deckId), {
+          fetch('/announce/' + encodeURIComponent(deckId), {   // origin-absolute; see fetchAnnouncements
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-Announce-Key': key },
             body: JSON.stringify({ announcements: list })
@@ -1458,6 +1458,19 @@
         document.getElementById('next').addEventListener('click', function () { go(currentIndex() + 1) })
 
         document.addEventListener('keydown', function (e) {
+          // The editor owns the keyboard while open: Escape closes it, and
+          // every other key (Space, arrows, Home/End) must reach the field
+          // being typed in rather than turn the slide. This is why spaces
+          // vanished from announcement text - the navigation handler below was
+          // preventDefault-ing the spacebar.
+          if (editorEl.classList.contains('on')) {
+            if (e.key === 'Escape') { e.preventDefault(); closeEditor() }
+            return
+          }
+          // Any other typing target (an input or textarea) keeps its keys too.
+          var t = e.target
+          if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return
+
           if (e.key === 'Escape') { e.preventDefault(); if (deck) toggleIndex(); return }
           if (indexOpen() && (e.key === 'Enter' || e.key === ' ')) return  // let the focused link fire
           if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(currentIndex() + 1) }
@@ -1683,7 +1696,11 @@
         // any failure (no board, unconfigured, offline) yields an empty list,
         // so the deck always loads.
         function fetchAnnouncements() {
-          return fetch('announce/' + encodeURIComponent(deckId))
+          // Origin-ABSOLUTE, like classroom.js reaches /session/<code>: the
+          // Pages Function lives at /announce/<deck> on the site root, while
+          // this page is served from /external/, so a relative path would
+          // resolve to /external/announce/... and miss the Function entirely.
+          return fetch('/announce/' + encodeURIComponent(deckId))
             .then(function (r) { return r.ok ? r.json() : null })
             .then(function (d) { return (d && Array.isArray(d.announcements)) ? d.announcements : [] })
             .catch(function () { return [] })
