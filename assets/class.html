@@ -140,6 +140,14 @@
          clickable on a projector, and word-break so a long URL cannot push
          the slide wider than the stage. */
       #rendered a { color: #2158a8; text-decoration: underline; word-break: break-word; }
+      /* An announcement image. Capped to a fraction of the stage height so it
+         leaves room for the text above and never overflows the slide. cqh is
+         stage-relative (see the #stage size container). */
+      #rendered .ann-img { margin-top: .8em; display: flex; justify-content: center; min-height: 0; }
+      #rendered .ann-img img {
+        max-width: 100%; max-height: 46cqh; object-fit: contain;
+        border-radius: 4px; border: 1px solid #e0ded6;
+      }
       /* Blank-cell tables for students to fill in. The cells are empty on
          purpose, so they need a minimum size to read as somewhere to write. */
       #rendered table { border-collapse: collapse; margin: .4em 0 0 0; font-size: 2.7vmin; font-size: 2.7cqmin; }
@@ -255,6 +263,12 @@
       }
       .ed-card-tools button:hover, #editor .ed-btn:hover { background: #e9e7e1; }
       .ed-card-tools .ed-del { margin-left: auto; color: #b3261e; }
+      .ed-image-row { display: flex; align-items: center; gap: .8em; margin-top: .6em; flex-wrap: wrap; }
+      .ed-thumb { display: flex; align-items: center; gap: .8em; }
+      .ed-thumb-img {
+        max-height: 64px; max-width: 140px; object-fit: contain;
+        border: 1px solid #cbc9c0; border-radius: 4px;
+      }
       #ed-add { margin: .4cqmin 0 2cqmin 0; }
       .ed-foot {
         display: flex; align-items: center; gap: 1em; flex-wrap: wrap;
@@ -566,6 +580,50 @@
           })
         }
 
+        // The only image data URLs ever rendered or saved - base64 alphabet
+        // only, so the value cannot contain a quote. Mirrors the server's
+        // check. Announcement images are picked as local files and embedded
+        // (see prepareImage): an external image URL would be blocked anyway,
+        // because the player is cross-origin isolated and most hosts do not
+        // send the headers that requires.
+        var ANN_IMG_RE = /^data:image\/(png|jpe?g|gif|webp);base64,[A-Za-z0-9+/=]+$/
+        var ANN_IMG_CAP = 500 * 1024   // must match the server's ANN_MAX_IMG
+
+        // Read a picked image file, downscale it, and return a data URL under
+        // the cap. Downscaling happens on a canvas from a local object URL, so
+        // the canvas is never tainted and toDataURL works. PNG is kept when it
+        // fits (crisp for diagrams); otherwise JPEG at falling quality.
+        function prepareImage(file) {
+          return new Promise(function (resolve, reject) {
+            if (!file || !/^image\//.test(file.type)) return reject('That is not an image file.')
+            var url = URL.createObjectURL(file)
+            var img = new Image()
+            img.onload = function () {
+              URL.revokeObjectURL(url)
+              var maxDim = 1200
+              var scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight))
+              var cw = Math.max(1, Math.round(img.naturalWidth * scale))
+              var ch = Math.max(1, Math.round(img.naturalHeight * scale))
+              var canvas = document.createElement('canvas')
+              canvas.width = cw; canvas.height = ch
+              canvas.getContext('2d').drawImage(img, 0, 0, cw, ch)
+              var out = canvas.toDataURL('image/png')
+              if (out.length > ANN_IMG_CAP) {
+                var q = 0.85
+                while (q >= 0.3) {
+                  out = canvas.toDataURL('image/jpeg', q)
+                  if (out.length <= ANN_IMG_CAP) break
+                  q -= 0.1
+                }
+              }
+              if (out.length > ANN_IMG_CAP) return reject('Image is too large even after shrinking — try a smaller one.')
+              resolve(out)
+            }
+            img.onerror = function () { URL.revokeObjectURL(url); reject('Could not read that image.') }
+            img.src = url
+          })
+        }
+
         // Several LCS practice slides pose a question and then give the
         // students a blank table to fill in - the answers are worked in class,
         // so the cells stay empty on purpose. A slide declares
@@ -709,6 +767,12 @@
             }
             if (slide.body) parts.push('<p class="big">' + linkify(esc(slide.body)) + '</p>')
             if (slide.note) parts.push('<p class="note">' + linkify(esc(slide.note)) + '</p>')
+            // Only a validated data:image URL (base64 alphabet only) is ever
+            // put in the src, so it cannot carry a quote to break out. The
+            // server validates too; this is the client's own last check.
+            if (slide.image && ANN_IMG_RE.test(slide.image)) {
+              parts.push('<div class="ann-img"><img alt="" src="' + slide.image + '"></div>')
+            }
             return { html: parts.join(''), title: esc(slide.title || 'Announcements') }
           }
           if (slide.type === 'icebreaker') {
@@ -1401,6 +1465,11 @@
           card.innerHTML =
             '<input class="ed-title" type="text" placeholder="Slide title (e.g. Announcements)">' +
             '<textarea class="ed-lines" placeholder="One bullet per line"></textarea>' +
+            '<div class="ed-image-row">' +
+              '<button type="button" class="ed-btn ed-addimg">Add image</button>' +
+              '<span class="ed-thumb"></span>' +
+              '<input type="file" accept="image/*" class="ed-file" hidden>' +
+            '</div>' +
             '<div class="ed-card-tools">' +
               '<button type="button" data-act="up" title="Move up">&uarr;</button>' +
               '<button type="button" data-act="down" title="Move down">&darr;</button>' +
@@ -1408,6 +1477,41 @@
             '</div>'
           card.querySelector('.ed-title').value = a.title || ''
           card.querySelector('.ed-lines').value = (a.items && a.items.length) ? a.items.join('\n') : (a.body || '')
+
+          // The image lives on the card element as _image, restored on edit and
+          // read back on save. Kept off the text fields so it round-trips
+          // untouched.
+          var fileInput = card.querySelector('.ed-file')
+          var addImgBtn = card.querySelector('.ed-addimg')
+          var thumb = card.querySelector('.ed-thumb')
+          if (a.image && ANN_IMG_RE.test(a.image)) card._image = a.image
+
+          function showThumb() {
+            thumb.innerHTML = ''
+            if (card._image) {
+              var im = document.createElement('img')
+              im.className = 'ed-thumb-img'; im.src = card._image
+              var rm = document.createElement('button')
+              rm.type = 'button'; rm.className = 'ed-btn'; rm.textContent = 'Remove image'
+              rm.addEventListener('click', function () { card._image = null; showThumb() })
+              thumb.appendChild(im); thumb.appendChild(rm)
+              addImgBtn.style.display = 'none'
+            } else {
+              addImgBtn.style.display = ''
+            }
+          }
+          addImgBtn.addEventListener('click', function () { fileInput.click() })
+          fileInput.addEventListener('change', function () {
+            var f = fileInput.files && fileInput.files[0]
+            if (!f) return
+            edStatusMsg('Adding image…')
+            prepareImage(f).then(function (dataUrl) {
+              card._image = dataUrl; showThumb(); edStatusMsg('')
+            }).catch(function (msg) { edStatusMsg(String(msg), 'err') })
+            fileInput.value = ''   // let the same file be re-picked later
+          })
+          showThumb()
+
           edCards.appendChild(card)
         }
 
@@ -1417,9 +1521,11 @@
             var title = card.querySelector('.ed-title').value.trim()
             var lines = card.querySelector('.ed-lines').value.split('\n')
               .map(function (s) { return s.trim() }).filter(function (s) { return s.length })
-            if (!title && !lines.length) return   // drop empty cards
+            var image = card._image && ANN_IMG_RE.test(card._image) ? card._image : null
+            if (!title && !lines.length && !image) return   // drop empty cards
             var o = { type: 'announcement', title: title }
             if (lines.length) o.items = lines
+            if (image) o.image = image
             out.push(o)
           })
           return out
@@ -1738,6 +1844,7 @@
             if (Array.isArray(a.items) && a.items.length) o.items = a.items.slice()
             if (a.body) o.body = a.body
             if (a.note) o.note = a.note
+            if (a.image) o.image = a.image
             return o
           })
           deck.slides = ann.concat(committedSlides)

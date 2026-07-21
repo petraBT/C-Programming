@@ -45,9 +45,13 @@ export default {
 // stores plain strings: the deck JSON is protected by git and the build, but
 // this store is protected only by a shared passphrase, and a leaked one must
 // not become stored HTML/script in every student's browser.
-const ANN_MAX_ITEMS = 12   // announcement slides per deck
-const ANN_MAX_LINES = 20   // bullet lines per slide
-const ANN_MAX_LEN = 400    // chars per field / line
+const ANN_MAX_ITEMS = 12          // announcement slides per deck
+const ANN_MAX_LINES = 20          // bullet lines per slide
+const ANN_MAX_LEN = 400           // chars per text field / line
+const ANN_MAX_IMG = 500 * 1024    // chars in an image data URL (client downscales to fit)
+// Only these image data URLs are ever stored or rendered. base64 alphabet
+// only, so the value cannot contain a quote to break out of the img src.
+const ANN_IMG_RE = /^data:image\/(png|jpe?g|gif|webp);base64,[A-Za-z0-9+/=]+$/
 
 function annClamp(v) {
   return typeof v === 'string' ? v.slice(0, ANN_MAX_LEN) : ''
@@ -65,8 +69,13 @@ function sanitizeAnnouncements(input) {
     if (body) out.body = body
     const note = annClamp(a.note)
     if (note) out.note = note
+    // Images are validated strictly (a data:image URL, base64 only) and size
+    // capped. Anything else is dropped rather than stored.
+    if (typeof a.image === 'string' && a.image.length <= ANN_MAX_IMG && ANN_IMG_RE.test(a.image)) {
+      out.image = a.image
+    }
     return out
-  }).filter(a => a.title || (a.items && a.items.length) || a.body)
+  }).filter(a => a.title || (a.items && a.items.length) || a.body || a.image)
 }
 
 function annJson(obj, status = 200) {
@@ -79,11 +88,20 @@ function annJson(obj, status = 200) {
 export class DeckBoard {
   constructor(state) {
     this.state = state
+    // Stored in a SQLite row, NOT the key-value storage API: an announcement
+    // may carry an embedded image, and the KV API caps a single value at
+    // 128 KiB. A SQLite TEXT value has no such limit. The class is already
+    // SQLite-backed (wrangler migration v2), so this needs no new migration;
+    // the old KV 'announcements' value, if any, is simply left unread.
+    state.storage.sql.exec('CREATE TABLE IF NOT EXISTS board (id INTEGER PRIMARY KEY, data TEXT)')
   }
 
   async fetch(request) {
+    const sql = this.state.storage.sql
     if (request.method === 'GET') {
-      const list = (await this.state.storage.get('announcements')) ?? []
+      const rows = sql.exec('SELECT data FROM board WHERE id = 1').toArray()
+      let list = []
+      if (rows.length) { try { list = JSON.parse(rows[0].data) } catch { list = [] } }
       return annJson({announcements: list})
     }
     if (request.method === 'POST') {
@@ -97,7 +115,7 @@ export class DeckBoard {
         return annJson({error: 'bad json'}, 400)
       }
       const list = sanitizeAnnouncements(body && body.announcements)
-      await this.state.storage.put('announcements', list)
+      sql.exec('INSERT OR REPLACE INTO board (id, data) VALUES (1, ?)', JSON.stringify(list))
       return annJson({announcements: list, ok: true})
     }
     return annJson({error: 'method not allowed'}, 405)
