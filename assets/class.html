@@ -136,6 +136,10 @@
         width: .5em; height: .5em; border-radius: 50%; background: #2a78d6;
       }
       #rendered .note { font-size: 2.6vmin; font-size: 2.6cqmin; color: #52514e; margin-top: .8em; line-height: 1.5; }
+      /* Links in announcements (see linkify()). Underlined so they read as
+         clickable on a projector, and word-break so a long URL cannot push
+         the slide wider than the stage. */
+      #rendered a { color: #2158a8; text-decoration: underline; word-break: break-word; }
       /* Blank-cell tables for students to fill in. The cells are empty on
          purpose, so they need a minimum size to read as somewhere to write. */
       #rendered table { border-collapse: collapse; margin: .4em 0 0 0; font-size: 2.7vmin; font-size: 2.7cqmin; }
@@ -545,6 +549,23 @@
         // Anything derived from elsewhere would need escaping first.
         function html(s) { return String(s == null ? '' : s) }
 
+        // Turn bare http(s) URLs in ALREADY-ESCAPED text into links. Used only
+        // for announcements, which are escaped (not trusted HTML like deck
+        // text). Safe precisely because the text is escaped first: any < or "
+        // is already an entity, so a match cannot contain markup-breaking
+        // characters and cannot break out of the href attribute, and only
+        // http/https ever become links (no javascript:/data:). Trailing
+        // sentence punctuation is left outside the link.
+        function linkify(escaped) {
+          return String(escaped).replace(/https?:\/\/[^\s<]+/g, function (u) {
+            var tail = ''
+            var m = u.match(/(?:&[a-z]+;|[.,;:!?)\]}'"])+$/i)
+            if (m) { tail = u.slice(u.length - m[0].length); u = u.slice(0, u.length - m[0].length) }
+            if (!u) return tail
+            return '<a href="' + u + '" target="_blank" rel="noopener noreferrer">' + u + '</a>' + tail
+          })
+        }
+
         // Several LCS practice slides pose a question and then give the
         // students a blank table to fill in - the answers are worked in class,
         // so the cells stay empty on purpose. A slide declares
@@ -683,11 +704,11 @@
             parts.push('<h2>' + esc(slide.title || 'Announcements') + '</h2>')
             if (slide.items && slide.items.length) {
               parts.push('<ul>')
-              slide.items.forEach(function (it) { parts.push('<li>' + esc(it) + '</li>') })
+              slide.items.forEach(function (it) { parts.push('<li>' + linkify(esc(it)) + '</li>') })
               parts.push('</ul>')
             }
-            if (slide.body) parts.push('<p class="big">' + esc(slide.body) + '</p>')
-            if (slide.note) parts.push('<p class="note">' + esc(slide.note) + '</p>')
+            if (slide.body) parts.push('<p class="big">' + linkify(esc(slide.body)) + '</p>')
+            if (slide.note) parts.push('<p class="note">' + linkify(esc(slide.note)) + '</p>')
             return { html: parts.join(''), title: esc(slide.title || 'Announcements') }
           }
           if (slide.type === 'icebreaker') {
