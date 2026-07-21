@@ -28,6 +28,82 @@ export default {
   },
 }
 
+// --- announcements board ---------------------------------------------------
+// A second, persistent Durable Object, one instance per DECK (not per session
+// code, and it does not expire): it holds the "today" announcement slides an
+// instructor adds to the front of a deck right before class. This is the
+// server-side, browser-editable store the classroom design always intended
+// for per-term ephemera, so those slides never have to be a source edit +
+// build + deploy five minutes before class.
+//
+// Reached from the Pages origin through functions/announce/[deck].js and the
+// BOARDS binding, exactly as sessions are reached through SESSIONS. GET is
+// open (students load it too); the doorway checks the instructor passphrase
+// before any write reaches here.
+//
+// Announcements are rendered ESCAPED on the client, unlike deck text, so this
+// stores plain strings: the deck JSON is protected by git and the build, but
+// this store is protected only by a shared passphrase, and a leaked one must
+// not become stored HTML/script in every student's browser.
+const ANN_MAX_ITEMS = 12   // announcement slides per deck
+const ANN_MAX_LINES = 20   // bullet lines per slide
+const ANN_MAX_LEN = 400    // chars per field / line
+
+function annClamp(v) {
+  return typeof v === 'string' ? v.slice(0, ANN_MAX_LEN) : ''
+}
+
+function sanitizeAnnouncements(input) {
+  if (!Array.isArray(input)) return []
+  return input.slice(0, ANN_MAX_ITEMS).map(a => {
+    a = a && typeof a === 'object' ? a : {}
+    const out = {type: 'announcement', title: annClamp(a.title)}
+    if (Array.isArray(a.items)) {
+      out.items = a.items.slice(0, ANN_MAX_LINES).map(annClamp).filter(s => s.length)
+    }
+    const body = annClamp(a.body)
+    if (body) out.body = body
+    const note = annClamp(a.note)
+    if (note) out.note = note
+    return out
+  }).filter(a => a.title || (a.items && a.items.length) || a.body)
+}
+
+function annJson(obj, status = 200) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: {'Content-Type': 'application/json', 'Cache-Control': 'no-store'},
+  })
+}
+
+export class DeckBoard {
+  constructor(state) {
+    this.state = state
+  }
+
+  async fetch(request) {
+    if (request.method === 'GET') {
+      const list = (await this.state.storage.get('announcements')) ?? []
+      return annJson({announcements: list})
+    }
+    if (request.method === 'POST') {
+      // The passphrase was already checked by the Pages Function doorway; a
+      // request that reaches here is authorised. Sanitize anyway - the DO is
+      // the last line before storage.
+      let body
+      try {
+        body = await request.json()
+      } catch {
+        return annJson({error: 'bad json'}, 400)
+      }
+      const list = sanitizeAnnouncements(body && body.announcements)
+      await this.state.storage.put('announcements', list)
+      return annJson({announcements: list, ok: true})
+    }
+    return annJson({error: 'method not allowed'}, 405)
+  }
+}
+
 const PATH_OK = /^\/(?!\/)/
 
 export class ClassSession {

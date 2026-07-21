@@ -16,3 +16,11 @@ compatibility_date = "2026-07-01"
 name = "SESSIONS"
 class_name = "ClassSession"
 script_name = "engs20-classroom"
+
+# Same cross-script pattern for the announcements board, reached by
+# functions/announce/[deck].js. The DeckBoard class is hosted by the same
+# engs20-classroom Worker.
+[[durable_objects.bindings]]
+name = "BOARDS"
+class_name = "DeckBoard"
+script_name = "engs20-classroom"

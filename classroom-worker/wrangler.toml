@@ -22,6 +22,18 @@ workers_dev = false
 name = "SESSIONS"
 class_name = "ClassSession"
 
+# DeckBoard holds the per-deck announcement slides (see src/index.js). Also
+# SQLite-backed, for the same free-plan reason as ClassSession.
+[[durable_objects.bindings]]
+name = "BOARDS"
+class_name = "DeckBoard"
+
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["ClassSession"]
+
+# A NEW tag, never editing v1: migrations are append-only, and adding the
+# announcements DO class must not rewrite the session DO's history.
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["DeckBoard"]
