@@ -445,6 +445,12 @@
 
         var deck = null
         var banks = {}
+        // Announcement slides for this deck, fetched from the server-side board
+        // and prepended to the front of the deck. committedSlides is the deck
+        // exactly as authored, kept aside so the front block can be rebuilt
+        // whenever the announcements change without disturbing the content.
+        var announcements = []
+        var committedSlides = null
 
         var revealTimer = null
         function revealFrame() {
@@ -597,6 +603,21 @@
         // slide - it comes from the icebreaker pool).
         function renderedSlideHTML(slide) {
           var parts = [], resolvedTitle = null
+          if (slide.type === 'announcement') {
+            // Announcements come from the server-side board, guarded only by a
+            // passphrase, so unlike deck text they are inserted ESCAPED - a
+            // leaked passphrase must not become markup or script in the room.
+            // Same title + bullets + body shape as an agenda otherwise.
+            parts.push('<h2>' + esc(slide.title || 'Announcements') + '</h2>')
+            if (slide.items && slide.items.length) {
+              parts.push('<ul>')
+              slide.items.forEach(function (it) { parts.push('<li>' + esc(it) + '</li>') })
+              parts.push('</ul>')
+            }
+            if (slide.body) parts.push('<p class="big">' + esc(slide.body) + '</p>')
+            if (slide.note) parts.push('<p class="note">' + esc(slide.note) + '</p>')
+            return { html: parts.join(''), title: esc(slide.title || 'Announcements') }
+          }
           if (slide.type === 'icebreaker') {
             var ib = resolveIcebreaker(slide)
             if (!ib) { parts.push('<p class="big">(no icebreakers defined)</p>') }
@@ -774,15 +795,30 @@
            - which is the requirement. Instructor ink is never broadcast,
            because there is no channel by which it could be. */
         var INK_NS = 'deck:ink:'
-        function inkKey(n) { return INK_NS + deckId + ':' + n }
+        // Persistence is keyed by the slide's STABLE position in the committed
+        // deck (its `_ink`, set at load), NOT its runtime index. Announcement
+        // slides are prepended at the front and vary from class to class, so
+        // keying by runtime index would slide a student's saved ink onto the
+        // wrong content slide whenever the announcement count changed. A slide
+        // with no _ink (an announcement) is not persisted at all. The in-memory
+        // `strokes` cache is still keyed by runtime index, which is stable
+        // within a single load.
+        function inkKey(n) {
+          var s = deck && deck.slides[n - 1]
+          if (!s || s._ink == null) return null
+          return INK_NS + deckId + ':' + s._ink
+        }
 
         function loadInk(n) {
           if (strokes[n]) return strokes[n]
           var list = []
-          try {
-            var raw = localStorage.getItem(inkKey(n))
-            if (raw) { var p = JSON.parse(raw); if (Array.isArray(p)) list = p }
-          } catch (e) { /* private mode, disabled storage, corrupt JSON */ }
+          var key = inkKey(n)
+          if (key) {
+            try {
+              var raw = localStorage.getItem(key)
+              if (raw) { var p = JSON.parse(raw); if (Array.isArray(p)) list = p }
+            } catch (e) { /* private mode, disabled storage, corrupt JSON */ }
+          }
           strokes[n] = list
           return list
         }
@@ -794,10 +830,12 @@
 
         function saveInk(n) {
           if (savePending === n) { savePending = null; clearTimeout(saveTimer); saveTimer = null }
+          var key = inkKey(n)
+          if (!key) { updateNote(); return }   // announcement slide: nothing to persist
           var list = strokes[n] || []
           try {
-            if (!list.length) localStorage.removeItem(inkKey(n))
-            else localStorage.setItem(inkKey(n), JSON.stringify(list))
+            if (!list.length) localStorage.removeItem(key)
+            else localStorage.setItem(key, JSON.stringify(list))
             inkFull = false
           } catch (e) {
             inkFull = true
@@ -851,9 +889,12 @@
 
         function inkEnabled() {
           // Only 'rendered' slides for now - see the #ink CSS comment.
+          // Announcements are excluded too: they are transient text that
+          // changes from class to class, so annotating them would not persist
+          // meaningfully (they carry no stable ink key).
           if (!deck) return false
           var slide = deck.slides[currentIndex() - 1]
-          return !!slide && slide.type !== 'ref' && slide.type !== 'demo'
+          return !!slide && slide.type !== 'ref' && slide.type !== 'demo' && slide.type !== 'announcement'
         }
 
         function sizeInk() {
@@ -1166,7 +1207,9 @@
         // saveInk() removes an emptied key, so a present key means real ink.
         function hasInk(n) {
           if (strokes[n]) return strokes[n].length > 0
-          try { return localStorage.getItem(inkKey(n)) !== null } catch (e) { return false }
+          var key = inkKey(n)
+          if (!key) return false
+          try { return localStorage.getItem(key) !== null } catch (e) { return false }
         }
 
         function renderSlideIndex() {
@@ -1467,6 +1510,32 @@
           })
         }
 
+        // GET this deck's announcements from the server-side board. Optional:
+        // any failure (no board, unconfigured, offline) yields an empty list,
+        // so the deck always loads.
+        function fetchAnnouncements() {
+          return fetch('announce/' + encodeURIComponent(deckId))
+            .then(function (r) { return r.ok ? r.json() : null })
+            .then(function (d) { return (d && Array.isArray(d.announcements)) ? d.announcements : [] })
+            .catch(function () { return [] })
+        }
+
+        // Rebuild the runtime slide list as [announcements..., committed...].
+        // Run at load and again whenever the instructor edits announcements.
+        // The announcement objects deliberately carry no _ink, so they are
+        // never persisted or annotated (see inkKey / inkEnabled).
+        function applyAnnouncements() {
+          if (committedSlides === null) committedSlides = deck.slides.slice()
+          var ann = (announcements || []).map(function (a) {
+            var o = { type: 'announcement', title: a.title || '' }
+            if (Array.isArray(a.items) && a.items.length) o.items = a.items.slice()
+            if (a.body) o.body = a.body
+            if (a.note) o.note = a.note
+            return o
+          })
+          deck.slides = ann.concat(committedSlides)
+        }
+
         if (!deckId) { renderDeckChooser(); return }
 
         Promise.all([
@@ -1475,12 +1544,28 @@
             return r.json()
           }),
           fetch('decks/icebreakers.json').then(function (r) { return r.ok ? r.json() : {} }).catch(function () { return {} }),
+          // The deck's announcements, added by the instructor before class
+          // (see functions/announce/[deck].js). Optional: a deck with none,
+          // or an unconfigured board, just yields an empty list.
+          fetchAnnouncements(),
         ]).then(function (res) {
           deck = res[0]
           banks.icebreakers = res[1]
           if (!deck.slides || !deck.slides.length) throw new Error('deck "' + deckId + '" has no slides')
           document.title = 'ENGS 20 — ' + (deck.title || deckId)
+
+          // Each committed slide gets a STABLE ink key: its 1-based position in
+          // the deck as authored, before anything is prepended. Announcements
+          // vary from class to class, so keying annotations by runtime index
+          // would move a student's saved ink; keying by this does not.
+          deck.slides.forEach(function (s, i) { s._ink = i + 1 })
+
+          // The handout is the stable content deck - announcements are
+          // transient and do not belong in a printed worksheet.
           if (params.get('print') === '1') return buildHandout()
+
+          announcements = res[2] || []
+          applyAnnouncements()   // prepends them for projector + students alike
           if (!location.hash) location.hash = '1'
           render()
         }).catch(function (e) {
