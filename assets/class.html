@@ -247,11 +247,14 @@
         position: absolute; top: 6mm; right: 10mm;
         font-size: 9pt; color: #86847c;
       }
-      .sheet h2 {
+      /* Only the sheet's own top-level heading (the deck title) - NOT the
+         book's activity heading, which is nested inside extracted content and
+         styled as .heading below. */
+      .sheet > h2 {
         margin: 0 0 .5em 0; font-size: 13pt; font-weight: 600;
         color: #256abf; text-transform: uppercase; letter-spacing: .02em;
       }
-      .sheet h2:empty { display: none; }
+      .sheet > h2:empty { display: none; }
       .sheet .big { font-size: 15pt; font-weight: 600; line-height: 1.35; margin: 0 0 .5em 0; }
       .sheet ul { margin: 0; padding: 0; list-style: none; }
       .sheet li {
@@ -294,6 +297,51 @@
         font-size: 9pt; color: #86847c; text-transform: uppercase;
         letter-spacing: .05em; margin: 0 0 .8em 0;
       }
+      /* --- extracted book content (ref slides) --------------------------- */
+      /* A 'ref' slide frames a live book page. On paper we cannot frame it, so
+         its actual activity is pulled from the built book HTML - the same
+         source of truth - and printed as a worksheet: problem statement,
+         sample run, and any starter programs as listings. These rules style
+         the book's own PreTeXt classes, which arrive without the book's
+         stylesheet, scoped so they never touch the projector view. */
+      .sheet .activity { margin: 0; }
+      .sheet .heading {
+        margin: 0 0 .5em 0; font-size: 12pt; font-weight: 600; color: #1a1a19;
+      }
+      .sheet .heading .type, .sheet .heading .codenumber { font-weight: 600; }
+      .sheet .para { font-size: 12pt; line-height: 1.5; margin: 0 0 .6em 0; position: relative; }
+      .sheet .emphasis, .sheet em { font-style: italic; }
+      /* The sample run: a console transcript. The book marks the program's
+         own prompts .prompt and the simulated user input in <b>, so keeping
+         that structure shows students what they would type. */
+      .sheet .code-box { margin: 0 0 .6em 0; }
+      .sheet .console {
+        font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+        font-size: 10pt; line-height: 1.4; margin: 0;
+        background: #f7f6f3; border: 1px solid #ddd9d0; border-radius: 4px;
+        padding: 3mm 4mm; white-space: pre-wrap;
+      }
+      .sheet .console .prompt { font-weight: 400; }
+      .sheet .console b { font-weight: 700; }
+      /* Starter programs, printed where their coding window was. Same look as
+         a demo slide's listing. */
+      .sheet pre.handout-code {
+        font-size: 10pt; line-height: 1.4; margin: .5em 0 .6em 0;
+        background: #f7f6f3; border: 1px solid #ddd9d0; border-radius: 4px;
+        padding: 3mm 4mm; white-space: pre-wrap; overflow-wrap: break-word;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
+      /* Book chrome that has no meaning on paper. Belt and braces: the script
+         also strips these before injection, but display:none guards anything
+         a future page adds. */
+      .sheet .autopermalink, .sheet .knowl-output { display: none; }
+      /* Run-it-live link back to the interactive slide. */
+      .sheet .runit {
+        margin: .8em 0 0 0; font-size: 10pt; color: #52514e;
+        border-top: 1px dashed #cbc9c0; padding-top: .6em;
+      }
+      .sheet .runit a { color: #256abf; word-break: break-all; }
+
       /* The space to write in. Grows to fill whatever the content leaves. */
       .sheet .room { flex: 1; min-height: 30mm; }
 
@@ -1291,53 +1339,129 @@
           return out
         }
 
+        // A starting program, fetched once and cached (several slides can
+        // share one). Lives outside the built site next to coding-window/,
+        // reached the same way the demo slides reach it on screen.
+        var codeCache = {}
+        function fetchCode(name) {
+          if (codeCache[name]) return codeCache[name]
+          codeCache[name] = fetch('../CMeCodeDir/' + encodeURIComponent(name) + '.c')
+            .then(function (r) { return r.ok ? r.text() : null })
+            .then(function (t) { return t == null ? '(could not load ' + name + '.c)' : t })
+            .catch(function () { return '(could not load ' + name + '.c)' })
+          return codeCache[name]
+        }
+
+        // A book page, fetched once, parsed, and cached - W1C2 frames three
+        // different subsections of the same page, so this fetches it once.
+        var pageCache = {}
+        function fetchBookPage(page) {
+          if (pageCache[page]) return pageCache[page]
+          pageCache[page] = fetch('../' + page)
+            .then(function (r) { return r.ok ? r.text() : null })
+            .then(function (t) { return t == null ? null : new DOMParser().parseFromString(t, 'text/html') })
+            .catch(function () { return null })
+          return pageCache[page]
+        }
+
+        // The same narrowing the live deck applies (see classroom.js deck
+        // mode), but against a fetched document instead of a live iframe:
+        // 'focus' takes one subsection by xml:id, 'only' takes every element
+        // matching a selector. An un-narrowed ref frames a whole book page,
+        // which is too much for a worksheet, so that returns null and the
+        // sheet falls back to a pointer.
+        function narrowNodes(doc, slide) {
+          if (slide.focus) { var el = doc.getElementById(slide.focus); return el ? [el] : [] }
+          if (slide.only) return [].slice.call(doc.querySelectorAll(slide.only))
+          return null
+        }
+
+        /* The printable body for a 'ref' slide: the real activity, pulled from
+           the built book HTML and turned into a worksheet, plus a link back to
+           the live interactive slide.
+
+           A coding window cannot be paper, but its starting program can, so
+           each embedded window is replaced in place by a highlighted listing -
+           there may be several in one activity (the char-datatype and
+           user-input activities carry three and four), interleaved with prose,
+           and replacing them in document order keeps that order. Book chrome
+           with no meaning on paper (the permalink icons, scripts) is stripped
+           first. Resolves to an HTML string. */
+        function prepareRefBody(slide, n) {
+          var runUrl = location.origin + location.pathname +
+                       '?deck=' + encodeURIComponent(deckId) + '#' + n
+          var head =
+            '<p class="kind">From the book</p>' +
+            '<h2>' + html(slide.title || '') + '</h2>'
+          var runit =
+            '<p class="runit">Run it live (interactive): ' +
+            '<a href="' + esc(runUrl) + '">' + esc(runUrl) + '</a></p>'
+          function pointer(msg) { return head + '<p class="note">' + msg + '</p>' + runit }
+
+          return fetchBookPage(slide.page).then(function (doc) {
+            if (!doc) return pointer('Could not load <code>' + esc(slide.page) + '</code>.')
+            var nodes = narrowNodes(doc, slide)
+            if (nodes == null) return pointer('This slide frames the book page <code>' + esc(slide.page) + '</code>.')
+            if (!nodes.length) return pointer('Could not find this slide’s content on <code>' + esc(slide.page) + '</code>.')
+
+            var wrap = document.createElement('div')
+            nodes.forEach(function (node) { wrap.appendChild(node.cloneNode(true)) })
+            ;[].forEach.call(wrap.querySelectorAll('.autopermalink, script, style, .knowl-output'), function (el) {
+              if (el.parentNode) el.parentNode.removeChild(el)
+            })
+
+            var frames = [].slice.call(wrap.querySelectorAll('iframe'))
+            var names = frames.map(function (f) {
+              var m = (f.getAttribute('src') || '').match(/[?&]src=([^&"]+\.c)/)
+              return m ? decodeURIComponent(m[1]).split('/').pop().replace(/\.c$/, '') : null
+            })
+            return Promise.all(names.map(function (nm) { return nm ? fetchCode(nm) : Promise.resolve(null) }))
+              .then(function (codes) {
+                frames.forEach(function (f, i) {
+                  var pre = document.createElement('pre')
+                  pre.className = 'handout-code'
+                  if (codes[i] != null) pre.innerHTML = highlightC(codes[i])
+                  else pre.textContent = '(code unavailable)'
+                  f.parentNode.replaceChild(pre, f)
+                })
+                return head + wrap.innerHTML + runit
+              })
+          })
+        }
+
         function buildHandout() {
           document.documentElement.classList.add('printing')
           document.body.classList.add('printing')
           document.title = (deck.title || deckId) + ' — slides'
 
-          // Demo slides need their starting program, which lives outside the
-          // built site next to coding-window/. Fetch them all before laying
-          // anything out, so the print dialog never opens on a half-built page.
-          var codeFor = {}
-          var wanted = deck.slides.filter(function (s) { return s.type === 'demo' && s.startPoint })
-          return Promise.all(wanted.map(function (s) {
-            var url = '../CMeCodeDir/' + encodeURIComponent(s.startPoint) + '.c'
-            return fetch(url)
-              .then(function (r) { return r.ok ? r.text() : null })
-              .then(function (t) {
-                // A missing file must not silently print an empty box.
-                codeFor[s.startPoint] = t == null
-                  ? '(could not load ' + s.startPoint + '.c)'
-                  : t
+          // Each sheet's body is prepared in parallel: demo slides fetch their
+          // starter, ref slides fetch and parse their book page (and its
+          // starters), the rest are synchronous. Laying out only after all of
+          // it resolves means the print dialog never opens on a half-built page.
+          var jobs = deck.slides.map(function (slide, i) {
+            var n = i + 1
+            if (slide.type === 'demo') {
+              var head =
+                '<p class="kind">Program</p>' +
+                '<h2>' + html(slide.title || '') + '</h2>' +
+                (slide.body ? '<p class="big">' + [].concat(slide.body).join('</p><p class="big">') + '</p>' : '')
+              if (!slide.startPoint) return Promise.resolve(head)
+              return fetchCode(slide.startPoint).then(function (code) {
+                return head + '<pre>' + highlightC(code) + '</pre>'
               })
-              .catch(function () { codeFor[s.startPoint] = '(could not load ' + s.startPoint + '.c)' })
-          })).then(function () {
-            var out = []
-            deck.slides.forEach(function (slide, i) {
+            }
+            if (slide.type === 'ref') return prepareRefBody(slide, n)
+            return Promise.resolve(renderedSlideHTML(slide).html)
+          })
+
+          return Promise.all(jobs).then(function (bodies) {
+            var out = bodies.map(function (body, i) {
               var n = i + 1
-              var body = ''
-              if (slide.type === 'demo') {
-                body =
-                  '<p class="kind">Program</p>' +
-                  '<h2>' + html(slide.title || '') + '</h2>' +
-                  (slide.body ? '<p class="big">' + [].concat(slide.body).join('</p><p class="big">') + '</p>' : '') +
-                  '<pre>' + highlightC(codeFor[slide.startPoint] || '') + '</pre>'
-              } else if (slide.type === 'ref') {
-                body =
-                  '<p class="kind">From the book</p>' +
-                  '<h2>' + html(slide.title || '') + '</h2>' +
-                  '<p class="note">This slide shows a page from the book: ' +
-                  '<code>' + esc(slide.page) + '</code></p>'
-              } else {
-                body = renderedSlideHTML(slide).html
-              }
-              out.push(
-                '<section class="sheet">' +
-                  '<span class="num">' + n + ' / ' + deck.slides.length + '</span>' +
-                  body +
-                  '<div class="room"></div>' +
-                '</section>')
+              return '<section class="sheet">' +
+                       '<span class="num">' + n + ' / ' + deck.slides.length + '</span>' +
+                       body +
+                       '<div class="room"></div>' +
+                     '</section>'
             })
             document.getElementById('print').innerHTML = out.join('')
           })
