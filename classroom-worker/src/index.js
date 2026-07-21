@@ -96,10 +96,26 @@ export class DeckBoard {
     state.storage.sql.exec('CREATE TABLE IF NOT EXISTS board (id INTEGER PRIMARY KEY, data TEXT)')
   }
 
+  // One-time carry-over from the earlier key-value storage to the SQLite row.
+  // Announcements saved before the storage switch live under the KV key
+  // 'announcements'; move them into the row the first time we find the row
+  // empty, then delete the old key so this runs at most once.
+  async migrateLegacy(sql) {
+    const legacy = await this.state.storage.get('announcements')
+    if (Array.isArray(legacy) && legacy.length) {
+      sql.exec('INSERT OR REPLACE INTO board (id, data) VALUES (1, ?)', JSON.stringify(legacy))
+      await this.state.storage.delete('announcements')
+    }
+  }
+
   async fetch(request) {
     const sql = this.state.storage.sql
     if (request.method === 'GET') {
-      const rows = sql.exec('SELECT data FROM board WHERE id = 1').toArray()
+      let rows = sql.exec('SELECT data FROM board WHERE id = 1').toArray()
+      if (!rows.length) {
+        await this.migrateLegacy(sql)
+        rows = sql.exec('SELECT data FROM board WHERE id = 1').toArray()
+      }
       let list = []
       if (rows.length) { try { list = JSON.parse(rows[0].data) } catch { list = [] } }
       return annJson({announcements: list})
