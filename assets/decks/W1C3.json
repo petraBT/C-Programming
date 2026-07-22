@@ -113,8 +113,8 @@
     },
     {
       "type": "demo",
-      "title": "Integer division, continued",
-      "body": "Can we get a real (decimal) answer? Run each version below and see which one fixes it.",
+      "title": "Casting an int to a float",
+      "body": "What do you think happens to the value of the number when you cast an int to a float? Are digits beyond the decimal point added on?",
       "startPoint": "engs20p_Ndivision2"
     },
     {
