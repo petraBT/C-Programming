@@ -1,0 +1,9 @@
+{
+  "user": "engs20student",
+  "files": [
+    {"path": "engs20/workspace/hello.c", "content": "#include <stdio.h>\n\nint main(void) {\n    printf(\"Hello, world!\\n\");\n    return 0;\n}\n"}
+  ],
+  "dirs": [
+    "engs20/workspace/LA1"
+  ]
+}
