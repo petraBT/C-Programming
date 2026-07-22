@@ -1,0 +1,6 @@
+{
+  "user": "engs20student",
+  "files": [
+    {"path": "myfiles/myFirstFile.txt", "content": "Hello! What's up?\n"}
+  ]
+}

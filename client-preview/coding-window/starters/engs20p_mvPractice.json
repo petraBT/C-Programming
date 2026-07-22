@@ -1,0 +1,9 @@
+{
+  "user": "engs20student",
+  "files": [
+    {"path": "engs20/myLongAssignment.c", "content": "/* Long Assignment 1 */\n#include <stdio.h>\n\nint main(void) {\n    printf(\"Hello, world!\\n\");\n    return 0;\n}\n"}
+  ],
+  "dirs": [
+    "engs20/workspace/LA1"
+  ]
+}

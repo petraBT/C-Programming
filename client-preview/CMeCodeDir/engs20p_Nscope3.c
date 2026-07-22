@@ -1,0 +1,31 @@
+#include <stdio.h>
+#define MAX 10                                  // all
+
+int one(int arg1, int arg2);                    // main, one
+int two(int one, int arg1);                     // all
+
+int main(void)                        
+{
+   int i,j,k;                                  // main
+
+   i = 2; j = 3;
+   k = one(i,j);
+   printf("One(%d, %d) = %d\n", i, j, k);
+
+   k = two(i,j);
+   printf("Two(%d, %d) = %d\n", i,j,k);
+
+   return(0);
+}
+
+int one(int arg1, int arg2)                     // main, one
+{
+    int i;                                      // one
+    i = two(arg1, arg2);   
+    return(arg1 + i);
+}
+
+int two(int one, int arg2)                      // all
+{
+   return(one*arg2+MAX);
+}

@@ -1,0 +1,17 @@
+#include <stdio.h>
+int main(void){
+    
+    int number, notPrime;
+    
+    printf("Please enter a number: ");
+    scanf("%d", &number);
+    
+    /* Please add your code here. Be sure to declare any
+       additional variables you need. */
+    
+    if (notPrime) {
+        printf("The number %d you entered is not prime.", number);
+    } else {
+        printf("The number %d you entered is prime.", number);
+    }
+}

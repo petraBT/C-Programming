@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linux Terminal (prototype)</title>
+    <script type="module" crossorigin src="./assets/linux-2MkMfe4j.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/sandbox-runner-Dtw_sjGt.js">
+    <link rel="stylesheet" crossorigin href="./assets/sandbox-runner-DD5dNYyH.css">
+  </head>
+  <body>
+    <div id="app">
+      <div id="terminal-panel" class="terminal">
+        <pre id="terminal-output"></pre><span id="cursor" aria-hidden="true"></span>
+        <div id="pager-hint" hidden>-- more -- (Space: next page, Ctrl+b: previous page, q: quit)</div>
+        <input id="terminal-capture" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Shell input" />
+      </div>
+    </div>
+  </body>
+</html>

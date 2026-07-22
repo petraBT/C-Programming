@@ -1,0 +1,39 @@
+{
+  "_comment": [
+    "Shared pool of icebreaker / community-building prompts, drawn from the",
+    "retired LCS decks. Deliberately NOT per-lecture: none of these are",
+    "topic-specific, and they get reused across lectures and terms, so one",
+    "pool avoids duplicating them. A deck slide of type 'icebreaker' names",
+    "one by id; leaving the id off picks one at random.",
+    "",
+    "This is durable content (git-tracked, edited at leisure). The things you",
+    "rewrite minutes before class - today's announcements, which prompt you",
+    "actually want - are session-level and do not belong in this file."
+  ],
+  "icebreakers": [
+    {
+      "id": "time-machine",
+      "prompt": "If you could use a time machine, would you travel to the future or to the past? When, and where would you go?"
+    },
+    {
+      "id": "weird-food",
+      "prompt": "What weird food combinations do you really enjoy?"
+    },
+    {
+      "id": "best-gift",
+      "prompt": "What is the best gift you've ever given or received?"
+    },
+    {
+      "id": "team-intros",
+      "title": "Meet your team",
+      "prompt": "Please go around and introduce yourselves: your name, your class year and (intended) major, and the best gift you've ever given or received.",
+      "note": "Then brainstorm a team name and enter it below."
+    },
+    {
+      "id": "three-in-common",
+      "title": "Three things in common",
+      "prompt": "As a team, find three interesting things you all have in common.",
+      "note": "Put those three things in the answer box along with your team name — the LFs will vote on the winning team!"
+    }
+  ]
+}

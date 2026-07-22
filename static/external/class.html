@@ -1,0 +1,1898 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Deliberately does NOT suppress pinch-zoom. That was tried, to kill
+         iOS Safari's double-tap-to-zoom delay, on the theory that it was
+         what made handwriting stutter. The device said otherwise: pointer
+         events were already arriving 8-19ms after Safari generated them,
+         so no such delay existed and the restriction bought nothing. The
+         real cause was Scribble swallowing contacts - see the touchmove
+         workaround in the script. Blocking zoom is an accessibility cost,
+         so it is not worth paying for nothing. touch-action: manipulation
+         on the stage covers double-tap zoom in a targeted way if it ever
+         does matter. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ENGS 20 — Class</title>
+    <style>
+      /* 16:9 projector view of a lecture deck. The deck is a playlist (see
+         decks/*.json): most slides are pages the book already builds, shown
+         in an iframe with the book's own chrome hidden, so class and book
+         never diverge. The rest are short in-class-only slides rendered
+         here. */
+      /* Pinned to light, deliberately: the book pages shown on 'ref' slides
+         and the coding windows inside them are light, and stepping between a
+         dark inline slide and a light book slide is jarring on a projector.
+         classroom.js pins the book side to light too (deck mode), so the room
+         sees one consistent thing regardless of anyone's OS theme. */
+      :root { color-scheme: light; }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0; height: 100%;
+        background: #111; color: #1a1a19;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        overflow: hidden;
+      }
+      /* The stage holds a strict 16:9 box, letterboxed into whatever the
+         projector actually gives us. */
+      #stage-wrap {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+      }
+      /* Slide type is sized against THE STAGE, not the viewport (see the
+         cqmin units below), which is what `container-type: size` here
+         enables. The stage is letterboxed to a strict 16:9 but the viewport
+         is whatever the room gives us, so viewport-relative type scaled
+         differently from the box it sits in: on a 4:3 screen the heading on
+         W1C3 slide 10 wrapped to three lines instead of two and pushed the
+         table down. That made the same slide lay out differently on the
+         projector and on an iPad - visible on its own, and fatal to pen
+         annotation, whose stroke coordinates are normalized to the stage and
+         so cannot follow reflowing text.
+         At exactly 16:9 fullscreen cqmin and vmin resolve to the same value,
+         so the projector view is unchanged. */
+      #stage {
+        position: relative;
+        width: min(100vw, calc(100vh * 16 / 9));
+        height: min(100vh, calc(100vw * 9 / 16));
+        background: #fff;
+        overflow: hidden;
+        container-type: size;
+        /* A hand resting on an iPad while writing is a long press on the
+           slide text: iOS selected the whole slide blue and raised the
+           "Copy / Search with Google" callout over it. The pen filter rejects
+           the touch for drawing, but rejecting it does not stop the browser's
+           own default gesture. A projected slide is not text anyone needs to
+           select, so turn both off. Book pages on 'ref' slides are a separate
+           document inside an iframe and keep their normal behaviour. */
+        -webkit-user-select: none; user-select: none;
+        -webkit-touch-callout: none;
+        /* The targeted half of the same fix as the viewport meta above:
+           "manipulation" keeps panning and pinch-zoom but drops double-tap
+           zoom, and so drops the delay Safari holds every contact for while
+           it waits to see whether a second one is coming. Belt and braces -
+           the meta tag is the one that works today, this is the one that
+           keeps working if the meta tag is ever loosened. */
+        touch-action: manipulation;
+      }
+
+      /* --- book-page slides --------------------------------------------- */
+      /* The deck's own title for the slide sits above the framed book page,
+         styled exactly like a demo slide's heading, so a slide built from the
+         book and one written in the deck file read as the same deck. The book
+         page keeps its own heading ("Activity 4.6.3. Adding User Input") -
+         that names the item the way the book numbers it, while this one says
+         what we are doing with it in class. A deck slide with no title just
+         gets the frame. */
+      #ref { width: 100%; height: 100%; display: none; flex-direction: column; }
+      #ref.on { display: flex; }
+      #ref h2 {
+        margin: 0; padding: 2.2% 4% 0 4%;
+        /* The vmin line is a fallback for engines without container queries
+           (pre-Safari 16); they keep the old viewport-relative behaviour. */
+        font-size: 3.2vmin; font-size: 3.2cqmin;
+        font-weight: 600; color: #256abf;
+      }
+      #ref h2:empty { display: none; }
+      #frame { flex: 1; width: 100%; min-height: 0; border: 0; display: block; background: #fff; }
+
+      /* --- demo slides: a little text over one coding window ------------- */
+      #demo { width: 100%; height: 100%; display: none; flex-direction: column; padding: 3.2% 4% 2.2% 4%; }
+      #demo.on { display: flex; }
+      #demo h2 { margin: 0 0 .35em 0; font-size: 3.2vmin; font-size: 3.2cqmin; font-weight: 600; color: #256abf; }
+      /* Several LCS slides are a bare problem statement with no heading. */
+      #demo h2:empty, #rendered h2:empty { display: none; }
+      #demo .body { font-size: 2.5vmin; font-size: 2.5cqmin; line-height: 1.45; margin: 0 0 .7em 0; }
+      #demo .body p { margin: 0 0 .35em 0; }
+      #demo code {
+        font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+        font-size: .92em; background: #f0efec; padding: .1em .35em; border-radius: 4px;
+      }
+      #demo iframe { flex: 1; width: 100%; border: 0; min-height: 0; }
+
+      /* --- rendered slides ---------------------------------------------- */
+      #rendered {
+        width: 100%; height: 100%;
+        padding: 5.5% 7%;
+        display: none;
+        flex-direction: column; justify-content: center;
+      }
+      /* Practice slides top-align their text so the lower half of the slide is
+         free to write on (set by render() for 'prompt' slides). Other rendered
+         slides - agenda, recap, announcements - stay centred. */
+      #rendered.top { justify-content: flex-start; }
+      #rendered.on { display: flex; }
+      #rendered h2 {
+        margin: 0 0 0.6em 0;
+        font-size: 3.1vmin; font-size: 3.1cqmin; font-weight: 600; letter-spacing: .01em;
+        color: #256abf; text-transform: uppercase;
+      }
+      #rendered .big {
+        font-size: 4.6vmin; font-size: 4.6cqmin; font-weight: 600; line-height: 1.25; margin: 0 0 .5em 0;
+      }
+      #rendered ul { margin: 0; padding: 0; list-style: none; }
+      #rendered li {
+        font-size: 3.4vmin; font-size: 3.4cqmin; line-height: 1.55; margin-bottom: .7em;
+        padding-left: 1.4em; position: relative;
+      }
+      #rendered li::before {
+        content: ""; position: absolute; left: 0; top: .55em;
+        width: .5em; height: .5em; border-radius: 50%; background: #2a78d6;
+      }
+      #rendered .note { font-size: 2.6vmin; font-size: 2.6cqmin; color: #52514e; margin-top: .8em; line-height: 1.5; }
+      /* Links in announcements (see linkify()). Underlined so they read as
+         clickable on a projector, and word-break so a long URL cannot push
+         the slide wider than the stage. */
+      #rendered a { color: #2158a8; text-decoration: underline; word-break: break-word; }
+      /* An announcement paragraph (the editor's Paragraph mode). Readable body
+         size rather than the big single-line style, so a longer block fits. */
+      #rendered .ann-para {
+        font-size: 3.3vmin; font-size: 3.3cqmin; line-height: 1.5; margin: 0 0 .5em 0;
+      }
+      /* An announcement image. Capped to a fraction of the stage height so it
+         leaves room for the text above and never overflows the slide. cqh is
+         stage-relative (see the #stage size container). */
+      #rendered .ann-img { margin-top: .8em; display: flex; justify-content: center; min-height: 0; }
+      #rendered .ann-img img {
+        max-width: 100%; max-height: 46cqh; object-fit: contain;
+        border-radius: 4px; border: 1px solid #e0ded6;
+      }
+      /* Blank-cell tables for students to fill in. The cells are empty on
+         purpose, so they need a minimum size to read as somewhere to write. */
+      #rendered table { border-collapse: collapse; margin: .4em 0 0 0; font-size: 2.7vmin; font-size: 2.7cqmin; }
+      #rendered th, #rendered td {
+        border: 1px solid #a9a79e; padding: .5em 1.2em; text-align: left;
+      }
+      #rendered td { min-width: 9em; height: 2.4em; }
+      #rendered thead th { background: #f0efec; font-weight: 600; }
+      #rendered tbody th { font-weight: 500; }
+      #rendered code {
+        font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+        font-size: .92em; background: #f0efec; padding: .12em .38em; border-radius: 4px;
+      }
+
+      /* --- pen annotation ------------------------------------------------ */
+      /* Sits over the slide, under #bar (which follows it in the DOM, so it
+         wins both paint and hit testing at the same z-index). Only turned on
+         for 'rendered' slides for now: 'ref' and 'demo' slides put an iframe
+         underneath, and covering it would make the coding window inert - that
+         needs a pen/interact toggle, which is a later step.
+
+         Annotations are the student's own and are deliberately NOT part of
+         the follow-me session: nothing here touches classroom.js. */
+      /* width/height are not redundant with inset: a canvas is a replaced
+         element, so `inset: 0` alone leaves width:auto resolving to the
+         canvas's intrinsic (backing-store) size - which is stage x dpr, so
+         the layer silently rendered at 2x and every stroke landed off-stage. */
+      #ink {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        display: none; touch-action: none;
+      }
+      #ink.on { display: block; }
+      #ink.erasing { cursor: cell; }
+      /* Undo/Clear need existing ink, so they show only once a slide has some
+         (bar.inking). The pen tools - colour swatches and the eraser toggle -
+         show on any inkable slide (bar.inkable), so a colour can be picked
+         before the first stroke. */
+      #bar .ink-tool, #bar .ink-pen { display: none; }
+      #bar.inking .ink-tool { display: inline-block; }
+      #bar.inkable .ink-pen { display: inline-block; }
+      #bar #swatches { white-space: nowrap; }
+      #bar .swatch {
+        width: 15px; height: 15px; padding: 0; margin: 0 1px; border-radius: 50%;
+        border: 1px solid #6a6a66; vertical-align: middle; cursor: pointer;
+      }
+      #bar .swatch.active { box-shadow: 0 0 0 2px #0d0d0d, 0 0 0 3px #d9d9d9; }
+      #bar #erase.active { background: #e7e5df; color: #1a1a19; border-color: #cbc9c0; }
+      #note { color: #86847c; }
+      #note.warn { color: #ffab91; }
+
+      /* --- index --------------------------------------------------------- */
+      /* Closes the discoverability gap: the player used to be a URL you had to
+         be told, with no way to see what decks exist or to get back to a
+         particular slide. Students keeping their own annotations only means
+         something if they can navigate back to the slide they annotated, so
+         this is a prerequisite for annotation rather than a convenience.
+         Opened with no ?deck= it lists the decks; inside a deck it lists that
+         deck's slides. */
+      #index {
+        position: absolute; inset: 0; z-index: 5;
+        background: #fbfbf9; overflow-y: auto;
+        display: none; padding: 4cqmin 5cqmin 8cqmin 5cqmin;
+      }
+      #index.on { display: block; }
+      #index h2 {
+        margin: 0 0 .1em 0; font-size: 3.4vmin; font-size: 3.4cqmin;
+        font-weight: 600; color: #256abf;
+      }
+      #index .sub {
+        margin: 0 0 1.2em 0; font-size: 2.1vmin; font-size: 2.1cqmin; color: #52514e;
+      }
+      #index a {
+        display: flex; align-items: baseline; gap: .8em;
+        padding: .55em .7em; border-radius: 6px;
+        text-decoration: none; color: #1a1a19;
+        font-size: 2.4vmin; font-size: 2.4cqmin; line-height: 1.35;
+      }
+      #index a:hover, #index a:focus { background: #eceae4; outline: none; }
+      #index a.here { background: #e4edf9; box-shadow: inset 0 0 0 1px #b9d0ee; }
+      #index .n {
+        flex: none; min-width: 2.4em; text-align: right;
+        color: #86847c; font-variant-numeric: tabular-nums;
+      }
+      #index .label { flex: 1; }
+      #index .kind {
+        flex: none; font-size: .78em; color: #86847c; text-transform: uppercase;
+        letter-spacing: .04em;
+      }
+      /* A slide the student has written on. Pure affordance: the whole point
+         of the index is getting back to your own annotation. */
+      #index .inked { flex: none; color: #d92b2b; font-size: .9em; }
+
+      /* --- announcements editor (?edit) ---------------------------------- */
+      /* The instructor's in-browser panel for the announcement slides that go
+         at the front of the deck. Only revealed with ?edit in the URL, so
+         students never see the control; the real gate is the passphrase the
+         server checks on save. Editing here writes to the server-side board
+         and is live for everyone in seconds - no source edit, no deploy. */
+      #editor {
+        position: absolute; inset: 0; z-index: 7;
+        background: #fbfbf9; overflow-y: auto;
+        display: none; padding: 4cqmin 5cqmin 6cqmin 5cqmin;
+      }
+      #editor.on { display: block; }
+      #editor h2 {
+        margin: 0 0 .1em 0; font-size: 3.2vmin; font-size: 3.2cqmin;
+        font-weight: 600; color: #256abf;
+      }
+      #editor .sub { margin: 0 0 1em 0; font-size: 2vmin; font-size: 2cqmin; color: #52514e; }
+      .ed-card {
+        border: 1px solid #ddd9d0; border-radius: 8px; background: #fff;
+        padding: 2cqmin 2.4cqmin; margin-bottom: 1.6cqmin;
+      }
+      .ed-card input.ed-title, .ed-card textarea {
+        width: 100%; box-sizing: border-box; font: inherit;
+        border: 1px solid #cbc9c0; border-radius: 5px; padding: .5em .6em;
+        font-size: 2.2vmin; font-size: 2.2cqmin; color: #1a1a19; background: #fff;
+      }
+      .ed-card input.ed-title { font-weight: 600; margin-bottom: .5em; }
+      .ed-card textarea { min-height: 4.5em; resize: vertical; line-height: 1.4; }
+      .ed-card-tools { display: flex; gap: .5em; margin-top: .5em; }
+      .ed-card-tools button, #editor .ed-btn {
+        font: inherit; font-size: 1.9vmin; font-size: 1.9cqmin;
+        border: 1px solid #cbc9c0; background: #f3f2ee; color: #1a1a19;
+        border-radius: 5px; padding: .35em .8em; cursor: pointer;
+      }
+      .ed-card-tools button:hover, #editor .ed-btn:hover { background: #e9e7e1; }
+      .ed-card-tools .ed-del { margin-left: auto; color: #b3261e; }
+      .ed-card .ed-body { min-height: 3.5em; }
+      .ed-card .ed-lines { min-height: 3.5em; margin-top: .5em; }
+      .ed-image-row { display: flex; align-items: center; gap: .8em; margin-top: .6em; flex-wrap: wrap; }
+      .ed-thumb { display: flex; align-items: center; gap: .8em; }
+      .ed-thumb-img {
+        max-height: 64px; max-width: 140px; object-fit: contain;
+        border: 1px solid #cbc9c0; border-radius: 4px;
+      }
+      #ed-add { margin: .4cqmin 0 2cqmin 0; }
+      .ed-foot {
+        display: flex; align-items: center; gap: 1em; flex-wrap: wrap;
+        border-top: 1px solid #e0ded6; padding-top: 1.4cqmin; margin-top: .5cqmin;
+      }
+      #ed-key {
+        font: inherit; font-size: 2.1vmin; font-size: 2.1cqmin;
+        border: 1px solid #cbc9c0; border-radius: 5px; padding: .5em .7em;
+        min-width: 16em;
+      }
+      #ed-save {
+        font: inherit; font-size: 2.1vmin; font-size: 2.1cqmin; font-weight: 600;
+        border: 1px solid #1f5fb0; background: #256abf; color: #fff;
+        border-radius: 5px; padding: .5em 1.4em; cursor: pointer;
+      }
+      #ed-save:hover { background: #1f5fb0; }
+      #ed-status { font-size: 2vmin; font-size: 2cqmin; color: #52514e; }
+      #ed-status.err { color: #b3261e; }
+      #ed-status.ok { color: #1a7f37; }
+      /* The bar control that opens it, shown only in ?edit mode. */
+      #bar .edit-tool { display: none; }
+      #bar.editable .edit-tool { display: inline-block; }
+
+      /* --- printable handout (?print=1) ---------------------------------- */
+      /* A blank worksheet to give students before class, so their note-taking
+         happens in a real PDF annotator rather than in a browser. That is not
+         a workaround for our own shortcomings: iPadOS Safari drops Pencil
+         input while writing fast (see the Scribble note in the script), and
+         native PDF apps simply do not, so paper-shaped notes belong there.
+         The live deck stays what gets projected - a PDF cannot hold a running
+         coding window.
+         Deliberately generous with whitespace: every sheet leaves room under
+         the slide content to write, which is the entire point. */
+      #print { display: none; }
+      /* The projector styles pin html AND body to height:100%;overflow:hidden
+         so a slide never scrolls. The handout is a long document and must,
+         so both elements have to be released - overriding only body leaves
+         html clipping it at one viewport. */
+      html.printing, body.printing { height: auto; overflow: visible; }
+      html.printing { background: #f0efec; }
+      body.printing { background: #f0efec; padding: 8mm 0; }
+      body.printing #stage-wrap { display: none; }
+      body.printing #print { display: block; }
+      .sheet {
+        position: relative;
+        background: #fff; color: #1a1a19;
+        width: 260mm; min-height: 170mm;
+        margin: 0 auto 8mm auto; padding: 14mm 16mm 16mm 16mm;
+        box-shadow: 0 1px 4px rgba(0,0,0,.25);
+        display: flex; flex-direction: column;
+      }
+      .sheet .num {
+        position: absolute; top: 6mm; right: 10mm;
+        font-size: 9pt; color: #86847c;
+      }
+      /* Only the sheet's own top-level heading (the deck title) - NOT the
+         book's activity heading, which is nested inside extracted content and
+         styled as .heading below. */
+      .sheet > h2 {
+        margin: 0 0 .5em 0; font-size: 13pt; font-weight: 600;
+        color: #256abf; text-transform: uppercase; letter-spacing: .02em;
+      }
+      .sheet > h2:empty { display: none; }
+      .sheet .big { font-size: 15pt; font-weight: 600; line-height: 1.35; margin: 0 0 .5em 0; }
+      .sheet ul { margin: 0; padding: 0; list-style: none; }
+      .sheet li {
+        font-size: 12.5pt; line-height: 1.5; margin-bottom: .5em;
+        padding-left: 1.4em; position: relative;
+      }
+      .sheet li::before {
+        content: ""; position: absolute; left: 0; top: .5em;
+        width: .45em; height: .45em; border-radius: 50%; background: #2a78d6;
+      }
+      .sheet .note { font-size: 10.5pt; color: #52514e; margin-top: .6em; line-height: 1.45; }
+      .sheet table { border-collapse: collapse; margin: .5em 0 0 0; font-size: 12pt; }
+      .sheet th, .sheet td { border: 1px solid #6e6c66; padding: .5em 1.1em; text-align: left; }
+      /* Taller than on screen: these are cells a student writes in by hand. */
+      .sheet td { min-width: 42mm; height: 14mm; }
+      .sheet thead th { background: #f0efec; font-weight: 600; }
+      .sheet code, .sheet pre {
+        font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      }
+      .sheet code { font-size: .9em; background: #f0efec; padding: .1em .3em; border-radius: 3px; }
+      .sheet pre {
+        font-size: 10pt; line-height: 1.4; margin: .5em 0 0 0;
+        background: #f7f6f3; border: 1px solid #ddd9d0; border-radius: 4px;
+        padding: 3mm 4mm; white-space: pre-wrap; overflow-wrap: break-word;
+        /* Text colour prints by default, but the code listing's whole value
+           is the colour, so force it rather than trust the print pipeline. */
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
+      /* Syntax colours lifted from the coding window's own CodeMirror default
+         theme (cm-keyword etc.), so the printed listing and the live editor
+         agree. Highlighting is done by highlightC() in the script; there is
+         no CodeMirror here, in keeping with the no-build-step handout. */
+      .sheet pre .t-keyword { color: #708; }
+      .sheet pre .t-type    { color: #085; }
+      .sheet pre .t-number  { color: #164; }
+      .sheet pre .t-comment { color: #a50; }
+      .sheet pre .t-string  { color: #a11; }
+      .sheet pre .t-meta    { color: #555; }
+      .sheet .kind {
+        font-size: 9pt; color: #86847c; text-transform: uppercase;
+        letter-spacing: .05em; margin: 0 0 .8em 0;
+      }
+      /* --- extracted book content (ref slides) --------------------------- */
+      /* A 'ref' slide frames a live book page. On paper we cannot frame it, so
+         its actual activity is pulled from the built book HTML - the same
+         source of truth - and printed as a worksheet: problem statement,
+         sample run, and any starter programs as listings. These rules style
+         the book's own PreTeXt classes, which arrive without the book's
+         stylesheet, scoped so they never touch the projector view. */
+      .sheet .activity { margin: 0; }
+      .sheet .heading {
+        margin: 0 0 .5em 0; font-size: 12pt; font-weight: 600; color: #1a1a19;
+      }
+      .sheet .heading .type, .sheet .heading .codenumber { font-weight: 600; }
+      .sheet .para { font-size: 12pt; line-height: 1.5; margin: 0 0 .6em 0; position: relative; }
+      .sheet .emphasis, .sheet em { font-style: italic; }
+      /* The sample run: a console transcript. The book marks the program's
+         own prompts .prompt and the simulated user input in <b>, so keeping
+         that structure shows students what they would type. */
+      .sheet .code-box { margin: 0 0 .6em 0; }
+      .sheet .console {
+        font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+        font-size: 10pt; line-height: 1.4; margin: 0;
+        background: #f7f6f3; border: 1px solid #ddd9d0; border-radius: 4px;
+        padding: 3mm 4mm; white-space: pre-wrap;
+      }
+      .sheet .console .prompt { font-weight: 400; }
+      .sheet .console b { font-weight: 700; }
+      /* Starter programs, printed where their coding window was. Same look as
+         a demo slide's listing. */
+      .sheet pre.handout-code {
+        font-size: 10pt; line-height: 1.4; margin: .5em 0 .6em 0;
+        background: #f7f6f3; border: 1px solid #ddd9d0; border-radius: 4px;
+        padding: 3mm 4mm; white-space: pre-wrap; overflow-wrap: break-word;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
+      /* Book chrome that has no meaning on paper. Belt and braces: the script
+         also strips these before injection, but display:none guards anything
+         a future page adds. */
+      .sheet .autopermalink, .sheet .knowl-output { display: none; }
+      /* Run-it-live link back to the interactive slide. */
+      .sheet .runit {
+        margin: .8em 0 0 0; font-size: 10pt; color: #52514e;
+        border-top: 1px dashed #cbc9c0; padding-top: .6em;
+      }
+      .sheet .runit a { color: #256abf; word-break: break-all; }
+
+      /* The space to write in. Grows to fill whatever the content leaves. */
+      .sheet .room { flex: 1; min-height: 30mm; }
+
+      @media print {
+        /* Landscape without naming a paper size, so it follows whatever the
+           printer is set to (Letter here, A4 elsewhere) instead of fighting it. */
+        @page { size: landscape; margin: 10mm; }
+        body.printing { background: #fff; }
+        .sheet {
+          width: auto; min-height: 0; margin: 0; padding: 0 4mm;
+          box-shadow: none;
+          break-after: page; page-break-after: always;
+          /* A sheet must never be split across two pages. */
+          break-inside: avoid; page-break-inside: avoid;
+        }
+        .sheet:last-child { break-after: auto; page-break-after: auto; }
+      }
+
+      /* --- chrome -------------------------------------------------------- */
+      #bar {
+        /* Above #index (z-index 5) so the menu button stays reachable while
+           the index is open - it is the way back out. */
+        position: absolute; left: 0; right: 0; bottom: 0; height: 34px; z-index: 6;
+        display: flex; align-items: center; gap: 14px; padding: 0 14px;
+        background: rgba(13,13,13,.86); font-size: 12px; color: #c3c2b7;
+        border-top: 1px solid #2c2c2a;
+      }
+      #bar .spacer { flex: 1; }
+      #bar button {
+        font: inherit; color: #ccc; background: transparent;
+        border: 1px solid #3a3a38; border-radius: 4px; padding: 3px 9px; cursor: pointer;
+      }
+      #bar button:hover { background: #232322; }
+      #title { color: #f2f2f2; font-weight: 600; }
+      #err { padding: 8vmin; padding: 8cqmin; font-size: 3vmin; font-size: 3cqmin; color: #ff8a80; display: none; }
+    </style>
+  </head>
+  <body>
+    <!-- Populated only by ?print=1; see buildHandout(). -->
+    <div id="print"></div>
+
+    <div id="stage-wrap">
+      <div id="stage">
+        <div id="ref">
+          <h2 id="ref-title"></h2>
+          <iframe id="frame" title="Class content" allow="cross-origin-isolated"></iframe>
+        </div>
+        <div id="demo">
+          <h2 id="demo-title"></h2>
+          <div class="body" id="demo-body"></div>
+          <iframe id="demo-frame" title="Coding window" allow="cross-origin-isolated"></iframe>
+        </div>
+        <div id="rendered"></div>
+        <div id="err"></div>
+        <canvas id="ink"></canvas>
+        <div id="index">
+          <h2 id="idx-title"></h2>
+          <p class="sub" id="idx-sub"></p>
+          <div id="idx-list"></div>
+        </div>
+        <div id="editor">
+          <h2>Announcements — <span id="ed-deck"></span></h2>
+          <p class="sub">These slides go at the front of the deck, live for you and every student. No build, no deploy.</p>
+          <div id="ed-cards"></div>
+          <button id="ed-add" class="ed-btn" type="button">+ Add announcement slide</button>
+          <div class="ed-foot">
+            <input id="ed-key" type="password" autocomplete="off" placeholder="Instructor passphrase" />
+            <button id="ed-save" type="button">Save</button>
+            <button id="ed-cancel" class="ed-btn" type="button">Close</button>
+            <span id="ed-status"></span>
+          </div>
+        </div>
+        <div id="bar">
+          <button id="menu" type="button" title="Slides (Esc)">&#9776;</button>
+          <button id="edit" class="edit-tool" type="button" title="Edit announcements">✎ Announcements</button>
+          <span id="title"></span>
+          <span class="spacer"></span>
+          <span id="note"></span>
+          <span id="swatches" class="ink-pen">
+            <button type="button" class="swatch" data-color="#d92b2b" style="background:#d92b2b" title="Red"></button>
+            <button type="button" class="swatch" data-color="#1a1a19" style="background:#1a1a19" title="Black"></button>
+            <button type="button" class="swatch" data-color="#2158a8" style="background:#2158a8" title="Blue"></button>
+            <button type="button" class="swatch" data-color="#1a7f37" style="background:#1a7f37" title="Green"></button>
+          </span>
+          <button id="erase" class="ink-pen" type="button" title="Eraser — drag over a mark to remove it">Erase</button>
+          <button id="undo" class="ink-tool" type="button" title="Undo last stroke">Undo</button>
+          <button id="clear" class="ink-tool" type="button" title="Erase this slide's ink">Clear</button>
+          <span id="pos"></span>
+          <button id="prev" type="button">&larr;</button>
+          <button id="next" type="button">&rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Follow-me sync. Stepping is recorded in location.hash, and classroom.js
+         already broadcasts hash changes to a session, so slide advances reach
+         students with no extra protocol. -->
+    <script src="classroom.js"></script>
+    <script>
+      (function () {
+        'use strict'
+
+        var params = new URLSearchParams(location.search)
+        // No ?deck= is no longer an error or a silent default to some
+        // particular lecture: it lists the decks. That makes
+        // external/class.html a URL worth giving students, which is the whole
+        // point - annotations they can't navigate back to are worth nothing.
+        var deckId = params.get('deck')
+
+        var refEl = document.getElementById('ref')
+        var refTitle = document.getElementById('ref-title')
+        var frame = document.getElementById('frame')
+        var demoEl = document.getElementById('demo')
+        var demoTitle = document.getElementById('demo-title')
+        var demoBody = document.getElementById('demo-body')
+        var demoFrame = document.getElementById('demo-frame')
+        var rendered = document.getElementById('rendered')
+        var errEl = document.getElementById('err')
+        var titleEl = document.getElementById('title')
+        var posEl = document.getElementById('pos')
+
+        var deck = null
+        var banks = {}
+        // Announcement slides for this deck, fetched from the server-side board
+        // and prepended to the front of the deck. committedSlides is the deck
+        // exactly as authored, kept aside so the front block can be rebuilt
+        // whenever the announcements change without disturbing the content.
+        var announcements = []
+        var committedSlides = null
+
+        var revealTimer = null
+        function revealFrame() {
+          clearTimeout(revealTimer)
+          frame.style.visibility = ''
+        }
+        frame.addEventListener('load', revealFrame)
+
+        function fail(msg) {
+          errEl.textContent = msg
+          errEl.style.display = 'block'
+          refEl.classList.remove('on')
+        }
+
+        // Slide text in the deck files is authored by us (not by students or
+        // any other untrusted source) and intentionally carries small bits of
+        // markup - <code>, &rarr; and the like - so it is inserted as HTML.
+        // Titles go through here too: escaping them printed a literal
+        // "&rarr;" on any slide whose title contained an entity.
+        // Anything derived from elsewhere would need escaping first.
+        function html(s) { return String(s == null ? '' : s) }
+
+        // Turn bare http(s) URLs in ALREADY-ESCAPED text into links. Used only
+        // for announcements, which are escaped (not trusted HTML like deck
+        // text). Safe precisely because the text is escaped first: any < or "
+        // is already an entity, so a match cannot contain markup-breaking
+        // characters and cannot break out of the href attribute, and only
+        // http/https ever become links (no javascript:/data:). Trailing
+        // sentence punctuation is left outside the link.
+        function linkify(escaped) {
+          return String(escaped).replace(/https?:\/\/[^\s<]+/g, function (u) {
+            var tail = ''
+            var m = u.match(/(?:&[a-z]+;|[.,;:!?)\]}'"])+$/i)
+            if (m) { tail = u.slice(u.length - m[0].length); u = u.slice(0, u.length - m[0].length) }
+            if (!u) return tail
+            return '<a href="' + u + '" target="_blank" rel="noopener noreferrer">' + u + '</a>' + tail
+          })
+        }
+
+        // The only image data URLs ever rendered or saved - base64 alphabet
+        // only, so the value cannot contain a quote. Mirrors the server's
+        // check. Announcement images are picked as local files and embedded
+        // (see prepareImage): an external image URL would be blocked anyway,
+        // because the player is cross-origin isolated and most hosts do not
+        // send the headers that requires.
+        var ANN_IMG_RE = /^data:image\/(png|jpe?g|gif|webp);base64,[A-Za-z0-9+/=]+$/
+        var ANN_IMG_CAP = 500 * 1024   // must match the server's ANN_MAX_IMG
+
+        // Read a picked image file, downscale it, and return a data URL under
+        // the cap. Downscaling happens on a canvas from a local object URL, so
+        // the canvas is never tainted and toDataURL works. PNG is kept when it
+        // fits (crisp for diagrams); otherwise JPEG at falling quality.
+        function prepareImage(file) {
+          return new Promise(function (resolve, reject) {
+            if (!file || !/^image\//.test(file.type)) return reject('That is not an image file.')
+            var url = URL.createObjectURL(file)
+            var img = new Image()
+            img.onload = function () {
+              URL.revokeObjectURL(url)
+              var maxDim = 1200
+              var scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight))
+              var cw = Math.max(1, Math.round(img.naturalWidth * scale))
+              var ch = Math.max(1, Math.round(img.naturalHeight * scale))
+              var canvas = document.createElement('canvas')
+              canvas.width = cw; canvas.height = ch
+              canvas.getContext('2d').drawImage(img, 0, 0, cw, ch)
+              var out = canvas.toDataURL('image/png')
+              if (out.length > ANN_IMG_CAP) {
+                var q = 0.85
+                while (q >= 0.3) {
+                  out = canvas.toDataURL('image/jpeg', q)
+                  if (out.length <= ANN_IMG_CAP) break
+                  q -= 0.1
+                }
+              }
+              if (out.length > ANN_IMG_CAP) return reject('Image is too large even after shrinking — try a smaller one.')
+              resolve(out)
+            }
+            img.onerror = function () { URL.revokeObjectURL(url); reject('Could not read that image.') }
+            img.src = url
+          })
+        }
+
+        // Several LCS practice slides pose a question and then give the
+        // students a blank table to fill in - the answers are worked in class,
+        // so the cells stay empty on purpose. A slide declares
+        //   "table": {"columns": ["", "77", "-77"], "rows": ["8-bit signed"]}
+        // where columns[0] labels the row-header column and every other cell
+        // is left blank. Rendered as its own block rather than inside the
+        // body paragraph: a <table> inside a <p> gets hoisted out by the
+        // parser and the layout comes apart.
+        function fillTable(t) {
+          if (!t || !t.rows || !t.rows.length) return ''
+          var cols = t.columns || ['']
+          var out = ['<table><thead><tr>']
+          cols.forEach(function (c) { out.push('<th>' + html(c) + '</th>') })
+          out.push('</tr></thead><tbody>')
+          t.rows.forEach(function (r) {
+            out.push('<tr><th scope="row">' + html(r) + '</th>')
+            for (var i = 1; i < cols.length; i++) out.push('<td></td>')
+            out.push('</tr>')
+          })
+          out.push('</tbody></table>')
+          return out.join('')
+        }
+
+        function currentIndex() {
+          var n = parseInt(location.hash.replace('#', ''), 10)
+          if (isNaN(n) || n < 1) n = 1
+          if (deck && n > deck.slides.length) n = deck.slides.length
+          return n
+        }
+
+        function go(n) {
+          var max = deck ? deck.slides.length : 1
+          n = Math.max(1, Math.min(max, n))
+          if (n === currentIndex() && location.hash) { render(); return }
+          location.hash = String(n)   // hashchange -> render() + follow-me sync
+        }
+
+        function resolveIcebreaker(slide) {
+          var list = (banks.icebreakers || {}).icebreakers || []
+          if (!list.length) return null
+          if (slide.id) {
+            for (var i = 0; i < list.length; i++) if (list[i].id === slide.id) return list[i]
+          }
+          return list[Math.floor(Math.random() * list.length)]
+        }
+
+        // render() has several early returns, one per slide type, so the ink
+        // layer is refreshed by a wrapper rather than at the end of each.
+        function render() {
+          renderSlide()
+          syncInk()
+        }
+
+        function renderSlide() {
+          if (!deck) return
+          var n = currentIndex()
+          var slide = deck.slides[n - 1]
+          posEl.textContent = n + ' / ' + deck.slides.length
+
+          // A "demo" slide is a few lines of in-class phrasing over ONE coding
+          // window, embedded straight from CMeCodeDir - the shape every
+          // content slide in the retired LCS decks actually had. It
+          // deliberately does NOT pull in the book page around it: that prose
+          // is the pre-class reading, and re-projecting it in class is exactly
+          // what we don't want.
+          if (slide.type === 'demo') {
+            rendered.classList.remove('on')
+            refEl.classList.remove('on')
+            demoEl.classList.add('on')
+            titleEl.innerHTML = html(slide.title || '')
+            demoTitle.innerHTML = html(slide.title || '')
+            demoBody.innerHTML = slide.body ? '<p>' + [].concat(slide.body).join('</p><p>') + '</p>' : ''
+            // "?src=" is resolved by the coding-window page itself, so the
+            // path is relative to /coding-window/, not to this player.
+            var dsrc = '../coding-window/index.html?src=' +
+                       '../CMeCodeDir/' + encodeURIComponent(slide.startPoint) + '.c'
+            if (demoFrame.getAttribute('data-src') !== dsrc) {
+              demoFrame.setAttribute('data-src', dsrc)
+              demoFrame.src = dsrc
+            }
+            return
+          }
+
+          if (slide.type === 'ref') {
+            rendered.classList.remove('on')
+            demoEl.classList.remove('on')
+            refEl.classList.add('on')
+            refTitle.innerHTML = html(slide.title || '')
+            // ?deck=1 tells classroom.js on the book page to hide the book's
+            // nav chrome and scale type up for projection.
+            var src = '../' + slide.page + (slide.page.indexOf('?') === -1 ? '?' : '&') + 'deck=1'
+            // Optional: narrow the slide - by xml:id, or by CSS selector to
+            // show only / hide the activities (splitting practice from theory).
+            if (slide.focus) src += '&focus=' + encodeURIComponent(slide.focus)
+            if (slide.only) src += '&only=' + encodeURIComponent(slide.only)
+            if (slide.omit) src += '&omit=' + encodeURIComponent(slide.omit)
+            if (frame.getAttribute('data-src') !== src) {
+              frame.setAttribute('data-src', src)
+              // PreTeXt injects classroom.js at the END of <body>, so a book
+              // page paints its full masthead and banner before deck mode
+              // strips them - a visible flash of the book's chrome on every
+              // page turn. We can't move the script (html.js.extra decides
+              // that), so hide the frame until the page has loaded and
+              // restyled itself. The timeout is a safety net: a page that
+              // never fires load must still end up visible.
+              frame.style.visibility = 'hidden'
+              clearTimeout(revealTimer)
+              revealTimer = setTimeout(revealFrame, 1200)
+              frame.src = src
+            }
+            titleEl.innerHTML = html(slide.title || '')
+            return
+          }
+
+          refEl.classList.remove('on')
+          demoEl.classList.remove('on')
+          rendered.classList.add('on')
+          // Practice slides sit at the top, leaving the lower half to write on.
+          rendered.classList.toggle('top', slide.type === 'prompt')
+          titleEl.innerHTML = html(slide.title || '')
+
+          var built = renderedSlideHTML(slide)
+          if (built.title) titleEl.innerHTML = built.title
+          rendered.innerHTML = built.html
+        }
+
+        // The markup for a 'rendered' slide, shared by the projector and the
+        // printed handout so the two cannot drift. Returns the body markup
+        // plus, for icebreakers, the resolved title (which is not in the
+        // slide - it comes from the icebreaker pool).
+        function renderedSlideHTML(slide) {
+          var parts = [], resolvedTitle = null
+          if (slide.type === 'announcement') {
+            // Announcements come from the server-side board, guarded only by a
+            // passphrase, so unlike deck text they are inserted ESCAPED - a
+            // leaked passphrase must not become markup or script in the room.
+            // Same title + bullets + body shape as an agenda otherwise.
+            parts.push('<h2>' + esc(slide.title || 'Announcements') + '</h2>')
+            // A slide can carry a paragraph, bullets, or both. The paragraph
+            // reads first as an intro, then the bullet list. Newlines the
+            // instructor typed become soft line breaks, and URLs are linked.
+            if (slide.body) parts.push('<p class="ann-para">' + linkify(esc(slide.body)).replace(/\n/g, '<br>') + '</p>')
+            if (slide.items && slide.items.length) {
+              parts.push('<ul>')
+              slide.items.forEach(function (it) { parts.push('<li>' + linkify(esc(it)) + '</li>') })
+              parts.push('</ul>')
+            }
+            if (slide.note) parts.push('<p class="note">' + linkify(esc(slide.note)) + '</p>')
+            // Only a validated data:image URL (base64 alphabet only) is ever
+            // put in the src, so it cannot carry a quote to break out. The
+            // server validates too; this is the client's own last check.
+            if (slide.image && ANN_IMG_RE.test(slide.image)) {
+              parts.push('<div class="ann-img"><img alt="" src="' + slide.image + '"></div>')
+            }
+            return { html: parts.join(''), title: esc(slide.title || 'Announcements') }
+          }
+          if (slide.type === 'icebreaker') {
+            var ib = resolveIcebreaker(slide)
+            if (!ib) { parts.push('<p class="big">(no icebreakers defined)</p>') }
+            else {
+              resolvedTitle = html(ib.title || 'Warm-up')
+              parts.push('<h2>' + html(ib.title || 'Warm-up') + '</h2>')
+              parts.push('<p class="big">' + html(ib.prompt) + '</p>')
+              if (ib.note) parts.push('<p class="note">' + html(ib.note) + '</p>')
+            }
+          } else if (slide.type === 'prompt') {
+            parts.push('<h2>' + html(slide.title || '') + '</h2>')
+            parts.push('<p class="big">' + html(slide.body) + '</p>')
+            parts.push(fillTable(slide.table))
+            if (slide.note) parts.push('<p class="note">' + html(slide.note) + '</p>')
+          } else {
+            // recap / agenda / anything else with a title + items
+            parts.push('<h2>' + html(slide.title || '') + '</h2>')
+            if (slide.items) {
+              parts.push('<ul>')
+              slide.items.forEach(function (it) { parts.push('<li>' + html(it) + '</li>') })
+              parts.push('</ul>')
+            }
+            if (slide.body) parts.push('<p class="big">' + html(slide.body) + '</p>')
+            if (slide.note) parts.push('<p class="note">' + html(slide.note) + '</p>')
+          }
+          return { html: parts.join(''), title: resolvedTitle }
+        }
+
+        /* --- pen annotation ------------------------------------------------
+           Students write on their own copy of a slide. This is deliberately
+           invisible to the follow-me session (see classroom.js): Petra's
+           annotations must not be broadcast, and a student's must not be
+           overwritten by anyone else's. Nothing below touches the session.
+
+           Strokes are kept as points normalized 0-1 against #stage, never as
+           pixels or images: the same slide is a different pixel size on a
+           phone, a laptop and the projector, and normalized points redraw
+           correctly on all of them. This only holds because slide type is
+           sized against the stage too (the cqmin units above) - normalized
+           coordinates survive rescaling, but nothing can make them survive
+           text reflowing underneath them. (It also keeps
+           the eventual localStorage form small - a rasterized PNG dataURL per
+           slide would eat the origin quota that saved student code shares.) */
+
+        // THE assumption this whole feature rests on: that iPadOS Safari
+        // reports an Apple Pencil as pointerType 'pen'. It cannot be tested
+        // from a Mac - open assets/pointer-check.html on the iPad to confirm.
+        // It is isolated here on purpose: if the Pencil turns out to report
+        // something else, this map is the only thing that has to change.
+        var PEN_POINTER_TYPES = { pen: true }
+
+        // Escape hatch for developing on a machine with no stylus:
+        // ?ink=all lets a mouse or finger draw. Not for classroom use - it
+        // costs the palm rejection that filtering to 'pen' gives for free.
+        if (params.get('ink') === 'all') PEN_POINTER_TYPES = { pen: true, mouse: true, touch: true }
+
+        function isPen(e) { return PEN_POINTER_TYPES[e.pointerType] === true }
+
+        var stage = document.getElementById('stage')
+        // getBoundingClientRect forces a layout flush, and the drawing path
+        // wanted one per pointermove - which is per sampled point, at the rate
+        // a Pencil samples. The stage only changes size when the window does
+        // (it is a fixed 16:9 box in a page that does not scroll), so measure
+        // it once and invalidate on resize.
+        var stageRect = null
+        function rect() { return stageRect || (stageRect = stage.getBoundingClientRect()) }
+        var ink = document.getElementById('ink')
+        var inkCtx = ink.getContext('2d')
+        var bar = document.getElementById('bar')
+        var strokes = {}          // slide number -> array of strokes (cache)
+        var live = null           // stroke in progress
+
+        /* Persistence. localStorage, deliberately not the sessionStorage that
+           carries classroom session identity: that is per-tab and dies with
+           the tab by design, which is the exact opposite of what annotation
+           wants. Keyed by deck and slide, in the same "cw:"-style namespace
+           the coding windows use.
+
+           This is per-browser and therefore inherently private to one student
+           - which is the requirement. Instructor ink is never broadcast,
+           because there is no channel by which it could be. */
+        var INK_NS = 'deck:ink:'
+        // Persistence is keyed by the slide's STABLE position in the committed
+        // deck (its `_ink`, set at load), NOT its runtime index. Announcement
+        // slides are prepended at the front and vary from class to class, so
+        // keying by runtime index would slide a student's saved ink onto the
+        // wrong content slide whenever the announcement count changed. A slide
+        // with no _ink (an announcement) is not persisted at all. The in-memory
+        // `strokes` cache is still keyed by runtime index, which is stable
+        // within a single load.
+        function inkKey(n) {
+          var s = deck && deck.slides[n - 1]
+          if (!s || s._ink == null) return null
+          return INK_NS + deckId + ':' + s._ink
+        }
+
+        function loadInk(n) {
+          if (strokes[n]) return strokes[n]
+          var list = []
+          var key = inkKey(n)
+          if (key) {
+            try {
+              var raw = localStorage.getItem(key)
+              if (raw) { var p = JSON.parse(raw); if (Array.isArray(p)) list = p }
+            } catch (e) { /* private mode, disabled storage, corrupt JSON */ }
+          }
+          strokes[n] = list
+          return list
+        }
+
+        // Set when a write has been refused for want of room. Annotations keep
+        // working in memory - losing the current stroke because the quota is
+        // full would be worse than losing it at the end of the session.
+        var inkFull = false
+
+        function saveInk(n) {
+          if (savePending === n) { savePending = null; clearTimeout(saveTimer); saveTimer = null }
+          var key = inkKey(n)
+          if (!key) { updateNote(); return }   // announcement slide: nothing to persist
+          var list = strokes[n] || []
+          try {
+            if (!list.length) localStorage.removeItem(key)
+            else localStorage.setItem(key, JSON.stringify(list))
+            inkFull = false
+          } catch (e) {
+            inkFull = true
+          }
+          updateNote()
+        }
+
+        /* Saving is debounced, like the coding windows.
+
+           It first saved synchronously on every pointerup, which seemed safe
+           because a pen stroke - unlike a keystroke - has a natural end. On
+           the iPad that was wrong and plainly so: localStorage is synchronous,
+           and stringifying the whole slide's ink runs at the exact moment the
+           pen lifts, which is the exact moment you are starting the next
+           letter. Handwriting became "pause between symbols", and got worse as
+           the slide filled up because the blocking write grows with it.
+
+           So: coalesce the writes, and flush on the way out. pagehide is the
+           reliable one on iOS Safari (unload is not), and visibilitychange
+           covers app-switching, which is how an iPad usually leaves a page. */
+        var saveTimer = null
+        var savePending = null
+
+        function saveInkSoon(n) {
+          // Changing slide with a write still pending would otherwise cancel
+          // it and save the new slide instead, losing the old slide's ink.
+          if (savePending != null && savePending !== n) flushInk()
+          savePending = n
+          clearTimeout(saveTimer)
+          saveTimer = setTimeout(flushInk, 500)
+        }
+
+        function flushInk() {
+          clearTimeout(saveTimer)
+          saveTimer = null
+          if (savePending == null) return
+          var n = savePending
+          savePending = null
+          saveInk(n)
+        }
+
+        window.addEventListener('pagehide', flushInk)
+        document.addEventListener('visibilitychange', function () {
+          if (document.visibilityState === 'hidden') flushInk()
+        })
+
+        // Stroke width is normalized too (a fraction of stage height), so a
+        // line drawn on the iPad is the same visual weight on the projector.
+        var PEN_WIDTH = 0.004
+        var PEN_COLOR = '#d92b2b'
+        // The active pen colour (each stroke stores its own, so changing this
+        // never recolours what is already drawn) and whether the eraser is on.
+        var inkColor = PEN_COLOR
+        var eraseMode = false
+        var erasing = false      // an eraser drag is in progress
+        var eraseDirty = false   // that drag has removed at least one stroke
+
+        function inkEnabled() {
+          // Only 'rendered' slides for now - see the #ink CSS comment.
+          // Announcements are excluded too: they are transient text that
+          // changes from class to class, so annotating them would not persist
+          // meaningfully (they carry no stable ink key).
+          if (!deck) return false
+          var slide = deck.slides[currentIndex() - 1]
+          return !!slide && slide.type !== 'ref' && slide.type !== 'demo' && slide.type !== 'announcement'
+        }
+
+        function sizeInk() {
+          var r = rect()
+          var dpr = window.devicePixelRatio || 1
+          var w = Math.max(1, Math.round(r.width * dpr))
+          var h = Math.max(1, Math.round(r.height * dpr))
+          if (ink.width !== w || ink.height !== h) { ink.width = w; ink.height = h }
+          inkCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
+          inkCtx.lineCap = inkCtx.lineJoin = 'round'
+          inkCtx.strokeStyle = PEN_COLOR
+        }
+
+        // Paint one complete stroke at the given stage size.
+        //
+        // A stroke drawn live and the same stroke redrawn from storage differ
+        // by well under 2% of their edge pixels: live drawing emits each
+        // coalesced batch as its own round-capped polyline, while this emits
+        // the stroke as one continuous path, so the antialiasing at the joins
+        // is marginally different. Measured, not assumed. It is invisible at
+        // any size, and the alternative - repainting the finished stroke on
+        // pen-lift to make them converge - puts work back at the exact moment
+        // that made handwriting stutter in the first place.
+        function paintStroke(s, r) {
+          var col = s.color || PEN_COLOR
+          if (s.pts.length < 2) {
+            // A tap with no movement: draw a dot, or it vanishes.
+            inkCtx.beginPath()
+            inkCtx.arc(s.pts[0][0] * r.width, s.pts[0][1] * r.height, (s.w * r.height) / 2, 0, Math.PI * 2)
+            inkCtx.fillStyle = col
+            inkCtx.fill()
+            return
+          }
+          inkCtx.strokeStyle = col
+          inkCtx.lineWidth = s.w * r.height
+          inkCtx.beginPath()
+          inkCtx.moveTo(s.pts[0][0] * r.width, s.pts[0][1] * r.height)
+          for (var i = 1; i < s.pts.length; i++) {
+            inkCtx.lineTo(s.pts[i][0] * r.width, s.pts[i][1] * r.height)
+          }
+          inkCtx.stroke()
+        }
+
+        /* A full repaint: clears the canvas and draws every stroke. Only for
+           the things that genuinely invalidate everything - changing slide,
+           resizing, undo, clear.
+
+           Explicitly NOT for drawing. The canvas backing store is stage x dpr,
+           which is 2560x1440 on a retina iPad: clearing and repainting 3.7
+           million pixels for every sampled point, at the rate a Pencil
+           samples, is most of why handwriting needed a pause between symbols.
+           A live stroke only ever adds to what is already on the canvas, so it
+           just draws the new segment - see drawLiveSegment. */
+        function redrawInk() {
+          sizeInk()
+          var r = rect()
+          inkCtx.clearRect(0, 0, r.width, r.height)
+          loadInk(currentIndex()).forEach(function (s) { paintStroke(s, r) })
+        }
+
+        // Extend the stroke in progress by the points just added, drawing only
+        // the new segments. `from` is the index of the last point already on
+        // the canvas.
+        function drawLiveSegment(s, from, r) {
+          if (s.pts.length < 2) return
+          inkCtx.strokeStyle = s.color || PEN_COLOR
+          inkCtx.lineWidth = s.w * r.height
+          inkCtx.beginPath()
+          inkCtx.moveTo(s.pts[from][0] * r.width, s.pts[from][1] * r.height)
+          for (var i = from + 1; i < s.pts.length; i++) {
+            inkCtx.lineTo(s.pts[i][0] * r.width, s.pts[i][1] * r.height)
+          }
+          inkCtx.stroke()
+        }
+
+        function syncInk() {
+          var on = inkEnabled()
+          ink.classList.toggle('on', on)
+          bar.classList.toggle('inkable', on)   // pen tools (colour, eraser)
+          bar.classList.toggle('inking', on && loadInk(currentIndex()).length > 0)  // undo/clear
+          if (on) redrawInk()
+          updateNote()
+        }
+
+        // Same trust model and wording as the coding windows, so students have
+        // one story to learn rather than two. The coding windows add "download
+        // your code to keep a safe copy"; there is no annotation export yet,
+        // so promising one here would be a lie - say it when it exists.
+        function updateNote() {
+          var noteEl = document.getElementById('note')
+          if (inkFull) {
+            noteEl.textContent = 'Out of storage — new marks are not being saved.'
+            noteEl.className = 'warn'
+          } else if (inkEnabled() && loadInk(currentIndex()).length) {
+            noteEl.textContent = 'Saved in this browser only.'
+            noteEl.className = ''
+          } else {
+            noteEl.textContent = ''
+            noteEl.className = ''
+          }
+        }
+
+        // 4 decimal places is ~0.16px on a 1600px-wide stage - far finer than
+        // anyone can see, and roughly half the JSON of full float precision,
+        // which matters against a ~5MB origin quota shared with saved code.
+        function r4(v) { return Math.round(v * 1e4) / 1e4 }
+        function pointIn(e, r) {
+          return [r4((e.clientX - r.left) / r.width), r4((e.clientY - r.top) / r.height)]
+        }
+        function point(e) { return pointIn(e, rect()) }
+        // Pens sample far faster than the ink needs to be described. Dropping
+        // points closer together than this loses nothing visible and keeps
+        // stored strokes substantially smaller.
+        var MIN_STEP = 0.0015
+        function farEnough(a, b) {
+          return Math.abs(a[0] - b[0]) > MIN_STEP || Math.abs(a[1] - b[1]) > MIN_STEP
+        }
+
+        /* The eraser removes whole strokes it touches, not pixels - strokes are
+           vectors, so splitting one would be a different, much heavier feature.
+           A stroke is "touched" if any of its points is within the eraser
+           radius of the pen. Points are dense (see MIN_STEP), so point testing
+           is accurate enough, and distances are measured in stage PIXELS so the
+           radius is round rather than squashed by the 16:9 aspect. */
+        var ERASE_R = 0.03   // radius as a fraction of stage height
+        // Distance (px) from point q to the segment a-b. Testing SEGMENTS, not
+        // just the stored points, is what makes the eraser reliable: a straight
+        // stroke can store only its two endpoints, so a vertex-only test would
+        // miss the eraser passing over the long span between them.
+        function distToSeg(qx, qy, ax, ay, bx, by) {
+          var dx = bx - ax, dy = by - ay
+          var len2 = dx * dx + dy * dy
+          var t = len2 ? ((qx - ax) * dx + (qy - ay) * dy) / len2 : 0
+          t = t < 0 ? 0 : t > 1 ? 1 : t
+          var cx = ax + t * dx, cy = ay + t * dy
+          return Math.sqrt((qx - cx) * (qx - cx) + (qy - cy) * (qy - cy))
+        }
+        function strokeNear(s, px, py, r) {
+          var R = ERASE_R * r.height
+          var qx = px * r.width, qy = py * r.height
+          var pts = s.pts
+          if (pts.length === 1) {
+            var dx = pts[0][0] * r.width - qx, dy = pts[0][1] * r.height - qy
+            return Math.sqrt(dx * dx + dy * dy) <= R
+          }
+          for (var i = 1; i < pts.length; i++) {
+            if (distToSeg(qx, qy,
+                  pts[i - 1][0] * r.width, pts[i - 1][1] * r.height,
+                  pts[i][0] * r.width, pts[i][1] * r.height) <= R) return true
+          }
+          return false
+        }
+        function eraseAt(e) {
+          var r = rect()
+          var list = loadInk(currentIndex())
+          if (!list.length) return
+          var p = pointIn(e, r)
+          var kept = [], removed = false
+          list.forEach(function (s) {
+            if (strokeNear(s, p[0], p[1], r)) removed = true
+            else kept.push(s)
+          })
+          if (removed) { strokes[currentIndex()] = kept; eraseDirty = true; redrawInk() }
+        }
+
+        ink.addEventListener('pointerdown', function (e) {
+          if (!isPen(e) || !inkEnabled()) return
+          e.preventDefault()
+          // Capture keeps a stroke coming to the canvas even if the pen strays
+          // over the bar. Not fatal if it fails, so don't let it throw away
+          // the stroke.
+          try { ink.setPointerCapture(e.pointerId) } catch (err) {}
+          if (eraseMode) { erasing = true; eraseDirty = false; eraseAt(e); return }
+          live = { w: PEN_WIDTH, color: inkColor, pts: [point(e)] }
+          loadInk(currentIndex()).push(live)
+          bar.classList.add('inking')
+        })
+
+        ink.addEventListener('pointermove', function (e) {
+          if (eraseMode) {
+            if (!erasing || !isPen(e)) return
+            e.preventDefault()
+            eraseAt(e)
+            return
+          }
+          if (!live || !isPen(e)) return
+          e.preventDefault()
+          // Safari coalesces pointermove at the Pencil's higher sample rate;
+          // taking the coalesced events keeps fast strokes smooth instead of
+          // polygonal. Older engines just give back the one event.
+          var evs = (typeof e.getCoalescedEvents === 'function' && e.getCoalescedEvents().length)
+                    ? e.getCoalescedEvents() : [e]
+          // One rect for the whole batch: getBoundingClientRect forces layout,
+          // and a coalesced batch can hold a dozen points.
+          var r = rect()
+          var drawnTo = live.pts.length - 1
+          for (var i = 0; i < evs.length; i++) {
+            var p = pointIn(evs[i], r)
+            if (farEnough(p, live.pts[live.pts.length - 1])) live.pts.push(p)
+          }
+          drawLiveSegment(live, drawnTo, r)
+        })
+
+        function endStroke(e) {
+          if (erasing) {
+            erasing = false
+            if (eraseDirty) { saveInk(currentIndex()); eraseDirty = false }
+            syncInk()   // all ink erased? drop the Undo/Clear tools
+            if (e && e.pointerId != null && ink.hasPointerCapture(e.pointerId)) ink.releasePointerCapture(e.pointerId)
+            return
+          }
+          if (!live) return
+          // A stroke that never moved left nothing on the canvas, because
+          // drawLiveSegment only draws segments. Paint its dot now.
+          if (live.pts.length < 2) paintStroke(live, rect())
+          live = null
+          saveInkSoon(currentIndex())
+          if (e && e.pointerId != null && ink.hasPointerCapture(e.pointerId)) {
+            ink.releasePointerCapture(e.pointerId)
+          }
+        }
+        /* The Scribble workaround.
+
+           iPadOS 14 introduced Scribble (handwriting to text), and with it a
+           long-standing regression: while a Pencil writes quickly on a web
+           page, Safari swallows whole pointer sequences. The contact never
+           reaches the page at all - not as a pointer event and not as a touch
+           event - so no amount of care in the handlers can recover it. It is
+           why Apple Notes writes perfectly while a browser drops symbols: the
+           native app never goes through that path.
+
+           Diagnosed on Petra's iPad by elimination: writing fast dropped
+           symbols identically on a 100-line diagnostic page with none of this
+           file's machinery, with and without a palm resting, while Apple
+           Notes was flawless. Every stylus contact that DID reach the page
+           produced a stroke - a clean 1:1 in the trace - so nothing here was
+           losing them; they simply never arrived.
+
+           Registering a non-passive touchmove listener that preventDefaults
+           is the community workaround: it opts this element out of the
+           gesture path Scribble hooks, and the pointer events stop going
+           missing. passive:false is the whole point - a passive listener may
+           not preventDefault, and would do nothing.
+
+           Nothing is scrolled by this. The canvas already carries
+           touch-action:none, and it only covers slides that do not scroll.
+           Students can also turn Scribble off in Settings > Apple Pencil,
+           which fixes it at the source, but nobody should have to change a
+           system setting to write on a slide. */
+        ink.addEventListener('touchmove', function (e) { e.preventDefault() }, { passive: false })
+
+        ink.addEventListener('pointerup', endStroke)
+        ink.addEventListener('pointercancel', endStroke)
+        // A stroke dragged off the stage should end there, not resume when the
+        // pen comes back.
+        ink.addEventListener('pointerleave', endStroke)
+
+        document.getElementById('undo').addEventListener('click', function () {
+          var n = currentIndex()
+          var list = loadInk(n)
+          if (list.length) list.pop()
+          saveInk(n)
+          syncInk()
+        })
+        document.getElementById('clear').addEventListener('click', function () {
+          var n = currentIndex()
+          if (!loadInk(n).length) return
+          // Now that ink outlives the tab, clearing destroys saved work - so
+          // it asks first, like the coding windows' "start fresh".
+          if (!confirm('Erase everything you have written on this slide?')) return
+          strokes[n] = []
+          saveInk(n)
+          syncInk()
+        })
+
+        // Colour swatches and the eraser toggle. Each stroke stores its own
+        // colour, so switching never recolours existing ink. Picking a colour
+        // also leaves erase mode - you reached for a colour to draw.
+        var swatchWrap = document.getElementById('swatches')
+        function setErase(on) {
+          eraseMode = on
+          document.getElementById('erase').classList.toggle('active', on)
+          ink.classList.toggle('erasing', on)
+        }
+        function setColor(c) {
+          inkColor = c
+          ;[].forEach.call(swatchWrap.querySelectorAll('.swatch'), function (b) {
+            b.classList.toggle('active', b.getAttribute('data-color') === c)
+          })
+          if (eraseMode) setErase(false)
+        }
+        swatchWrap.addEventListener('click', function (e) {
+          var b = e.target.closest && e.target.closest('.swatch')
+          if (b) setColor(b.getAttribute('data-color'))
+        })
+        document.getElementById('erase').addEventListener('click', function () { setErase(!eraseMode) })
+        setColor(PEN_COLOR)   // mark the default swatch active
+
+        window.addEventListener('resize', function () {
+          stageRect = null            // the cached measurement is now stale
+          if (inkEnabled()) redrawInk()
+        })
+        // Rotating an iPad fires resize, but Safari can report the old size if
+        // asked too early, so drop the cache again on the orientation event.
+        window.addEventListener('orientationchange', function () { stageRect = null })
+
+        /* --- index ---------------------------------------------------------
+           Two modes, same panel: with no ?deck= it lists the decks, inside a
+           deck it lists that deck's slides and marks the ones you have written
+           on. */
+
+        var indexEl = document.getElementById('index')
+        var idxTitle = document.getElementById('idx-title')
+        var idxSub = document.getElementById('idx-sub')
+        var idxList = document.getElementById('idx-list')
+
+        // Deck text is authored HTML (see html() above), so it carries markup
+        // and entities. The index wants a short plain-text label, and
+        // truncating HTML directly would happily cut a tag in half - so let
+        // the parser resolve it, then take textContent and escape what comes
+        // back out.
+        var scratch = document.createElement('div')
+        function plain(s) {
+          scratch.innerHTML = String(s == null ? '' : s)
+          return (scratch.textContent || '').replace(/\s+/g, ' ').trim()
+        }
+        function esc(s) {
+          return String(s).replace(/[&<>"]/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]
+          })
+        }
+        function clip(s, n) { return s.length > n ? s.slice(0, n - 1).trimEnd() + '…' : s }
+
+        // Several slides in a deck legitimately share a title ("Practice"
+        // three times in W1C3), and some have none at all, so a title alone
+        // does not identify a slide. Fall back to - or append - the body.
+        function slideLabel(slide) {
+          var t = plain(slide.title || '')
+          var b = plain([].concat(slide.body || '')[0] || '')
+          if (slide.type === 'icebreaker') {
+            // Only name the actual prompt when the slide pins one by id. An
+            // icebreaker with no id is drawn at random each render, so
+            // resolving one here would label the row with a prompt the slide
+            // itself won't show.
+            var ib = slide.id ? resolveIcebreaker(slide) : null
+            t = t || plain((ib && ib.title) || 'Warm-up')
+            b = b || plain((ib && ib.prompt) || '')
+          }
+          // A demo slide is allowed to be a bare coding window with no words
+          // at all (W1C3 slide 14). Naming its starting program beats
+          // labelling the row "demo", which is what the type column says
+          // anyway.
+          if (!t && !b && slide.startPoint) b = plain(slide.startPoint)
+          if (t && b) return clip(t, 60) + ' — ' + clip(b, 70)
+          return clip(t || b || slide.type, 110)
+        }
+
+        // Reads storage rather than the in-memory cache: after a reload the
+        // index is the first thing a student opens, and nothing is cached yet
+        // - marking only the slides visited this session would defeat it.
+        // saveInk() removes an emptied key, so a present key means real ink.
+        function hasInk(n) {
+          if (strokes[n]) return strokes[n].length > 0
+          var key = inkKey(n)
+          if (!key) return false
+          try { return localStorage.getItem(key) !== null } catch (e) { return false }
+        }
+
+        function renderSlideIndex() {
+          idxTitle.innerHTML = html(deck.title || deckId)
+          idxSub.textContent = deck.slides.length + ' slides · tap one to go to it'
+          var here = currentIndex()
+          var out = []
+          deck.slides.forEach(function (s, i) {
+            var n = i + 1
+            out.push(
+              '<a href="#' + n + '"' + (n === here ? ' class="here"' : '') + '>' +
+                '<span class="n">' + n + '</span>' +
+                '<span class="label">' + esc(slideLabel(s)) + '</span>' +
+                (hasInk(n) ? '<span class="inked" title="you have written on this slide">✎</span>' : '') +
+                '<span class="kind">' + esc(s.type) + '</span>' +
+              '</a>'
+            )
+          })
+          idxList.innerHTML = out.join('')
+        }
+
+        // The deck chooser: no ?deck= at all. Titles and slide counts are read
+        // from the deck files themselves rather than duplicated into
+        // decks/index.json, so they cannot drift.
+        function renderDeckChooser() {
+          idxTitle.textContent = 'ENGS 20 — class decks'
+          idxSub.textContent = 'Loading…'
+          indexEl.classList.add('on')
+          document.getElementById('bar').style.display = 'none'
+          fetch('decks/index.json')
+            .then(function (r) { if (!r.ok) throw new Error('no deck list (' + r.status + ')'); return r.json() })
+            .then(function (list) {
+              var ids = (list && list.decks) || []
+              return Promise.all(ids.map(function (id) {
+                return fetch('decks/' + encodeURIComponent(id) + '.json')
+                  .then(function (r) { return r.ok ? r.json() : null })
+                  .then(function (d) { return { id: id, deck: d } })
+                  .catch(function () { return { id: id, deck: null } })
+              }))
+            })
+            .then(function (rows) {
+              rows = rows.filter(function (r) { return r.deck && r.deck.slides })
+              if (!rows.length) { idxSub.textContent = 'No decks found.'; return }
+              idxSub.textContent = 'Pick a lecture.'
+              idxList.innerHTML = rows.map(function (r) {
+                return '<a href="?deck=' + encodeURIComponent(r.id) + '#1">' +
+                         '<span class="n">' + esc(r.id) + '</span>' +
+                         '<span class="label">' + html(r.deck.title || r.id) + '</span>' +
+                         '<span class="kind">' + r.deck.slides.length + ' slides</span>' +
+                       '</a>'
+              }).join('')
+            })
+            .catch(function (e) { idxSub.textContent = 'Could not load the deck list. ' + e.message })
+        }
+
+        function indexOpen() { return indexEl.classList.contains('on') }
+        function toggleIndex(force) {
+          var on = force == null ? !indexOpen() : force
+          if (on) renderSlideIndex()
+          indexEl.classList.toggle('on', on)
+          // The ink layer must not sit over the open index and swallow taps.
+          if (on) ink.classList.remove('on')
+          else syncInk()
+        }
+
+        idxList.addEventListener('click', function (e) {
+          var a = e.target.closest && e.target.closest('a')
+          if (!a || !deck) return          // deck chooser links navigate normally
+          e.preventDefault()
+          go(parseInt(a.getAttribute('href').slice(1), 10))
+          toggleIndex(false)
+        })
+        document.getElementById('menu').addEventListener('click', function () { toggleIndex() })
+
+        /* --- announcements editor ------------------------------------------
+           The instructor edits the deck's front-of-deck announcement slides
+           here and saves them to the server-side board, live for everyone.
+           Revealed only by ?edit in the URL, so students never see the
+           control; the actual gate is the passphrase the server checks. */
+        var EDIT_KEY_LS = 'deck:announce:key'   // remembers the passphrase on this device
+        var editorEl = document.getElementById('editor')
+        var edCards = document.getElementById('ed-cards')
+        var edKey = document.getElementById('ed-key')
+        var edStatus = document.getElementById('ed-status')
+        if (params.has('edit')) bar.classList.add('editable')
+
+        function edStatusMsg(msg, cls) { edStatus.textContent = msg || ''; edStatus.className = cls || '' }
+
+        // One card per announcement slide: a title, an optional paragraph, an
+        // optional bullet list, and an optional image. Text values are set via
+        // .value, never innerHTML, so nothing an instructor types can break the
+        // editor markup.
+        function addCard(a) {
+          a = a || {}
+          var card = document.createElement('div')
+          card.className = 'ed-card'
+          card.innerHTML =
+            '<input class="ed-title" type="text" placeholder="Slide title (e.g. Announcements)">' +
+            '<textarea class="ed-body" placeholder="Paragraph — optional (line breaks are kept)"></textarea>' +
+            '<textarea class="ed-lines" placeholder="Bullets — optional, one per line"></textarea>' +
+            '<div class="ed-image-row">' +
+              '<button type="button" class="ed-btn ed-addimg">Add image</button>' +
+              '<span class="ed-thumb"></span>' +
+              '<input type="file" accept="image/*" class="ed-file" hidden>' +
+            '</div>' +
+            '<div class="ed-card-tools">' +
+              '<button type="button" data-act="up" title="Move up">&uarr;</button>' +
+              '<button type="button" data-act="down" title="Move down">&darr;</button>' +
+              '<button type="button" class="ed-del" data-act="del">Remove</button>' +
+            '</div>'
+          card.querySelector('.ed-title').value = a.title || ''
+          // Paragraph and bullets are independent fields: a slide can have
+          // either, both, or neither (with just an image).
+          card.querySelector('.ed-body').value = a.body || ''
+          card.querySelector('.ed-lines').value = (a.items && a.items.length) ? a.items.join('\n') : ''
+
+          // The image lives on the card element as _image, restored on edit and
+          // read back on save. Kept off the text fields so it round-trips
+          // untouched.
+          var fileInput = card.querySelector('.ed-file')
+          var addImgBtn = card.querySelector('.ed-addimg')
+          var thumb = card.querySelector('.ed-thumb')
+          if (a.image && ANN_IMG_RE.test(a.image)) card._image = a.image
+
+          function showThumb() {
+            thumb.innerHTML = ''
+            if (card._image) {
+              var im = document.createElement('img')
+              im.className = 'ed-thumb-img'; im.src = card._image
+              var rm = document.createElement('button')
+              rm.type = 'button'; rm.className = 'ed-btn'; rm.textContent = 'Remove image'
+              rm.addEventListener('click', function () { card._image = null; showThumb() })
+              thumb.appendChild(im); thumb.appendChild(rm)
+              addImgBtn.style.display = 'none'
+            } else {
+              addImgBtn.style.display = ''
+            }
+          }
+          addImgBtn.addEventListener('click', function () { fileInput.click() })
+          fileInput.addEventListener('change', function () {
+            var f = fileInput.files && fileInput.files[0]
+            if (!f) return
+            edStatusMsg('Adding image…')
+            prepareImage(f).then(function (dataUrl) {
+              card._image = dataUrl; showThumb(); edStatusMsg('')
+            }).catch(function (msg) { edStatusMsg(String(msg), 'err') })
+            fileInput.value = ''   // let the same file be re-picked later
+          })
+          showThumb()
+
+          edCards.appendChild(card)
+        }
+
+        function readCards() {
+          var out = []
+          ;[].forEach.call(edCards.querySelectorAll('.ed-card'), function (card) {
+            var title = card.querySelector('.ed-title').value.trim()
+            // Paragraph keeps its internal line breaks (outer whitespace
+            // trimmed); bullets are the non-empty lines.
+            var body = card.querySelector('.ed-body').value.replace(/^\s+|\s+$/g, '')
+            var lines = card.querySelector('.ed-lines').value.split('\n')
+              .map(function (s) { return s.trim() }).filter(function (s) { return s.length })
+            var image = card._image && ANN_IMG_RE.test(card._image) ? card._image : null
+            if (!title && !body && !lines.length && !image) return   // drop empty cards
+            var o = { type: 'announcement', title: title }
+            if (body) o.body = body
+            if (lines.length) o.items = lines
+            if (image) o.image = image
+            out.push(o)
+          })
+          return out
+        }
+
+        function openEditor() {
+          document.getElementById('ed-deck').textContent = deck.title || deckId
+          edCards.innerHTML = ''
+          if (announcements.length) announcements.forEach(addCard)
+          else addCard()
+          try { edKey.value = localStorage.getItem(EDIT_KEY_LS) || '' } catch (e) {}
+          edStatusMsg('')
+          ink.classList.remove('on')   // keep the canvas from covering the editor
+          editorEl.classList.add('on')
+        }
+        function closeEditor() { editorEl.classList.remove('on'); syncInk() }
+
+        function saveEditor() {
+          var list = readCards()
+          var key = edKey.value
+          try { if (key) localStorage.setItem(EDIT_KEY_LS, key) } catch (e) {}
+          edStatusMsg('Saving…')
+          fetch('/announce/' + encodeURIComponent(deckId), {   // origin-absolute; see fetchAnnouncements
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Announce-Key': key },
+            body: JSON.stringify({ announcements: list })
+          }).then(function (r) {
+            if (r.status === 401) { edStatusMsg('Wrong passphrase.', 'err'); return null }
+            if (r.status === 503) { edStatusMsg('Announcements are not set up on the server yet.', 'err'); return null }
+            if (!r.ok) { edStatusMsg('Could not save (' + r.status + ').', 'err'); return null }
+            return r.json()
+          }).then(function (d) {
+            if (!d) return
+            announcements = (d.announcements && Array.isArray(d.announcements)) ? d.announcements : list
+            applyAnnouncements()
+            edStatusMsg('Saved — live for everyone.', 'ok')
+            go(1)   // show the result from the top
+            setTimeout(closeEditor, 800)
+          }).catch(function () { edStatusMsg('Network error — not saved.', 'err') })
+        }
+
+        edCards.addEventListener('click', function (e) {
+          var btn = e.target.closest && e.target.closest('button[data-act]')
+          if (!btn) return
+          var card = btn.closest('.ed-card'), act = btn.getAttribute('data-act')
+          if (act === 'del') card.parentNode.removeChild(card)
+          else if (act === 'up' && card.previousElementSibling) card.parentNode.insertBefore(card, card.previousElementSibling)
+          else if (act === 'down' && card.nextElementSibling) card.parentNode.insertBefore(card.nextElementSibling, card)
+        })
+        document.getElementById('ed-add').addEventListener('click', function () { addCard() })
+        document.getElementById('ed-save').addEventListener('click', saveEditor)
+        document.getElementById('ed-cancel').addEventListener('click', closeEditor)
+        document.getElementById('edit').addEventListener('click', openEditor)
+
+        window.addEventListener('hashchange', render)
+        document.getElementById('prev').addEventListener('click', function () { go(currentIndex() - 1) })
+        document.getElementById('next').addEventListener('click', function () { go(currentIndex() + 1) })
+
+        document.addEventListener('keydown', function (e) {
+          // The editor owns the keyboard while open: Escape closes it, and
+          // every other key (Space, arrows, Home/End) must reach the field
+          // being typed in rather than turn the slide. This is why spaces
+          // vanished from announcement text - the navigation handler below was
+          // preventDefault-ing the spacebar.
+          if (editorEl.classList.contains('on')) {
+            if (e.key === 'Escape') { e.preventDefault(); closeEditor() }
+            return
+          }
+          // Any other typing target (an input or textarea) keeps its keys too.
+          var t = e.target
+          if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return
+
+          if (e.key === 'Escape') { e.preventDefault(); if (deck) toggleIndex(); return }
+          if (indexOpen() && (e.key === 'Enter' || e.key === ' ')) return  // let the focused link fire
+          if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(currentIndex() + 1) }
+          else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(currentIndex() - 1) }
+          else if (e.key === 'Home') { e.preventDefault(); go(1) }
+          else if (e.key === 'End') { e.preventDefault(); go(deck ? deck.slides.length : 1) }
+        })
+
+        /* --- the printable handout (?print=1) -------------------------------
+           Lays every slide out as one sheet and stops. Save as PDF from the
+           browser's print dialog; there is no PDF library and no build step,
+           which is deliberate - the deck changes right up to class time and a
+           handout that needs a toolchain would not get regenerated.
+
+           Interactive slides cannot be paper. A 'demo' slide prints its
+           starting program as a listing, which is arguably better to annotate
+           by hand than a live editor is; a 'ref' slide prints which book page
+           it frames, since that page is a separate document we cannot inline.
+           Every slide gets a sheet regardless, so sheet N is slide N and
+           "look at slide 12" means the same thing on paper and on screen. */
+        /* A small, self-contained C syntax highlighter for the printed code
+           listings. Deliberately not CodeMirror: the handout has no build
+           step and pulls in nothing, and a listing does not need the editor's
+           full grammar - just keywords, types, numbers, strings, comments and
+           preprocessor lines, coloured to match the live window (see the
+           .t-* rules above). It is a left-to-right scanner rather than a pile
+           of regexes so that, e.g., a keyword inside a string or comment is
+           not miscoloured. Output is escaped as it goes. */
+        function highlightC(src) {
+          var KEYWORDS = { 'if':1,'else':1,'for':1,'while':1,'do':1,'switch':1,
+            'case':1,'default':1,'break':1,'continue':1,'return':1,'goto':1,
+            'sizeof':1,'typedef':1,'struct':1,'union':1,'enum':1,'static':1,
+            'const':1,'extern':1,'register':1,'volatile':1,'auto':1,'inline':1 }
+          var TYPES = { 'int':1,'char':1,'float':1,'double':1,'void':1,'short':1,
+            'long':1,'unsigned':1,'signed':1,'bool':1,'size_t':1,'FILE':1 }
+          var i = 0, n = src.length, out = ''
+          var atLineStart = true   // only whitespace seen since the last newline
+          function emit(cls, text) { out += '<span class="t-' + cls + '">' + esc(text) + '</span>' }
+          var isIdent = /[A-Za-z0-9_]/, isDigit = /[0-9]/, isNum = /[0-9a-fA-FxX.uUlLfF]/
+
+          while (i < n) {
+            var c = src.charAt(i)
+            if (c === '\n') { out += '\n'; i++; atLineStart = true; continue }
+            if (c === ' ' || c === '\t') { out += c; i++; continue }
+
+            // Preprocessor directive: '#' as the first non-space on its line.
+            // The angle-bracket or quoted header gets the string colour.
+            if (c === '#' && atLineStart) {
+              var e = i; while (e < n && src.charAt(e) !== '\n') e++
+              var line = src.slice(i, e)
+              var m = line.match(/^(#\s*[a-z]+\s*)(<[^>]*>|"[^"]*")?([\s\S]*)$/)
+              if (m) {
+                emit('meta', m[1])
+                if (m[2]) emit('string', m[2])
+                if (m[3]) emit('meta', m[3])
+              } else { emit('meta', line) }
+              i = e; atLineStart = false; continue
+            }
+            atLineStart = false
+
+            if (c === '/' && src.charAt(i + 1) === '/') {
+              var le = i; while (le < n && src.charAt(le) !== '\n') le++
+              emit('comment', src.slice(i, le)); i = le; continue
+            }
+            if (c === '/' && src.charAt(i + 1) === '*') {
+              var be = i + 2
+              while (be < n && !(src.charAt(be) === '*' && src.charAt(be + 1) === '/')) be++
+              be = Math.min(n, be + 2)
+              emit('comment', src.slice(i, be)); i = be; continue
+            }
+            if (c === '"' || c === "'") {
+              var se = i + 1
+              while (se < n && src.charAt(se) !== c) { if (src.charAt(se) === '\\') se++; se++ }
+              se = Math.min(n, se + 1)
+              emit('string', src.slice(i, se)); i = se; continue
+            }
+            if (isDigit.test(c) || (c === '.' && isDigit.test(src.charAt(i + 1)))) {
+              var ne = i; while (ne < n && isNum.test(src.charAt(ne))) ne++
+              emit('number', src.slice(i, ne)); i = ne; continue
+            }
+            if (/[A-Za-z_]/.test(c)) {
+              var we = i; while (we < n && isIdent.test(src.charAt(we))) we++
+              var word = src.slice(i, we)
+              if (KEYWORDS[word]) emit('keyword', word)
+              else if (TYPES[word]) emit('type', word)
+              else out += esc(word)
+              i = we; continue
+            }
+            out += esc(c); i++
+          }
+          return out
+        }
+
+        // A starting program, fetched once and cached (several slides can
+        // share one). Lives outside the built site next to coding-window/,
+        // reached the same way the demo slides reach it on screen.
+        var codeCache = {}
+        function fetchCode(name) {
+          if (codeCache[name]) return codeCache[name]
+          codeCache[name] = fetch('../CMeCodeDir/' + encodeURIComponent(name) + '.c')
+            .then(function (r) { return r.ok ? r.text() : null })
+            .then(function (t) { return t == null ? '(could not load ' + name + '.c)' : t })
+            .catch(function () { return '(could not load ' + name + '.c)' })
+          return codeCache[name]
+        }
+
+        // A book page, fetched once, parsed, and cached - W1C2 frames three
+        // different subsections of the same page, so this fetches it once.
+        var pageCache = {}
+        function fetchBookPage(page) {
+          if (pageCache[page]) return pageCache[page]
+          pageCache[page] = fetch('../' + page)
+            .then(function (r) { return r.ok ? r.text() : null })
+            .then(function (t) { return t == null ? null : new DOMParser().parseFromString(t, 'text/html') })
+            .catch(function () { return null })
+          return pageCache[page]
+        }
+
+        // The same narrowing the live deck applies (see classroom.js deck
+        // mode), but against a fetched document instead of a live iframe:
+        // 'focus' takes one subsection by xml:id, 'only' takes every element
+        // matching a selector. An un-narrowed ref frames a whole book page,
+        // which is too much for a worksheet, so that returns null and the
+        // sheet falls back to a pointer.
+        function narrowNodes(doc, slide) {
+          if (slide.focus) { var el = doc.getElementById(slide.focus); return el ? [el] : [] }
+          if (slide.only) return [].slice.call(doc.querySelectorAll(slide.only))
+          return null
+        }
+
+        /* The printable body for a 'ref' slide: the real activity, pulled from
+           the built book HTML and turned into a worksheet, plus a link back to
+           the live interactive slide.
+
+           A coding window cannot be paper, but its starting program can, so
+           each embedded window is replaced in place by a highlighted listing -
+           there may be several in one activity (the char-datatype and
+           user-input activities carry three and four), interleaved with prose,
+           and replacing them in document order keeps that order. Book chrome
+           with no meaning on paper (the permalink icons, scripts) is stripped
+           first. Resolves to an HTML string. */
+        function prepareRefBody(slide, n) {
+          var runUrl = location.origin + location.pathname +
+                       '?deck=' + encodeURIComponent(deckId) + '#' + n
+          var head =
+            '<p class="kind">From the book</p>' +
+            '<h2>' + html(slide.title || '') + '</h2>'
+          var runit =
+            '<p class="runit">Run it live (interactive): ' +
+            '<a href="' + esc(runUrl) + '">' + esc(runUrl) + '</a></p>'
+          function pointer(msg) { return head + '<p class="note">' + msg + '</p>' + runit }
+
+          return fetchBookPage(slide.page).then(function (doc) {
+            if (!doc) return pointer('Could not load <code>' + esc(slide.page) + '</code>.')
+            var nodes = narrowNodes(doc, slide)
+            if (nodes == null) return pointer('This slide frames the book page <code>' + esc(slide.page) + '</code>.')
+            if (!nodes.length) return pointer('Could not find this slide’s content on <code>' + esc(slide.page) + '</code>.')
+
+            var wrap = document.createElement('div')
+            nodes.forEach(function (node) { wrap.appendChild(node.cloneNode(true)) })
+            ;[].forEach.call(wrap.querySelectorAll('.autopermalink, script, style, .knowl-output'), function (el) {
+              if (el.parentNode) el.parentNode.removeChild(el)
+            })
+
+            var frames = [].slice.call(wrap.querySelectorAll('iframe'))
+            var names = frames.map(function (f) {
+              var m = (f.getAttribute('src') || '').match(/[?&]src=([^&"]+\.c)/)
+              return m ? decodeURIComponent(m[1]).split('/').pop().replace(/\.c$/, '') : null
+            })
+            return Promise.all(names.map(function (nm) { return nm ? fetchCode(nm) : Promise.resolve(null) }))
+              .then(function (codes) {
+                frames.forEach(function (f, i) {
+                  var pre = document.createElement('pre')
+                  pre.className = 'handout-code'
+                  if (codes[i] != null) pre.innerHTML = highlightC(codes[i])
+                  else pre.textContent = '(code unavailable)'
+                  f.parentNode.replaceChild(pre, f)
+                })
+                return head + wrap.innerHTML + runit
+              })
+          })
+        }
+
+        function buildHandout() {
+          document.documentElement.classList.add('printing')
+          document.body.classList.add('printing')
+          document.title = (deck.title || deckId) + ' — slides'
+
+          // Each sheet's body is prepared in parallel: demo slides fetch their
+          // starter, ref slides fetch and parse their book page (and its
+          // starters), the rest are synchronous. Laying out only after all of
+          // it resolves means the print dialog never opens on a half-built page.
+          var jobs = deck.slides.map(function (slide, i) {
+            var n = i + 1
+            if (slide.type === 'demo') {
+              var head =
+                '<p class="kind">Program</p>' +
+                '<h2>' + html(slide.title || '') + '</h2>' +
+                (slide.body ? '<p class="big">' + [].concat(slide.body).join('</p><p class="big">') + '</p>' : '')
+              if (!slide.startPoint) return Promise.resolve(head)
+              return fetchCode(slide.startPoint).then(function (code) {
+                return head + '<pre>' + highlightC(code) + '</pre>'
+              })
+            }
+            if (slide.type === 'ref') return prepareRefBody(slide, n)
+            return Promise.resolve(renderedSlideHTML(slide).html)
+          })
+
+          return Promise.all(jobs).then(function (bodies) {
+            var out = bodies.map(function (body, i) {
+              var n = i + 1
+              return '<section class="sheet">' +
+                       '<span class="num">' + n + ' / ' + deck.slides.length + '</span>' +
+                       body +
+                       '<div class="room"></div>' +
+                     '</section>'
+            })
+            document.getElementById('print').innerHTML = out.join('')
+          })
+        }
+
+        // GET this deck's announcements from the server-side board. Optional:
+        // any failure (no board, unconfigured, offline) yields an empty list,
+        // so the deck always loads.
+        function fetchAnnouncements() {
+          // Origin-ABSOLUTE, like classroom.js reaches /session/<code>: the
+          // Pages Function lives at /announce/<deck> on the site root, while
+          // this page is served from /external/, so a relative path would
+          // resolve to /external/announce/... and miss the Function entirely.
+          return fetch('/announce/' + encodeURIComponent(deckId))
+            .then(function (r) { return r.ok ? r.json() : null })
+            .then(function (d) { return (d && Array.isArray(d.announcements)) ? d.announcements : [] })
+            .catch(function () { return [] })
+        }
+
+        // Rebuild the runtime slide list as [announcements..., committed...].
+        // Run at load and again whenever the instructor edits announcements.
+        // The announcement objects deliberately carry no _ink, so they are
+        // never persisted or annotated (see inkKey / inkEnabled).
+        function applyAnnouncements() {
+          if (committedSlides === null) committedSlides = deck.slides.slice()
+          var ann = (announcements || []).map(function (a) {
+            var o = { type: 'announcement', title: a.title || '' }
+            if (Array.isArray(a.items) && a.items.length) o.items = a.items.slice()
+            if (a.body) o.body = a.body
+            if (a.note) o.note = a.note
+            if (a.image) o.image = a.image
+            return o
+          })
+          deck.slides = ann.concat(committedSlides)
+        }
+
+        if (!deckId) { renderDeckChooser(); return }
+
+        Promise.all([
+          fetch('decks/' + encodeURIComponent(deckId) + '.json').then(function (r) {
+            if (!r.ok) throw new Error('no deck "' + deckId + '" (' + r.status + ')')
+            return r.json()
+          }),
+          fetch('decks/icebreakers.json').then(function (r) { return r.ok ? r.json() : {} }).catch(function () { return {} }),
+          // The deck's announcements, added by the instructor before class
+          // (see functions/announce/[deck].js). Optional: a deck with none,
+          // or an unconfigured board, just yields an empty list.
+          fetchAnnouncements(),
+        ]).then(function (res) {
+          deck = res[0]
+          banks.icebreakers = res[1]
+          if (!deck.slides || !deck.slides.length) throw new Error('deck "' + deckId + '" has no slides')
+          document.title = 'ENGS 20 — ' + (deck.title || deckId)
+
+          // Each committed slide gets a STABLE ink key: its 1-based position in
+          // the deck as authored, before anything is prepended. Announcements
+          // vary from class to class, so keying annotations by runtime index
+          // would move a student's saved ink; keying by this does not.
+          deck.slides.forEach(function (s, i) { s._ink = i + 1 })
+
+          // The handout is the stable content deck - announcements are
+          // transient and do not belong in a printed worksheet.
+          if (params.get('print') === '1') return buildHandout()
+
+          announcements = res[2] || []
+          applyAnnouncements()   // prepends them for projector + students alike
+          if (!location.hash) location.hash = '1'
+          render()
+        }).catch(function (e) {
+          fail('Could not load this deck. ' + e.message)
+        })
+      })()
+    </script>
+  </body>
+</html>

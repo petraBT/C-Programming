@@ -1,0 +1,6 @@
+{
+  "user": "engs20student",
+  "files": [
+    {"path": "engs20/toBeDeleted.txt", "content": "This file can be deleted.\n"}
+  ]
+}

@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void){
+    float data[5] = {1.2, 2.5, 4.0, 3.1, 5.5};
+    int i;
+    int size = 5;
+    
+    FILE *gfile = popen("gnuplot", "w");
+
+    fprintf(gfile, "set terminal png\n");
+    fprintf(gfile, "set output 'plot_graph.png'\n");
+
+    fprintf(gfile, "plot '-'\n");
+    for(i=0; i<size; i++){
+        fprintf(gfile, "%d %f\n", i, data[i]); // coordinates x and y
+    }
+
+    fprintf(gfile, "e\n");
+    pclose(gfile);
+
+    return 0;
+}

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Pointer check</title>
+    <style>
+      /* A throwaway diagnostic, not part of the deck player. It exists to
+         answer one question that cannot be answered from a Mac: what does
+         iPadOS Safari actually report in PointerEvent.pointerType when the
+         input is an Apple Pencil? The deck annotation feature filters on
+         pointerType === 'pen' for palm rejection, so if that assumption is
+         wrong the pen simply never draws.
+
+         Open this on the iPad, draw with the Pencil, then draw with a finger,
+         and read the two rows. Keep it until the answer is confirmed on the
+         hardware students and Petra actually use. */
+      :root { color-scheme: light; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; font-family: system-ui, -apple-system, sans-serif; }
+      body { display: flex; flex-direction: column; background: #fff; color: #1a1a19; }
+      header { padding: 12px 16px; border-bottom: 1px solid #d8d6cf; }
+      h1 { margin: 0 0 .3em 0; font-size: 17px; }
+      p { margin: 0; font-size: 13px; color: #52514e; line-height: 1.45; }
+      #pad {
+        flex: 1; min-height: 0; position: relative;
+        background: #fbfbf9; touch-action: none; cursor: crosshair;
+      }
+      #pad canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+      #hint {
+        position: absolute; inset: 0; display: flex;
+        align-items: center; justify-content: center;
+        font-size: 15px; color: #a9a79e; pointer-events: none;
+      }
+      #out {
+        border-top: 1px solid #d8d6cf; padding: 10px 16px 14px 16px;
+        font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-size: 12.5px;
+        background: #f6f5f2; max-height: 45%; overflow: auto;
+      }
+      .row { margin-bottom: 6px; line-height: 1.5; }
+      .row b { display: inline-block; min-width: 5.5em; color: #256abf; }
+      .none { color: #a9a79e; }
+      #verdict { font-size: 13px; font-family: system-ui, sans-serif; margin-top: 10px; line-height: 1.5; }
+      .ok { color: #1a7f37; } .bad { color: #b3261e; }
+      button {
+        font: inherit; font-family: system-ui, sans-serif; font-size: 13px;
+        border: 1px solid #b8b6ad; background: #fff; border-radius: 5px;
+        padding: 4px 10px; margin-top: 8px; cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Pointer type check</h1>
+      <p>Draw in the box below <b>with the Apple Pencil</b>, then again <b>with a finger</b>.
+         Each distinct <code>pointerType</code> the browser reports gets its own row.</p>
+    </header>
+    <div id="pad"><canvas id="c"></canvas><div id="hint">draw here</div></div>
+    <div id="out">
+      <div id="rows"><span class="none">no pointer events yet</span></div>
+      <div id="verdict"></div>
+      <button id="reset" type="button">Reset</button>
+    </div>
+
+    <script>
+      (function () {
+        'use strict'
+        var pad = document.getElementById('pad')
+        var canvas = document.getElementById('c')
+        var ctx = canvas.getContext('2d')
+        var rowsEl = document.getElementById('rows')
+        var verdictEl = document.getElementById('verdict')
+        var hint = document.getElementById('hint')
+        var seen = Object.create(null)
+        var drawing = false
+
+        function fit() {
+          var r = pad.getBoundingClientRect()
+          var dpr = window.devicePixelRatio || 1
+          canvas.width = Math.round(r.width * dpr)
+          canvas.height = Math.round(r.height * dpr)
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+          ctx.lineCap = ctx.lineJoin = 'round'
+          ctx.strokeStyle = '#256abf'
+        }
+        fit()
+        window.addEventListener('resize', fit)
+
+        function report() {
+          var types = Object.keys(seen)
+          if (!types.length) { rowsEl.innerHTML = '<span class="none">no pointer events yet</span>'; return }
+          rowsEl.innerHTML = types.map(function (t) {
+            var s = seen[t]
+            return '<div class="row"><b>' + t + '</b> ' + s.n + ' events' +
+                   ' &middot; pressure ' + s.pmin.toFixed(3) + '&ndash;' + s.pmax.toFixed(3) +
+                   ' &middot; tilt ' + (s.tilt ? 'yes' : 'no') +
+                   ' &middot; coalesced ' + (s.coalesced ? 'yes' : 'no') + '</div>'
+          }).join('')
+
+          // The one thing this page exists to answer.
+          var v = []
+          if (seen.pen) {
+            v.push('<span class="ok">&#10003; A pointerType of "pen" was reported.</span> ' +
+                   'If that row is the one that grew while you were using the Pencil, ' +
+                   'the annotation filter is correct as written.')
+            if (seen.pen.pmax > 0 && seen.pen.pmax < 1) {
+              v.push('Pressure varies, so pressure-sensitive stroke width is available too.')
+            } else {
+              v.push('Pressure never varied from ' + seen.pen.pmax.toFixed(3) +
+                     ' &mdash; do not rely on pressure for stroke width.')
+            }
+          } else if (seen.touch) {
+            v.push('<span class="bad">&#10007; The Pencil did NOT report "pen".</span> ' +
+                   'If the "touch" row is the one that grew while you were using the Pencil, ' +
+                   'iPadOS is reporting it as touch and the pen filter must change ' +
+                   '(and palm rejection has to come from somewhere else &mdash; ' +
+                   'touch events carry touchType "stylus" on Safari).')
+          }
+          verdictEl.innerHTML = v.join('<br>')
+        }
+
+        function note(e) {
+          var t = e.pointerType || '(empty string)'
+          var s = seen[t]
+          if (!s) s = seen[t] = { n: 0, pmin: Infinity, pmax: -Infinity, tilt: false, coalesced: false }
+          s.n++
+          if (typeof e.pressure === 'number') {
+            s.pmin = Math.min(s.pmin, e.pressure)
+            s.pmax = Math.max(s.pmax, e.pressure)
+          }
+          if (e.tiltX || e.tiltY) s.tilt = true
+          if (typeof e.getCoalescedEvents === 'function' && e.getCoalescedEvents().length > 1) s.coalesced = true
+          report()
+        }
+
+        pad.addEventListener('pointerdown', function (e) {
+          hint.style.display = 'none'
+          drawing = true
+          pad.setPointerCapture(e.pointerId)
+          note(e)
+          var r = pad.getBoundingClientRect()
+          ctx.beginPath()
+          ctx.moveTo(e.clientX - r.left, e.clientY - r.top)
+        })
+        pad.addEventListener('pointermove', function (e) {
+          if (!drawing) return
+          note(e)
+          var r = pad.getBoundingClientRect()
+          ctx.lineWidth = 1 + (e.pressure || 0.5) * 6
+          ctx.lineTo(e.clientX - r.left, e.clientY - r.top)
+          ctx.stroke()
+          ctx.beginPath()
+          ctx.moveTo(e.clientX - r.left, e.clientY - r.top)
+        })
+        function end(e) { if (drawing) { drawing = false; note(e) } }
+        pad.addEventListener('pointerup', end)
+        pad.addEventListener('pointercancel', end)
+
+        document.getElementById('reset').addEventListener('click', function () {
+          seen = Object.create(null)
+          ctx.clearRect(0, 0, canvas.width, canvas.height)
+          hint.style.display = ''
+          verdictEl.innerHTML = ''
+          report()
+        })
+      })()
+    </script>
+  </body>
+</html>

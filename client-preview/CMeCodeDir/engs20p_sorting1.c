@@ -1,0 +1,12 @@
+#include <stdio.h>
+
+int main(void) {
+   
+   int a, b, c;
+   
+   /* Give it a try! Assign values to a and b and attempt to swap them.
+      Be sure to print the values before and after the swap to be sure
+      it worked properly. */
+      
+   return(0);
+}

@@ -1,0 +1,6 @@
+{
+  "user": "engs20student",
+  "files": [
+    {"path": "engs20/lookAtMe.txt", "content": "Congratulations on finding this file with the \"less\" command!\n\nHere's a little secret: the best fuel for debugging a tricky program\nlate at night is a warm mug of cocoa and a square of Chocolate. It\nnever fails to help untangle a stubborn bug.\n\nNow go forth and conquer more Linux commands!\n"}
+  ]
+}

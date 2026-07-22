@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+/* Don't forget to #include the string library here! 
+   The header for the library is called string.h */
+
+int main(void) {
+   
+   char food[30];
+   
+   printf("What is your favorite food? ");
+   
+   /* You'll have to fill in the details here! */
+
+   /* Make sure everything worked: */
+   printf("Your favorite food is %s.\n", food);
+    return(0);
+}

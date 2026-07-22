@@ -1,0 +1,143 @@
+{
+  "id": "W1C3",
+  "title": "Binary, hex, casting and the modulo operation",
+  "_comment": [
+    "See decks/W1C2.json for the format and the reasoning behind it.",
+    "Follows the retired LCS deck W1C3Digitalpracticeconv.pdf slide for",
+    "slide (its 23 slides, minus 3 of per-term announcements).",
+    "",
+    "HOW THESE SLIDES WORK - do not 'improve' this by adding answers. An LCS",
+    "practice slide shows the PROBLEM STATEMENT ONLY. The class works it,",
+    "and Petra then presents the solution live. The handwriting visible on",
+    "top of the PDF pages is that live solution, not slide content. So a",
+    "'note' here may carry information the printed slide gave the students",
+    "up front (e.g. 'to help you, 177 -> 10110001'), but must never carry",
+    "the answer. Same for the discussion prompts: 'What are the ways to",
+    "represent negative numbers in binary?' is Petra asking the students to",
+    "explain what they read before class - it needs no note at all.",
+    "",
+    "For the same reason this deck does not frame the book's worked examples",
+    "or its prose sections: that is the pre-class reading, and it gives the",
+    "answers away. Book pages appear only where the class works a real book",
+    "activity (the averaging one).",
+    "",
+    "The casting and modulo slides are 'demo' slides: the LCS originals were",
+    "a line of framing plus one Dash coding window, which is what 'demo'",
+    "reproduces.",
+    "",
+    "Several LCS pages are images in the PDF, so their text is not in its",
+    "text layer and had to come from Petra directly. Two of them (p11 and",
+    "p16) were bare section headers announcing a topic switch and are",
+    "deliberately dropped. The rest are the practice slides at 8, 10 and 12",
+    "below, two of which hand the students a blank table to fill in - see",
+    "the 'table' field and fillTable() in class.html."
+  ],
+  "slides": [
+    { "type": "icebreaker", "id": "weird-food" },
+    {
+      "type": "agenda",
+      "title": "Today",
+      "items": [
+        "Binary numbers",
+        "Negative number representation",
+        "Hexadecimal numbers",
+        "Converting between ints and floats",
+        "Casting",
+        "The modulo operation"
+      ]
+    },
+    { "type": "icebreaker", "id": "three-in-common" },
+
+    {
+      "type": "prompt",
+      "title": "Practice",
+      "body": "Please convert the decimal number 177 to 8-bit binary."
+    },
+    {
+      "type": "prompt",
+      "title": "Practice",
+      "body": "Please convert the decimal number 177 to base-3."
+    },
+    {
+      "type": "prompt",
+      "title": "Practice: binary addition",
+      "body": "Add the decimal numbers 177 and 23 in 8-bit binary.",
+      "note": "To help you, here are the binary conversions: 177 &rarr; 10110001, 23 &rarr; 00010111"
+    },
+    {
+      "type": "prompt",
+      "title": "Now try this one",
+      "body": "Now try 177 + 177 in 8-bit binary.",
+      "note": "Recall that the binary representation of 177 is 10110001. Does your result make sense?"
+    },
+
+    {
+      "type": "prompt",
+      "title": "Hexadecimal numbers",
+      "body": "Please convert the decimal number 177 to hexadecimal."
+    },
+
+    {
+      "type": "prompt",
+      "body": "What are the ways to represent negative numbers in binary?"
+    },
+    {
+      "type": "prompt",
+      "body": "Write the (decimal) numbers 77 and &minus;77 as 8-bit signed integers and in 8-bit binary 2's complement. Show your work.",
+      "table": {
+        "columns": ["", "77", "&minus;77"],
+        "rows": ["8-bit signed integer", "8-bit binary 2's complement"]
+      }
+    },
+    {
+      "type": "prompt",
+      "title": "Practice: 2's complement",
+      "body": "Now calculate 110 &minus; 77 in binary 2's complement (that is, perform the addition 110 + (&minus;77)).",
+      "note": "Reminder: the binary 2's complements of the relevant numbers are 110: 01101110 and &minus;77: 10110011"
+    },
+
+    {
+      "type": "prompt",
+      "body": "What is the decimal value of the hexadecimal number <code>C3</code> if binary numbers are represented as:",
+      "table": {
+        "columns": ["", "Decimal value"],
+        "rows": ["Unsigned", "Signed magnitude", "Binary 2's complement"]
+      }
+    },
+
+    {
+      "type": "demo",
+      "title": "Integer division",
+      "body": "Recall the funny division behaviour we noticed in the C programming language.",
+      "startPoint": "engs20p_Ndivision1"
+    },
+    {
+      "type": "demo",
+      "startPoint": "engs20p_Ndivision2"
+    },
+    {
+      "type": "demo",
+      "body": "What happens when you similarly cast a float to an int? Will rounding occur?",
+      "startPoint": "engs20p_Ndivision3"
+    },
+    { "type": "ref", "page": "floats-average.html", "only": ".activity", "title": "Your turn: averaging integers" },
+    {
+      "type": "demo",
+      "body": "Suppose you want to know the remainder of the division of one integer by another. Can we do this with our current programming knowledge?",
+      "startPoint": "engs20p_NRemainder"
+    },
+
+    {
+      "type": "recap",
+      "title": "Here is what we covered today",
+      "items": [
+        "Converting between decimal and binary numbers",
+        "Negative number representation",
+        "Three ways a binary number can be interpreted: unsigned integer, signed magnitude, binary 2's complement",
+        "Hexadecimal numbers as short-hand for binary",
+        "Converting (casting) between data types: <code>ave = ((float) a)/((float) b);</code>",
+        "Modulo operation to find the remainder in integer division: <code>8 % 5 = 3</code>"
+      ]
+    }
+  ]
+}

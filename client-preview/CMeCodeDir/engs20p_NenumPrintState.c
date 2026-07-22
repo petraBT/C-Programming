@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+int main(void) {
+	enum state { STANDBY = 1, RUNNING, ERROR = 99}; //we can assign specific values
+	enum state machineState;
+	int sensorCode = 2; // read from a sensor for example
+								 
+	/* Cast the sensor raw integer into our readable enum type */
+	machineState = (enum state) sensorCode;
+										 
+	if (machineState == RUNNING){
+		printf("Machine is operating normally.\n");
+	}
+	else{
+		printf("State code: %d\n", machineState); 
+	}
+
+	return 0;
+}

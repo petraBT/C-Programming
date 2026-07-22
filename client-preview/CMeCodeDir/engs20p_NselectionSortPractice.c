@@ -1,0 +1,23 @@
+#include<stdio.h>
+void printArray(int numbers[], int len);
+int main(void) {
+    int list[] = {759, 14, 2, 900, 106, 77, -10, 8, -3, 5}; /* unsorted list */
+    int n = 10;
+    printf("Unsorted: \n");
+    printArray(list, n);
+    
+    // Your code goes here...
+    
+    printf("Sorted: \n");
+    printArray(list, n);
+ 
+    return 0;
+}
+
+void printArray(int numbers[], int len) {
+    int i;
+    for (i=0; i<len; i++)  {
+        printf("%d ", numbers[i]);
+    }
+    printf("\n");
+}

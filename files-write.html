@@ -9,7 +9,7 @@
 <!--******************************************-->
 <!--*  Authored with PreTeXt                 *-->
 <!--*  pretextbook.org                       *-->
-<!--*  Theme: salem                          *-->
+<!--*  Theme: denver                         *-->
 <!--*  Palette: leaves                       *-->
 <!--******************************************-->
 <head xmlns:og="http://ogp.me/ns#" xmlns:book="https://ogp.me/ns/book#">
@@ -35,7 +35,7 @@ htmlPresentation: false,
 <meta name="twitter:description" content="This is a book written in PreTeXt, to accompany our C-programming class ENGS 20.">
 <meta property="og:description" content="This is a book written in PreTeXt, to accompany our C-programming class ENGS 20.">
 <meta name="twitter:card" content="summary">
-<script src="_static/pretext/js/jquery.min.js"></script><script src="_static/pretext/js/dist/pretext-core.js?v=2.43"></script><!--** eBookCongig is necessary to configure interactive       **-->
+<script src="_static/pretext/js/jquery.min.js"></script><script src="_static/pretext/js/dist/pretext-core.js?v=2.44"></script><!--** eBookCongig is necessary to configure interactive       **-->
 <!--** Runestone components to run locally in reader's browser **-->
 <!--** No external communication:                              **-->
 <!--**     log level is 0, Runestone Services are disabled     **-->
@@ -57,14 +57,14 @@ eBookConfig.allow_pairs = false;
 eBookConfig.enableScratchAC = false;
 eBookConfig.build_info = "";
 eBookConfig.python3 = null;
-eBookConfig.runestone_version = '8.1.9';
+eBookConfig.runestone_version = '8.1.14';
 eBookConfig.jobehost = '';
 eBookConfig.proxyuri_runs = '';
 eBookConfig.proxyuri_files = '';
 eBookConfig.enable_chatcodes =  false;
 </script>
 <!--*** Runestone Services ***-->
-<script src="_static/prefix-runtime.846a0d6fafaa99e0.bundle.js"></script><script src="_static/prefix-926.5c7038c8ef173faf.bundle.js"></script><script src="_static/prefix-runestone.bbcfc02849ebc023.bundle.js"></script><link rel="stylesheet" type="text/css" href="_static/prefix-926.229729d09512acc9.css">
+<script src="_static/prefix-runtime.cb5af2e851de3574.bundle.js"></script><script src="_static/prefix-926.5c7038c8ef173faf.bundle.js"></script><script src="_static/prefix-runestone.f51cd4153b45055d.bundle.js"></script><link rel="stylesheet" type="text/css" href="_static/prefix-926.229729d09512acc9.css">
 <link rel="stylesheet" type="text/css" href="_static/prefix-runestone.66fa8a682a32c0ac.css">
 <script src="_static/pretext/js/dist/lti_iframe_resizer.js"></script><link rel="icon" type="image/png" sizes="32x32" href="external/favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="external/favicon/favicon-16x16.png">
@@ -72,9 +72,9 @@ eBookConfig.enable_chatcodes =  false;
 </script>
 </head>
 <body id="bonfert-taylor-ICP" class="pretext book ignore-math">
-<a class="assistive" href="#ptx-content">Skip to main content</a><header id="ptx-masthead" class="ptx-masthead"><div class="ptx-banner">
+<a class="assistive" href="#ptx-content">Skip to main content</a><header id="ptx-masthead" class="ptx-masthead" role="banner"><div class="ptx-banner">
 <a id="logo-link" class="logo-link" target="_blank" href="https://pretextbook.org"><img src="external/CProgrammingLogo.png" alt="Logo image"></a><div class="title-container">
-<h1 class="heading"><a href="engs20-book.html"><span class="title">Introduction to C-Programming</span> <span class="subtitle">As seen in ENGS 20</span></a></h1>
+<div class="heading ptx-banner-heading"><a href="engs20-book.html"><span class="title">Introduction to C-Programming</span> <span class="subtitle">As seen in ENGS 20</span></a></div>
 <p class="byline">Petra Bonfert-Taylor</p>
 </div>
 </div></header><nav id="ptx-navbar" class="ptx-navbar navbar"><div class="ptx-navbar-contents">
@@ -118,7 +118,7 @@ eBookConfig.enable_chatcodes =  false;
 \newcommand{\fillinmath}[1]{\mathchoice{\colorbox{fillinmathshade}{$\displaystyle     \phantom{\,#1\,}$}}{\colorbox{fillinmathshade}{$\textstyle        \phantom{\,#1\,}$}}{\colorbox{fillinmathshade}{$\scriptstyle      \phantom{\,#1\,}$}}{\colorbox{fillinmathshade}{$\scriptscriptstyle\phantom{\,#1\,}$}}}
 \)</span></div>
 <div class="ptx-page">
-<div id="ptx-sidebar" role="complementary" class="ptx-sidebar"><nav id="ptx-toc" tabindex="-1" aria-label="Contents" class="ptx-toc depth3 parts focused" data-preexpanded-levels="0" data-max-levels="3"><ul class="structural toc-item-list contains-active">
+<div id="ptx-sidebar" role="complementary" class="ptx-sidebar"><nav id="ptx-toc" tabindex="-1" aria-label="Contents" class="ptx-toc depth3 parts focused" data-preexpanded-levels="2" data-max-levels="3"><ul class="structural toc-item-list contains-active">
 <li class="toc-item toc-frontmatter">
 <div class="toc-title-box"><a href="meta_frontmatter.html" class="internal"><span class="title">Front Matter</span></a></div>
 <ul id="ptx-toc-group-meta_frontmatter" class="structural toc-item-list">
@@ -176,43 +176,44 @@ eBookConfig.enable_chatcodes =  false;
 <div class="toc-title-box"><a href="variables-printing-numbers.html" class="internal"><span class="codenumber">4.1</span> <span class="title">Printing Numbers</span></a></div>
 <ul id="ptx-toc-group-variables-printing-numbers" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="variables-printing-numbers.html#variables-printing-numbers-6" class="internal"><span class="codenumber">4.1</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="variables-calculations.html" class="internal"><span class="codenumber">4.2</span> <span class="title">Simple Calculations</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="variables-calculations.html" class="internal"><span class="codenumber">4.2</span> <span class="title">Simple Calculations</span></a></div>
-<ul id="ptx-toc-group-variables-calculations" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="variables-calculations.html#variables-calculations-5" class="internal"><span class="codenumber">4.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="variables-calculations-practice.html" class="internal"><span class="codenumber">4.3</span> <span class="title">Practice: Simple Calculations</span></a></div>
+<ul id="ptx-toc-group-variables-calculations-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="variables-calculations-practice.html#variables-calculations-practice-2" class="internal"><span class="codenumber">4.3</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="variables-intro.html" class="internal"><span class="codenumber">4.3</span> <span class="title">Introduction to Variables</span></a></div>
-<ul id="ptx-toc-group-variables-intro" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="variables-intro.html#variables-intro-7" class="internal"><span class="codenumber">4.3</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="variables-intro.html" class="internal"><span class="codenumber">4.4</span> <span class="title">Introduction to Variables</span></a></div>
+<ul id="ptx-toc-group-variables-intro" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="variables-intro.html#variables-intro-7" class="internal"><span class="codenumber">4.4</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="variables-changing.html" class="internal"><span class="codenumber">4.4</span> <span class="title">Modifying Variables</span></a></div>
-<ul id="ptx-toc-group-variables-changing" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="variables-changing.html#variables-changing-6" class="internal"><span class="codenumber">4.4</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="variables-changing.html" class="internal"><span class="codenumber">4.5</span> <span class="title">Modifying Variables</span></a></div>
+<ul id="ptx-toc-group-variables-changing" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="variables-changing.html#variables-changing-6" class="internal"><span class="codenumber">4.5</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="variables-initializing.html" class="internal"><span class="codenumber">4.5</span> <span class="title">Initializing Variables</span></a></div>
-<ul id="ptx-toc-group-variables-initializing" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="variables-initializing.html#variables-initializing-6" class="internal"><span class="codenumber">4.5</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="variables-initializing.html" class="internal"><span class="codenumber">4.6</span> <span class="title">Initializing Variables</span></a></div>
+<ul id="ptx-toc-group-variables-initializing" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="variables-initializing.html#variables-initializing-6" class="internal"><span class="codenumber">4.6</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="variables-errors.html" class="internal"><span class="codenumber">4.6</span> <span class="title">Common Variable Errors</span></a></div>
+<div class="toc-title-box"><a href="variables-errors.html" class="internal"><span class="codenumber">4.7</span> <span class="title">Common Variable Errors</span></a></div>
 <ul id="ptx-toc-group-variables-errors" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-errors.html#variables-errors-4" class="internal"><span class="codenumber">4.6.1</span> <span class="title">Fix Me!</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-errors.html#variables-errors-5" class="internal"><span class="codenumber">4.6.2</span> <span class="title">Fix me too...!</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-errors.html#variables-errors-6" class="internal"><span class="codenumber">4.6.3</span> <span class="title">Fix me three...!</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-errors.html#variables-errors-7" class="internal"><span class="codenumber">4.6.4</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-errors.html#variables-errors-4" class="internal"><span class="codenumber">4.7.1</span> <span class="title">Fix Me!</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-errors.html#variables-errors-5" class="internal"><span class="codenumber">4.7.2</span> <span class="title">Fix me too...!</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-errors.html#variables-errors-6" class="internal"><span class="codenumber">4.7.3</span> <span class="title">Fix me three...!</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-errors.html#variables-errors-7" class="internal"><span class="codenumber">4.7.4</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="variables-loop-practice.html" class="internal"><span class="codenumber">4.7</span> <span class="title">Using Variables in Loops: Practice!</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="variables-user-input.html" class="internal"><span class="codenumber">4.8</span> <span class="title">User Input Using <code class="code-inline tex2jax_ignore">scanf()</code></span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="variables-char-datatype.html" class="internal"><span class="codenumber">4.9</span> <span class="title">The <code class="code-inline tex2jax_ignore">char</code> Datatype</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="variables-float-datatype.html" class="internal"><span class="codenumber">4.10</span> <span class="title">The <code class="code-inline tex2jax_ignore">float</code> Datatype</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="variables-loop-practice.html" class="internal"><span class="codenumber">4.8</span> <span class="title">Using Variables in Loops: Practice!</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="variables-user-input.html" class="internal"><span class="codenumber">4.9</span> <span class="title">User Input Using <code class="code-inline tex2jax_ignore">scanf()</code></span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="variables-char-datatype.html" class="internal"><span class="codenumber">4.10</span> <span class="title">The <code class="code-inline tex2jax_ignore">char</code> Datatype</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="variables-float-datatype.html" class="internal"><span class="codenumber">4.11</span> <span class="title">The <code class="code-inline tex2jax_ignore">float</code> Datatype</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="variables-division.html" class="internal"><span class="codenumber">4.11</span> <span class="title">Division</span></a></div>
+<div class="toc-title-box"><a href="variables-division.html" class="internal"><span class="codenumber">4.12</span> <span class="title">Division</span></a></div>
 <ul id="ptx-toc-group-variables-division" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-division.html#variables-division-3" class="internal"><span class="codenumber">4.11.1</span> <span class="title">Intro to Division in C</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-division.html#variables-division-4" class="internal"><span class="codenumber">4.11.2</span> <span class="title">Your Turn!</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-division.html#variables-division-3" class="internal"><span class="codenumber">4.12.1</span> <span class="title">Intro to Division in C</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="variables-division.html#variables-division-4" class="internal"><span class="codenumber">4.12.2</span> <span class="title">Your Turn!</span></a></div></li>
 </ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="variables-summary.html" class="internal"><span class="codenumber">4.12</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="variables-summary.html" class="internal"><span class="codenumber">4.13</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 </ul>
@@ -261,20 +262,21 @@ eBookConfig.enable_chatcodes =  false;
 <div class="toc-title-box"><a href="floats.html" class="internal"><span class="codenumber">6</span> <span class="title">Floats and Converting</span></a></div>
 <ul id="ptx-toc-group-floats" class="structural toc-item-list">
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="floats-intro.html" class="internal"><span class="codenumber">6.1</span> <span class="title">Digital Representation of Floats</span></a></div>
-<ul id="ptx-toc-group-floats-intro" class="structural toc-item-list">
-<li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="floats-intro.html#floats-intro-4" class="internal"><span class="codenumber">6.1</span> <span class="title">Check Your Understanding</span></a></div></li>
-<li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="floats-intro.html#floats-intro-23" class="internal"><span class="codenumber">6.1</span> <span class="title">Check Your Understanding</span></a></div></li>
-</ul>
+<div class="toc-title-box"><a href="floats-intro.html" class="internal"><span class="codenumber">6.1</span> <span class="title">Review: Integer Division</span></a></div>
+<ul id="ptx-toc-group-floats-intro" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="floats-intro.html#floats-intro-4" class="internal"><span class="codenumber">6.1</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="floats-int-to-float.html" class="internal"><span class="codenumber">6.2</span> <span class="title">Converting Integers to Floats</span></a></div>
-<ul id="ptx-toc-group-floats-int-to-float" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="floats-int-to-float.html#floats-int-to-float-4" class="internal"><span class="codenumber">6.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="floats-representation.html" class="internal"><span class="codenumber">6.2</span> <span class="title">Digital Representation of Floats</span></a></div>
+<ul id="ptx-toc-group-floats-representation" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="floats-representation.html#floats-representation-20" class="internal"><span class="codenumber">6.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="floats-float-to-int.html" class="internal"><span class="codenumber">6.3</span> <span class="title">Converting Floats to Integers</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="floats-average.html" class="internal"><span class="codenumber">6.4</span> <span class="title">Averages</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="floats-remainder.html" class="internal"><span class="codenumber">6.5</span> <span class="title">Remainders</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="floats-summary.html" class="internal"><span class="codenumber">6.6</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section">
+<div class="toc-title-box"><a href="floats-int-to-float.html" class="internal"><span class="codenumber">6.3</span> <span class="title">Converting Integers to Floats</span></a></div>
+<ul id="ptx-toc-group-floats-int-to-float" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="floats-int-to-float.html#floats-int-to-float-4" class="internal"><span class="codenumber">6.3</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+</li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="floats-float-to-int.html" class="internal"><span class="codenumber">6.4</span> <span class="title">Converting Floats to Integers</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="floats-average.html" class="internal"><span class="codenumber">6.5</span> <span class="title">Averages</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="floats-remainder.html" class="internal"><span class="codenumber">6.6</span> <span class="title">Remainders</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="floats-summary.html" class="internal"><span class="codenumber">6.7</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-chapter">
@@ -290,7 +292,7 @@ eBookConfig.enable_chatcodes =  false;
 </ul>
 </li>
 <li class="toc-item toc-chapter">
-<div class="toc-title-box"><a href="prefixes.html" class="internal"><span class="codenumber">8</span> <span class="title">Prefixes</span></a></div>
+<div class="toc-title-box"><a href="prefixes.html" class="internal"><span class="codenumber">8</span> <span class="title">Memory-Size Prefixes: Kilo, Mega, Giga</span></a></div>
 <ul id="ptx-toc-group-prefixes" class="structural toc-item-list">
 <li class="toc-item toc-section">
 <div class="toc-title-box"><a href="prefixes-intro.html" class="internal"><span class="codenumber">8.1</span> <span class="title">Prefixes</span></a></div>
@@ -302,7 +304,7 @@ eBookConfig.enable_chatcodes =  false;
 </ul>
 </li>
 <li class="toc-item toc-part">
-<div class="toc-title-box"><a href="part-fundamentals.html" class="internal"><span class="codenumber">III</span> <span class="title">Fundamentals</span></a></div>
+<div class="toc-title-box"><a href="part-fundamentals.html" class="internal"><span class="codenumber">III</span> <span class="title">Control Flow and Functions</span></a></div>
 <ul id="ptx-toc-group-part-fundamentals" class="structural toc-item-list">
 <li class="toc-item toc-chapter">
 <div class="toc-title-box"><a href="branching.html" class="internal"><span class="codenumber">9</span> <span class="title">Branching</span></a></div>
@@ -315,45 +317,46 @@ eBookConfig.enable_chatcodes =  false;
 <div class="toc-title-box"><a href="branching-if-else.html" class="internal"><span class="codenumber">9.2</span> <span class="title"><code class="code-inline tex2jax_ignore">if - else</code> Statements</span></a></div>
 <ul id="ptx-toc-group-branching-if-else" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-if-else.html#branching-if-else-5" class="internal"><span class="codenumber">9.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="branching-operators.html" class="internal"><span class="codenumber">9.3</span> <span class="title">Relational and Equality Operators</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="branching-operators.html" class="internal"><span class="codenumber">9.3</span> <span class="title">Relational and Equality Operators</span></a></div>
-<ul id="ptx-toc-group-branching-operators" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-operators.html#branching-operators-14" class="internal"><span class="codenumber">9.3</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="branching-operators-practice.html" class="internal"><span class="codenumber">9.4</span> <span class="title">Practice: Relational and Equality Operators</span></a></div>
+<ul id="ptx-toc-group-branching-operators-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-operators-practice.html#branching-operators-practice-2" class="internal"><span class="codenumber">9.4</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="branching-if-else-practice.html" class="internal"><span class="codenumber">9.4</span> <span class="title"><code class="code-inline tex2jax_ignore">if - else</code> Statement Practice</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="branching-if-else-practice.html" class="internal"><span class="codenumber">9.5</span> <span class="title"><code class="code-inline tex2jax_ignore">if - else</code> Statement Practice</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="branching-advanced.html" class="internal"><span class="codenumber">9.5</span> <span class="title"><code class="code-inline tex2jax_ignore">if - else-if - else</code> Statements</span></a></div>
-<ul id="ptx-toc-group-branching-advanced" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-advanced.html#branching-advanced-5" class="internal"><span class="codenumber">9.5</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="branching-advanced.html" class="internal"><span class="codenumber">9.6</span> <span class="title"><code class="code-inline tex2jax_ignore">if - else-if - else</code> Statements</span></a></div>
+<ul id="ptx-toc-group-branching-advanced" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-advanced.html#branching-advanced-5" class="internal"><span class="codenumber">9.6</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="branching-multiple.html" class="internal"><span class="codenumber">9.6</span> <span class="title">Combining Multiple Logic Statements</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="branching-multiple.html" class="internal"><span class="codenumber">9.7</span> <span class="title">Combining Multiple Logic Statements</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="branching-practice.html" class="internal"><span class="codenumber">9.7</span> <span class="title">Practice Your Logic Statements!</span></a></div>
+<div class="toc-title-box"><a href="branching-practice.html" class="internal"><span class="codenumber">9.8</span> <span class="title">Practice Your Logic Statements!</span></a></div>
 <ul id="ptx-toc-group-branching-practice" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="branching-practice.html#branching-practice-2" class="internal"><span class="codenumber">9.7.1</span> <span class="title">Days of the Month</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="branching-practice.html#branching-practice-3" class="internal"><span class="codenumber">9.7.2</span> <span class="title">Constant or Vowel?</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="branching-practice.html#branching-practice-2" class="internal"><span class="codenumber">9.8.1</span> <span class="title">Days of the Month</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="branching-practice.html#branching-practice-3" class="internal"><span class="codenumber">9.8.2</span> <span class="title">Constant or Vowel?</span></a></div></li>
 </ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="branching-evaluating.html" class="internal"><span class="codenumber">9.8</span> <span class="title">Evaluating Logic Statements</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="branching-evaluating.html" class="internal"><span class="codenumber">9.9</span> <span class="title">Evaluating Logic Statements</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="branching-operator.html" class="internal"><span class="codenumber">9.9</span> <span class="title">Operator Precedence</span></a></div>
-<ul id="ptx-toc-group-branching-operator" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-operator.html#branching-operator-6" class="internal"><span class="codenumber">9.9</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="branching-operator.html" class="internal"><span class="codenumber">9.10</span> <span class="title">Operator Precedence</span></a></div>
+<ul id="ptx-toc-group-branching-operator" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-operator.html#branching-operator-6" class="internal"><span class="codenumber">9.10</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="branching-flag.html" class="internal"><span class="codenumber">9.10</span> <span class="title">The Idea of a Flag</span></a></div>
-<ul id="ptx-toc-group-branching-flag" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-flag.html#branching-flag-6" class="internal"><span class="codenumber">9.10</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="branching-flag.html" class="internal"><span class="codenumber">9.11</span> <span class="title">The Idea of a Flag</span></a></div>
+<ul id="ptx-toc-group-branching-flag" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-flag.html#branching-flag-6" class="internal"><span class="codenumber">9.11</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="branching-logic.html" class="internal"><span class="codenumber">9.11</span> <span class="title">Logical Expressions in English</span></a></div>
-<ul id="ptx-toc-group-branching-logic" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-logic.html#branching-logic-5" class="internal"><span class="codenumber">9.11</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="branching-logic.html" class="internal"><span class="codenumber">9.12</span> <span class="title">Logical Expressions in English</span></a></div>
+<ul id="ptx-toc-group-branching-logic" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-logic.html#branching-logic-5" class="internal"><span class="codenumber">9.12</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="branching-negate.html" class="internal"><span class="codenumber">9.12</span> <span class="title">Negating Logical Expressions</span></a></div>
-<ul id="ptx-toc-group-branching-negate" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-negate.html#branching-negate-5" class="internal"><span class="codenumber">9.12</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="branching-negate.html" class="internal"><span class="codenumber">9.13</span> <span class="title">Negating Logical Expressions</span></a></div>
+<ul id="ptx-toc-group-branching-negate" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="branching-negate.html#branching-negate-5" class="internal"><span class="codenumber">9.13</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="branching-summary.html" class="internal"><span class="codenumber">9.13</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="branching-summary.html" class="internal"><span class="codenumber">9.14</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-chapter">
-<div class="toc-title-box"><a href="adv-branching.html" class="internal"><span class="codenumber">10</span> <span class="title">Advanced Branching</span></a></div>
+<div class="toc-title-box"><a href="adv-branching.html" class="internal"><span class="codenumber">10</span> <span class="title">Advanced Branching: switch and Nested Loops</span></a></div>
 <ul id="ptx-toc-group-adv-branching" class="structural toc-item-list">
 <li class="toc-item toc-section">
 <div class="toc-title-box"><a href="adv-branching-switch.html" class="internal"><span class="codenumber">10.1</span> <span class="title">The <code class="code-inline tex2jax_ignore">switch()</code> Statement</span></a></div>
@@ -389,86 +392,94 @@ eBookConfig.enable_chatcodes =  false;
 <li class="toc-item toc-chapter">
 <div class="toc-title-box"><a href="format.html" class="internal"><span class="codenumber">11</span> <span class="title">Formatted Input/Output and Program Style</span></a></div>
 <ul id="ptx-toc-group-format" class="structural toc-item-list">
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="format-io.html" class="internal"><span class="codenumber">11.1</span> <span class="title">Formatted Input and Output</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="format-io.html" class="internal"><span class="codenumber">11.1</span> <span class="title">Formatted Input and Output</span></a></div>
-<ul id="ptx-toc-group-format-io" class="structural toc-item-list">
-<li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="format-io.html#format-io-5" class="internal"><span class="codenumber">11.1</span> <span class="title">Check Your Understanding</span></a></div></li>
-<li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="format-io.html#format-io-9" class="internal"><span class="codenumber">11.1</span> <span class="title">Check Your Understanding</span></a></div></li>
-</ul>
+<div class="toc-title-box"><a href="format-io-practice1.html" class="internal"><span class="codenumber">11.2</span> <span class="title">Practice with Format Specifiers</span></a></div>
+<ul id="ptx-toc-group-format-io-practice1" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="format-io-practice1.html#format-io-practice1-2" class="internal"><span class="codenumber">11.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="format-io-formatting.html" class="internal"><span class="codenumber">11.3</span> <span class="title">Formatting Options</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="format-scanf.html" class="internal"><span class="codenumber">11.2</span> <span class="title">Understanding <code class="code-inline tex2jax_ignore">scanf()</code></span></a></div>
-<ul id="ptx-toc-group-format-scanf" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="format-scanf.html#format-scanf-5" class="internal"><span class="codenumber">11.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="format-io-practice2.html" class="internal"><span class="codenumber">11.4</span> <span class="title">Practice with Formatting Options</span></a></div>
+<ul id="ptx-toc-group-format-io-practice2" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="format-io-practice2.html#format-io-practice2-2" class="internal"><span class="codenumber">11.4</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="format-style.html" class="internal"><span class="codenumber">11.3</span> <span class="title">Program Style</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="format-summary.html" class="internal"><span class="codenumber">11.4</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="format-scanf.html" class="internal"><span class="codenumber">11.5</span> <span class="title">Understanding <code class="code-inline tex2jax_ignore">scanf()</code></span></a></div></li>
+<li class="toc-item toc-section">
+<div class="toc-title-box"><a href="format-scanf-practice.html" class="internal"><span class="codenumber">11.6</span> <span class="title">Practice with <code class="code-inline tex2jax_ignore">scanf()</code></span></a></div>
+<ul id="ptx-toc-group-format-scanf-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="format-scanf-practice.html#format-scanf-practice-2" class="internal"><span class="codenumber">11.6</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+</li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="format-style.html" class="internal"><span class="codenumber">11.7</span> <span class="title">Program Style</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="format-summary.html" class="internal"><span class="codenumber">11.8</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-chapter">
 <div class="toc-title-box"><a href="functions.html" class="internal"><span class="codenumber">12</span> <span class="title">Functions and Recursion</span></a></div>
 <ul id="ptx-toc-group-functions" class="structural toc-item-list">
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="functions-single.html" class="internal"><span class="codenumber">12.1</span> <span class="title">Single Functions</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="functions-single.html" class="internal"><span class="codenumber">12.1</span> <span class="title">Single Functions</span></a></div>
-<ul id="ptx-toc-group-functions-single" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="functions-single.html#functions-single-7" class="internal"><span class="codenumber">12.1</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="functions-single-practice.html" class="internal"><span class="codenumber">12.2</span> <span class="title">Practice: Single Functions</span></a></div>
+<ul id="ptx-toc-group-functions-single-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="functions-single-practice.html#functions-single-practice-2" class="internal"><span class="codenumber">12.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+</li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="functions-multiple.html" class="internal"><span class="codenumber">12.3</span> <span class="title">Multiple Functions</span></a></div></li>
+<li class="toc-item toc-section">
+<div class="toc-title-box"><a href="functions-multiple-practice.html" class="internal"><span class="codenumber">12.4</span> <span class="title">Practice: Multiple Functions</span></a></div>
+<ul id="ptx-toc-group-functions-multiple-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="functions-multiple-practice.html#functions-multiple-practice-2" class="internal"><span class="codenumber">12.4</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="functions-multiple.html" class="internal"><span class="codenumber">12.2</span> <span class="title">Multiple Functions</span></a></div>
-<ul id="ptx-toc-group-functions-multiple" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="functions-multiple.html#functions-multiple-5" class="internal"><span class="codenumber">12.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
-</li>
-<li class="toc-item toc-section">
-<div class="toc-title-box"><a href="functions-practice.html" class="internal"><span class="codenumber">12.3</span> <span class="title">Practice Your Functions!</span></a></div>
+<div class="toc-title-box"><a href="functions-practice.html" class="internal"><span class="codenumber">12.5</span> <span class="title">Practice Your Functions!</span></a></div>
 <ul id="ptx-toc-group-functions-practice" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="functions-practice.html#functions-practice-3" class="internal"><span class="codenumber">12.3.1</span> <span class="title">Functions: Your Turn!</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="functions-practice.html#functions-practice-4" class="internal"><span class="codenumber">12.3.2</span> <span class="title">Another One!</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="functions-practice.html#functions-practice-3" class="internal"><span class="codenumber">12.5.1</span> <span class="title">Functions: Your Turn!</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="functions-practice.html#functions-practice-4" class="internal"><span class="codenumber">12.5.2</span> <span class="title">Another One!</span></a></div></li>
 </ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="functions-recursion.html" class="internal"><span class="codenumber">12.4</span> <span class="title">Recursion</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="functions-recursion.html" class="internal"><span class="codenumber">12.6</span> <span class="title">Recursion</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="function-recursion-practice.html" class="internal"><span class="codenumber">12.5</span> <span class="title">Practice Your Recursion!</span></a></div>
+<div class="toc-title-box"><a href="function-recursion-practice.html" class="internal"><span class="codenumber">12.7</span> <span class="title">Practice Your Recursion!</span></a></div>
 <ul id="ptx-toc-group-function-recursion-practice" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="function-recursion-practice.html#function-recursion-practice-3" class="internal"><span class="codenumber">12.5.1</span> <span class="title">Practice 1</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="function-recursion-practice.html#function-recursion-practice-4" class="internal"><span class="codenumber">12.5.2</span> <span class="title">Practice 2</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="function-recursion-practice.html#function-recursion-practice-5" class="internal"><span class="codenumber">12.5.3</span> <span class="title">Practice 3</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="function-recursion-practice.html#function-recursion-practice-3" class="internal"><span class="codenumber">12.7.1</span> <span class="title">Practice 1</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="function-recursion-practice.html#function-recursion-practice-4" class="internal"><span class="codenumber">12.7.2</span> <span class="title">Practice 2</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="function-recursion-practice.html#function-recursion-practice-5" class="internal"><span class="codenumber">12.7.3</span> <span class="title">Practice 3</span></a></div></li>
 </ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="functions-summary.html" class="internal"><span class="codenumber">12.6</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="functions-summary.html" class="internal"><span class="codenumber">12.8</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-chapter">
-<div class="toc-title-box"><a href="loops.html" class="internal"><span class="codenumber">13</span> <span class="title">Loops</span></a></div>
+<div class="toc-title-box"><a href="loops.html" class="internal"><span class="codenumber">13</span> <span class="title">While and Do-While Loops</span></a></div>
 <ul id="ptx-toc-group-loops" class="structural toc-item-list">
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="loops-while.html" class="internal"><span class="codenumber">13.1</span> <span class="title">The <code class="code-inline tex2jax_ignore">while</code> Loop</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="loops-while.html" class="internal"><span class="codenumber">13.1</span> <span class="title">The <code class="code-inline tex2jax_ignore">while</code> Loop</span></a></div>
-<ul id="ptx-toc-group-loops-while" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="loops-while.html#loops-while-7" class="internal"><span class="codenumber">13.1</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="loops-while-practice.html" class="internal"><span class="codenumber">13.2</span> <span class="title">Practice: The while Loop</span></a></div>
+<ul id="ptx-toc-group-loops-while-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="loops-while-practice.html#loops-while-practice-2" class="internal"><span class="codenumber">13.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="loops-for-while.html" class="internal"><span class="codenumber">13.2</span> <span class="title"><code class="code-inline tex2jax_ignore">for</code> vs. <code class="code-inline tex2jax_ignore">while</code> Loops</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="loops-do-while.html" class="internal"><span class="codenumber">13.3</span> <span class="title">The <code class="code-inline tex2jax_ignore">do-while</code>-Loop</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="loops-for-while.html" class="internal"><span class="codenumber">13.3</span> <span class="title"><code class="code-inline tex2jax_ignore">for</code> vs. <code class="code-inline tex2jax_ignore">while</code> Loops</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="loops-do-while.html" class="internal"><span class="codenumber">13.4</span> <span class="title">The <code class="code-inline tex2jax_ignore">do-while</code>-Loop</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="loops-compound.html" class="internal"><span class="codenumber">13.5</span> <span class="title">Compound Assignment Operators</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="loops-compound.html" class="internal"><span class="codenumber">13.4</span> <span class="title">Compound Assignment Operators</span></a></div>
-<ul id="ptx-toc-group-loops-compound" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="loops-compound.html#loops-compound-12" class="internal"><span class="codenumber">13.4</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
-</li>
-<li class="toc-item toc-section">
-<div class="toc-title-box"><a href="loops-operators.html" class="internal"><span class="codenumber">13.5</span> <span class="title">Increment / Decrement Operators</span></a></div>
-<ul id="ptx-toc-group-loops-operators" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="loops-operators.html#loops-operators-11" class="internal"><span class="codenumber">13.5</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="loops-compound-practice.html" class="internal"><span class="codenumber">13.6</span> <span class="title">Practice: Compound Assignment Operators</span></a></div>
+<ul id="ptx-toc-group-loops-compound-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="loops-compound-practice.html#loops-compound-practice-2" class="internal"><span class="codenumber">13.6</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="loops-operators-practice.html" class="internal"><span class="codenumber">13.6</span> <span class="title">Increment / Decrement Practice</span></a></div>
+<div class="toc-title-box"><a href="loops-operators.html" class="internal"><span class="codenumber">13.7</span> <span class="title">Increment / Decrement Operators</span></a></div>
+<ul id="ptx-toc-group-loops-operators" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="loops-operators.html#loops-operators-11" class="internal"><span class="codenumber">13.7</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+</li>
+<li class="toc-item toc-section">
+<div class="toc-title-box"><a href="loops-operators-practice.html" class="internal"><span class="codenumber">13.8</span> <span class="title">Increment / Decrement Practice</span></a></div>
 <ul id="ptx-toc-group-loops-operators-practice" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-operators-practice.html#loops-operators-practice-2" class="internal"><span class="codenumber">13.6.1</span> <span class="title">Increment Practice</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-operators-practice.html#loops-operators-practice-3" class="internal"><span class="codenumber">13.6.2</span> <span class="title">Predict the Result</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-operators-practice.html#loops-operators-practice-4" class="internal"><span class="codenumber">13.6.3</span> <span class="title">Try It Out!</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-operators-practice.html#loops-operators-practice-2" class="internal"><span class="codenumber">13.8.1</span> <span class="title">Increment Practice</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-operators-practice.html#loops-operators-practice-3" class="internal"><span class="codenumber">13.8.2</span> <span class="title">Predict the Result</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-operators-practice.html#loops-operators-practice-4" class="internal"><span class="codenumber">13.8.3</span> <span class="title">Try It Out!</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="loops-fun.html" class="internal"><span class="codenumber">13.7</span> <span class="title">Fun With Loops!</span></a></div>
+<div class="toc-title-box"><a href="loops-fun.html" class="internal"><span class="codenumber">13.9</span> <span class="title">Fun With Loops!</span></a></div>
 <ul id="ptx-toc-group-loops-fun" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-fun.html#loops-fun-3" class="internal"><span class="codenumber">13.7.1</span> <span class="title">Option 1</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-fun.html#loops-fun-4" class="internal"><span class="codenumber">13.7.2</span> <span class="title">Option 2</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-fun.html#loops-fun-5" class="internal"><span class="codenumber">13.7.3</span> <span class="title">Option 3</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-fun.html#loops-fun-6" class="internal"><span class="codenumber">13.7.4</span> <span class="title">Option 4</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-fun.html#loops-fun-3" class="internal"><span class="codenumber">13.9.1</span> <span class="title">Option 1</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-fun.html#loops-fun-4" class="internal"><span class="codenumber">13.9.2</span> <span class="title">Option 2</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-fun.html#loops-fun-5" class="internal"><span class="codenumber">13.9.3</span> <span class="title">Option 3</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="loops-fun.html#loops-fun-6" class="internal"><span class="codenumber">13.9.4</span> <span class="title">Option 4</span></a></div></li>
 </ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="loops-summary.html" class="internal"><span class="codenumber">13.8</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="loops-summary.html" class="internal"><span class="codenumber">13.10</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 </ul>
@@ -477,7 +488,7 @@ eBookConfig.enable_chatcodes =  false;
 <div class="toc-title-box"><a href="part-server.html" class="internal"><span class="codenumber">IV</span> <span class="title">Server-Based Coding</span></a></div>
 <ul class="structural toc-item-list contains-active" id="ptx-toc-group-part-server">
 <li class="toc-item toc-chapter">
-<div class="toc-title-box"><a href="linux.html" class="internal"><span class="codenumber">14</span> <span class="title">Linux</span></a></div>
+<div class="toc-title-box"><a href="linux.html" class="internal"><span class="codenumber">14</span> <span class="title">The Linux Command Line</span></a></div>
 <ul id="ptx-toc-group-linux" class="structural toc-item-list">
 <li class="toc-item toc-section">
 <div class="toc-title-box"><a href="linux-editor.html" class="internal"><span class="codenumber">14.1</span> <span class="title">Install Software On Your Computer</span></a></div>
@@ -517,12 +528,13 @@ eBookConfig.enable_chatcodes =  false;
 <li class="toc-item toc-section"><div class="toc-title-box"><a href="linux-move-file.html" class="internal"><span class="codenumber">14.8</span> <span class="title">Move a File</span></a></div></li>
 <li class="toc-item toc-section"><div class="toc-title-box"><a href="linux-copy-file.html" class="internal"><span class="codenumber">14.9</span> <span class="title">Copy a File</span></a></div></li>
 <li class="toc-item toc-section"><div class="toc-title-box"><a href="linux-compile.html" class="internal"><span class="codenumber">14.10</span> <span class="title">Compiling Code</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="linux-languages.html" class="internal"><span class="codenumber">14.11</span> <span class="title">Computer Languages</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="linux-languages.html" class="internal"><span class="codenumber">14.11</span> <span class="title">Computer Languages</span></a></div>
-<ul id="ptx-toc-group-linux-languages" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="linux-languages.html#linux-languages-5" class="internal"><span class="codenumber">14.11</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="linux-languages-practice.html" class="internal"><span class="codenumber">14.12</span> <span class="title">Practice: Computer Languages</span></a></div>
+<ul id="ptx-toc-group-linux-languages-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="linux-languages-practice.html#linux-languages-practice-2" class="internal"><span class="codenumber">14.12</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="linux-cheat-sheet.html" class="internal"><span class="codenumber">14.12</span> <span class="title">List of Linux Commands</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="linux-summary.html" class="internal"><span class="codenumber">14.13</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="linux-cheat-sheet.html" class="internal"><span class="codenumber">14.13</span> <span class="title">List of Linux Commands</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="linux-summary.html" class="internal"><span class="codenumber">14.14</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-chapter contains-active">
@@ -561,34 +573,35 @@ eBookConfig.enable_chatcodes =  false;
 </li>
 <li class="toc-item toc-section">
 <div class="toc-title-box"><a href="debug-conditional.html" class="internal"><span class="codenumber">16.3</span> <span class="title">Conditional Compilation</span></a></div>
-<ul id="ptx-toc-group-debug-conditional" class="structural toc-item-list">
-<li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="debug-conditional.html#debug-conditional-12" class="internal"><span class="codenumber">16.3</span> <span class="title">Check Your Understanding</span></a></div></li>
-<li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="debug-conditional.html#debug-conditional-16" class="internal"><span class="codenumber">16.3</span> <span class="title">Check Your Understanding</span></a></div></li>
-</ul>
+<ul id="ptx-toc-group-debug-conditional" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="debug-conditional.html#debug-conditional-12" class="internal"><span class="codenumber">16.3</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="debug-practice.html" class="internal"><span class="codenumber">16.4</span> <span class="title">Debugging Practice</span></a></div>
+<div class="toc-title-box"><a href="debug-conditional-practice.html" class="internal"><span class="codenumber">16.4</span> <span class="title">Practice: Conditional Compilation</span></a></div>
+<ul id="ptx-toc-group-debug-conditional-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="debug-conditional-practice.html#debug-conditional-practice-2" class="internal"><span class="codenumber">16.4</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+</li>
+<li class="toc-item toc-section">
+<div class="toc-title-box"><a href="debug-practice.html" class="internal"><span class="codenumber">16.5</span> <span class="title">Debugging Practice</span></a></div>
 <ul id="ptx-toc-group-debug-practice" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="debug-practice.html#debug-practice-3" class="internal"><span class="codenumber">16.4.1</span> <span class="title">Fix Me: 1</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="debug-practice.html#debug-practice-4" class="internal"><span class="codenumber">16.4.2</span> <span class="title">Fix Me: 2</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="debug-practice.html#debug-practice-5" class="internal"><span class="codenumber">16.4.3</span> <span class="title">Fix Me: 3</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="debug-practice.html#debug-practice-3" class="internal"><span class="codenumber">16.5.1</span> <span class="title">Fix Me: 1</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="debug-practice.html#debug-practice-4" class="internal"><span class="codenumber">16.5.2</span> <span class="title">Fix Me: 2</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="debug-practice.html#debug-practice-5" class="internal"><span class="codenumber">16.5.3</span> <span class="title">Fix Me: 3</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="debug-test.html" class="internal"><span class="codenumber">16.5</span> <span class="title">Test Your Knowledge!</span></a></div>
-<ul id="ptx-toc-group-debug-test" class="structural toc-item-list"><li class="toc-item toc-subsection"><div class="toc-title-box"><a href="debug-test.html#debug-test-3" class="internal"><span class="codenumber">16.5.1</span> <span class="title">Try It Out!</span></a></div></li></ul>
+<div class="toc-title-box"><a href="debug-test.html" class="internal"><span class="codenumber">16.6</span> <span class="title">Test Your Knowledge!</span></a></div>
+<ul id="ptx-toc-group-debug-test" class="structural toc-item-list"><li class="toc-item toc-subsection"><div class="toc-title-box"><a href="debug-test.html#debug-test-3" class="internal"><span class="codenumber">16.6.1</span> <span class="title">Try It Out!</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="debug-barcode.html" class="internal"><span class="codenumber">16.6</span> <span class="title">Back to File I/O</span></a></div>
-<ul id="ptx-toc-group-debug-barcode" class="structural toc-item-list"><li class="toc-item toc-subsection"><div class="toc-title-box"><a href="debug-barcode.html#debug-barcode-9" class="internal"><span class="codenumber">16.6.1</span> <span class="title">Optional: Make it fancier!</span></a></div></li></ul>
+<div class="toc-title-box"><a href="debug-barcode.html" class="internal"><span class="codenumber">16.7</span> <span class="title">Back to File I/O</span></a></div>
+<ul id="ptx-toc-group-debug-barcode" class="structural toc-item-list"><li class="toc-item toc-subsection"><div class="toc-title-box"><a href="debug-barcode.html#debug-barcode-9" class="internal"><span class="codenumber">16.7.1</span> <span class="title">Optional: Make it fancier!</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="debug-summary.html" class="internal"><span class="codenumber">16.7</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="debug-summary.html" class="internal"><span class="codenumber">16.8</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toc-item toc-part">
-<div class="toc-title-box"><a href="part-advanced.html" class="internal"><span class="codenumber">V</span> <span class="title">Advanced Concepts</span></a></div>
+<div class="toc-title-box"><a href="part-advanced.html" class="internal"><span class="codenumber">V</span> <span class="title">Arrays, Pointers, and Memory Management</span></a></div>
 <ul id="ptx-toc-group-part-advanced" class="structural toc-item-list">
 <li class="toc-item toc-chapter">
 <div class="toc-title-box"><a href="array.html" class="internal"><span class="codenumber">17</span> <span class="title">Arrays</span></a></div>
@@ -604,100 +617,106 @@ eBookConfig.enable_chatcodes =  false;
 <div class="toc-title-box"><a href="array-other.html" class="internal"><span class="codenumber">17.2</span> <span class="title">Arrays of Other Data Types</span></a></div>
 <ul id="ptx-toc-group-array-other" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="array-other.html#array-other-5" class="internal"><span class="codenumber">17.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="array-initialize.html" class="internal"><span class="codenumber">17.3</span> <span class="title">Initializing Arrays</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="array-initialize.html" class="internal"><span class="codenumber">17.3</span> <span class="title">Initializing Arrays</span></a></div>
-<ul id="ptx-toc-group-array-initialize" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="array-initialize.html#array-initialize-5" class="internal"><span class="codenumber">17.3</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="array-initialize-practice.html" class="internal"><span class="codenumber">17.4</span> <span class="title">Practice: Initializing Arrays</span></a></div>
+<ul id="ptx-toc-group-array-initialize-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="array-initialize-practice.html#array-initialize-practice-2" class="internal"><span class="codenumber">17.4</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="array-practice.html" class="internal"><span class="codenumber">17.4</span> <span class="title">Array Practice</span></a></div>
+<div class="toc-title-box"><a href="array-practice.html" class="internal"><span class="codenumber">17.5</span> <span class="title">Array Practice</span></a></div>
 <ul id="ptx-toc-group-array-practice" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-practice.html#array-practice-3" class="internal"><span class="codenumber">17.4.1</span> <span class="title">Option 1</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-practice.html#array-practice-4" class="internal"><span class="codenumber">17.4.2</span> <span class="title">Option 2</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-practice.html#array-practice-5" class="internal"><span class="codenumber">17.4.3</span> <span class="title">Option 3</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-practice.html#array-practice-3" class="internal"><span class="codenumber">17.5.1</span> <span class="title">Option 1</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-practice.html#array-practice-4" class="internal"><span class="codenumber">17.5.2</span> <span class="title">Option 2</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-practice.html#array-practice-5" class="internal"><span class="codenumber">17.5.3</span> <span class="title">Option 3</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="array-advanced.html" class="internal"><span class="codenumber">17.5</span> <span class="title">Advanced Array Practice</span></a></div>
+<div class="toc-title-box"><a href="array-advanced.html" class="internal"><span class="codenumber">17.6</span> <span class="title">Advanced Array Practice</span></a></div>
 <ul id="ptx-toc-group-array-advanced" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-advanced.html#array-advanced-3" class="internal"><span class="codenumber">17.5.1</span> <span class="title">Option 1</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-advanced.html#array-advanced-4" class="internal"><span class="codenumber">17.5.2</span> <span class="title">Option 2</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-advanced.html#array-advanced-5" class="internal"><span class="codenumber">17.5.3</span> <span class="title">Option 3</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-advanced.html#array-advanced-3" class="internal"><span class="codenumber">17.6.1</span> <span class="title">Option 1</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-advanced.html#array-advanced-4" class="internal"><span class="codenumber">17.6.2</span> <span class="title">Option 2</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="array-advanced.html#array-advanced-5" class="internal"><span class="codenumber">17.6.3</span> <span class="title">Option 3</span></a></div></li>
 </ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="array-summary.html" class="internal"><span class="codenumber">17.6</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="array-summary.html" class="internal"><span class="codenumber">17.7</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-chapter">
-<div class="toc-title-box"><a href="memory.html" class="internal"><span class="codenumber">18</span> <span class="title">Memory</span></a></div>
+<div class="toc-title-box"><a href="memory.html" class="internal"><span class="codenumber">18</span> <span class="title">The Stack, Scope, and Numerical Errors</span></a></div>
 <ul id="ptx-toc-group-memory" class="structural toc-item-list">
 <li class="toc-item toc-section">
 <div class="toc-title-box"><a href="memory-space.html" class="internal"><span class="codenumber">18.1</span> <span class="title">Space Needed to Store Variables</span></a></div>
 <ul id="ptx-toc-group-memory-space" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="memory-space.html#memory-space-5" class="internal"><span class="codenumber">18.1</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-stack.html" class="internal"><span class="codenumber">18.2</span> <span class="title">The Stack</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-functions.html" class="internal"><span class="codenumber">18.3</span> <span class="title">Functions And The Stack</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="memory-functions.html" class="internal"><span class="codenumber">18.3</span> <span class="title">Functions And The Stack</span></a></div>
-<ul id="ptx-toc-group-memory-functions" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="memory-functions.html#memory-functions-6" class="internal"><span class="codenumber">18.3</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="memory-functions-practice.html" class="internal"><span class="codenumber">18.4</span> <span class="title">Practice: Functions And The Stack</span></a></div>
+<ul id="ptx-toc-group-memory-functions-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="memory-functions-practice.html#memory-functions-practice-2" class="internal"><span class="codenumber">18.4</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="memory-scope.html" class="internal"><span class="codenumber">18.4</span> <span class="title">The Scope of a Variable</span></a></div>
+<div class="toc-title-box"><a href="memory-scope.html" class="internal"><span class="codenumber">18.5</span> <span class="title">The Scope of a Variable</span></a></div>
 <ul id="ptx-toc-group-memory-scope" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="memory-scope.html#memory-scope-5" class="internal"><span class="codenumber">18.4.1</span> <span class="title">It Gets Worse...</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="memory-scope.html#memory-scope-6" class="internal"><span class="codenumber">18.4.2</span> <span class="title">Okay... Here is the <code class="code-inline tex2jax_ignore">Run</code> button...</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="memory-scope.html#memory-scope-5" class="internal"><span class="codenumber">18.5.1</span> <span class="title">It Gets Worse...</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="memory-scope.html#memory-scope-6" class="internal"><span class="codenumber">18.5.2</span> <span class="title">Okay... Here is the <code class="code-inline tex2jax_ignore">Run</code> button...</span></a></div></li>
 </ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-bad-variables.html" class="internal"><span class="codenumber">18.5</span> <span class="title">Bad Variable Names</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-update.html" class="internal"><span class="codenumber">18.6</span> <span class="title">First Look at Modifying Arrays with Functions</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-arrays.html" class="internal"><span class="codenumber">18.7</span> <span class="title">Practice Modifying Arrays with Functions</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-roundoff.html" class="internal"><span class="codenumber">18.8</span> <span class="title">Roundoff Error</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-rounding.html" class="internal"><span class="codenumber">18.9</span> <span class="title">Rounding in C</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-rounding-practice.html" class="internal"><span class="codenumber">18.10</span> <span class="title">Practice Your Rounding!</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-overflow.html" class="internal"><span class="codenumber">18.11</span> <span class="title">Overflow</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-summary.html" class="internal"><span class="codenumber">18.12</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-bad-variables.html" class="internal"><span class="codenumber">18.6</span> <span class="title">Bad Variable Names</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-update.html" class="internal"><span class="codenumber">18.7</span> <span class="title">First Look at Modifying Arrays with Functions</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-arrays.html" class="internal"><span class="codenumber">18.8</span> <span class="title">Practice Modifying Arrays with Functions</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-roundoff.html" class="internal"><span class="codenumber">18.9</span> <span class="title">Roundoff Error</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-rounding.html" class="internal"><span class="codenumber">18.10</span> <span class="title">Rounding in C</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-rounding-practice.html" class="internal"><span class="codenumber">18.11</span> <span class="title">Practice Your Rounding!</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-overflow.html" class="internal"><span class="codenumber">18.12</span> <span class="title">Overflow</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="memory-summary.html" class="internal"><span class="codenumber">18.13</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-chapter">
 <div class="toc-title-box"><a href="pointers.html" class="internal"><span class="codenumber">19</span> <span class="title">Pointers</span></a></div>
 <ul id="ptx-toc-group-pointers" class="structural toc-item-list">
 <li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-address.html" class="internal"><span class="codenumber">19.1</span> <span class="title">The Address of a Variable</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-dereference.html" class="internal"><span class="codenumber">19.2</span> <span class="title">Dereferencing a Pointer</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="pointers-dereference.html" class="internal"><span class="codenumber">19.2</span> <span class="title">Dereferencing a Pointer</span></a></div>
-<ul id="ptx-toc-group-pointers-dereference" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="pointers-dereference.html#pointers-dereference-5" class="internal"><span class="codenumber">19.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="pointers-dereference-practice.html" class="internal"><span class="codenumber">19.3</span> <span class="title">Practice: Dereferencing a Pointer</span></a></div>
+<ul id="ptx-toc-group-pointers-dereference-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="pointers-dereference-practice.html#pointers-dereference-practice-2" class="internal"><span class="codenumber">19.3</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+</li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-example.html" class="internal"><span class="codenumber">19.4</span> <span class="title">Pointer Example</span></a></div></li>
+<li class="toc-item toc-section">
+<div class="toc-title-box"><a href="pointers-example-practice.html" class="internal"><span class="codenumber">19.5</span> <span class="title">Practice: Pointer Example</span></a></div>
+<ul id="ptx-toc-group-pointers-example-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="pointers-example-practice.html#pointers-example-practice-2" class="internal"><span class="codenumber">19.5</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+</li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-intro-frac-calc.html" class="internal"><span class="codenumber">19.6</span> <span class="title">Intro to the Fraction Calculator</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-design.html" class="internal"><span class="codenumber">19.7</span> <span class="title">Top-Down Design</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-bottom-up-testing.html" class="internal"><span class="codenumber">19.8</span> <span class="title">Bottom-Up Testing</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-top-down-testing.html" class="internal"><span class="codenumber">19.9</span> <span class="title">Top-Down Testing</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-frac-calc.html" class="internal"><span class="codenumber">19.10</span> <span class="title">The Fraction Calculator</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-arrays.html" class="internal"><span class="codenumber">19.11</span> <span class="title">Arrays and Pointers</span></a></div></li>
+<li class="toc-item toc-section">
+<div class="toc-title-box"><a href="pointers-arrays-practice.html" class="internal"><span class="codenumber">19.12</span> <span class="title">Practice: Arrays and Pointers</span></a></div>
+<ul id="ptx-toc-group-pointers-arrays-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="pointers-arrays-practice.html#pointers-arrays-practice-2" class="internal"><span class="codenumber">19.12</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+</li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-functions.html" class="internal"><span class="codenumber">19.13</span> <span class="title">Passing Arrays to Functions</span></a></div></li>
+<li class="toc-item toc-section">
+<div class="toc-title-box"><a href="pointers-functions-quiz.html" class="internal"><span class="codenumber">19.14</span> <span class="title">Practice: Passing Arrays to Functions</span></a></div>
+<ul id="ptx-toc-group-pointers-functions-quiz" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="pointers-functions-quiz.html#pointers-functions-quiz-2" class="internal"><span class="codenumber">19.14</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="pointers-example.html" class="internal"><span class="codenumber">19.3</span> <span class="title">Pointer Example</span></a></div>
-<ul id="ptx-toc-group-pointers-example" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="pointers-example.html#pointers-example-5" class="internal"><span class="codenumber">19.3</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
-</li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-intro-frac-calc.html" class="internal"><span class="codenumber">19.4</span> <span class="title">Intro to the Fraction Calculator</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-design.html" class="internal"><span class="codenumber">19.5</span> <span class="title">Top-Down Design</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-bottom-up-testing.html" class="internal"><span class="codenumber">19.6</span> <span class="title">Bottom-Up Testing</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-top-down-testing.html" class="internal"><span class="codenumber">19.7</span> <span class="title">Top-Down Testing</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-frac-calc.html" class="internal"><span class="codenumber">19.8</span> <span class="title">The Fraction Calculator</span></a></div></li>
-<li class="toc-item toc-section">
-<div class="toc-title-box"><a href="pointers-arrays.html" class="internal"><span class="codenumber">19.9</span> <span class="title">Arrays and Pointers</span></a></div>
-<ul id="ptx-toc-group-pointers-arrays" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="pointers-arrays.html#pointers-arrays-11" class="internal"><span class="codenumber">19.9</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
-</li>
-<li class="toc-item toc-section">
-<div class="toc-title-box"><a href="pointers-functions.html" class="internal"><span class="codenumber">19.10</span> <span class="title">Passing Arrays to Functions</span></a></div>
-<ul id="ptx-toc-group-pointers-functions" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="pointers-functions.html#pointers-functions-5" class="internal"><span class="codenumber">19.10</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
-</li>
-<li class="toc-item toc-section">
-<div class="toc-title-box"><a href="pointers-functions-practice.html" class="internal"><span class="codenumber">19.11</span> <span class="title">Practice Passing Arrays to Functions</span></a></div>
+<div class="toc-title-box"><a href="pointers-functions-practice.html" class="internal"><span class="codenumber">19.15</span> <span class="title">Practice Passing Arrays to Functions</span></a></div>
 <ul id="ptx-toc-group-pointers-functions-practice" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-functions-practice.html#pointers-functions-practice-3" class="internal"><span class="codenumber">19.11.1</span> <span class="title">Option 1</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-functions-practice.html#pointers-functions-practice-4" class="internal"><span class="codenumber">19.11.2</span> <span class="title">Option 2</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-functions-practice.html#pointers-functions-practice-5" class="internal"><span class="codenumber">19.11.3</span> <span class="title">Option 3</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-functions-practice.html#pointers-functions-practice-3" class="internal"><span class="codenumber">19.15.1</span> <span class="title">Option 1</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-functions-practice.html#pointers-functions-practice-4" class="internal"><span class="codenumber">19.15.2</span> <span class="title">Option 2</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-functions-practice.html#pointers-functions-practice-5" class="internal"><span class="codenumber">19.15.3</span> <span class="title">Option 3</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="pointers-arithmetic.html" class="internal"><span class="codenumber">19.12</span> <span class="title">Arrays, Functions, and Pointer Arithmetic</span></a></div>
+<div class="toc-title-box"><a href="pointers-arithmetic.html" class="internal"><span class="codenumber">19.16</span> <span class="title">Arrays, Functions, and Pointer Arithmetic</span></a></div>
 <ul id="ptx-toc-group-pointers-arithmetic" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-arithmetic.html#pointers-arithmetic-3" class="internal"><span class="codenumber">19.12.1</span> <span class="title">Option 1</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-arithmetic.html#pointers-arithmetic-4" class="internal"><span class="codenumber">19.12.2</span> <span class="title">Option 2</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-arithmetic.html#pointers-arithmetic-5" class="internal"><span class="codenumber">19.12.3</span> <span class="title">Option 3</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-arithmetic.html#pointers-arithmetic-3" class="internal"><span class="codenumber">19.16.1</span> <span class="title">Option 1</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-arithmetic.html#pointers-arithmetic-4" class="internal"><span class="codenumber">19.16.2</span> <span class="title">Option 2</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="pointers-arithmetic.html#pointers-arithmetic-5" class="internal"><span class="codenumber">19.16.3</span> <span class="title">Option 3</span></a></div></li>
 </ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-summary.html" class="internal"><span class="codenumber">19.13</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="pointers-summary.html" class="internal"><span class="codenumber">19.17</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-chapter">
@@ -715,7 +734,7 @@ eBookConfig.enable_chatcodes =  false;
 </ul>
 </li>
 <li class="toc-item toc-chapter">
-<div class="toc-title-box"><a href="malloc.html" class="internal"><span class="codenumber">21</span> <span class="title">Computer Memory Management</span></a></div>
+<div class="toc-title-box"><a href="malloc.html" class="internal"><span class="codenumber">21</span> <span class="title">Dynamic Memory Allocation: malloc() and free()</span></a></div>
 <ul id="ptx-toc-group-malloc" class="structural toc-item-list">
 <li class="toc-item toc-section">
 <div class="toc-title-box"><a href="malloc-intro.html" class="internal"><span class="codenumber">21.1</span> <span class="title"><code class="code-inline tex2jax_ignore">malloc()</code> - Dynamically Allocating Memory</span></a></div>
@@ -750,43 +769,46 @@ eBookConfig.enable_chatcodes =  false;
 <li class="toc-item toc-chapter">
 <div class="toc-title-box"><a href="sortsearch.html" class="internal"><span class="codenumber">22</span> <span class="title">Sorting and Searching</span></a></div>
 <ul id="ptx-toc-group-sortsearch" class="structural toc-item-list">
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-linear.html" class="internal"><span class="codenumber">22.1</span> <span class="title">Linear Search</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="sortsearch-linear.html" class="internal"><span class="codenumber">22.1</span> <span class="title">Linear Search</span></a></div>
-<ul id="ptx-toc-group-sortsearch-linear" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="sortsearch-linear.html#sortsearch-linear-7" class="internal"><span class="codenumber">22.1</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="sortsearch-linear-quiz.html" class="internal"><span class="codenumber">22.2</span> <span class="title">Practice: Linear Search</span></a></div>
+<ul id="ptx-toc-group-sortsearch-linear-quiz" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="sortsearch-linear-quiz.html#sortsearch-linear-quiz-2" class="internal"><span class="codenumber">22.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-bisection.html" class="internal"><span class="codenumber">22.3</span> <span class="title">Bisection Search</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="sortsearch-bisection.html" class="internal"><span class="codenumber">22.2</span> <span class="title">Bisection Search</span></a></div>
-<ul id="ptx-toc-group-sortsearch-bisection" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="sortsearch-bisection.html#sortsearch-bisection-6" class="internal"><span class="codenumber">22.2</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="sortsearch-bisection-practice.html" class="internal"><span class="codenumber">22.4</span> <span class="title">Practice: Bisection Search</span></a></div>
+<ul id="ptx-toc-group-sortsearch-bisection-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="sortsearch-bisection-practice.html#sortsearch-bisection-practice-2" class="internal"><span class="codenumber">22.4</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-linear-practice.html" class="internal"><span class="codenumber">22.3</span> <span class="title">Linear Search Practice</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-linear-practice.html" class="internal"><span class="codenumber">22.5</span> <span class="title">Linear Search Practice</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-bubble.html" class="internal"><span class="codenumber">22.6</span> <span class="title">Bubble Sort</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="sortsearch-bubble.html" class="internal"><span class="codenumber">22.4</span> <span class="title">Bubble Sort</span></a></div>
-<ul id="ptx-toc-group-sortsearch-bubble" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="sortsearch-bubble.html#sortsearch-bubble-8" class="internal"><span class="codenumber">22.4</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="sortsearch-bubble-practice.html" class="internal"><span class="codenumber">22.7</span> <span class="title">Practice: Bubble Sort</span></a></div>
+<ul id="ptx-toc-group-sortsearch-bubble-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="sortsearch-bubble-practice.html#sortsearch-bubble-practice-2" class="internal"><span class="codenumber">22.7</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-selection.html" class="internal"><span class="codenumber">22.5</span> <span class="title">Selection Sort</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-insertiion.html" class="internal"><span class="codenumber">22.6</span> <span class="title">Insertion Sort</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="quicksort-algorithm.html" class="internal"><span class="codenumber">22.7</span> <span class="title">The QuickSort Algorithm</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="quicksort-debug.html" class="internal"><span class="codenumber">22.8</span> <span class="title">Debugging QuickSort</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="quicksort-characters.html" class="internal"><span class="codenumber">22.9</span> <span class="title">QuickSort with Characters, and a Smarter Pivot</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-selection.html" class="internal"><span class="codenumber">22.8</span> <span class="title">Selection Sort</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-insertiion.html" class="internal"><span class="codenumber">22.9</span> <span class="title">Insertion Sort</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="quicksort-algorithm.html" class="internal"><span class="codenumber">22.10</span> <span class="title">The QuickSort Algorithm</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="quicksort-debug.html" class="internal"><span class="codenumber">22.11</span> <span class="title">Debugging QuickSort</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="quicksort-characters.html" class="internal"><span class="codenumber">22.12</span> <span class="title">QuickSort with Characters, and a Smarter Pivot</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="quicksort-runtime-analysis.html" class="internal"><span class="codenumber">22.10</span> <span class="title">Runtime Analysis and Big-O Notation</span></a></div>
-<ul id="ptx-toc-group-quicksort-runtime-analysis" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="quicksort-runtime-analysis.html#quicksort-runtime-analysis-18" class="internal"><span class="codenumber">22.10</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="quicksort-runtime-analysis.html" class="internal"><span class="codenumber">22.13</span> <span class="title">Runtime Analysis and Big-O Notation</span></a></div>
+<ul id="ptx-toc-group-quicksort-runtime-analysis" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="quicksort-runtime-analysis.html#quicksort-runtime-analysis-18" class="internal"><span class="codenumber">22.13</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-sort-practice.html" class="internal"><span class="codenumber">22.11</span> <span class="title">Sorting Practice</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-parallel-arrays.html" class="internal"><span class="codenumber">22.12</span> <span class="title">Sorting Parallel Arrays</span></a></div></li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-arrays.html" class="internal"><span class="codenumber">22.13</span> <span class="title">Sort Arrays</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-sort-practice.html" class="internal"><span class="codenumber">22.14</span> <span class="title">Sorting Practice</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-parallel-arrays.html" class="internal"><span class="codenumber">22.15</span> <span class="title">Sorting Parallel Arrays</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-arrays.html" class="internal"><span class="codenumber">22.16</span> <span class="title">Sort Arrays</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="sortsearch-implementing.html" class="internal"><span class="codenumber">22.14</span> <span class="title">Implementing Sort Arrays</span></a></div>
+<div class="toc-title-box"><a href="sortsearch-implementing.html" class="internal"><span class="codenumber">22.17</span> <span class="title">Implementing Sort Arrays</span></a></div>
 <ul id="ptx-toc-group-sortsearch-implementing" class="structural toc-item-list">
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="sortsearch-implementing.html#sortsearch-implementing-2" class="internal"><span class="codenumber">22.14.1</span> <span class="title">Printing</span></a></div></li>
-<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="sortsearch-implementing.html#sortsearch-implementing-3" class="internal"><span class="codenumber">22.14.2</span> <span class="title">Sorting</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="sortsearch-implementing.html#sortsearch-implementing-2" class="internal"><span class="codenumber">22.17.1</span> <span class="title">Printing</span></a></div></li>
+<li class="toc-item toc-subsection"><div class="toc-title-box"><a href="sortsearch-implementing.html#sortsearch-implementing-3" class="internal"><span class="codenumber">22.17.2</span> <span class="title">Sorting</span></a></div></li>
 </ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-summary.html" class="internal"><span class="codenumber">22.15</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="sortsearch-summary.html" class="internal"><span class="codenumber">22.18</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-chapter">
-<div class="toc-title-box"><a href="la2.html" class="internal"><span class="codenumber">23</span> <span class="title">Long Assignment 2</span></a></div>
+<div class="toc-title-box"><a href="la2.html" class="internal"><span class="codenumber">23</span> <span class="title">Long Assignment 2: A Menu-Driven Program</span></a></div>
 <ul id="ptx-toc-group-la2" class="structural toc-item-list"><li class="toc-item toc-section"><div class="toc-title-box"><a href="la2-menu.html" class="internal"><span class="codenumber">23.1</span> <span class="title">LA2: Menu Selection</span></a></div></li></ul>
 </li>
 <li class="toc-item toc-chapter">
@@ -812,7 +834,7 @@ eBookConfig.enable_chatcodes =  false;
 </ul>
 </li>
 <li class="toc-item toc-part">
-<div class="toc-title-box"><a href="part-enriched.html" class="internal"><span class="codenumber">VI</span> <span class="title">Enriched Concepts</span></a></div>
+<div class="toc-title-box"><a href="part-enriched.html" class="internal"><span class="codenumber">VI</span> <span class="title">Structures, Linked Lists, and Libraries</span></a></div>
 <ul id="ptx-toc-group-part-enriched" class="structural toc-item-list">
 <li class="toc-item toc-chapter">
 <div class="toc-title-box"><a href="structures.html" class="internal"><span class="codenumber">25</span> <span class="title">Structures</span></a></div>
@@ -849,11 +871,12 @@ eBookConfig.enable_chatcodes =  false;
 </li>
 </ul>
 </li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="structures-pointers.html" class="internal"><span class="codenumber">25.5</span> <span class="title">Structures and Pointers</span></a></div></li>
 <li class="toc-item toc-section">
-<div class="toc-title-box"><a href="structures-pointers.html" class="internal"><span class="codenumber">25.5</span> <span class="title">Structures and Pointers</span></a></div>
-<ul id="ptx-toc-group-structures-pointers" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="structures-pointers.html#structures-pointers-15" class="internal"><span class="codenumber">25.5</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
+<div class="toc-title-box"><a href="structures-pointers-practice.html" class="internal"><span class="codenumber">25.6</span> <span class="title">Practice: Structures and Pointers</span></a></div>
+<ul id="ptx-toc-group-structures-pointers-practice" class="structural toc-item-list"><li class="toc-item toc-reading-questions"><div class="toc-title-box"><a href="structures-pointers-practice.html#structures-pointers-practice-2" class="internal"><span class="codenumber">25.6</span> <span class="title">Check Your Understanding</span></a></div></li></ul>
 </li>
-<li class="toc-item toc-section"><div class="toc-title-box"><a href="structures-summary.html" class="internal"><span class="codenumber">25.6</span> <span class="title">Summary</span></a></div></li>
+<li class="toc-item toc-section"><div class="toc-title-box"><a href="structures-summary.html" class="internal"><span class="codenumber">25.7</span> <span class="title">Summary</span></a></div></li>
 </ul>
 </li>
 <li class="toc-item toc-chapter">
@@ -992,9 +1015,9 @@ eBookConfig.enable_chatcodes =  false;
 </ul></nav></div>
 <main class="ptx-main"><div id="ptx-content" class="ptx-content">
 <section class="section" id="files-write">
-<h2 class="heading hide-type">
+<h1 class="heading hide-type">
 <span class="type">Section</span><span class="space heading-divison-mark heading-divison-mark__space"> </span><span class="codenumber">15.7</span><span class="space heading-divison-mark heading-divison-mark__space"> </span><span class="title">Writing to a File</span>
-</h2>
+</h1>
 <div class="para" id="files-write-2">So far we have read data from files. It is just as easy to write data to a file. The main differences to reading are:<div class="autopermalink" aria-hidden="true" data-description="Paragraph"><a tabindex="-1" href="#files-write-2" title="Copy heading and permalink for Paragraph" aria-label="Copy heading and permalink for Paragraph">🔗</a></div>
 </div>
 <ul class="disc" id="files-write-3">
@@ -1030,7 +1053,7 @@ eBookConfig.enable_chatcodes =  false;
 </div></main>
 </div>
 <div id="ptx-page-footer" class="ptx-page-footer">
-<a class="feedback-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdHJlbWz2sc8DrOMYa81E5mRqDKIgulXXfqEq-d48TcuzL9mw/viewform?usp=sf_link" target="_blank">Report Errors</a><a class="pretext-link" href="https://pretextbook.org" title="PreTeXt"><div class="logo"><svg xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="338 3000 8772 6866" role="img"><title>PreTeXt logo</title><g style="stroke-width:.025in; stroke:currentColor; fill:none"><polyline points="472,3590 472,9732 " style="stroke-width:174; stroke-linejoin:miter; stroke-linecap:round; "></polyline><path style="stroke-width:126;stroke-linecap:butt;" d="M 4724,9448 A 4660 4660  0  0  1  8598  9259"></path><path style="stroke-width:174;stroke-linecap:butt;" d="M 4488,9685 A 4228 4228  0  0  0   472  9732"></path><path style="stroke-width:126;stroke-linecap:butt;" d="M 4724,3590 A 4241 4241  0  0  1  8598  3496"></path><path style="stroke-width:126;stroke-linecap:round;" d="M 850,3496  A 4241 4241  0  0  1  4724  3590"></path><path style="stroke-width:126;stroke-linecap:round;" d="M 850,9259  A 4507 4507  0  0  1  4724  9448"></path><polyline points="5385,4299 4062,8125" style="stroke-width:300; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="8598,3496 8598,9259" style="stroke-width:126; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="850,3496 850,9259" style="stroke-width:126; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="4960,9685 4488,9685" style="stroke-width:174; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="3070,4582 1889,6141 3070,7700" style="stroke-width:300; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="6418,4582 7600,6141 6418,7700" style="stroke-width:300; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="8976,3590 8976,9732" style="stroke-width:174; stroke-linejoin:miter; stroke-linecap:round;"></polyline><path style="stroke-width:174;stroke-linecap:butt;" d="M 4960,9685 A 4228 4228  0  0  1  8976  9732"></path></g></svg></div></a><a class="runestone-link" href="https://runestone.academy" title="Runestone Academy"><img class="logo" src="https://runestone.academy/runestone/static/images/RAIcon_cropped.png" alt="Runstone Academy logo"></a><a class="mathjax-link" href="https://www.mathjax.org" title="MathJax"><img class="logo" src="https://www.mathjax.org/badge/badge-square-2.png" alt="MathJax logo"></a>
+<a class="feedback-link" href="https://docs.google.com/forms/d/e/1FAIpQLSdHJlbWz2sc8DrOMYa81E5mRqDKIgulXXfqEq-d48TcuzL9mw/viewform?usp=sf_link" target="_blank">Report Errors</a><a class="pretext-link" href="https://pretextbook.org" title="PreTeXt"><div class="logo"><svg xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="338 3000 8772 6866" role="img"><title>PreTeXt logo</title><g style="stroke-width:.025in; stroke:currentColor; fill:none"><polyline points="472,3590 472,9732 " style="stroke-width:174; stroke-linejoin:miter; stroke-linecap:round; "></polyline><path style="stroke-width:126;stroke-linecap:butt;" d="M 4724,9448 A 4660 4660  0  0  1  8598  9259"></path><path style="stroke-width:174;stroke-linecap:butt;" d="M 4488,9685 A 4228 4228  0  0  0   472  9732"></path><path style="stroke-width:126;stroke-linecap:butt;" d="M 4724,3590 A 4241 4241  0  0  1  8598  3496"></path><path style="stroke-width:126;stroke-linecap:round;" d="M 850,3496  A 4241 4241  0  0  1  4724  3590"></path><path style="stroke-width:126;stroke-linecap:round;" d="M 850,9259  A 4507 4507  0  0  1  4724  9448"></path><polyline points="5385,4299 4062,8125" style="stroke-width:300; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="8598,3496 8598,9259" style="stroke-width:126; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="850,3496 850,9259" style="stroke-width:126; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="4960,9685 4488,9685" style="stroke-width:174; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="3070,4582 1889,6141 3070,7700" style="stroke-width:300; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="6418,4582 7600,6141 6418,7700" style="stroke-width:300; stroke-linejoin:miter; stroke-linecap:round;"></polyline><polyline points="8976,3590 8976,9732" style="stroke-width:174; stroke-linejoin:miter; stroke-linecap:round;"></polyline><path style="stroke-width:174;stroke-linecap:butt;" d="M 4960,9685 A 4228 4228  0  0  1  8976  9732"></path></g></svg></div></a><a xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings" class="runestone-link" href="https://runestone.academy" title="Runestone Academy"><img class="logo" src="external/images/RAIcon_cropped.png" alt="Runstone Academy logo"></a><a xmlns:exsl="http://exslt.org/common" xmlns:str="http://exslt.org/strings" class="mathjax-link" href="https://www.mathjax.org" title="MathJax"><img class="logo" src="external/images/mathjax-badge-square-2.png" alt="MathJax logo"></a>
 </div>
 </body>
 </html>

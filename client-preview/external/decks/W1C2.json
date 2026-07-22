@@ -1,0 +1,139 @@
+{
+  "id": "W1C2",
+  "title": "Variables, input, char and float",
+  "_comment": [
+    "Reconstructed slide-for-slide from the retired LCS deck",
+    "W1C2Variablesinputscharfloat.pdf.",
+    "",
+    "Note the shape every content slide has there: a short heading, two or",
+    "three lines of in-class phrasing, and ONE coding window. That is what",
+    "'demo' slides are - they embed a single starting point from CMeCodeDir",
+    "directly. They deliberately do NOT frame the surrounding book page: that",
+    "prose is the pre-class reading, and re-projecting it in class is not the",
+    "point of the class meeting.",
+    "",
+    "'ref' slides with only=.activity are used where the class works a real",
+    "book activity, so the full problem statement comes from the book itself",
+    "and stays in sync with what students see at home.",
+    "",
+    "Per-term ephemera from the original deck (that day's announcements, the",
+    "'who in this class...' slide, office-hour changes) is deliberately absent -",
+    "that is session-level, edited minutes before class without a rebuild."
+  ],
+  "slides": [
+    {
+      "type": "recap",
+      "title": "Where we left off",
+      "items": [
+        "<code>printf</code> displays a message on the screen",
+        "<code>\\n</code> starts a new line; quotes are escaped as <code>\\\"</code>",
+        "Loops repeat instructions multiple times",
+        "Comments: <code>/* ... */</code> across lines, <code>//</code> to end of line"
+      ]
+    },
+    { "type": "icebreaker", "id": "time-machine" },
+    {
+      "type": "agenda",
+      "title": "Today",
+      "items": [
+        "Common variable errors",
+        "Variables and loops",
+        "User input using <code>scanf()</code>",
+        "The <code>char</code> datatype",
+        "The <code>float</code> datatype",
+        "Division in C"
+      ]
+    },
+    { "type": "icebreaker", "id": "team-intros" },
+
+    { "type": "ref", "page": "variables-errors.html", "focus": "activity-4-6-1-Fix_Me_1", "title": "Fix Me!" },
+    { "type": "ref", "page": "variables-errors.html", "focus": "activity-4-6-2-Fix_Me_2", "title": "Fix me too...!" },
+    { "type": "ref", "page": "variables-errors.html", "focus": "activity-4-6-3-Fix_Me_3", "title": "Fix me three...!" },
+    {
+      "type": "recap",
+      "title": "What we learned",
+      "items": [
+        "Variable names contain only letters, numbers and <code>_</code>",
+        "They must start with a letter or <code>_</code>",
+        "They are case sensitive",
+        "Variables must be initialized BEFORE they are used"
+      ]
+    },
+
+    { "type": "ref", "page": "variables-loop-practice.html", "only": ".activity", "title": "Practice your loops!" },
+
+    {
+      "type": "demo",
+      "title": "User input",
+      "body": [
+        "It is possible to have the user enter values and store them in variables. The command for this is <code>scanf()</code>.",
+        "Let's ask the user for their age and then print it out:"
+      ],
+      "startPoint": "engs20p_NuserInput1"
+    },
+    {
+      "type": "demo",
+      "title": "Reading more than one value",
+      "body": "You can read multiple entries with one <code>scanf</code> statement if you wish — or simply use multiple <code>scanf</code> statements:",
+      "startPoint": "engs20p_NuserInput2"
+    },
+    {
+      "type": "demo",
+      "title": "Back to the multiplication table",
+      "body": "Now we'll have the user input which multiplication table to print.",
+      "startPoint": "engs20p_NuserInput3"
+    },
+    { "type": "ref", "page": "variables-user-input.html", "only": ".activity", "title": "Your turn..." },
+
+    {
+      "type": "demo",
+      "title": "The char datatype",
+      "body": [
+        "So far we have only stored integer numbers in variables. You can also store letters or symbols — <em>characters</em>.",
+        "The datatype is <code>char</code> and the format specifier is <code>%c</code>:"
+      ],
+      "startPoint": "engs20p_NprintChar"
+    },
+    { "type": "ref", "page": "variables-char-datatype.html", "only": ".activity", "title": "Your turn..." },
+    {
+      "type": "demo",
+      "title": "User input — characters",
+      "body": "You can use <code>scanf()</code> to read a character from the user input:",
+      "startPoint": "engs20p_NscanChar"
+    },
+
+    {
+      "type": "demo",
+      "title": "Decimal numbers",
+      "body": [
+        "C has several data types for decimal numbers: <code>float</code>, <code>double</code> and <code>long double</code>, with increasing precision. We'll mostly use <code>float</code>, whose format specifier is <code>%f</code>.",
+        "Use <code>%.1f</code>, <code>%.2f</code>, … to set the number of decimal places — the default is 6."
+      ],
+      "startPoint": "engs20p_NprintScanFloat"
+    },
+    {
+      "type": "recap",
+      "title": "What we learned",
+      "items": [
+        "<code>int</code>, <code>char</code>, <code>float</code> datatypes",
+        "Format specifiers <code>%d</code>, <code>%c</code>, <code>%f</code>",
+        "<code>scanf(\"%d\", &amp;age);</code>",
+        "<code>scanf(\"%c\", &amp;letter);</code>",
+        "<code>scanf(\"%f\", &amp;height);</code>"
+      ]
+    },
+
+    {
+      "type": "demo",
+      "title": "Division",
+      "body": "Try to predict what the output of the following program will be — then run it.",
+      "startPoint": "engs20p_Ndivision1"
+    },
+    {
+      "type": "prompt",
+      "title": "Summary of division behaviour in C",
+      "body": "<code>5/2 = 2</code> &nbsp;&nbsp; <code>5.0/2 = 2.5</code> &nbsp;&nbsp; <code>5/2.0 = 2.5</code> &nbsp;&nbsp; <code>5.0/2.0 = 2.5</code>",
+      "note": "What is going on here?"
+    }
+  ]
+}

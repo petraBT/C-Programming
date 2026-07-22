@@ -1,0 +1,20 @@
+#include <stdio.h>
+#define N 14    /* number of weights in the array */
+
+int main (void) {
+  float weights[N] = {1, 2, 3, 3.5, 4, 5, 6, 7, 8,
+                      9, 10, 11, 12, 13};  /* weight in ounces */
+  int stamp[N] = {49, 70, 91, 112, 161, 182, 203, 224, 245,
+                 266, 287, 308, 329, 350};   /* price in cents */
+  float letter;   /* user's letter weight in cents */
+  
+  
+  printf("How much does your letter weigh (in ounces): ");
+  scanf("%f", &letter);
+  
+  
+/* Your code goes here! */
+
+  
+  return 0;
+}

@@ -1,0 +1,23 @@
+#include <stdio.h>
+
+int main(void) {
+    FILE *ifile;  /* ifile is a variable name - you could use any other name here. 
+                     However, the '*' is important. We'll learn about it more later. 
+                     We call this a file pointer. */
+    int i, num, N;
+    
+    ifile = fopen("my_first_file.txt", "r"); /* open file for reading. 
+                                                The "r" stands for reading. */
+    
+    N = 10; /* we were told that there are 10 numbers in the file */
+    
+    for (i = 0; i<N; i++) {
+        fscanf(ifile, "%d", &num);
+        printf("I read %d from the file. \n", num);
+    }
+    
+    fclose(ifile); /* closes the file */
+    
+    return(0);
+}
+
