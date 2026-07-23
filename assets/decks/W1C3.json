@@ -79,7 +79,8 @@
 
     {
       "type": "prompt",
-      "body": "What are the ways to represent negative numbers in binary?"
+      "body": "What are the ways to represent negative numbers in binary?",
+      "title": "Negative Numbers in Binary"
     },
     {
       "type": "prompt",
@@ -87,7 +88,8 @@
       "table": {
         "columns": ["", "77", "&minus;77"],
         "rows": ["8-bit signed integer", "8-bit binary 2's complement"]
-      }
+      },
+      "title": "Negative Numbers - Practice"
     },
     {
       "type": "prompt",
@@ -102,7 +104,8 @@
       "table": {
         "columns": ["", "Decimal value"],
         "rows": ["Unsigned", "Signed magnitude", "Binary 2's complement"]
-      }
+      },
+      "title": "Interpretation of Hexadecimal Shorthand for the different representations"
     },
 
     {

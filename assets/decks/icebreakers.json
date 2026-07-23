@@ -27,7 +27,7 @@
       "id": "team-intros",
       "title": "Meet your team",
       "prompt": "Please go around and introduce yourselves: your name, your class year and (intended) major, and the best gift you've ever given or received.",
-      "note": "Then brainstorm a team name and enter it below."
+      "note": "Then brainstorm a team name."
     },
     {
       "id": "three-in-common",
