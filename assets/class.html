@@ -100,7 +100,14 @@
       #frame { flex: 1; width: 100%; min-height: 0; border: 0; display: block; background: #fff; }
 
       /* --- demo slides: a little text over one coding window ------------- */
-      #demo { width: 100%; height: 100%; display: none; flex-direction: column; padding: 3.2% 4% 2.2% 4%; }
+      #demo { width: 100%; height: 100%; display: none; flex-direction: column; padding: 3.2% 4% 2.2% 4%; position: relative; }
+      /* Authoring affordance over a demo's coding window (see #demo-overlay in
+         the script); inert and hidden unless the deck is armed for editing. */
+      #demo-overlay { position: absolute; display: none; z-index: 4; cursor: pointer; border-radius: 4px; }
+      .deck-edit-armed #demo.on #demo-overlay {
+        display: block; outline: 2px dashed #1c7ed6; outline-offset: -2px;
+        background: rgba(28, 126, 214, .07);
+      }
       #demo.on { display: flex; }
       #demo h2 { margin: 0 0 .35em 0; font-size: 3.2vmin; font-size: 3.2cqmin; font-weight: 600; color: #256abf; letter-spacing: .01em; text-transform: uppercase; }
       /* Several LCS slides are a bare problem statement with no heading. */
@@ -550,6 +557,10 @@
           <h2 id="demo-title"></h2>
           <div class="body" id="demo-body"></div>
           <iframe id="demo-frame" title="Coding window" allow="cross-origin-isolated"></iframe>
+          <!-- Authoring only: while Alt is held on a demo slide this covers the
+               coding window so a click can open its starting point in the tool
+               (a click inside the iframe never reaches this page otherwise). -->
+          <div id="demo-overlay" title="Alt-click: edit this starting point"></div>
         </div>
         <div id="rendered"></div>
         <div id="err"></div>
@@ -1976,6 +1987,7 @@
         ;(function () {
           if (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return
           var EDIT_SERVER = 'http://127.0.0.1:8927'
+          var STARTING_POINTS = 'http://127.0.0.1:5050' // same tool ptx-edit opens
 
           function toast(message, kind) {
             var existing = document.getElementById('deck-edit-toast')
@@ -2121,8 +2133,12 @@
                 input.dataset.key = key
                 input.dataset.kind = kind
                 // Show the raw source; setting .value (not innerHTML) keeps any
-                // markup in the string as literal text, never parsed.
-                input.value = (kind === 'lines') ? (value || []).join('\n') : (value == null ? '' : String(value))
+                // markup in the string as literal text, never parsed. A 'lines'
+                // value may be a string (a one-paragraph demo body) as well as
+                // an array, so normalise through concat rather than .join alone.
+                input.value = (kind === 'lines')
+                  ? [].concat(value == null ? [] : value).join('\n')
+                  : (value == null ? '' : String(value))
                 wrap.appendChild(input)
               }
               seFields.appendChild(wrap)
@@ -2137,9 +2153,14 @@
           function readSlideForm () {
             var fields = {}
             ;[].forEach.call(seFields.querySelectorAll('[data-key]'), function (el) {
-              // 'lines' fields (bullets, demo paragraphs) round-trip as one
-              // entry per line; everything else is the string as typed.
-              fields[el.dataset.key] = el.dataset.kind === 'lines' ? splitLines(el.value) : el.value
+              var key = el.dataset.key
+              if (el.dataset.kind !== 'lines') { fields[key] = el.value; return }
+              // 'lines' fields round-trip one entry per line, but keep their
+              // original shape: bullets are always a list, while a demo body
+              // stays a plain string until it actually has several paragraphs.
+              var arr = splitLines(el.value)
+              var wasArray = key === 'items' || Array.isArray(curForm.src[key])
+              fields[key] = (wasArray || arr.length > 1) ? arr : (arr[0] || '')
             })
             ;[].forEach.call(seFields.querySelectorAll('[data-table-key]'), function (wrap) {
               var headers = splitLines(wrap.querySelector('[data-tablepart="columns"]').value)
@@ -2205,14 +2226,36 @@
           // and the 404 it returns still resolves the promise; only a real
           // network error (nothing listening) rejects and leaves us inert.
           fetch(EDIT_SERVER + '/open-deck').then(function () {
+            var demoOverlayEl = document.getElementById('demo-overlay')
+            function placeDemoOverlay () {
+              // Match the coding-window iframe's box (offsets are relative to
+              // #demo, which is position:relative).
+              var f = document.getElementById('demo-frame')
+              demoOverlayEl.style.left = f.offsetLeft + 'px'
+              demoOverlayEl.style.top = f.offsetTop + 'px'
+              demoOverlayEl.style.width = f.offsetWidth + 'px'
+              demoOverlayEl.style.height = f.offsetHeight + 'px'
+            }
             document.addEventListener('keydown', function (e) {
-              if (e.key === 'Alt') document.body.classList.add('deck-edit-armed')
+              if (e.key === 'Alt') { placeDemoOverlay(); document.body.classList.add('deck-edit-armed') }
             })
             document.addEventListener('keyup', function (e) {
               if (e.key === 'Alt') document.body.classList.remove('deck-edit-armed')
             })
             window.addEventListener('blur', function () {
               document.body.classList.remove('deck-edit-armed')
+            })
+            window.addEventListener('resize', placeDemoOverlay)
+            document.getElementById('demo-frame').addEventListener('load', placeDemoOverlay)
+            // Alt-click the coding window on a demo slide opens its starting
+            // point in the same tool ptx-edit uses for book coding windows.
+            demoOverlayEl.addEventListener('click', function (e) {
+              e.preventDefault()
+              e.stopPropagation()
+              var slide = deck && deck.slides && deck.slides[currentIndex() - 1]
+              if (!slide || slide.type !== 'demo' || !slide.startPoint) return
+              window.open(STARTING_POINTS + '/?file=' + encodeURIComponent(slide.startPoint), '_blank')
+              toast('Opening ' + slide.startPoint + ' in the starting points tool', 'ok')
             })
             // Capture phase, so an alt-click is claimed for editing before any
             // control treats it as an ordinary click. (The pen layer only draws
@@ -2221,8 +2264,9 @@
             //   alt-shift-click  -> edit it in a form (mirrors the book)
             document.addEventListener('click', function (e) {
               if (!e.altKey) return
-              // Leave the chrome alone; the book iframe handles its own clicks.
-              if (e.target.closest('#bar, #index, #editor, #slideedit, #frame, #demo-frame, .deck-edit-toast')) return
+              // Leave the chrome alone; the book iframe and the demo-window
+              // overlay handle their own clicks.
+              if (e.target.closest('#bar, #index, #editor, #slideedit, #frame, #demo-frame, #demo-overlay, .deck-edit-toast')) return
               e.preventDefault()
               e.stopPropagation()
               if (e.shiftKey) openSlideForm()
