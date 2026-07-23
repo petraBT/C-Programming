@@ -832,6 +832,9 @@
           }
           if (slide.type === 'icebreaker') {
             var ib = resolveIcebreaker(slide)
+            // Remember which bank entry is on screen (a random pick when the
+            // slide pins no id), so alt-click-to-source can open that exact one.
+            slide._ib = ib && ib.id ? ib.id : null
             if (!ib) { parts.push('<p class="big">(no icebreakers defined)</p>') }
             else {
               resolvedTitle = html(ib.title || 'Warm-up')
@@ -1949,11 +1952,19 @@
               toast('Announcement slide - edit it with the ✎ (Announcements) flag.', 'info')
               return
             }
-            // _ink is the slide's position in the deck AS AUTHORED, which is the
-            // JSON index; the runtime index can differ because announcements are
-            // prepended at load.
-            fetch(EDIT_SERVER + '/open-deck?deck=' + encodeURIComponent(deckId) +
-                  '&slide=' + slide._ink)
+            var query
+            if (slide.type === 'icebreaker') {
+              // An icebreaker slide only references the shared bank
+              // (decks/icebreakers.json), so open that, at the entry showing.
+              var id = slide.id || slide._ib
+              query = 'deck=icebreakers' + (id ? '&id=' + encodeURIComponent(id) : '')
+            } else {
+              // _ink is the slide's position in the deck AS AUTHORED, which is
+              // the JSON index; the runtime index can differ because
+              // announcements are prepended at load.
+              query = 'deck=' + encodeURIComponent(deckId) + '&slide=' + slide._ink
+            }
+            fetch(EDIT_SERVER + '/open-deck?' + query)
               .then(function (r) { return r.json().then(function (b) {
                 if (!r.ok) throw new Error(b.error || 'lookup failed')
                 return b

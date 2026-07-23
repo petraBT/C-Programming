@@ -22,6 +22,7 @@ import argparse
 import difflib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -201,6 +202,17 @@ def deck_slide_line(text: str, index: int) -> int:
     return 1
 
 
+def json_id_line(text: str, ident: str) -> int:
+    """1-based line of the object whose "id" is `ident`, or 1 if not found.
+
+    For files keyed by id rather than array position - the icebreaker bank,
+    decks/icebreakers.json, which an icebreaker slide only references. Matched
+    with tolerance for whatever spacing the file uses around the colon.
+    """
+    match = re.search(r'"id"\s*:\s*"' + re.escape(ident) + r'"', text)
+    return text.count("\n", 0, match.start()) + 1 if match else 1
+
+
 def apply_edit(element, old_text: str, new_text: str):
     """Rewrite an element's own visible text in place, preserving everything else.
 
@@ -295,15 +307,22 @@ def make_handler(locator: Locator):
             the deck JSON, and this is how it opens from the player.
             """
             deck = query.get("deck", [""])[0]
-            try:
-                slide = int(query.get("slide", ["0"])[0])
-            except ValueError:
-                slide = 0
             path = locator.deck_path(deck)
             if path is None:
                 return self._send({"error": "No such deck."}, 404)
             with open(path, encoding="utf-8") as handle:
-                line = deck_slide_line(handle.read(), slide) if slide > 0 else 1
+                text = handle.read()
+            # id wins over slide: an icebreaker slide only references an entry in
+            # the shared bank (deck=icebreakers), so it opens by id, not index.
+            ident = query.get("id", [""])[0]
+            if ident:
+                line = json_id_line(text, ident)
+            else:
+                try:
+                    slide = int(query.get("slide", ["0"])[0])
+                except ValueError:
+                    slide = 0
+                line = deck_slide_line(text, slide) if slide > 0 else 1
             editor = open_in_editor(path, line)
             relative = os.path.relpath(path, locator.project_dir)
             print(f"  -> {relative}:{line} ({editor})")
