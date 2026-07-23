@@ -213,6 +213,79 @@ def json_id_line(text: str, ident: str) -> int:
     return text.count("\n", 0, match.start()) + 1 if match else 1
 
 
+def array_element_span(text: str, key: str, position: int):
+    """(start, end) char offsets of the position-th (1-based) top-level element
+    of the "<key>": [...] array, end just past its closing brace; or None.
+
+    Same raw-text walk as deck_slide_line, but returning the element's whole
+    span so a single object can be replaced without reformatting the rest of
+    the file. Only elements at the array's own level are counted; a slide's
+    own nested objects/arrays are stepped over.
+    """
+    k = text.find('"%s"' % key)
+    if k == -1:
+        return None
+    i = text.find("[", k)
+    if i == -1:
+        return None
+    i += 1
+    depth = count = 0
+    in_str = esc = False
+    start = None
+    while i < len(text):
+        c = text[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif c == "\\":
+                esc = True
+            elif c == '"':
+                in_str = False
+        elif c == '"':
+            in_str = True
+        elif c in "{[":
+            if depth == 0:
+                count += 1
+                if count == position:
+                    start = i
+            depth += 1
+        elif c in "}]":
+            if depth == 0:
+                break  # the array's own closing bracket
+            depth -= 1
+            if depth == 0 and start is not None:
+                return (start, i + 1)
+        i += 1
+    return None
+
+
+def replace_object(text: str, span, obj) -> str:
+    """Splice a re-serialized object back into text at span, matching whether
+    the original sat on one line or several, and its indentation."""
+    start, end = span
+    original = text[start:end]
+    if "\n" in original:
+        indent = text[text.rfind("\n", 0, start) + 1:start]
+        dumped = json.dumps(obj, ensure_ascii=False, indent=2).replace("\n", "\n" + indent)
+    else:
+        dumped = json.dumps(obj, ensure_ascii=False)
+    return text[:start] + dumped + text[end:]
+
+
+def mirror_to_served(project_dir: str, deck: str, text: str):
+    """Authoring convenience: the local preview serves output/web-edit, not the
+    source, so refresh the served copy too - otherwise a reload would show the
+    pre-edit deck until the next build. Best-effort and silent if absent."""
+    served = os.path.join(project_dir, "output", "web-edit",
+                          "external", "decks", deck + ".json")
+    try:
+        if os.path.isfile(served):
+            with open(served, "w", encoding="utf-8") as handle:
+                handle.write(text)
+    except OSError:
+        pass
+
+
 def apply_edit(element, old_text: str, new_text: str):
     """Rewrite an element's own visible text in place, preserving everything else.
 
@@ -356,8 +429,88 @@ def make_handler(locator: Locator):
                 "text": element.text(),
             })
 
+        # Content fields a slide form may set. Nothing else is touched, so the
+        # form can never rewrite a slide's type, page, focus, or id.
+        DECK_FIELDS = {"title", "body", "note", "prompt", "startPoint", "items"}
+
+        def _patch_deck(self):
+            length = int(self.headers.get("Content-Length", 0))
+            try:
+                payload = json.loads(self.rfile.read(length) or b"{}")
+            except json.JSONDecodeError:
+                return self._send({"error": "bad request"}, 400)
+
+            path = locator.deck_path(payload.get("deck", ""))
+            if path is None:
+                return self._send({"error": "No such deck."}, 404)
+
+            # Validate the fields up front: strings (or null to clear), and
+            # items a list of strings. Anything off-shape is refused whole.
+            updates = {}
+            for name, value in (payload.get("fields") or {}).items():
+                if name not in self.DECK_FIELDS:
+                    continue
+                if name == "items" or isinstance(value, list):
+                    if not isinstance(value, list) or any(not isinstance(x, str) for x in value):
+                        return self._send({"error": "%s must be a list of strings" % name}, 400)
+                    updates[name] = value
+                elif value is None or isinstance(value, str):
+                    updates[name] = value
+                else:
+                    return self._send({"error": "bad type for %s" % name}, 400)
+
+            with open(path, encoding="utf-8") as handle:
+                text = handle.read()
+            data = json.loads(text)
+
+            ident = payload.get("id")
+            if ident is not None:
+                bank = data.get("icebreakers", [])
+                position = next((i + 1 for i, e in enumerate(bank) if e.get("id") == ident), None)
+                key = "icebreakers"
+            else:
+                key = "slides"
+                try:
+                    position = int(payload.get("slide", 0))
+                except (TypeError, ValueError):
+                    position = 0
+                if not 1 <= position <= len(data.get("slides", [])):
+                    position = None
+            if not position:
+                return self._send({"error": "slide not found"}, 404)
+
+            span = array_element_span(text, key, position)
+            if span is None:
+                return self._send({"error": "could not locate slide in file"}, 500)
+
+            obj = json.loads(text[span[0]:span[1]])
+            for name, value in updates.items():
+                # An emptied field drops out rather than lingering as "".
+                if value is None or value == "" or value == []:
+                    obj.pop(name, None)
+                else:
+                    obj[name] = value
+
+            new_text = replace_object(text, span, obj)
+            # The source is the truth; never leave it unparseable.
+            try:
+                json.loads(new_text)
+            except json.JSONDecodeError:
+                return self._send({"error": "internal: refusing to write invalid JSON"}, 500)
+
+            with open(path, "w", encoding="utf-8") as handle:
+                handle.write(new_text)
+            mirror_to_served(locator.project_dir, payload.get("deck", ""), new_text)
+
+            relative = os.path.relpath(path, locator.project_dir)
+            line = text.count("\n", 0, span[0]) + 1
+            print(f"  patched {relative}:{line}")
+            return self._send({"file": relative, "line": line})
+
         def do_POST(self):
             url = urlparse(self.path)
+            if url.path == "/patch-deck":
+                return self._patch_deck()
             if url.path != "/patch":
                 return self._send({"error": "not found"}, 404)
 
