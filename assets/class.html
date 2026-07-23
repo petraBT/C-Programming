@@ -478,6 +478,25 @@
       #bar button:hover { background: #232322; }
       #title { color: #f2f2f2; font-weight: 600; }
       #err { padding: 8vmin; padding: 8cqmin; font-size: 3vmin; font-size: 3cqmin; color: #ff8a80; display: none; }
+
+      /* --- authoring affordance (localhost + edit-server only) ------------ */
+      /* Alt-click a deck-authored slide to open its JSON source; see the
+         script near the end. Wired up only when the edit-server answers, so
+         these never show for a student or on the deployed deck. */
+      .deck-edit-armed #stage { cursor: pointer; }
+      .deck-edit-armed #rendered.on, .deck-edit-armed #demo.on,
+      .deck-edit-armed #ref.on > h2 {
+        outline: 2px dashed #2b8a3e; outline-offset: -6px; border-radius: 4px;
+      }
+      .deck-edit-toast {
+        position: fixed; top: 14px; right: 14px; z-index: 10000;
+        max-width: 30em; padding: 9px 13px; border-radius: 6px;
+        font: 13px/1.4 system-ui, sans-serif; color: #fff;
+        box-shadow: 0 2px 12px rgba(0,0,0,.28);
+      }
+      .deck-edit-toast-ok { background: #2b8a3e; }
+      .deck-edit-toast-error { background: #c92a2a; }
+      .deck-edit-toast-info { background: #343a40; }
     </style>
   </head>
   <body>
@@ -1892,6 +1911,90 @@
         }).catch(function (e) {
           fail('Could not load this deck. ' + e.message)
         })
+
+        // --- authoring: alt-click a deck-authored slide to open its JSON -----
+        // The book half of this - alt-click a paragraph on a 'ref' slide -
+        // happens inside that slide's iframe, handled by ptx-edit.js. This is
+        // the other half: the slides written in decks/<deck>.json (recap,
+        // agenda, prompt, demo, icebreaker, and the deck title bar of a 'ref'
+        // slide). Alt-click one to open its source at the right slide.
+        //
+        // Local-only and self-effacing, exactly like the book's version: it
+        // wires nothing up unless the edit-server (127.0.0.1:8927, started by
+        // ./preview-edit.sh) actually answers, so it never appears for a
+        // student, on the deployed deck, or in a plain non-authoring preview.
+        ;(function () {
+          if (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return
+          var EDIT_SERVER = 'http://127.0.0.1:8927'
+
+          function toast(message, kind) {
+            var existing = document.getElementById('deck-edit-toast')
+            if (existing) existing.remove()
+            var node = document.createElement('div')
+            node.id = 'deck-edit-toast'
+            node.className = 'deck-edit-toast deck-edit-toast-' + (kind || 'info')
+            node.textContent = message
+            document.body.appendChild(node)
+            setTimeout(function () { if (node.parentNode) node.remove() },
+                       kind === 'error' ? 6000 : 2500)
+          }
+
+          function openCurrentSlide() {
+            if (!deck || !deck.slides) return
+            var slide = deck.slides[currentIndex() - 1]
+            if (!slide) return
+            // Announcement slides come from the passphrase board, not the deck
+            // file - they carry no _ink and are edited with the ✎ flag instead.
+            if (slide._ink == null) {
+              toast('Announcement slide - edit it with the ✎ (Announcements) flag.', 'info')
+              return
+            }
+            // _ink is the slide's position in the deck AS AUTHORED, which is the
+            // JSON index; the runtime index can differ because announcements are
+            // prepended at load.
+            fetch(EDIT_SERVER + '/open-deck?deck=' + encodeURIComponent(deckId) +
+                  '&slide=' + slide._ink)
+              .then(function (r) { return r.json().then(function (b) {
+                if (!r.ok) throw new Error(b.error || 'lookup failed')
+                return b
+              }) })
+              .then(function (b) { toast('Opened ' + b.file + ':' + b.line, 'ok') })
+              .catch(function (e) {
+                toast(e instanceof TypeError
+                  ? 'Edit server not running - start it with ./preview-edit.sh'
+                  : e.message, 'error')
+              })
+          }
+
+          // Probe first: only wire up the affordance once the edit-server has
+          // answered, so nothing shows when authoring isn't actually running
+          // (a plain in-browser preview on localhost, say). A bare GET to
+          // /open-deck is a simple cross-origin request - no CORS preflight -
+          // and the 404 it returns still resolves the promise; only a real
+          // network error (nothing listening) rejects and leaves us inert.
+          fetch(EDIT_SERVER + '/open-deck').then(function () {
+            document.addEventListener('keydown', function (e) {
+              if (e.key === 'Alt') document.body.classList.add('deck-edit-armed')
+            })
+            document.addEventListener('keyup', function (e) {
+              if (e.key === 'Alt') document.body.classList.remove('deck-edit-armed')
+            })
+            window.addEventListener('blur', function () {
+              document.body.classList.remove('deck-edit-armed')
+            })
+            // Capture phase, so an alt-click is claimed for editing before any
+            // control treats it as an ordinary click. (The pen layer only draws
+            // for pen input, so a mouse alt-click never leaves a stroke.)
+            document.addEventListener('click', function (e) {
+              if (!e.altKey) return
+              // Leave the chrome alone; the book iframe handles its own clicks.
+              if (e.target.closest('#bar, #index, #editor, #frame, #demo-frame, .deck-edit-toast')) return
+              e.preventDefault()
+              e.stopPropagation()
+              openCurrentSlide()
+            }, true)
+          }).catch(function () { /* edit-server not running: stay inert */ })
+        })()
       })()
     </script>
   </body>

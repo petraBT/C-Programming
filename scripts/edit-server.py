@@ -114,6 +114,21 @@ class Locator:
         source = os.path.join(self.project_dir, "source")
         return os.path.abspath(path).startswith(source + os.sep)
 
+    def deck_path(self, deck: str):
+        """Resolve a deck name to assets/decks/<deck>.json, or None.
+
+        The name comes straight off a URL, so it is checked against a strict
+        allow-list (letters, digits, _ and -) before being joined - a crafted
+        "../.." must not be able to reach a file outside the decks directory.
+        """
+        if not deck or not all(c.isalnum() or c in "_-" for c in deck):
+            return None
+        decks = os.path.realpath(os.path.join(self.project_dir, "assets", "decks"))
+        path = os.path.realpath(os.path.join(decks, deck + ".json"))
+        if not path.startswith(decks + os.sep):
+            return None
+        return path if os.path.isfile(path) else None
+
 
 def open_in_editor(path: str, line: int) -> str:
     """Launch the user's editor at a file and line. Returns what it used."""
@@ -140,6 +155,50 @@ def open_in_editor(path: str, line: int) -> str:
     # Last resort: hand it to macOS, which at least opens the right file.
     subprocess.Popen(["open", path])
     return "open"
+
+
+def deck_slide_line(text: str, index: int) -> int:
+    """1-based line of the Nth (1-based) object in the top-level "slides" array.
+
+    json.load would give us the slide but discards line numbers, so walk the
+    raw text instead. Track string state so braces inside strings don't count,
+    and only count elements at the array's own top level (a slide's own nested
+    objects/arrays - a table, a bullet list - must not be miscounted as slides).
+    Falls back to line 1 if the structure isn't found: opening the file at the
+    top is still more useful than refusing.
+    """
+    key = text.find('"slides"')
+    if key == -1:
+        return 1
+    i = text.find("[", key)
+    if i == -1:
+        return 1
+    i += 1  # step past the opening [ so depth 0 means "directly in the array"
+    depth = count = 0
+    in_str = esc = False
+    while i < len(text):
+        c = text[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif c == "\\":
+                esc = True
+            elif c == '"':
+                in_str = False
+        elif c == '"':
+            in_str = True
+        elif c in "{[":
+            if depth == 0:
+                count += 1
+                if count == index:
+                    return text.count("\n", 0, i) + 1
+            depth += 1
+        elif c in "}]":
+            if depth == 0:
+                break  # the slides array's own closing bracket
+            depth -= 1
+        i += 1
+    return 1
 
 
 def apply_edit(element, old_text: str, new_text: str):
@@ -228,8 +287,32 @@ def make_handler(locator: Locator):
         def do_OPTIONS(self):
             self._send({})
 
+        def _open_deck(self, query):
+            """Open assets/decks/<deck>.json at the Nth slide in the editor.
+
+            The deck player's 'ref' slides open their book page (handled by
+            ptx-edit.js in the slide iframe); every other slide is authored in
+            the deck JSON, and this is how it opens from the player.
+            """
+            deck = query.get("deck", [""])[0]
+            try:
+                slide = int(query.get("slide", ["0"])[0])
+            except ValueError:
+                slide = 0
+            path = locator.deck_path(deck)
+            if path is None:
+                return self._send({"error": "No such deck."}, 404)
+            with open(path, encoding="utf-8") as handle:
+                line = deck_slide_line(handle.read(), slide) if slide > 0 else 1
+            editor = open_in_editor(path, line)
+            relative = os.path.relpath(path, locator.project_dir)
+            print(f"  -> {relative}:{line} ({editor})")
+            return self._send({"file": relative, "line": line})
+
         def do_GET(self):
             url = urlparse(self.path)
+            if url.path == "/open-deck":
+                return self._open_deck(parse_qs(url.query))
             if url.path != "/locate":
                 return self._send({"error": "not found"}, 404)
 
