@@ -84,7 +84,7 @@
     var onlySel = deckParams.get('only')
     var omitSel = deckParams.get('omit')
     if (focusId || onlySel || omitSel) {
-      document.addEventListener('DOMContentLoaded', function () {
+      var narrowSlide = function () {
         var keep = []
         if (focusId) {
           var byId = document.getElementById(focusId)
@@ -119,7 +119,21 @@
             if (onPath.indexOf(child) === -1) child.style.display = 'none'
           }
         }
-      })
+      }
+      // In the web-edit build this file is inserted dynamically by
+      // web-edit-loader.js (a script-created element, which does NOT block
+      // DOMContentLoaded), so it can run either before OR after that event. If
+      // it lost the race, addEventListener would wait for an event already gone
+      // and the slide would never narrow - the whole section, every activity,
+      // on each 'focus' slide, intermittently. So run now if the DOM is already
+      // parsed, and wait only if it genuinely isn't. (The deployed web-client
+      // build loads this as a parser-inserted footer script that always runs
+      // before the event, which is why this only bit the local authoring deck.)
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', narrowSlide)
+      } else {
+        narrowSlide()
+      }
     }
   }
 
