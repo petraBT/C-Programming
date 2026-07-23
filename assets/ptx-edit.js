@@ -17,6 +17,15 @@
   // starting-points-tool/server.js, run separately from the book's own preview.
   var STARTING_POINTS = 'http://127.0.0.1:5050'
 
+  // True when this page is shown inside another frame - in practice, a book
+  // page projected as a slide in the classroom deck player (class.html). The
+  // player paints a toolbar across the bottom of the frame, so a bottom-
+  // anchored toast would hide behind it; embedded, the toast goes to the top
+  // instead. Read on its own (window is the top), the toast stays put. A
+  // cross-origin top would make the comparison throw, but a same-origin embed
+  // (which the deck always is) never does.
+  var EMBEDDED = window.top !== window.self
+
   // Blocks PreTeXt gives an id to and that hold prose worth editing. Anything
   // else the click bubbles up from until it reaches one of these.
   var BLOCKS = '.para, li, article, .heading, h1, h2, h3, h4, h5, h6, blockquote, figcaption, td, th'
@@ -29,6 +38,7 @@
     var node = document.createElement('div')
     node.id = 'ptx-edit-toast'
     node.className = 'ptx-edit-toast ptx-edit-toast-' + (kind || 'info')
+    if (EMBEDDED) node.className += ' ptx-edit-toast-embedded'
     node.textContent = message
     document.body.appendChild(node)
     // Errors stay up long enough to actually read; confirmations don't linger.
@@ -260,7 +270,11 @@
     })
   }
 
+  var armed = false
   function arm (on) {
+    on = !!on
+    if (on === armed) return // called on every mousemove; do nothing until it flips
+    armed = on
     document.body.classList.toggle('ptx-edit-armed', on)
     if (on) {
       addOverlays()
@@ -275,6 +289,13 @@
   document.addEventListener('keyup', function (event) {
     if (event.key === 'Alt') arm(false)
   })
+  // Keydown only fires here when this document holds the keyboard focus. A
+  // deck slide usually doesn't - alt goes to the surrounding player - so the
+  // hover affordance would never appear. Mouse events carry the modifier state
+  // regardless of focus, so arm from the pointer too: the outline shows
+  // whenever alt is held over the text, embedded or standalone. (arm() is a
+  // no-op until the state actually flips, so this is cheap per move.)
+  document.addEventListener('mousemove', function (event) { arm(event.altKey) })
   window.addEventListener('blur', function () { arm(false) })
   window.addEventListener('resize', repositionOverlays)
 
@@ -302,6 +323,8 @@
     '  font: 14px/1.4 system-ui, sans-serif; color: #fff;',
     '  box-shadow: 0 2px 12px rgba(0,0,0,.25);',
     '}',
+    // Embedded (a deck slide): pin to the top, clear of the player's bottom bar.
+    '.ptx-edit-toast-embedded { top: 18px; bottom: auto; }',
     '.ptx-edit-toast-ok { background: #2b8a3e; }',
     '.ptx-edit-toast-error { background: #c92a2a; }',
     '.ptx-edit-toast-info { background: #343a40; }'
