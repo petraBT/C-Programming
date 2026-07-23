@@ -207,12 +207,17 @@
     label.appendChild(strong)
     var join = document.createElement('span')
     join.style.color = '#c3c2b7'
-    // Deliberately the CURRENT page's path, not the site root: the root
-    // index.html is a bare PreTeXt redirect page that carries no scripts and
-    // drops the query string, so a root join link would silently do nothing.
-    // Any real content page works - followers snap to the lead's page as
-    // soon as the socket connects anyway.
-    join.textContent = ' · students join at ' + location.origin + location.pathname + '?classroom=' + session.code
+    // Deliberately the CURRENT page's path (with its query), not the site
+    // root: the root index.html is a bare PreTeXt redirect page that carries
+    // no scripts and drops the query string, so a root join link would
+    // silently do nothing. Keeping location.search means a deck link carries
+    // its ?deck=<code>, so a student lands on the right deck rather than the
+    // deck chooser. (Followers also snap to the lead's page once the socket
+    // connects, but starting on the deck avoids a chooser flash.)
+    var joinParams = new URLSearchParams(location.search)
+    joinParams.set('classroom', session.code)
+    join.textContent = ' · students join at ' +
+      location.origin + location.pathname + '?' + joinParams.toString()
     label.appendChild(join)
   } else {
     label.textContent = 'Following class session ' + session.code
@@ -247,7 +252,11 @@
   var retryDelay = 1000
 
   function currentPath() {
-    return location.pathname + location.hash
+    // Includes the query string: the deck player identifies its slide deck by
+    // ?deck=<code>, so a path without it would drop a follower onto the deck
+    // chooser instead of the lead's deck. (Book pages carry no query, so this
+    // is a no-op there.)
+    return location.pathname + location.search + location.hash
   }
 
   function safePath(p) {
