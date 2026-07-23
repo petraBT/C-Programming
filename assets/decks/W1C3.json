@@ -122,12 +122,14 @@
     },
     {
       "type": "demo",
+      "title": "Casting a float to an int",
       "body": "What happens when you similarly cast a float to an int? Will rounding occur?",
       "startPoint": "engs20p_Ndivision3"
     },
     { "type": "ref", "page": "floats-average.html", "only": ".activity", "title": "Your turn: averaging integers" },
     {
       "type": "demo",
+      "title": "Division Remainder",
       "body": "Suppose you want to know the remainder of the division of one integer by another. Can we do this with our current programming knowledge?",
       "startPoint": "engs20p_NRemainder"
     },
