@@ -69,6 +69,13 @@ print(f"Applying isolation headers to {len(isolated_pages)} page(s) that embed t
 class IsolatedRequestHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
         path_only = self.path.split("?", 1)[0]
+        # Local authoring server: never let the browser cache. Every file is
+        # rebuilt on save, and a cached copy of a rebuilt .js/.css/.html
+        # silently serves the OLD build - which shows up as "my edit had no
+        # effect" or as intermittent, cache-dependent behaviour (the exact
+        # trap behind the deck slides sometimes narrowing and sometimes not).
+        # no-store keeps the preview honest; on localhost the re-fetch is free.
+        self.send_header("Cache-Control", "no-store, max-age=0")
         # Cross-origin isolation must propagate through every frame in the
         # ancestor chain (empirically confirmed earlier), so the
         # coding-window tool's own files need these headers too, on top of
