@@ -259,17 +259,138 @@ def array_element_span(text: str, key: str, position: int):
     return None
 
 
-def replace_object(text: str, span, obj) -> str:
-    """Splice a re-serialized object back into text at span, matching whether
-    the original sat on one line or several, and its indentation."""
-    start, end = span
-    original = text[start:end]
-    if "\n" in original:
-        indent = text[text.rfind("\n", 0, start) + 1:start]
-        dumped = json.dumps(obj, ensure_ascii=False, indent=2).replace("\n", "\n" + indent)
-    else:
-        dumped = json.dumps(obj, ensure_ascii=False)
-    return text[:start] + dumped + text[end:]
+def _scan_string(s: str, i: int) -> int:
+    """Index just past the JSON string starting at s[i] == '"'."""
+    i += 1
+    while i < len(s):
+        if s[i] == "\\":
+            i += 2
+            continue
+        if s[i] == '"':
+            return i + 1
+        i += 1
+    return i
+
+
+def _scan_value(s: str, i: int) -> int:
+    """Index just past the JSON value starting at s[i]."""
+    c = s[i]
+    if c == '"':
+        return _scan_string(s, i)
+    if c in "{[":
+        depth = 0
+        while i < len(s):
+            ch = s[i]
+            if ch == '"':
+                i = _scan_string(s, i)
+                continue
+            if ch in "{[":
+                depth += 1
+            elif ch in "}]":
+                depth -= 1
+                if depth == 0:
+                    return i + 1
+            i += 1
+        return i
+    while i < len(s) and s[i] not in ",}] \t\r\n":  # number / true / false / null
+        i += 1
+    return i
+
+
+def _top_level_fields(text: str, obj_start: int, obj_end: int):
+    """(name, key_start, value_start, value_end) for each field directly in the
+    object spanning [obj_start, obj_end) (obj_start at '{', obj_end past '}')."""
+    fields = []
+    i = obj_start + 1
+    while i < obj_end:
+        while i < obj_end and text[i] in " \t\r\n":
+            i += 1
+        if i >= obj_end or text[i] != '"':
+            break
+        key_start = i
+        key_end = _scan_string(text, i)
+        name = json.loads(text[key_start:key_end])
+        j = key_end
+        while j < obj_end and text[j] in " \t\r\n":
+            j += 1
+        if j >= obj_end or text[j] != ":":
+            break
+        j += 1
+        while j < obj_end and text[j] in " \t\r\n":
+            j += 1
+        value_end = _scan_value(text, j)
+        fields.append((name, key_start, j, value_end))
+        k = value_end
+        while k < obj_end and text[k] in " \t\r\n":
+            k += 1
+        if k < obj_end and text[k] == ",":
+            k += 1
+        i = k
+    return fields
+
+
+def _dump_value(value, field_indent: str) -> str:
+    """Serialize a field value in the deck's house style: a top-level array
+    (bullets, demo paragraphs) one item per line, a table object one key per
+    line with its own short arrays kept inline, everything else on one line."""
+    if isinstance(value, dict):
+        inner = field_indent + "  "
+        pairs = [inner + json.dumps(k, ensure_ascii=False) + ": " +
+                 json.dumps(v, ensure_ascii=False) for k, v in value.items()]
+        return "{\n" + ",\n".join(pairs) + "\n" + field_indent + "}"
+    if isinstance(value, list):
+        return json.dumps(value, ensure_ascii=False, indent=2).replace("\n", "\n" + field_indent)
+    return json.dumps(value, ensure_ascii=False)
+
+
+def patch_object_fields(text: str, span, updates) -> str:
+    """Apply field updates to the object at span, touching ONLY the changed
+    fields' text. Untouched fields - including compact nested tables - are left
+    byte-for-byte, so editing one field never reflows the rest of the slide.
+    A value of None / "" / [] removes the field."""
+    obj_start, obj_end = span
+    multiline = "\n" in text[obj_start:obj_end]
+    fields = _top_level_fields(text, obj_start, obj_end)
+    by_name = {f[0]: f for f in fields}
+
+    field_indent = ""
+    if fields and multiline:
+        nl = text.rfind("\n", obj_start, fields[0][1])
+        if nl != -1:
+            field_indent = text[nl + 1:fields[0][1]]
+
+    edits = []  # (start, end, replacement), applied back to front
+    for name, value in updates.items():
+        removing = value is None or value == "" or value == []
+        if name in by_name:
+            _, key_start, value_start, value_end = by_name[name]
+            if not removing:
+                edits.append((value_start, value_end, _dump_value(value, field_indent)))
+                continue
+            # Drop the whole "key": value pair, plus one comma, leaving no gap.
+            after = value_end
+            while after < obj_end and text[after] in " \t\r\n":
+                after += 1
+            if after < obj_end and text[after] == ",":
+                # not the last field: remove from this line's newline to the comma
+                line_nl = text.rfind("\n", obj_start, key_start)
+                edits.append((line_nl if line_nl != -1 else key_start, after + 1, ""))
+            else:
+                # last field: remove the preceding comma through this value
+                p = key_start - 1
+                while p > obj_start and text[p] in " \t\r\n":
+                    p -= 1
+                edits.append((p if text[p] == "," else key_start, value_end, ""))
+        elif not removing:
+            # Add as the last field.
+            insert_at = fields[-1][3] if fields else obj_start + 1
+            body = '"%s": %s' % (name, _dump_value(value, field_indent))
+            edits.append((insert_at, insert_at,
+                          (",\n" + field_indent + body) if multiline else (", " + body)))
+
+    for start, end, replacement in sorted(edits, key=lambda e: e[0], reverse=True):
+        text = text[:start] + replacement + text[end:]
+    return text
 
 
 def mirror_to_served(project_dir: str, deck: str, text: str):
@@ -431,7 +552,7 @@ def make_handler(locator: Locator):
 
         # Content fields a slide form may set. Nothing else is touched, so the
         # form can never rewrite a slide's type, page, focus, or id.
-        DECK_FIELDS = {"title", "body", "note", "prompt", "startPoint", "items"}
+        DECK_FIELDS = {"title", "body", "note", "prompt", "startPoint", "items", "table"}
 
         def _patch_deck(self):
             length = int(self.headers.get("Content-Length", 0))
@@ -450,7 +571,18 @@ def make_handler(locator: Locator):
             for name, value in (payload.get("fields") or {}).items():
                 if name not in self.DECK_FIELDS:
                     continue
-                if name == "items" or isinstance(value, list):
+                if name == "table":
+                    if value is None:
+                        updates[name] = None
+                    elif (isinstance(value, dict)
+                          and all(isinstance(value.get(k), list)
+                                  and all(isinstance(x, str) for x in value[k])
+                                  for k in ("columns", "rows"))):
+                        # keep just the two known keys, in a stable order
+                        updates[name] = {"columns": value["columns"], "rows": value["rows"]}
+                    else:
+                        return self._send({"error": "table needs columns and rows lists of strings"}, 400)
+                elif name == "items" or isinstance(value, list):
                     if not isinstance(value, list) or any(not isinstance(x, str) for x in value):
                         return self._send({"error": "%s must be a list of strings" % name}, 400)
                     updates[name] = value
@@ -483,15 +615,7 @@ def make_handler(locator: Locator):
             if span is None:
                 return self._send({"error": "could not locate slide in file"}, 500)
 
-            obj = json.loads(text[span[0]:span[1]])
-            for name, value in updates.items():
-                # An emptied field drops out rather than lingering as "".
-                if value is None or value == "" or value == []:
-                    obj.pop(name, None)
-                else:
-                    obj[name] = value
-
-            new_text = replace_object(text, span, obj)
+            new_text = patch_object_fields(text, span, updates)
             # The source is the truth; never leave it unparseable.
             try:
                 json.loads(new_text)

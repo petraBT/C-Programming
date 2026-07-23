@@ -519,6 +519,10 @@
         font-size: 2.2vmin; font-size: 2.2cqmin; color: #1a1a19; background: #fff;
       }
       .se-field textarea { min-height: 5em; resize: vertical; line-height: 1.4; }
+      .se-subfield { margin-top: .6cqmin; }
+      .se-subfield:first-of-type { margin-top: 0; }
+      .se-sublabel { font-weight: 400 !important; color: #6b6a64 !important; font-size: 1.7cqmin !important; }
+      .se-subfield textarea { min-height: 3em; }
       #slideedit .ed-foot { display: flex; align-items: center; gap: .8em; margin-top: 1.4cqmin; }
       #slideedit button {
         font: inherit; font-size: 2vmin; font-size: 2cqmin; cursor: pointer;
@@ -2024,14 +2028,32 @@
           // The fields each deck-authored slide type exposes. Order is display
           // order; the value's own type (string vs array of lines) is read off
           // the source object so a save round-trips it unchanged.
+          // [key, label, kind] - kind is how the field reads and writes:
+          //   text  single-line string      area  multi-line string
+          //   lines textarea -> array       table columns/rows -> {columns,rows}
           var FORM = {
-            recap:      [['title', 'Title'], ['items', 'Bullets (one per line)'], ['note', 'Note (optional)']],
-            agenda:     [['title', 'Title'], ['items', 'Bullets (one per line)'], ['note', 'Note (optional)']],
-            prompt:     [['title', 'Title'], ['body', 'Body'], ['note', 'Note (optional)']],
-            demo:       [['title', 'Title'], ['body', 'Text above the coding window (one paragraph per line)'], ['startPoint', 'Starting point (CMeCodeDir file, without .c)']],
-            icebreaker: [['title', 'Title'], ['prompt', 'Prompt'], ['note', 'Note (optional)']]
+            recap:      [['title', 'Title', 'text'], ['items', 'Bullets (one per line)', 'lines'], ['note', 'Note (optional)', 'text']],
+            agenda:     [['title', 'Title', 'text'], ['items', 'Bullets (one per line)', 'lines'], ['note', 'Note (optional)', 'text']],
+            prompt:     [['title', 'Title', 'text'], ['body', 'Body', 'area'], ['table', 'Table (optional)', 'table'], ['note', 'Note (optional)', 'text']],
+            demo:       [['title', 'Title', 'text'], ['body', 'Text above the coding window (one paragraph per line)', 'lines'], ['startPoint', 'Starting point (CMeCodeDir file, without .c)', 'text']],
+            icebreaker: [['title', 'Title', 'text'], ['prompt', 'Prompt', 'area'], ['note', 'Note (optional)', 'text']]
           }
-          var MULTILINE = { items: 1, body: 1, prompt: 1 } // textarea vs input
+          function splitLines (v) {
+            return v.split('\n').map(function (s) { return s.trim() }).filter(function (s) { return s.length })
+          }
+          function subField (labelText, part, value) {
+            var d = document.createElement('div')
+            d.className = 'se-subfield'
+            var l = document.createElement('label')
+            l.className = 'se-sublabel'
+            l.textContent = labelText
+            var t = document.createElement('textarea')
+            t.dataset.tablepart = part
+            t.value = value
+            d.appendChild(l)
+            d.appendChild(t)
+            return d
+          }
           var slideeditEl = document.getElementById('slideedit')
           var seFields = document.getElementById('se-fields')
           var seType = document.getElementById('se-type')
@@ -2078,19 +2100,31 @@
             seType.textContent = slide.type
             seFields.innerHTML = ''
             FORM[slide.type].forEach(function (spec) {
-              var key = spec[0], value = src[key]
+              var key = spec[0], value = src[key], kind = spec[2]
               var wrap = document.createElement('div')
               wrap.className = 'se-field'
               var label = document.createElement('label')
               label.textContent = spec[1]
-              var input = document.createElement(MULTILINE[key] ? 'textarea' : 'input')
-              if (!MULTILINE[key]) input.type = 'text'
-              input.dataset.key = key
-              // Show the raw source; setting .value (not innerHTML) keeps any
-              // markup in the string as literal text, never parsed.
-              input.value = Array.isArray(value) ? value.join('\n') : (value == null ? '' : String(value))
               wrap.appendChild(label)
-              wrap.appendChild(input)
+              if (kind === 'table') {
+                // A table is columns + rows. The first column cell is the
+                // (usually blank) corner; keep it aside so the form only shows
+                // the real headers, and restore it on save.
+                var cols = (value && value.columns) || []
+                wrap.dataset.tableKey = key
+                wrap.dataset.corner = cols.length ? cols[0] : ''
+                wrap.appendChild(subField('Column headers (one per line)', 'columns', cols.slice(1).join('\n')))
+                wrap.appendChild(subField('Row labels (one per line)', 'rows', ((value && value.rows) || []).join('\n')))
+              } else {
+                var input = document.createElement(kind === 'text' ? 'input' : 'textarea')
+                if (kind === 'text') input.type = 'text'
+                input.dataset.key = key
+                input.dataset.kind = kind
+                // Show the raw source; setting .value (not innerHTML) keeps any
+                // markup in the string as literal text, never parsed.
+                input.value = (kind === 'lines') ? (value || []).join('\n') : (value == null ? '' : String(value))
+                wrap.appendChild(input)
+              }
               seFields.appendChild(wrap)
             })
             seStatus('')
@@ -2103,15 +2137,18 @@
           function readSlideForm () {
             var fields = {}
             ;[].forEach.call(seFields.querySelectorAll('[data-key]'), function (el) {
-              var key = el.dataset.key
-              // An array-valued field (bullets, demo paragraphs) round-trips as
-              // one line per entry; 'items' is always an array even if empty.
-              if (key === 'items' || Array.isArray(curForm.src[key])) {
-                fields[key] = el.value.split('\n').map(function (s) { return s.trim() })
-                  .filter(function (s) { return s.length })
-              } else {
-                fields[key] = el.value
-              }
+              // 'lines' fields (bullets, demo paragraphs) round-trip as one
+              // entry per line; everything else is the string as typed.
+              fields[el.dataset.key] = el.dataset.kind === 'lines' ? splitLines(el.value) : el.value
+            })
+            ;[].forEach.call(seFields.querySelectorAll('[data-table-key]'), function (wrap) {
+              var headers = splitLines(wrap.querySelector('[data-tablepart="columns"]').value)
+              var rows = splitLines(wrap.querySelector('[data-tablepart="rows"]').value)
+              // Empty on both sides means "no table"; otherwise restore the
+              // corner cell in front of the headers.
+              fields[wrap.dataset.tableKey] = (headers.length || rows.length)
+                ? { columns: [wrap.dataset.corner].concat(headers), rows: rows }
+                : null
             })
             return fields
           }
@@ -2119,7 +2156,7 @@
           function applyFields (src, fields) {
             Object.keys(fields).forEach(function (key) {
               var v = fields[key]
-              if (v === '' || (Array.isArray(v) && !v.length)) delete src[key]
+              if (v === '' || v === null || (Array.isArray(v) && !v.length)) delete src[key]
               else src[key] = v
             })
           }
