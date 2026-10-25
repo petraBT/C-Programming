@@ -5,5 +5,7 @@ window.COURSE = {
   editPort: 9027,
   reviewPort: 9028,
   // "Follow me": the session client reads the slide number from location.hash.
-  scripts: ['classroom.js']
+  scripts: ['classroom.js'],
+  // Alt-click a demo slide's coding window (while authoring) to open its starting point here.
+  startPoints: 'http://127.0.0.1:5050'
 }

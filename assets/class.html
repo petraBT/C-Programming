@@ -3039,12 +3039,47 @@
               document.body.classList.remove('deck-edit-armed')
             })
 
+            /* A coding window on a demo slide (<cmecode> in a <slide>) is an iframe: its
+               clicks never reach this page. So while Alt is held, each one gets a
+               transparent overlay this page CAN see clicks on; Alt-click opens that
+               starting point in the starting-points tool. Only for a course that
+               names the tool: COURSE.startPoints = 'http://127.0.0.1:5050'. The
+               starting point's name is in the iframe's own address, ?src=…/NAME.c. */
+            if (COURSE.startPoints) {
+              var spOverlays = []
+              var clearSpOverlays = function () {
+                spOverlays.forEach(function (o) { if (o.parentNode) o.parentNode.removeChild(o) })
+                spOverlays = []
+              }
+              document.addEventListener('keydown', function (e) {
+                if (e.key !== 'Alt' || spOverlays.length) return
+                ;[].forEach.call(document.querySelectorAll('#ref iframe'), function (f) {
+                  var m = /[?&]src=[^&]*?([^/&]+)\.c(?:&|$)/.exec(f.getAttribute('src') || '')
+                  if (!m) return
+                  var name = decodeURIComponent(m[1]), r = f.getBoundingClientRect()
+                  var o = document.createElement('div')
+                  o.setAttribute('data-sp-overlay', '1')
+                  o.title = 'Alt-click: edit "' + name + '" in the starting points tool'
+                  o.style.cssText = 'position:fixed;z-index:50;cursor:pointer;border-radius:4px;' +
+                    'outline:2px solid rgba(43,138,62,.55);outline-offset:-2px;background:rgba(43,138,62,.06);' +
+                    'left:' + r.left + 'px;top:' + r.top + 'px;width:' + r.width + 'px;height:' + r.height + 'px'
+                  o.addEventListener('click', function (ev) {
+                    ev.preventDefault(); ev.stopPropagation()
+                    window.open(COURSE.startPoints + '/?file=' + encodeURIComponent(name), '_blank')
+                  })
+                  document.body.appendChild(o); spOverlays.push(o)
+                })
+              })
+              document.addEventListener('keyup', function (e) { if (e.key === 'Alt') clearSpOverlays() })
+              window.addEventListener('blur', clearSpOverlays)
+            }
+
             // Capture phase, so an alt-click is claimed for editing before any
             // control treats it as an ordinary click. (The pen layer only draws
             // for pen input, so a mouse alt-click never leaves a stroke.)
             document.addEventListener('click', function (e) {
               if (!e.altKey || editing) return
-              if (e.target.closest('#bar, #slideedit, .deck-edit-toast')) return
+              if (e.target.closest('#bar, #slideedit, .deck-edit-toast, [data-sp-overlay]')) return
               var slide = currentSlide()
               if (!slide) return
               e.preventDefault()
