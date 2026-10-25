@@ -14,6 +14,8 @@ CurrentByteIndex) and treat the file as bytes throughout, only decoding at the
 edges.
 """
 
+from __future__ import annotations
+
 import os
 import re
 import xml.parsers.expat

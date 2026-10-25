@@ -108,11 +108,12 @@ def render_shape(kind, box, sp, ox, oy, s, max_text, font_scale=1.0):
             tx = {"start": x + w * 0.02, "end": x + w * 0.98,
                   "middle": x + w / 2}[anchor]
             fs = size * s / 72.0
+            bold_attr = ' font-weight="bold"' if bold else ''
             out.append(
                 f'<text x="{tx:.1f}" y="{start + i * line_h:.1f}" font-size="{fs:.1f}" '
                 f'fill="{colour}" text-anchor="{anchor}" '
                 f'font-family="Helvetica, Arial, sans-serif"'
-                f'{" font-weight=\"bold\"" if bold else ""}{xf}>{escape(text)}</text>')
+                f'{bold_attr}{xf}>{escape(text)}</text>')
     return out
 
 
