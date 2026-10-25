@@ -17,13 +17,14 @@ set -e
 # web-edit is deliberately absent from build.sh and deploy.sh, because it is the
 # one target carrying a script that talks to a server able to rewrite source.
 #
-# Usage: ./preview-edit.sh [port] [--no-watch]   (port defaults to 8931)
+# Usage: ./preview-edit.sh [port] [--no-watch]   (port defaults to 9031)
 #
 # --no-watch skips the rebuild-on-save watcher, for when you want the preview
 # held still at a known build. A warm rebuild is a few seconds; the first one
 # after a PreTeXt upgrade is much slower, since it re-fetches Runestone.
 
-PORT=8931
+# ENGS 20 has its own ports (9031, 9027) so it can run beside ENGS 28 (8931, 8927).
+PORT=9031
 WATCH=yes
 for arg in "$@"; do
   case "$arg" in
@@ -77,7 +78,7 @@ echo ""
 echo "Helpers:"
 # Finds and rewrites .ptx source in response to alt-clicks. See
 # scripts/README-editing.md.
-start_helper "edit server" 8927 python3 scripts/edit-server.py
+start_helper "edit server" 9027 python3 scripts/edit-server.py --port 9027
 # What alt-clicking a coding window opens into. Optional: everything else works
 # without it, so a missing node shouldn't stop the preview.
 if command -v node >/dev/null 2>&1; then

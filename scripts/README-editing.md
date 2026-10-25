@@ -22,7 +22,7 @@ One command, from the project root:
 ```
 
 That builds the target, serves it, and starts both helper processes — the edit
-server on 8927 (which finds and rewrites the source) and the starting points
+server on 9027 (which finds and rewrites the source) and the starting points
 tool on 5050 (which coding-window clicks open into). Ctrl-C stops all three. If
 a port is already taken it says so and carries on rather than failing silently,
 so a second copy won't fight the first.
@@ -40,7 +40,7 @@ starting points tool is worth having up by itself, and the edit server takes a
 `--project` for the other books:
 
 ```bash
-python3 scripts/edit-server.py          # port 8927
+python3 scripts/edit-server.py --port 9027   # ENGS 20 uses 9027 (ENGS 28 uses 8927)
 node starting-points-tool/server.js     # port 5050
 ```
 

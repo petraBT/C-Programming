@@ -17,7 +17,7 @@ it. Each line links to the section with the caveats.
 ./preview-edit.sh          # build, serve, and start every helper. Ctrl-C stops all.
 ```
 
-Open <http://localhost:8931/>, then hold <kbd>alt</kbd>:
+Open <http://localhost:9031/>, then hold <kbd>alt</kbd>:
 
 | | |
 | --- | --- |

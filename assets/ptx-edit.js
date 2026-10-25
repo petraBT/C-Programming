@@ -13,7 +13,7 @@
 (function () {
   'use strict'
 
-  var SERVER = 'http://127.0.0.1:8927'
+  var SERVER = 'http://127.0.0.1:9027'   // ENGS 20's own edit-server port (ENGS 28 uses 8927)
   // starting-points-tool/server.js, run separately from the book's own preview.
   var STARTING_POINTS = 'http://127.0.0.1:5050'
 

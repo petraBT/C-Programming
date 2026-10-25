@@ -1981,12 +1981,12 @@
         // slide). Alt-click one to open its source at the right slide.
         //
         // Local-only and self-effacing, exactly like the book's version: it
-        // wires nothing up unless the edit-server (127.0.0.1:8927, started by
+        // wires nothing up unless the edit-server (127.0.0.1:9027, started by
         // ./preview-edit.sh) actually answers, so it never appears for a
         // student, on the deployed deck, or in a plain non-authoring preview.
         ;(function () {
           if (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return
-          var EDIT_SERVER = 'http://127.0.0.1:8927'
+          var EDIT_SERVER = 'http://127.0.0.1:9027'   // ENGS 20's own edit-server port (ENGS 28 uses 8927)
           var STARTING_POINTS = 'http://127.0.0.1:5050' // same tool ptx-edit opens
 
           function toast(message, kind) {
