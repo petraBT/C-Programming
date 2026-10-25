@@ -15,6 +15,10 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$SCRIPT_DIR"
 
+# The deck player's contents page reads this; regenerate it so a deck added since the
+# last build shows up.
+python3 scripts/make_deck_index.py
+
 pretext build web-edit
 ./scripts/add-applets.sh output/web-edit
 

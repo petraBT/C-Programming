@@ -20,12 +20,62 @@ import xml.parsers.expat
 from dataclasses import dataclass, field
 
 
+# The source bytes of each indexed file, so flatten() can see how a character
+# was actually WRITTEN — a dash is one character on screen whether the author
+# typed "—" or "&#8212;", but seven bytes in the second case. Keyed by mtime so
+# a file edited underneath us is re-read rather than answered from a stale copy.
+_RAW_CACHE: dict[str, tuple[int, bytes]] = {}
+
+
+def source_width(raw: bytes, pos: int, ch: str) -> int:
+    """How many source bytes at `pos` produced the decoded character `ch`.
+
+    Usually the character's own UTF-8 length — but XML lets the same character
+    be written as a reference, and then it is longer: "&#8212;" is seven bytes
+    for one dash, "&amp;" five for one ampersand. Getting this wrong is not a
+    rounding error, it is corruption: an em dash whose span was computed as
+    three bytes covered only "&#8", so deleting the dash in the preview left a
+    stray "212;" in the file.
+
+    A literal "&" cannot appear in XML character data (it must itself be
+    escaped), so "&" here always opens a reference and runs to the ";".
+    """
+    if raw[pos:pos + 1] == b"&":
+        end = raw.find(b";", pos)
+        # Bounded: a stray "&" with no ";" for a long way is not a reference,
+        # and must not swallow the rest of the paragraph.
+        if end != -1 and end - pos <= 12:
+            return end - pos + 1
+    return len(ch.encode("utf-8"))
+
+
+def raw_bytes(path: str) -> bytes:
+    try:
+        stamp = os.stat(path).st_mtime_ns
+    except OSError:
+        return b""
+    hit = _RAW_CACHE.get(path)
+    if hit is not None and hit[0] == stamp:
+        return hit[1]
+    try:
+        with open(path, "rb") as handle:
+            data = handle.read()
+    except OSError:
+        data = b""
+    _RAW_CACHE[path] = (stamp, data)
+    return data
+
+
 # Elements whose text a person would plausibly click on and want to edit.
 # Restricting matches to these keeps a search for a sentence from returning the
 # <section> and <chapter> that merely contain it.
 TEXT_ELEMENTS = {
     "p", "li", "title", "cell", "term", "q", "blockquote", "caption",
     "pre", "line", "attribution", "em", "alert", "insert", "delete", "stale",
+    # A <slide>'s presenter <note>: instructor-only text that is never
+    # projected, so it is edited through the deck player's slide form rather
+    # than by clicking it. It still has to be indexed to be found and written.
+    "note",
 }
 
 # Elements whose text is in the source but renders nowhere in the running prose
@@ -100,14 +150,15 @@ class Element:
         starts: list[int] = []
         ends: list[int] = []
         owned: list[bool] = []
+        raw = raw_bytes(self.path)
         ws_start = -1  # byte offset where the current whitespace run began
         for data, base, depth in self.chunks:
             text = data.decode("utf-8", "replace")
-            # Byte offset of character i is base + the UTF-8 length of the
-            # characters before it, so multi-byte characters stay aligned.
+            # expat hands back DECODED text, so a character's width on screen is
+            # not its width in the file. Walk the raw bytes alongside it.
             pos = base
             for ch in text:
-                width = len(ch.encode("utf-8"))
+                width = source_width(raw, pos, ch)
                 if ch.isspace():
                     if ws_start < 0:
                         ws_start = pos

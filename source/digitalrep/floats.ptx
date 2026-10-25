@@ -19,6 +19,12 @@
         <title>Review: Integer Division</title>
         <p>Recall the funny division behavior we notice in the C programming language when using integers. Feel free to play around in this code window to refresh your memory and experiment in order to analyze this behavior.</p>
         <cmecode startPoint="engs20p_Ndivision1" addOn="&amp;nocheck=true" height="300"></cmecode>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c3-13-demo" title="Integer division">
+          <p>Recall the funny division behaviour we noticed in the C programming language.</p>
+          <cmecode startPoint="engs20p_Ndivision1"/>
+        </slide>
         <reading-questions>
             <exercise xml:id="quiz-floatchar-1">
                 <statement>
@@ -245,6 +251,12 @@
             <p><em>Record your answer below.</em></p>
             <program xml:id="activity-6-2-1-Int-to-Float-no-output" language="octave" interactive="yes"/>
         </activity>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c3-14-demo" title="Casting an int to a float">
+          <p>What do you think happens to the value of the number when you cast an int to a float? Are digits beyond the decimal point added on?</p>
+          <cmecode startPoint="engs20p_Ndivision2"/>
+        </slide>
         <reading-questions>
             <exercise xml:id="quiz-floatchar-4">
                 <statement>
@@ -337,6 +349,12 @@
                 <p>Just use the code window above to play around. Don't be afraid! You can't break anything!</p>
             </hint>
         </activity>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c3-15-demo" title="Casting a float to an int">
+          <p>What happens when you similarly cast a float to an int? Will rounding occur?</p>
+          <cmecode startPoint="engs20p_Ndivision3"/>
+        </slide>
     </section>
 
     <section xml:id="floats-average">
@@ -376,6 +394,12 @@
                 <p>15-6=9 <m>\rightarrow</m> 9-6=3 <m>\rightarrow</m> 6 doesn't go into 3, so 3 is the remainder.</p>
             </solution>
         </investigation>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c3-17-demo" title="Division Remainder">
+          <p>Suppose you want to know the remainder of the division of one integer by another. Can we do this with our current programming knowledge?</p>
+          <cmecode startPoint="engs20p_NRemainder"/>
+        </slide>
     </section>
 
     <section xml:id="floats-summary">
@@ -418,5 +442,17 @@
                 </li>
             </ul>
         </p>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c3-18-recap" kind="recap" title="Here is what we covered today">
+          <ul>
+            <li>Converting between decimal and binary numbers</li>
+            <li>Negative number representation</li>
+            <li>Three ways a binary number can be interpreted: unsigned integer, signed magnitude, binary 2's complement</li>
+            <li>Hexadecimal numbers as short-hand for binary</li>
+            <li>Converting (casting) between data types: <c>ave = ((float) a)/((float) b);</c></li>
+            <li>Modulo operation to find the remainder in integer division: <c>8 % 5 = 3</c></li>
+          </ul>
+        </slide>
     </section>
 </chapter>

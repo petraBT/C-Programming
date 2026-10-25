@@ -13,7 +13,10 @@
 
 <!-- Assumes current file is in mathbook/user, so it must be copied there -->
 <!-- <xsl:import pretext-href="pretext-html.xsl" /> -->
-<xsl:import href="./core/pretext-html.xsl"/>
+<!-- slide-html.xsl is the shared slide tooling (synced from ~/repos/slide-tooling, never
+     edited here): it teaches PreTeXt the <slide>, <instructor> and <clr> elements, and
+     imports core/pretext-html.xsl itself. Every template below overrides it. -->
+<xsl:import href="./slide-html.xsl"/>
 <!-- <xsl:import href="c-programming-preprocessing.xsl" /> -->
 
 <!-- Set via project.ptx <stringparam key="cmecode.mode" value="static"/> on a build target.
@@ -173,7 +176,22 @@ Example:
             <xsl:text>.c</xsl:text>
         </xsl:if>
     </xsl:variable>
-    <iframe title="Coding Assignment" allow="cross-origin-isolated" style="position: absolute; top: -9999em; visibility: hidden; border: none;" onload="this.style.position='static'; this.style.visibility='visible';" src="{$the-url}" width="100%" height="{$height}"></iframe>
+    <xsl:choose>
+        <!-- Inside a <slide> (a demo slide: a line or two over one coding window) the
+             address goes in data-sim-src, not src, and the deck player sets src when it
+             shows the slide: the published book keeps its slides as hidden blocks, and a
+             browser loads an iframe even under display:none, so a plain src would run a
+             second, invisible coding window on the reading page. The sim-embed wrapper is
+             what the player looks for to give the window the whole slide. -->
+        <xsl:when test="ancestor::slide">
+            <div class="sim-embed">
+                <iframe title="Coding Assignment" allow="cross-origin-isolated" style="position: absolute; top: -9999em; visibility: hidden; border: none;" onload="this.style.position='static'; this.style.visibility='visible';" data-sim-src="{$the-url}" width="100%" height="{$height}"></iframe>
+            </div>
+        </xsl:when>
+        <xsl:otherwise>
+            <iframe title="Coding Assignment" allow="cross-origin-isolated" style="position: absolute; top: -9999em; visibility: hidden; border: none;" onload="this.style.position='static'; this.style.visibility='visible';" src="{$the-url}" width="100%" height="{$height}"></iframe>
+        </xsl:otherwise>
+    </xsl:choose>
 </xsl:template>
 
 <xsl:template name="cmecode-live">

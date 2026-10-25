@@ -7,6 +7,9 @@
 // inherited from the web-client target it mirrors, and ptx-edit.js, the
 // authoring helper. Hence this shim.
 //
+// course.js comes first: ptx-edit.js reads window.COURSE.editPort from it (ENGS 20's
+// edit server is on 9027, not the shared default).
+//
 // Only web-edit uses it. web-client still points html.js.extra straight at
 // classroom.js, so nothing about the deployed build changes.
 (function () {
@@ -17,7 +20,7 @@
   var self = document.currentScript && document.currentScript.src
   var base = self ? self.replace(/[^/]*$/, '') : 'external/'
 
-  ;['classroom.js', 'ptx-edit.js'].forEach(function (name) {
+  ;['course.js', 'classroom.js', 'ptx-edit.js'].forEach(function (name) {
     var script = document.createElement('script')
     script.src = base + name
     // Dynamically inserted scripts default to async, which would let these two

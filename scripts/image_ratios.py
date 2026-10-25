@@ -1,0 +1,202 @@
+#!/usr/bin/env python3
+"""Reserve layout space for every image in the book.
+
+PreTeXt emits a figure as
+
+    <div class="image-box" style="width: 94%; ..."><img src="..." class="contained"></div>
+
+with no width/height on the <img> and no aspect-ratio on the box.  Until the
+image itself arrives the box is ~22px tall, so every page with a figure grows
+by hundreds of pixels as it loads and everything below each figure moves down.
+Measured on subsec-day12-whole-build.html: one figure swings the page height by
+516px, and a paragraph that finally sits at y=2656 passes through y=2140 on the
+way.
+
+That reflow is why a review comment's pixel bbox does not replay reliably.
+Petra circled a paragraph on 2026-08-26; by the time the coordinates were read
+back against a settled page the box no longer covered it, and the comment was
+reported to her as "drawn in blank space".  (`assets/ptx-review.js` anchors a
+comment three ways for exactly this reason -- bbox, PreTeXt block ids, and
+source file:line -- and the anchors were right all along.)
+
+The fix is an `aspect-ratio` per image, which reserves the height from the
+declared width before a single byte of the image is fetched.  XSLT 1.0 cannot
+read image files, so the ratios cannot come from xsl/engs28-html.xsl; they are
+generated here into a marked block in assets/book.css, which every HTML target
+already loads via html.css.extra in project.ptx.
+
+Run by build.sh and scripts/build-all.sh, so the block cannot go stale.
+Idempotent: writes only when the generated block actually changes.
+
+    python3 scripts/image_ratios.py           # rewrite the block
+    python3 scripts/image_ratios.py --check   # non-zero if it is out of date
+"""
+import os
+import re
+import sys
+import xml.etree.ElementTree as ET
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ASSETS = os.path.join(ROOT, 'assets')
+SOURCE = os.path.join(ROOT, 'source')
+CSS = os.path.join(ASSETS, 'book.css')
+
+BEGIN = '/* BEGIN generated image aspect ratios -- scripts/image_ratios.py */'
+END = '/* END generated image aspect ratios */'
+
+RASTER = {'.png', '.jpg', '.jpeg', '.gif', '.webp'}
+VECTOR = {'.svg'}
+
+
+def svg_size(path):
+    """Intrinsic ratio of an SVG, from viewBox if it has one, else width/height."""
+    try:
+        root = ET.parse(path).getroot()
+    except Exception:
+        return None
+    vb = root.get('viewBox')
+    if vb:
+        parts = re.split(r'[\s,]+', vb.strip())
+        if len(parts) == 4:
+            try:
+                w, h = float(parts[2]), float(parts[3])
+                if w > 0 and h > 0:
+                    return w, h
+            except ValueError:
+                pass
+    w, h = root.get('width'), root.get('height')
+    if w and h:
+        try:
+            wn = float(re.sub(r'[^0-9.]', '', w))
+            hn = float(re.sub(r'[^0-9.]', '', h))
+            if wn > 0 and hn > 0:
+                return wn, hn
+        except ValueError:
+            pass
+    return None
+
+
+def raster_size(path):
+    try:
+        from PIL import Image
+    except ImportError:
+        return None
+    try:
+        with Image.open(path) as im:
+            w, h = im.size
+            return (w, h) if w > 0 and h > 0 else None
+    except Exception:
+        return None
+
+
+def referenced():
+    """Every image path the book source names, as a path under assets/.
+
+    assets/images/ also holds a thousand mined PowerPoint slides that no page
+    references; keying off the source keeps the generated block to what the
+    book actually renders.
+    """
+    paths = set()
+    for name in sorted(os.listdir(SOURCE)):
+        if not name.endswith('.ptx'):
+            continue
+        text = open(os.path.join(SOURCE, name), encoding='utf-8').read()
+        for m in re.finditer(r'\bsource="([^"]+)"', text):
+            rel = m.group(1)
+            if os.path.splitext(rel)[1].lower() in RASTER | VECTOR:
+                paths.add(rel)
+    return paths
+
+
+def collect():
+    """(relative path, w, h) for every image the book source references."""
+    out, skipped, missing = [], [], []
+    for rel in sorted(referenced()):
+        full = os.path.join(ASSETS, rel)
+        if not os.path.isfile(full):
+            missing.append(rel)          # check_rules.py owns the real B-11 check
+            continue
+        ext = os.path.splitext(rel)[1].lower()
+        size = svg_size(full) if ext in VECTOR else raster_size(full)
+        if size is None:
+            skipped.append(rel)
+            continue
+        out.append((rel, size[0], size[1]))
+    return out, skipped, missing
+
+
+def ratio(w, h):
+    """A short exact ratio.  Integers where we have them, else 4dp."""
+    if float(w).is_integer() and float(h).is_integer():
+        return '%d / %d' % (int(w), int(h))
+    return '%.4f / %.4f' % (w, h)
+
+
+def build_block(images, collisions):
+    lines = [BEGIN,
+             '/* Generated -- do not edit by hand.  Regenerated by build.sh and',
+             '   scripts/build-all.sh; see the header of scripts/image_ratios.py',
+             '   for why these exist and what breaks without them.',
+             '',
+             '   `aspect-ratio` on the <img> reserves the figure\'s height from its',
+             '   declared width before the image is fetched, so a page stops',
+             '   reflowing as its figures arrive.  Matching is a substring of the',
+             '   path under assets/, which survives the ?_r= cache-buster the',
+             '   authoring preview appends and the differing external/ prefixes',
+             '   across build targets. */']
+    if collisions:
+        lines.append('/* NOTE: basename collisions, matched on full path: %s */'
+                     % ', '.join(sorted(collisions)))
+    for rel, w, h in images:
+        # Anchor at a path separator so a bare assets/*.svg cannot also match
+        # a same-named file inside assets/images/.
+        key = rel if '/' in rel else '/' + rel
+        lines.append('img[src*="%s"] { aspect-ratio: %s; }' % (key, ratio(w, h)))
+    lines.append(END)
+    return '\n'.join(lines) + '\n'
+
+
+def splice(css, block):
+    if BEGIN in css and END in css:
+        head = css[:css.index(BEGIN)]
+        tail = css[css.index(END) + len(END):].lstrip('\n')
+        return head + block + (('\n' + tail) if tail.strip() else '')
+    sep = '' if css.endswith('\n\n') else ('\n' if css.endswith('\n') else '\n\n')
+    return css + sep + '\n' + block
+
+
+def main():
+    check = '--check' in sys.argv
+    images, skipped, missing = collect()
+
+    seen = {}
+    collisions = set()
+    for rel, _, _ in images:
+        base = rel.rsplit('/', 1)[-1]
+        if base in seen:
+            collisions.add(base)
+        seen[base] = rel
+
+    block = build_block(images, collisions)
+    css = open(CSS, encoding='utf-8').read()
+    updated = splice(css, block)
+
+    if updated == css:
+        print('image_ratios: %d image(s), book.css already current' % len(images))
+    elif check:
+        print('image_ratios: assets/book.css is OUT OF DATE -- run '
+              'python3 scripts/image_ratios.py', file=sys.stderr)
+        return 1
+    else:
+        open(CSS, 'w', encoding='utf-8').write(updated)
+        print('image_ratios: %d image(s) -> assets/book.css' % len(images))
+
+    for rel in skipped:
+        print('image_ratios: no intrinsic size, skipped: %s' % rel, file=sys.stderr)
+    for rel in missing:
+        print('image_ratios: referenced but not in assets/: %s' % rel, file=sys.stderr)
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

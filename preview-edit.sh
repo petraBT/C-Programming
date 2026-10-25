@@ -23,7 +23,7 @@ set -e
 # held still at a known build. A warm rebuild is a few seconds; the first one
 # after a PreTeXt upgrade is much slower, since it re-fetches Runestone.
 
-# ENGS 20 has its own ports (9031, 9027) so it can run beside ENGS 28 (8931, 8927).
+# ENGS 20 has its own ports (9031, 9027, 9028) so it can run beside ENGS 28 (8931, 8927, 8928).
 PORT=9031
 WATCH=yes
 for arg in "$@"; do
@@ -79,6 +79,9 @@ echo "Helpers:"
 # Finds and rewrites .ptx source in response to alt-clicks. See
 # scripts/README-editing.md.
 start_helper "edit server" 9027 python3 scripts/edit-server.py --port 9027
+# Review mode in the deck player (R or the Review button): circle part of a slide,
+# type what should change, and it queues in reviews/slide-comments.jsonl.
+start_helper "review server" 9028 env REVIEW_PORT=9028 python3 scripts/review-server.py
 # What alt-clicking a coding window opens into. Optional: everything else works
 # without it, so a missing node shouldn't stop the preview.
 if command -v node >/dev/null 2>&1; then

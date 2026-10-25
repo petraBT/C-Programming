@@ -1,0 +1,10 @@
+/* Reading-view styling for classroom-deck authoring elements.
+
+   A <slide> element (see xsl/engs28-html.xsl) is the condensed in-class form of
+   the surrounding content. It is emitted into the built HTML so the deck player
+   can extract it, but it is NEVER shown in the book's reading view - only the
+   projector does. The presenter note inside it is likewise hidden here (and is
+   never projected either; it reaches the instructor only through the handout and
+   the ?notes view). Loaded on every page via the html.css.extra stringparam on
+   the web-deck target. */
+.deck-slide { display: none !important; }

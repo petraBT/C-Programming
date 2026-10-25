@@ -420,6 +420,41 @@ cash = 20;</code></program> </li>
   <title>Common Variable Errors</title>
   <p><idx><h>variables</h><h>errors</h></idx>We all make mistakes. In coding there are several types of errors we are all prone to. Some are akin to spelling or grammar errors (we call them syntax errors) and some are of logical nature, for example. It can be helpful to think about potential errors before getting started so that you can be on the lookout. Let's look at some common errors in working with variables.</p>
   <p>The following three activities present erroneous code. Can you spot the error and fix it? Don't be afraid to play around and try out multiple solutions. You cannot break anything! Remember that you can always go back to the original problem by clicking on the <q>Start fresh</q> button.</p>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c2-01-recap" kind="recap" title="Where we left off">
+          <ul>
+            <li><c>printf</c> displays a message on the screen</li>
+            <li><c>\n</c> starts a new line; quotes are escaped as <c>\"</c></li>
+            <li>Loops repeat instructions multiple times</li>
+            <li>Comments: <c>/* ... */</c> across lines, <c>//</c> to end of line</li>
+          </ul>
+        </slide>
+        <slide xml:id="sl-w1c2-02-icebreaker" kind="prompt" title="Warm-up">
+          <p>If you could use a time machine, would you travel to the future or to the past? When, and where would you go?</p>
+        </slide>
+        <slide xml:id="sl-w1c2-03-agenda" kind="agenda" title="Today">
+          <ul>
+            <li>Common variable errors</li>
+            <li>Variables and loops</li>
+            <li>User input using <c>scanf()</c></li>
+            <li>The <c>char</c> datatype</li>
+            <li>The <c>float</c> datatype</li>
+            <li>Division in C</li>
+          </ul>
+        </slide>
+        <slide xml:id="sl-w1c2-04-icebreaker" kind="prompt" title="Meet your team">
+          <p>Please go around and introduce yourselves: your name, your class year and (intended) major, and the best gift you've ever given or received.</p>
+          <caption>Then brainstorm a team name.</caption>
+        </slide>
+        <slide xml:id="sl-w1c2-08-recap" kind="recap" title="What we learned">
+          <ul>
+            <li>Variable names contain only letters, numbers and <c>_</c></li>
+            <li>They must start with a letter or <c>_</c></li>
+            <li>They are case sensitive</li>
+            <li>Variables must be initialized BEFORE they are used</li>
+          </ul>
+        </slide>
   <subsection>
     <title>Fix Me!</title>
     <activity xml:id="activity-4-6-1-Fix_Me_1">
@@ -550,6 +585,21 @@ cash = 20;</code></program> </li>
       <cmecode startPoint="engs20p_NuserInput4" addOn="&amp;nocheck=true" height="500"></cmecode>
     </statement>
   </activity>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c2-10-demo" title="User input">
+          <p>It is possible to have the user enter values and store them in variables. The command for this is <c>scanf()</c>.</p>
+          <p>Let's ask the user for their age and then print it out:</p>
+          <cmecode startPoint="engs20p_NuserInput1"/>
+        </slide>
+        <slide xml:id="sl-w1c2-11-demo" title="Reading more than one value">
+          <p>You can read multiple entries with one <c>scanf</c> statement if you wish — or simply use multiple <c>scanf</c> statements:</p>
+          <cmecode startPoint="engs20p_NuserInput2"/>
+        </slide>
+        <slide xml:id="sl-w1c2-12-demo" title="Back to the multiplication table">
+          <p>Now we'll have the user input which multiplication table to print.</p>
+          <cmecode startPoint="engs20p_NuserInput3"/>
+        </slide>
 </section>
 
 <section xml:id="variables-char-datatype">
@@ -601,6 +651,17 @@ cash = 20;</code></program> </li>
     <p>Since our <c>scanf()</c> statement in the code window above has <c>&amp;letter</c> as the destination where the scanned input is to be stored, the <c>scanf()</c> function knows that <c>&amp;letter</c> was declared as a <c>char</c>, so it expects the complementary <c>%c</c> format specifier.</p>
   </solution>
 </investigation>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c2-14-demo" title="The char datatype">
+          <p>So far we have only stored integer numbers in variables. You can also store letters or symbols — <em>characters</em>.</p>
+          <p>The datatype is <c>char</c> and the format specifier is <c>%c</c>:</p>
+          <cmecode startPoint="engs20p_NprintChar"/>
+        </slide>
+        <slide xml:id="sl-w1c2-16-demo" title="User input — characters">
+          <p>You can use <c>scanf()</c> to read a character from the user input:</p>
+          <cmecode startPoint="engs20p_NscanChar"/>
+        </slide>
 </section>
 
 <section xml:id="variables-float-datatype">
@@ -627,11 +688,37 @@ cash = 20;</code></program> </li>
       <p>Try it out above to see what happens, then see if you can guess why that happens!</p>
     </hint>
   </investigation>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c2-17-demo" title="Decimal numbers">
+          <p>C has several data types for decimal numbers: <c>float</c>, <c>double</c> and <c>long double</c>, with increasing precision. We'll mostly use <c>float</c>, whose format specifier is <c>%f</c>.</p>
+          <p>Use <c>%.1f</c>, <c>%.2f</c>, … to set the number of decimal places — the default is 6.</p>
+          <cmecode startPoint="engs20p_NprintScanFloat"/>
+        </slide>
+        <slide xml:id="sl-w1c2-18-recap" kind="recap" title="What we learned">
+          <ul>
+            <li><c>int</c>, <c>char</c>, <c>float</c> datatypes</li>
+            <li>Format specifiers <c>%d</c>, <c>%c</c>, <c>%f</c></li>
+            <li><c>scanf("%d", &amp;age);</c></li>
+            <li><c>scanf("%c", &amp;letter);</c></li>
+            <li><c>scanf("%f", &amp;height);</c></li>
+          </ul>
+        </slide>
 </section>
 
 <section xml:id="variables-division">
     <title>Division</title>
     <p>Get ready to be surprised. But don't worry, we'll explain everything soon!</p>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c2-19-demo" title="Division">
+          <p>Try to predict what the output of the following program will be — then run it.</p>
+          <cmecode startPoint="engs20p_Ndivision1"/>
+        </slide>
+        <slide xml:id="sl-w1c2-20-prompt" kind="prompt" title="Summary of division behaviour in C">
+          <p><c>5/2 = 2</c>    <c>5.0/2 = 2.5</c>    <c>5/2.0 = 2.5</c>    <c>5.0/2.0 = 2.5</c></p>
+          <caption>What is going on here?</caption>
+        </slide>
     <subsection>
       <title>Intro to Division in C</title>
       <activity label="activity-variables-division">

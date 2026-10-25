@@ -13,7 +13,9 @@
 
 <!-- Assumes current file is in mathbook/user, so it must be copied there -->
 <!-- <xsl:import pretext-href="pretext-html.xsl" /> -->
-<xsl:import href="./core/pretext-latex.xsl"/>
+<!-- slide-latex.xsl (shared slide tooling, synced) imports core/pretext-latex.xsl itself and
+     keeps <slide> blocks out of the PDF. -->
+<xsl:import href="./slide-latex.xsl"/>
 
 <!-- 
 Example: Assumes c-source code is in source subdirectory /CMeCodeDir

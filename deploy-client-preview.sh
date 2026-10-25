@@ -78,6 +78,14 @@ if [ -d CanvasStartDir ]; then
   cp -R CanvasStartDir "$STAGE_DIR/"
 fi
 
+# Note-taking PDFs of the decks, if ./make-slide-pdfs.sh has been run: the deck player looks
+# for them at slides/pdf/ (beside external/) and shows its PDF button only when it finds
+# manifest.json there. Not built here - they take a minute per deck and are rarely stale.
+if [ -f output/slide-pdfs/manifest.json ]; then
+  mkdir -p "$STAGE_DIR/slides/pdf"
+  cp output/slide-pdfs/*.pdf output/slide-pdfs/manifest.json "$STAGE_DIR/slides/pdf/"
+fi
+
 python3 generate-middleware.py output/web-client functions/_middleware.js
 
 npx wrangler pages deploy "$STAGE_DIR" --project-name="$PROJECT_NAME"

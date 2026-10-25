@@ -66,7 +66,11 @@
            it directly as a <link href="..."> for the browser to resolve (unlike cmecode.root
            above), and PreTeXt already copies everything under assets/ into
            <output-dir>/external/ regardless of whether it's linked anywhere. -->
-      <stringparam key="html.css.extra" value="external/_custom-styles.css"/>
+      <!-- deck.css keeps the hidden <slide> blocks out of the reading view; deck.slides=render
+           makes this target emit them (as hidden divs) for the deck player, external/class.html,
+           to extract. The legacy targets (web, web-static) leave them out. -->
+      <stringparam key="html.css.extra" value="external/deck.css external/_custom-styles.css"/>
+      <stringparam key="deck.slides" value="render"/>
       <!-- The JS twin of html.css.extra: emitted as a <script src="..."> on every page.
            assets/classroom.js is the in-class "follow me" session client - inert unless the
            tab has joined a session via ?classroom=... (see that file's own comments). -->
@@ -90,7 +94,8 @@
       <xsl>xsl/c-programming-html.xsl</xsl>
       <stringparam key="cmecode.mode" value="client"/>
       <stringparam key="cmecode.root" value="/Users/dz00762/repos/C-Programming/CMeCodeDir/"/>
-      <stringparam key="html.css.extra" value="external/_custom-styles.css"/>
+      <stringparam key="html.css.extra" value="external/deck.css external/_custom-styles.css"/>
+      <stringparam key="deck.slides" value="render"/>
       <!-- Unlike html.css.extra, html.js.extra takes exactly ONE file, and
            web-client already spends it on classroom.js. assets/web-edit-loader.js
            is a shim that pulls in both that and ptx-edit.js - see its comments.

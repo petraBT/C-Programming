@@ -13,7 +13,7 @@
 (function () {
   'use strict'
 
-  var SERVER = 'http://127.0.0.1:9027'   // ENGS 20's own edit-server port (ENGS 28 uses 8927)
+  var SERVER = 'http://127.0.0.1:' + ((window.COURSE || {}).editPort || 8927)
   // starting-points-tool/server.js, run separately from the book's own preview.
   var STARTING_POINTS = 'http://127.0.0.1:5050'
 
@@ -108,8 +108,53 @@
     return error.message
   }
 
-  function beginEdit (block) {
+  /* Ask the server whether this block can be rewritten in place BEFORE opening
+     it for editing. Roughly one book paragraph in twelve is a dead end — it
+     holds math, an <xref> or a character entity, whose displayed text is
+     generated at build time and has no counterpart in the source, so no edit
+     to it could ever be saved. Finding that out after typing (which is what
+     used to happen) means losing the work, so the check moved to the front:
+     a block that can't be line-edited opens in your editor instead, and says
+     why. */
+  function requestEdit (block) {
     if (editing) return
+    editing = block   // claim it now, so a second alt-shift-click can't race
+    var url = SERVER + '/locate' +
+      '?text=' + encodeURIComponent(textFor(block)) +
+      '&id=' + encodeURIComponent(idFor(block))
+    fetch(url)
+      .then(function (response) { return response.json().then(function (body) {
+        if (!response.ok) throw new Error(body.error || 'lookup failed')
+        return body
+      }) })
+      .then(function (body) {
+        if (body.editable) { beginEdit(block); return }
+        // Not editable: hand the author to the file rather than to a dead end.
+        editing = null
+        toast('Can’t edit here — ' + body.blocked + '. Opening ' +
+              body.file + ':' + body.line + ' in your editor.', 'info')
+        fetch(url + '&open=1').catch(function () {})
+      })
+      .catch(function (error) {
+        editing = null
+        toast(describe(error), 'error')
+      })
+  }
+
+  /* Hand back text a failed save would otherwise discard. The clipboard needs
+     permission and a recent gesture and can simply refuse, so the console is
+     the fallback that always works - and the caller is told which happened, so
+     the message never promises a clipboard that isn't there. */
+  function keepText (text, done) {
+    console.log('[ptx-edit] unsaved text:\n' + text)
+    try {
+      navigator.clipboard.writeText(text)
+        .then(function () { done(true) })
+        .catch(function () { done(false) })
+    } catch (e) { done(false) }
+  }
+
+  function beginEdit (block) {
     var original = textFor(block)
     editing = block
     // Take the permalink widget out for the duration - inside a contenteditable
@@ -122,6 +167,13 @@
     var originalHTML = block.innerHTML
     block.classList.add('ptx-edit-active')
     block.setAttribute('contenteditable', 'plaintext-only')
+
+    /* Nothing opened here contains inline markup: the server refuses those up
+       front (see edit_status) and sends you to the file instead. An earlier
+       version did open them, with the marked-up spans set
+       contenteditable=false — but selecting the block and retyping deletes
+       those spans outright, so the guard silently failed exactly when someone
+       had reworded a whole sentence. Don't reintroduce it. */
     block.focus()
 
     function revert () {
@@ -159,11 +211,21 @@
           toast('Saved to ' + body.file + ':' + body.line, 'ok')
         })
         .catch(function (error) {
-          // The source is the truth; if the write didn't land, don't leave the
-          // page showing an edit that only exists in this tab.
-          revert()
-          restoreChrome()
-          toast(describe(error), 'error')
+          // The source is the truth, so a write that didn't land must not leave
+          // the page showing an edit that exists only in this tab. But the
+          // wording someone just spent minutes on is not the source's to throw
+          // away: copy it out BEFORE reverting, and open the file, so the work
+          // survives as a paste even though the page goes back.
+          keepText(updated, function (kept) {
+            revert()
+            restoreChrome()
+            toast(describe(error) +
+                  (kept ? ' Your text is on the clipboard.' : ' Your text is in the console.') +
+                  ' Opening the file.', 'error')
+            fetch(SERVER + '/locate?open=1' +
+                  '&text=' + encodeURIComponent(original) +
+                  '&id=' + encodeURIComponent(idFor(block))).catch(function () {})
+          })
         })
     }
 
@@ -182,7 +244,7 @@
 
     block.addEventListener('keydown', onKey)
     block.addEventListener('blur', onBlur)
-    toast('Editing - ⌘⏎ to save, esc to cancel', 'info')
+    toast('Editing - click out or ⌘⏎ to save, esc to cancel', 'info')
   }
 
   document.addEventListener('click', function (event) {
@@ -195,7 +257,7 @@
     if (!block) return
     event.preventDefault()
     event.stopPropagation()
-    if (event.shiftKey) beginEdit(block)
+    if (event.shiftKey) requestEdit(block)
     else openInEditor(block)
   }, true)
 
@@ -330,4 +392,16 @@
     '.ptx-edit-toast-info { background: #343a40; }'
   ].join('\n')
   document.head.appendChild(style)
+})()
+
+// The book review layer (circle + comment -> reviews/slide-comments.jsonl)
+// rides this file's one html.js.extra slot into the web-edit build. A
+// separate file so the two layers evolve independently; it gates itself
+// (localhost + review server answering) exactly like the code above.
+;(function () {
+  var s = document.createElement('script')
+  s.src = (document.currentScript && document.currentScript.src)
+    ? document.currentScript.src.replace(/ptx-edit\.js.*$/, 'ptx-review.js')
+    : 'external/ptx-review.js'
+  document.head.appendChild(s)
 })()

@@ -304,6 +304,38 @@ Object hosted by the `classroom-worker/` Worker (deployed separately:
 Until then everything degrades gracefully: `/session/<CODE>` answers 503,
 and a session banner just shows an amber "connecting" dot.
 
+## 8b. Class slides (decks)
+
+The deck player (`assets/class.html`, opened as `external/class.html?deck=W1C2`) and its
+review/edit servers, deck checkers and slide XSL are the **shared slide tooling**, copied in
+from `~/repos/slide-tooling` by `./scripts/sync-tooling.sh` and recorded in `tooling.lock`.
+**Never edit those files here** (`scripts/check_tooling.py` fails if you do): change them in
+slide-tooling, commit there, sync. What stays in this book: `assets/course.js` (name, PDF
+prefix, ports 9027/9028, `scripts: ['classroom.js']` for follow-me), `xsl/c-programming-*.xsl`,
+`assets/classroom.js`, the deploy scripts.
+
+**All slide content lives in the book source.** `assets/decks/<deck>.json` is only the playlist:
+`{"type":"ref","page":"<page>.html","slide":"<xml:id>"}` per slide.
+
+| Slide | Author it as |
+|---|---|
+| Recap / agenda | `<slide xml:id="sl-..." kind="recap" title="..."><ul><li>..</li></ul></slide>` |
+| Practice prompt / icebreaker | `<slide kind="prompt" title="..."><p>the question</p></slide>`; `<caption>` is the smaller line under it; a `<tabular>` (header row, then one row label per line) becomes the blank table to fill in |
+| Demo (words over one coding window) | `<slide title="..."><p>lead-in</p><cmecode startPoint="..."/></slide>` |
+| Book activity | no block: the deck refs the `<activity>`'s own `xml:id` on its page |
+
+Put each block beside the content it goes with, before the section's first subsection or
+`<reading-questions>`. It is hidden in the reading view (`deck.css`); only `web-client` and
+`web-edit` emit it (`deck.slides=render`). Presenter-only note: `<note>`.
+
+- Preview and edit: `./preview-edit.sh` (book on 9031, edit server 9027, review server 9028).
+  Hold Alt on a slide: green = editable, alt-shift-click edits in place. **R** = review mode.
+- Check a deck: `python3 scripts/check_deck.py --build=output/web-client assets/decks/W1C2.json`
+- Note-taking PDFs: `./make-slide-pdfs.sh`, then deploy (the script copies them in).
+- Compare before/after a change to the tooling or the XSL: `scripts/deck_snapshot_all.sh`
+  and `scripts/deck_compare.py` (see their headers).
+- Announcements are `kind="notice"` slides in the source, edited and rebuilt like any slide.
+
 ## 9. Known gotchas
 
 - **Canvas can't be made interactive via iframe, ever** — Canvas doesn't

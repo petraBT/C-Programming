@@ -92,6 +92,39 @@
       <image source="images/Binary.png" width="70%"/>
       <p>Note: Digits have different weights (place values)</p>
       <image source="images/PlaceValues.png" width="70%"/>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c3-01-icebreaker" kind="prompt" title="Warm-up">
+          <p>What weird food combinations do you really enjoy?</p>
+        </slide>
+        <slide xml:id="sl-w1c3-02-agenda" kind="agenda" title="Today">
+          <ul>
+            <li>Binary numbers</li>
+            <li>Negative number representation</li>
+            <li>Hexadecimal numbers</li>
+            <li>Converting between ints and floats</li>
+            <li>Casting</li>
+            <li>The modulo operation</li>
+          </ul>
+        </slide>
+        <slide xml:id="sl-w1c3-03-icebreaker" kind="prompt" title="Three things in common">
+          <p>As a team, find three interesting things you all have in common.</p>
+          <caption>Put those three things in the answer box along with your team name — the LFs will vote on the winning team!</caption>
+        </slide>
+        <slide xml:id="sl-w1c3-04-prompt" kind="prompt" title="Practice">
+          <p>Please convert the decimal number 177 to 8-bit binary.</p>
+        </slide>
+        <slide xml:id="sl-w1c3-05-prompt" kind="prompt" title="Practice">
+          <p>Please convert the decimal number 177 to base-3.</p>
+        </slide>
+        <slide xml:id="sl-w1c3-06-prompt" kind="prompt" title="Practice: binary addition">
+          <p>Add the decimal numbers 177 and 23 in 8-bit binary.</p>
+          <caption>To help you, here are the binary conversions: 177 → 10110001, 23 → 00010111</caption>
+        </slide>
+        <slide xml:id="sl-w1c3-07-prompt" kind="prompt" title="Now try this one">
+          <p>Now try 177 + 177 in 8-bit binary.</p>
+          <caption>Recall that the binary representation of 177 is 10110001. Does your result make sense?</caption>
+        </slide>
       <reading-questions>
         <exercise label="quiz-integers-1">
           <statement>
@@ -306,6 +339,23 @@
         <image source="images/SignedMagnitude.png" width="70%"/>
         <p>This allows for a range from -127 to 127 to be represented.</p>
         <p>For an n-bit binary number: <m>-(2^{n-1}-1)</m> to <m>(2^{n-1}-1)</m></p>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c3-09-prompt" kind="prompt" title="Negative Numbers in Binary">
+          <p>What are the ways to represent negative numbers in binary?</p>
+        </slide>
+        <slide xml:id="sl-w1c3-10-prompt" kind="prompt" title="Negative Numbers - Practice">
+          <p>Write the (decimal) numbers 77 and −77 as 8-bit signed integers and in 8-bit binary 2's complement. Show your work.</p>
+          <tabular>
+            <row header="yes"><cell/><cell>77</cell><cell>−77</cell></row>
+            <row><cell>8-bit signed integer</cell><cell/><cell/></row>
+            <row><cell>8-bit binary 2's complement</cell><cell/><cell/></row>
+          </tabular>
+        </slide>
+        <slide xml:id="sl-w1c3-11-prompt" kind="prompt" title="Practice: 2's complement">
+          <p>Now calculate 110 − 77 in binary 2's complement (that is, perform the addition 110 + (−77)).</p>
+          <caption>Reminder: the binary 2's complements of the relevant numbers are 110: 01101110 and −77: 10110011</caption>
+        </slide>
         <subsection>
           <title>Adding in Binary</title>
           <p>How do you add binary numbers?</p>
@@ -530,6 +580,20 @@
         <p>Example: <c>0xAC</c> means "A" * <m>16^1</m> + "C" * <m>16^0</m> = 10 * 16 + 12 * 1 = 172 in decimal</p>
         <p><em>The "0x" indicates that what follows is in hex</em></p>
         <p>Another example: <c>0x57</c> means 5 * <m>16^1</m> + 7 * <m>16^0</m> = 87 in decimal</p>
+
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c3-08-prompt" kind="prompt" title="Hexadecimal numbers">
+          <p>Please convert the decimal number 177 to hexadecimal.</p>
+        </slide>
+        <slide xml:id="sl-w1c3-12-prompt" kind="prompt" title="Interpretation of Hexadecimal Shorthand for the different representations">
+          <p>What is the decimal value of the hexadecimal number <c>C3</c> if binary numbers are represented as:</p>
+          <tabular>
+            <row header="yes"><cell/><cell>Decimal value</cell></row>
+            <row><cell>Unsigned</cell><cell/></row>
+            <row><cell>Signed magnitude</cell><cell/></row>
+            <row><cell>Binary 2's complement</cell><cell/></row>
+          </tabular>
+        </slide>
         <subsection>
           <title>Why Use Hexadecimal?</title>
           <p>Binary numbers can be REALLY long (used in memory location addressing for example.)</p>

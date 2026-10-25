@@ -1,4 +1,22 @@
 {
-  "_comment": "The list of lecture decks the player offers when opened with no ?deck= parameter. Deliberately just ids: the player fetches each deck for its own title and slide count, so a deck's title lives in exactly one place (the deck file) and cannot drift out of sync with a copy here. Add a line when you add a deck. icebreakers.json is not listed - it is a shared pool, not a deck, and has no slides array.",
-  "decks": ["W1C2", "W1C3"]
+  "decks": [
+    {
+      "id": "W1C2",
+      "title": "Variables, input, char and float",
+      "label": "",
+      "name": "Variables, input, char and float",
+      "kind": "class",
+      "slides": 20,
+      "instructorOnly": 0
+    },
+    {
+      "id": "W1C3",
+      "title": "Binary, hex, casting and the modulo operation",
+      "label": "",
+      "name": "Binary, hex, casting and the modulo operation",
+      "kind": "class",
+      "slides": 18,
+      "instructorOnly": 0
+    }
+  ]
 }
