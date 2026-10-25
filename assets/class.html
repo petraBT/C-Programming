@@ -1166,6 +1166,9 @@
             var isActivity = bodyClone.classList && (bodyClone.classList.contains('activity') ||
               bodyClone.classList.contains('exercise-like') || bodyClone.classList.contains('project-like'))
             ;[].forEach.call(bodyClone.querySelectorAll(isActivity ? 'figure, .figure-like, .code-box, pre.program, .sim-embed, .sim-link' : 'figure, .figure-like'), function (el) {
+              // A <console> sample run ("here is what your program should print") is part of
+              // the task, not a listing shown on its own slide: keep it.
+              if (isActivity && el.classList.contains('code-box') && el.querySelector('pre.console')) return
               if (el.parentNode) el.parentNode.removeChild(el)
             })
             while (bodyClone.firstChild) refBody.appendChild(bodyClone.firstChild)
