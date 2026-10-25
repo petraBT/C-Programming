@@ -28,7 +28,10 @@ export default {
   },
 }
 
-// --- announcements board ---------------------------------------------------
+// --- announcements board (UNUSED since 2026-10-25) -------------------------
+// Announcements are now <slide kind="notice"> blocks in the book source. The Pages
+// function and binding that reached this class are gone; the class itself stays only
+// because deleting a Durable Object class needs a migration and a worker redeploy.
 // A second, persistent Durable Object, one instance per DECK (not per session
 // code, and it does not expire): it holds the "today" announcement slides an
 // instructor adds to the front of a deck right before class. This is the
