@@ -94,6 +94,7 @@
       <image source="images/PlaceValues.png" width="70%"/>
 
         <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c3-00-title" kind="title" title="Binary, hex, casting and the modulo operation" subtitle="ENGS 20 · W1C3"/>
         <slide xml:id="sl-w1c3-01-icebreaker" kind="prompt" title="Warm-up">
           <p>What weird food combinations do you really enjoy?</p>
         </slide>

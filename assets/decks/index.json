@@ -6,7 +6,7 @@
       "label": "",
       "name": "Variables, input, char and float",
       "kind": "class",
-      "slides": 20,
+      "slides": 21,
       "instructorOnly": 0
     },
     {
@@ -15,7 +15,7 @@
       "label": "",
       "name": "Binary, hex, casting and the modulo operation",
       "kind": "class",
-      "slides": 18,
+      "slides": 19,
       "instructorOnly": 0
     }
   ]
