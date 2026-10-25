@@ -1,6 +1,6 @@
 {
   "id": "W1C2",
-  "title": "Variables, input, char and float",
+  "title": "Week 1, Class 2 — Variables, input, char and float",
   "_comment": [
     "Playlist only: every slide lives in the book source as a <slide> block (kind=\"recap|agenda|prompt\"",
     "cards, or a prose slide with a <cmecode> for a demo) or is an <activity> referenced by its xml:id.",

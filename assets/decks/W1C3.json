@@ -1,6 +1,6 @@
 {
   "id": "W1C3",
-  "title": "Binary, hex, casting and the modulo operation",
+  "title": "Week 1, Class 3 — Binary, hex, casting and the modulo operation",
   "_comment": [
     "Playlist only: every slide lives in the book source as a <slide> block (kind=\"recap|agenda|prompt\"",
     "cards, or a prose slide with a <cmecode> for a demo) or is an <activity> referenced by its xml:id.",

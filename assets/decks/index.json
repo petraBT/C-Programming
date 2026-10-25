@@ -2,8 +2,8 @@
   "decks": [
     {
       "id": "W1C2",
-      "title": "Variables, input, char and float",
-      "label": "",
+      "title": "Week 1, Class 2 — Variables, input, char and float",
+      "label": "Week 1, Class 2",
       "name": "Variables, input, char and float",
       "kind": "class",
       "slides": 21,
@@ -11,8 +11,8 @@
     },
     {
       "id": "W1C3",
-      "title": "Binary, hex, casting and the modulo operation",
-      "label": "",
+      "title": "Week 1, Class 3 — Binary, hex, casting and the modulo operation",
+      "label": "Week 1, Class 3",
       "name": "Binary, hex, casting and the modulo operation",
       "kind": "class",
       "slides": 19,

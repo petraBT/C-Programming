@@ -422,7 +422,7 @@ cash = 20;</code></program> </li>
   <p>The following three activities present erroneous code. Can you spot the error and fix it? Don't be afraid to play around and try out multiple solutions. You cannot break anything! Remember that you can always go back to the original problem by clicking on the <q>Start fresh</q> button.</p>
 
         <!-- In-class slides for the deck player; hidden in the reading view. -->
-        <slide xml:id="sl-w1c2-00-title" kind="title" title="Variables, input, char and float" subtitle="ENGS 20 · W1C2"/>
+        <slide xml:id="sl-w1c2-00-title" kind="title" title="Variables, input, char and float" subtitle="Week 1, Class 2"/>
         <slide xml:id="sl-w1c2-01-recap" kind="recap" title="Where we left off">
           <ul>
             <li><c>printf</c> displays a message on the screen</li>
