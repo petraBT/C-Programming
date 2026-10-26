@@ -2,7 +2,7 @@
 # reason: Durable Object bindings for Pages Functions can only be declared
 # here, not on the `wrangler pages deploy` command line - this is how
 # functions/session/[code].js reaches the ClassSession Durable Object hosted
-# by the separate engs20-classroom Worker (classroom-worker/).
+# by the separate engs20-classroom Worker (slide-tooling/worker/, shared by all courses).
 #
 # `name` and `pages_build_output_dir` deliberately mirror what
 # deploy-client-preview.sh already passes (PROJECT_NAME / STAGE_DIR) - if you

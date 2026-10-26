@@ -285,8 +285,8 @@ Every `web-client` page carries `assets/classroom.js` (the shared session client
 
 Moving parts: `assets/classroom.js` (client) → `functions/session/[code].js`
 (same-origin WebSocket endpoint, a Pages Function) → `ClassSession` Durable
-Object hosted by the `classroom-worker/` Worker (deployed separately:
-`cd classroom-worker && npx wrangler deploy`).
+Object hosted by the shared `worker/` Worker in slide-tooling (deployed separately, only when its code changes:
+`cd ~/repos/slide-tooling/worker && npx wrangler deploy`).
 
 ### Polls (multiple choice) in follow-me sessions
 
@@ -297,7 +297,7 @@ A poll is a slide: `<slide xml:id="sl-..." kind="poll" title="Predict" answer="B
 - The second-device link carries a secret key, so only your devices can see answers or reveal; the session code students know cannot. Keep the link private.
 - Votes are kept on the session server for two weeks after the last activity, then deleted; Export first if you want them.
 - Without a session (a student on the deployed deck by themselves) a poll gives the right answer straight away.
-- Needs the worker redeployed (`cd classroom-worker && npx wrangler deploy`) as well as `./deploy-client-preview.sh`.
+- Needs the worker redeployed (`cd ~/repos/slide-tooling/worker && npx wrangler deploy`) as well as `./deploy-client-preview.sh`.
 
 ### Short answers and pasted code
 
@@ -324,7 +324,7 @@ In a session a student can go back but not ahead of the slide you are on (arrow 
    area the first time registers the account's `workers.dev` subdomain —
    required before ANY Worker can be uploaded (API error 10063), and only
    doable from the dashboard.
-2. `cd classroom-worker && npx wrangler deploy`
+2. `cd ~/repos/slide-tooling/worker && npx wrangler deploy`
 3. `mv wrangler.toml.pending wrangler.toml` (repo root — it holds the
    Durable Object binding for the Pages Functions; it's parked as
    `.pending` because a Pages deploy FAILS if the binding names a Worker

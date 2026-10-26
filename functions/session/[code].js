@@ -1,7 +1,7 @@
 // WebSocket endpoint for in-class "follow me" sessions, on the book's own
 // origin (wss://<site>/session/<CODE>). This is just a doorway: the actual
 // session state lives in a Durable Object hosted by the separate
-// engs20-classroom Worker (classroom-worker/), reached through the SESSIONS
+// engs20-classroom Worker (slide-tooling/worker/, shared by all courses), reached through the SESSIONS
 // binding declared in the repo-root wrangler.toml. Committed as a real file,
 // unlike functions/_middleware.js which deploy-client-preview.sh regenerates
 // from the build output every deploy - the two coexist; Pages runs the
