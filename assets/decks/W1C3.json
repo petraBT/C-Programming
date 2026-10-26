@@ -85,34 +85,22 @@
     {
       "type": "ref",
       "page": "floats-float-to-int.html",
-      "slide": "sl-w1c3-15-demo"
-    },
-    {
-      "type": "ref",
-      "page": "floats-float-to-int.html",
-      "slide": "sl-w1c3-q-float2int"
+      "slide": "sl-w1c3-15-demo",
+      "respond": "sl-w1c3-q-float2int"
     },
     {
       "type": "ref",
       "page": "floats-average.html",
       "slide": "activity-6-4-1-Averages",
       "title": "Your turn: averaging integers",
-      "room": "compressed"
-    },
-    {
-      "type": "ref",
-      "page": "floats-average.html",
-      "slide": "sl-w1c3-q-average"
+      "room": "compressed",
+      "respond": "sl-w1c3-q-average"
     },
     {
       "type": "ref",
       "page": "floats-remainder.html",
-      "slide": "sl-w1c3-17-demo"
-    },
-    {
-      "type": "ref",
-      "page": "floats-remainder.html",
-      "slide": "sl-w1c3-q-remainder"
+      "slide": "sl-w1c3-17-demo",
+      "respond": "sl-w1c3-q-remainder"
     },
     {
       "type": "ref",

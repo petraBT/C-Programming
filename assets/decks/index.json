@@ -15,7 +15,7 @@
       "label": "Week 1, Class 2",
       "name": "Variables, input, char and float",
       "kind": "class",
-      "slides": 28,
+      "slides": 21,
       "instructorOnly": 0
     },
     {
@@ -24,7 +24,7 @@
       "label": "Week 1, Class 3",
       "name": "Binary, hex, casting and the modulo operation",
       "kind": "class",
-      "slides": 22,
+      "slides": 19,
       "instructorOnly": 0
     }
   ]

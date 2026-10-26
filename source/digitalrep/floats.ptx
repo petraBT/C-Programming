@@ -356,7 +356,7 @@
           <cmecode startPoint="engs20p_Ndivision3"/>
         </slide>
         <slide xml:id="sl-w1c3-q-float2int" kind="short" title="Casting a float to an int">
-          <p>What happens when you cast a float to an int? Will rounding occur?</p>
+          <p>Describe what you saw when you cast a float to an int. Did rounding occur?</p>
         </slide>
     </section>
 

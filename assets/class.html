@@ -520,47 +520,51 @@
       #glue .poll-choice.right .poll-bar { background: #c5e8cf; }
       #glue .poll-choice.wrong.mine { border-color: #c92a2a; box-shadow: inset 0 0 0 2px #c92a2a; }
       /* --- written answers (kind="short" and kind="code") ------------------ */
-      #glue .resp { margin-top: 1cqmin; max-width: 94%; }
-      #glue .resp-input, #glue .resp-card, #glue .resp-big, #glue .resp-bigtext {
+      :is(#glue, #ref) .resp { margin-top: 1cqmin; max-width: 94%; }
+      :is(#glue, #ref) .resp-input, :is(#glue, #ref) .resp-card, :is(#glue, #ref) .resp-big, :is(#glue, #ref) .resp-bigtext {
         -webkit-user-select: text; user-select: text;
       }
-      #glue .resp-input {
+      :is(#glue, #ref) .resp-input {
         width: 100%; box-sizing: border-box; font: inherit; font-size: 2.8cqmin; line-height: 1.4;
         padding: 1.2cqmin 1.6cqmin; border: 2px solid #c9c7be; border-radius: 1.2cqmin; resize: none;
         color: #1a1a19; background: #fff;
       }
-      #glue .resp-input.code { font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-size: 2.3cqmin; line-height: 1.35; white-space: pre; overflow: auto; }
-      #glue .resp-input:focus { outline: none; border-color: #2158a8; }
-      #glue .resp-row { display: flex; align-items: center; gap: 2cqmin; margin-top: 1cqmin; }
-      #glue .resp-send, #glue .resp-copy {
+      :is(#glue, #ref) .resp-input.code { font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-size: 2.3cqmin; line-height: 1.35; white-space: pre; overflow: auto; }
+      :is(#glue, #ref) .resp-input:focus { outline: none; border-color: #2158a8; }
+      :is(#glue, #ref) .resp-row { display: flex; align-items: center; gap: 2cqmin; margin-top: 1cqmin; }
+      :is(#glue, #ref) .resp-send, :is(#glue, #ref) .resp-copy {
         font: inherit; font-size: 2.6cqmin; font-weight: 600; color: #fff; background: #2158a8; border: 0;
         border-radius: 1cqmin; padding: 1cqmin 2.4cqmin; cursor: pointer;
       }
-      #glue .resp-copy { color: #2158a8; background: #fff; border: 2px solid #2158a8; }
-      #glue .resp-status { font-size: 2.4cqmin; color: #52514e; }
-      #glue .resp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(30cqmin, 1fr)); gap: 1.4cqmin; }
-      #glue .resp-card {
+      :is(#glue, #ref) .resp-copy { color: #2158a8; background: #fff; border: 2px solid #2158a8; }
+      :is(#glue, #ref) .resp-status { font-size: 2.4cqmin; color: #52514e; }
+      :is(#glue, #ref) .resp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(30cqmin, 1fr)); gap: 1.4cqmin; }
+      :is(#glue, #ref) .resp-card {
         position: relative; text-align: left; font: inherit; font-size: 2.4cqmin; color: #1a1a19; background: #fff;
         border: 2px solid #c9c7be; border-radius: 1.2cqmin; padding: 1.2cqmin 1.6cqmin; max-height: 26cqmin; overflow: hidden;
         white-space: pre-wrap; word-break: break-word;
       }
-      #glue .resp-scroll { max-height: 60cqmin; overflow-y: auto; padding: .4cqmin; -webkit-user-select: text; user-select: text; }
-      #glue .resp-card:not(.code) { max-height: none; }
-      #glue .resp-card.code { font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-size: 1.9cqmin; white-space: pre; word-break: normal; }
-      #glue .resp-card.clickable { cursor: pointer; }
-      #glue .resp-card.picked { border-color: #2158a8; box-shadow: inset 0 0 0 2px #2158a8; }
-      #glue .resp-n { display: block; font-weight: 700; font-size: 2.2cqmin; color: #2158a8; font-family: inherit; margin-bottom: .4cqmin; }
-      #glue .resp-chips { display: flex; flex-wrap: wrap; gap: 1cqmin; margin: 1cqmin 0; align-items: center; }
-      #glue .resp-chip { font: inherit; font-size: 2.2cqmin; font-weight: 700; border: 2px solid #c9c7be; background: #fff; color: #2158a8; border-radius: 99px; padding: .4cqmin 1.6cqmin; cursor: default; }
-      #glue .resp-chip.clickable { cursor: pointer; }
-      #glue .resp-chip.picked { background: #2158a8; border-color: #2158a8; color: #fff; }
-      #glue .resp-big {
+      :is(#glue, #ref) .resp-scroll { max-height: 60cqmin; overflow-y: auto; padding: .4cqmin; -webkit-user-select: text; user-select: text; }
+      :is(#glue, #ref) .resp-card:not(.code) { max-height: none; }
+      :is(#glue, #ref) .resp-card.code { font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-size: 1.9cqmin; white-space: pre; word-break: normal; }
+      :is(#glue, #ref) .resp-card.clickable { cursor: pointer; }
+      :is(#glue, #ref) .resp-card.picked { border-color: #2158a8; box-shadow: inset 0 0 0 2px #2158a8; }
+      :is(#glue, #ref) .resp-n { display: block; font-weight: 700; font-size: 2.2cqmin; color: #2158a8; font-family: inherit; margin-bottom: .4cqmin; }
+      :is(#glue, #ref) .resp-chips { display: flex; flex-wrap: wrap; gap: 1cqmin; margin: 1cqmin 0; align-items: center; }
+      :is(#glue, #ref) .resp-chip { font: inherit; font-size: 2.2cqmin; font-weight: 700; border: 2px solid #c9c7be; background: #fff; color: #2158a8; border-radius: 99px; padding: .4cqmin 1.6cqmin; cursor: default; }
+      :is(#glue, #ref) .resp-chip.clickable { cursor: pointer; }
+      :is(#glue, #ref) .resp-chip.picked { background: #2158a8; border-color: #2158a8; color: #fff; }
+      :is(#glue, #ref) .resp-big {
         margin: 0; padding: 1.6cqmin 2cqmin; background: #f4f3ef; border: 2px solid #2158a8; border-radius: 1.2cqmin;
         font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-size: 2.7cqmin; line-height: 1.35; white-space: pre-wrap;
         max-height: 56cqmin; overflow: auto;
       }
-      #glue .resp-bigtext { font-size: 4cqmin; line-height: 1.35; padding: 1.6cqmin 2cqmin; background: #f4f3ef; border: 2px solid #2158a8; border-radius: 1.2cqmin; white-space: pre-wrap; margin: 0; }
-      #glue .resp-label { font-size: 2.3cqmin; color: #52514e; margin: .6cqmin 0; }
+      :is(#glue, #ref) .resp-bigtext { font-size: 4cqmin; line-height: 1.35; padding: 1.6cqmin 2cqmin; background: #f4f3ef; border: 2px solid #2158a8; border-radius: 1.2cqmin; white-space: pre-wrap; margin: 0; }
+      :is(#glue, #ref) .resp-label { font-size: 2.3cqmin; color: #52514e; margin: .6cqmin 0; }
+      #ref .resp { margin-top: 2cqmin; }
+      #ref .resp-ask { font-weight: 600; margin: 2cqmin 0 .6cqmin 0 !important; }
+      #ref .resp-input { font-size: 2.4cqmin; }
+      #ref.resp-shared .ref-media, #ref.resp-shared .ref-body > :not(.resp-ask):not(.resp) { display: none; }
       #poll-ctl { display: none; align-items: center; gap: 8px; }
       #poll-ctl.on { display: inline-flex; }
       #poll-count { color: #c3c2b7; white-space: nowrap; }
@@ -1179,7 +1183,7 @@
           refBody.innerHTML = ''
           refMedia.innerHTML = ''
           refBody.classList.remove('roomy', 'compressed', 'has-sim', 'code-small', 'cols-top')
-          refEl.classList.remove('figure-focus', 'stacked', 'caption-side', 'media-wide', 'media-wide-slight')
+          refEl.classList.remove('figure-focus', 'stacked', 'caption-side', 'media-wide', 'media-wide-slight', 'resp-shared')
           refEl.classList.add('single')
           showOnly(refEl)
           fetchPage(slide.page).then(function (res) {
@@ -1462,6 +1466,24 @@
             // R_lim and friends as italic variables with real subscripts, then
             // hand the <m>/<md> math to MathJax (or flatten it if MathJax never
             // arrived).
+            /* "respond": "<slide id>" on the deck entry puts that <slide kind="short|code">'s
+               answer box at the foot of this slide, so students answer where they work
+               and the slide scrolls if the box does not fit. The kind="short|code" block
+               holds the question and gives the answer its identity. */
+            if (slide.respond) {
+              var rb = res.doc.getElementById(slide.respond)
+              var rk = rb && rb.getAttribute('data-deck-kind')
+              if (rk === 'short' || rk === 'code') {
+                var rg = glueFromBlock(rb, { slide: slide.respond })
+                if (rg.body) {
+                  var ask = document.createElement('p'); ask.className = 'resp-ask'; ask.innerHTML = html(rg.body)
+                  refBody.appendChild(ask)
+                }
+                var holder = document.createElement('div'); holder.innerHTML = respBoxHtml(rg)
+                refBody.appendChild(holder.firstChild)
+                respRendered(rg, refBody)
+              } else console.warn('respond slide "' + slide.respond + '" is not a short or code slide on ' + slide.page)
+            }
             mathify(refEl)
             typesetMath(refEl)
             })
@@ -1521,6 +1543,17 @@
           return g
         }
 
+        function respBoxHtml(slide) {
+          var code = slide.type === 'code'
+          return '<div class="resp" data-resp="' + esc(pollKey(slide)) + '" data-kind="' + slide.type + '">' +
+            '<div class="resp-entry"><textarea class="resp-input' + (code ? ' code' : '') + '" rows="' +
+            (code ? 9 : 3) + '" maxlength="' + (code ? 6000 : 400) +
+            '" spellcheck="false" aria-label="' + (code ? 'Paste your code here' : 'Type your answer here') +
+            '" placeholder="' + (code ? 'Paste your code here' : 'Type your answer here') + '"></textarea>' +
+            '<div class="resp-row"><button type="button" class="resp-send">Submit</button><span class="resp-status" role="status"></span></div></div>' +
+            '<div class="resp-priv"></div><div class="resp-view"></div></div>'
+        }
+
         function renderGlue(slide) {
           glueEl.removeAttribute('data-from-block')
           showOnly(glueEl)
@@ -1539,13 +1572,7 @@
             glueEl.classList.add('top')
             parts.push('<h2>' + html(slide.title || '') + '</h2>')
             if (slide.body) parts.push('<p class="big">' + html(slide.body) + '</p>')
-            parts.push('<div class="resp" data-resp="' + esc(pollKey(slide)) + '" data-kind="' + slide.type + '">' +
-              '<div class="resp-entry"><textarea class="resp-input' + (slide.type === 'code' ? ' code' : '') + '" rows="' +
-              (slide.type === 'code' ? 9 : 3) + '" maxlength="' + (slide.type === 'code' ? 6000 : 400) +
-              '" spellcheck="false" aria-label="' + (slide.type === 'code' ? 'Paste your code here' : 'Type your answer here') +
-              '" placeholder="' + (slide.type === 'code' ? 'Paste your code here' : 'Type your answer here') + '"></textarea>' +
-              '<div class="resp-row"><button type="button" class="resp-send">Submit</button><span class="resp-status" role="status"></span></div></div>' +
-              '<div class="resp-priv"></div><div class="resp-view"></div></div>')
+            parts.push(respBoxHtml(slide))
             if (slide.note) parts.push('<p class="note">' + html(slide.note) + '</p>')
           } else if (slide.type === 'poll') {
             glueEl.classList.add('top')
@@ -1642,7 +1669,7 @@
         }
         function pollStoreKey(key) { return 'engs20-vote:' + (pollSession ? pollSession.code : 'local') + ':' + key }
         function pollEl() { return glueEl.classList.contains('on') ? glueEl.querySelector('.poll') : null }
-        function respEl() { return glueEl.classList.contains('on') ? glueEl.querySelector('.resp') : null }
+        function respEl() { return glueEl.classList.contains('on') ? glueEl.querySelector('.resp') : (refEl.classList.contains('on') ? refEl.querySelector('.resp') : null) }
         function pollSlide() {
           var sl = deck && deck.slides && deck.slides[currentIndex() - 1]
           return sl
@@ -1794,6 +1821,7 @@
           if (!el) return
           var key = el.getAttribute('data-resp'), st = pollSt(key), kind = el.getAttribute('data-kind')
           var shared = st.shared && st.shared.on ? st.shared : null
+          refEl.classList.toggle('resp-shared', !!shared && refEl.classList.contains('on'))
           var entry = el.querySelector('.resp-entry'), priv = el.querySelector('.resp-priv'), view = el.querySelector('.resp-view')
           var asker = pollRole === 'follow' || pollRole === null
           entry.style.display = asker && !shared ? '' : 'none'
@@ -1863,9 +1891,9 @@
           respRestoreScroll(view, hadGrid ? viewTop : (st.gridTop || 0))
           pollSyncBar()
         }
-        function respRendered(slide) {
+        function respRendered(slide, root) {
           var key = pollKey(slide), st = pollSt(key)
-          var el = glueEl.querySelector('.resp')
+          var el = (root || glueEl).querySelector('.resp')
           var ta = el.querySelector('.resp-input')
           if (!st.sent) { try { st.sent = localStorage.getItem(pollStoreKey(key)) || null } catch (e) {} }
           if (st.sent) ta.value = st.sent

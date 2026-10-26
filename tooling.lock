@@ -1,8 +1,8 @@
 {
  "source": "slide-tooling",
- "commit": "c38604553207c205d473b04a2c26826af52f2a8a",
+ "commit": "ffcbb9411f419ca1087782d6290ed2beb719858e",
  "files": {
-  "assets/class.html": "abc9a9e0adbad82f3482f9963b2b363f8dee63091291efa759a64a0e6a0c8b43",
+  "assets/class.html": "6c4fe7928e7113e8471e0af7166a2e3055970d1337554ac439c012e4bb3c83ed",
   "assets/classroom.js": "d3255f4f82a369cce6a8f4266dd6408e5a8a565472ce4189ebeafff61bf64c47",
   "assets/deck.css": "110541eeb625bc6548cf9f7ce7a5a9df2c93ef977c54734836899325c5ac6a21",
   "assets/ptx-edit.js": "aa90a02ede43e2705efa1d7d45a61ed4a74bf71567cb3461aae5da0a87ac014d",
@@ -11,7 +11,7 @@
   "scripts/README-editing.md": "7267ac241d433e91342695c72e3577134509bd86a1eb40aea0f77d0786535874",
   "scripts/build-deck-instructor.sh": "59f96a784fdb46658ab88a3b23972b1f35fc657c510f7f59aaeeb5857be1151f",
   "scripts/build-deck.sh": "9013acaec388e64f6eb0bdf56f05ca0a9ba4ac0125089f6aec2a252a53704876",
-  "scripts/check_deck.py": "150b841904ab1cb774f9ee30199d92a43243e6c7713285b03c438c0b3183cf9b",
+  "scripts/check_deck.py": "3d35c01e7d026d6cc0ff686b81153d83b58bebe6782351435e6cb40122611ba9",
   "scripts/check_tooling.py": "c1a2f1c4f5137ae697bc38f3aed3797f0772960792e70ab9a49d6a1452385726",
   "scripts/deck_compare.py": "ad1fd761e51cab014f0e55aece45111b76f3fd73b10fa46060c1d417c4e950bb",
   "scripts/deck_fit.mjs": "ba53beacb5d0d29982c5e2362cb99180c2fce6f49e987d8a95859d92ea250e1a",

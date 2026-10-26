@@ -115,6 +115,14 @@ def main():
             m = re.search(r'id="%s"([^>]*)' % re.escape(s["slide"]), html)
             if not m:
                 print(f"  MISSING ID    {s['slide']}  on {s['page']}"); bad += 1; continue
+            # "respond" puts a short/code slide's answer box on this slide: it must be a
+            # <slide kind="short|code"> on the same page.
+            if s.get("respond"):
+                rm = re.search(r'id="%s"[^>]*data-deck-kind="(short|code)"' % re.escape(s["respond"]), html)
+                if not rm:
+                    print(f"  BAD RESPOND   {s['slide']}: \"respond\": \"{s['respond']}\" is not a"
+                          f" kind=\"short\" or \"code\" slide on {s['page']}")
+                    bad += 1
             # If the slide block delegates to a figure/table, that target must be
             # on this same page or the slide renders empty -- unless the deck entry
             # names the page it lives on with "refPage", which the player fetches
