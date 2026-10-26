@@ -11,12 +11,14 @@ name = "engs20-classroom"
 main = "src/index.js"
 compatibility_date = "2026-07-01"
 
-# No public URL at all: this Worker only exists to HOST the Durable Object
-# class. The actual WebSocket endpoint the browsers talk to is a Pages
-# Function on the book's own origin (functions/session/[code].js), which
-# reaches the DO through a cross-script binding (see the repo-root
-# wrangler.toml). Same-origin WebSockets, no workers.dev subdomain needed.
-workers_dev = false
+# ENGS 20 reaches this through a Pages Function on its own origin (functions/session/[code].js,
+# via a cross-script binding, see the repo-root wrangler.toml): same-origin WebSockets. ENGS 28
+# stays on GitHub Pages, which has no functions, so its pages connect to this Worker's own
+# workers.dev address directly (COURSE.sessionOrigin in its assets/course.js). The Worker only
+# accepts WebSockets whose Origin is one of the course sites (ORIGIN_OK in src/index.js), and
+# everything private needs the instructor key, so the open address gives nobody anything.
+workers_dev = true
+preview_urls = false
 
 [[durable_objects.bindings]]
 name = "SESSIONS"
