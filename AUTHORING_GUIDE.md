@@ -290,7 +290,7 @@ Object hosted by the `classroom-worker/` Worker (deployed separately:
 
 ### Polls (multiple choice) in follow-me sessions
 
-A poll is a slide: `<slide xml:id="sl-..." kind="poll" title="Predict" answer="B"><p>Question</p><ol><li>choice A</li><li>choice B</li></ol></slide>` (up to 8 choices; `answer` is optional, leave it off for an opinion question; the letter is in the page source, so a poll is a check for understanding, not a test). `assets/decks/POLLDEMO.json` has two samples to try; delete it and the two `sl-polldemo-*` slides when done.
+A poll is a slide: `<slide xml:id="sl-..." kind="poll" title="Predict" answer="B"><p>Question</p><ol><li>choice A</li><li>choice B</li></ol></slide>` (up to 8 choices; `answer` is optional, leave it off for an opinion question; the letter is in the page source, so a poll is a check for understanding, not a test). `assets/decks/POLLDEMO.json` has samples to try; delete it and the `sl-polldemo-*` slides when done.
 
 - **Students** (joined through the follow-me link) pick a choice. It is anonymous: the browser invents a random id so a student can change an answer and still count once. They see nothing of the class's answers until you reveal.
 - **You**: start the session as usual, then click **Copy second-device link** in the banner and open it on your tablet or phone. That device (the *presenter*) follows your slides and sees the live split privately. The projecting screen shows only "N answered". **Reveal** (or V) on either device shows the split and the right answer to everyone; students can no longer change answers. **Reset** clears one question. **Export** downloads a CSV of every poll's counts.
@@ -298,6 +298,17 @@ A poll is a slide: `<slide xml:id="sl-..." kind="poll" title="Predict" answer="B
 - Votes are kept on the session server for two weeks after the last activity, then deleted; Export first if you want them.
 - Without a session (a student on the deployed deck by themselves) a poll gives the right answer straight away.
 - Needs the worker redeployed (`cd classroom-worker && npx wrangler deploy`) as well as `./deploy-client-preview.sh`.
+
+### Short answers and pasted code
+
+`<slide kind="short" title="..."><p>Question</p></slide>` (up to 400 characters) and `<slide kind="code" title="..."><p>Question</p></slide>` (up to 6000, line breaks and indentation kept). Same anonymous rules as polls.
+
+1. Students type or paste in the box and Submit (they can resubmit until you show the answers). Nothing is visible to anyone else.
+2. Your second device (the presenter link) sees the submissions arrive, privately, and can click one to pick it. The projecting screen shows only "N submitted".
+3. **Show answers** (or **Show submissions**, V) puts every submission in front of the whole class, anonymously, with the picked one enlarged; answers close at that point. Click a numbered chip on either of your devices to change the pick, or **All** to go back to the grid.
+4. **Copy** puts the picked code on the clipboard of the device you press it on: press it on the projecting laptop, then paste into the coding window. (Loading it straight into the coding window is not built.)
+5. **Export** downloads one JSON file (every poll's counts and every written answer) when there are written answers, otherwise a CSV of the polls. **Reset** clears one question.
+6. Samples: the POLLDEMO deck.
 
 **One-time activation** (not yet done as of this writing):
 

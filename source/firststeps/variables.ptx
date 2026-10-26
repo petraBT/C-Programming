@@ -423,7 +423,7 @@ cash = 20;</code></program> </li>
 
         <!-- In-class slides for the deck player; hidden in the reading view. -->
         <!-- Poll demo: a multiple-choice question with a right answer, and one without (opinion).
-             Used by the POLLDEMO deck; delete both slides and assets/decks/POLLDEMO.json when done. -->
+             Used by the POLLDEMO deck; delete these four slides and assets/decks/POLLDEMO.json when done. -->
         <slide xml:id="sl-polldemo-division" kind="poll" title="Predict" answer="B">
           <p>What does <c>7 / 2</c> evaluate to in C when both numbers are <c>int</c>?</p>
           <ol>
@@ -432,6 +432,12 @@ cash = 20;</code></program> </li>
             <li><c>4</c></li>
             <li>It is a compile error</li>
           </ol>
+        </slide>
+        <slide xml:id="sl-polldemo-short" kind="short" title="In your own words">
+          <p>In one sentence: why does <c>7 / 2</c> give <c>3</c> and not <c>3.5</c>?</p>
+        </slide>
+        <slide xml:id="sl-polldemo-code" kind="code" title="Your code">
+          <p>Write a program that prints the remainder of <c>17</c> divided by <c>5</c>. Paste it here.</p>
         </slide>
         <slide xml:id="sl-polldemo-confidence" kind="poll" title="How confident are you?">
           <p>How confident do you feel about variables so far?</p>

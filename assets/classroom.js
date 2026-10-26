@@ -316,9 +316,12 @@
   var listeners = {}
   var kept = {}
   function deliver(msg) {
-    if (msg.type === 'state' || msg.type === 'tally' || msg.type === 'reveal' || msg.type === 'reset') {
+    if (msg.type === 'state' || msg.type === 'tally' || msg.type === 'reveal' || msg.type === 'reset' ||
+        msg.type === 'shared' || msg.type === 'pick') {
       var k = msg.type + ':' + (msg.slide || '')
-      if (msg.type === 'reset') { delete kept['tally:' + msg.slide]; delete kept['reveal:' + msg.slide] } else kept[k] = msg
+      if (msg.type === 'reset') {
+        ;['tally:', 'reveal:', 'shared:', 'pick:'].forEach(function (pre) { delete kept[pre + msg.slide] })
+      } else kept[k] = msg
     }
     ;(listeners[msg.type] || []).forEach(function (fn) { try { fn(msg) } catch (err) { console.error(err) } })
   }

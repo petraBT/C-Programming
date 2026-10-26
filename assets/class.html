@@ -519,6 +519,46 @@
       #glue .poll-choice.right { border-color: #1a7f37; }
       #glue .poll-choice.right .poll-bar { background: #c5e8cf; }
       #glue .poll-choice.wrong.mine { border-color: #c92a2a; box-shadow: inset 0 0 0 2px #c92a2a; }
+      /* --- written answers (kind="short" and kind="code") ------------------ */
+      #glue .resp { margin-top: 1cqmin; max-width: 94%; }
+      #glue .resp-input, #glue .resp-card, #glue .resp-big, #glue .resp-bigtext {
+        -webkit-user-select: text; user-select: text;
+      }
+      #glue .resp-input {
+        width: 100%; box-sizing: border-box; font: inherit; font-size: 2.8cqmin; line-height: 1.4;
+        padding: 1.2cqmin 1.6cqmin; border: 2px solid #c9c7be; border-radius: 1.2cqmin; resize: none;
+        color: #1a1a19; background: #fff;
+      }
+      #glue .resp-input.code { font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-size: 2.3cqmin; line-height: 1.35; white-space: pre; overflow: auto; }
+      #glue .resp-input:focus { outline: none; border-color: #2158a8; }
+      #glue .resp-row { display: flex; align-items: center; gap: 2cqmin; margin-top: 1cqmin; }
+      #glue .resp-send, #glue .resp-copy {
+        font: inherit; font-size: 2.6cqmin; font-weight: 600; color: #fff; background: #2158a8; border: 0;
+        border-radius: 1cqmin; padding: 1cqmin 2.4cqmin; cursor: pointer;
+      }
+      #glue .resp-copy { color: #2158a8; background: #fff; border: 2px solid #2158a8; }
+      #glue .resp-status { font-size: 2.4cqmin; color: #52514e; }
+      #glue .resp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(34cqmin, 1fr)); gap: 1.4cqmin; }
+      #glue .resp-card {
+        position: relative; text-align: left; font: inherit; font-size: 2.4cqmin; color: #1a1a19; background: #fff;
+        border: 2px solid #c9c7be; border-radius: 1.2cqmin; padding: 1.2cqmin 1.6cqmin; max-height: 26cqmin; overflow: hidden;
+        white-space: pre-wrap; word-break: break-word;
+      }
+      #glue .resp-card.code { font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-size: 1.9cqmin; white-space: pre; word-break: normal; }
+      #glue .resp-card.clickable { cursor: pointer; }
+      #glue .resp-card.picked { border-color: #2158a8; box-shadow: inset 0 0 0 2px #2158a8; }
+      #glue .resp-n { display: block; font-weight: 700; font-size: 2.2cqmin; color: #2158a8; font-family: inherit; margin-bottom: .4cqmin; }
+      #glue .resp-chips { display: flex; flex-wrap: wrap; gap: 1cqmin; margin: 1cqmin 0; align-items: center; }
+      #glue .resp-chip { font: inherit; font-size: 2.2cqmin; font-weight: 700; border: 2px solid #c9c7be; background: #fff; color: #2158a8; border-radius: 99px; padding: .4cqmin 1.6cqmin; cursor: default; }
+      #glue .resp-chip.clickable { cursor: pointer; }
+      #glue .resp-chip.picked { background: #2158a8; border-color: #2158a8; color: #fff; }
+      #glue .resp-big {
+        margin: 0; padding: 1.6cqmin 2cqmin; background: #f4f3ef; border: 2px solid #2158a8; border-radius: 1.2cqmin;
+        font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-size: 2.7cqmin; line-height: 1.35; white-space: pre-wrap;
+        max-height: 56cqmin; overflow: auto;
+      }
+      #glue .resp-bigtext { font-size: 4cqmin; line-height: 1.35; padding: 1.6cqmin 2cqmin; background: #f4f3ef; border: 2px solid #2158a8; border-radius: 1.2cqmin; white-space: pre-wrap; margin: 0; }
+      #glue .resp-label { font-size: 2.3cqmin; color: #52514e; margin: .6cqmin 0; }
       #poll-ctl { display: none; align-items: center; gap: 8px; }
       #poll-ctl.on { display: inline-flex; }
       #poll-count { color: #c3c2b7; white-space: nowrap; }
@@ -756,7 +796,7 @@
             <span id="poll-count"></span>
             <button id="poll-reveal" type="button" title="Show the results to everyone (V)">Reveal</button>
             <button id="poll-reset" type="button" title="Clear the answers to this question">Reset</button>
-            <button id="poll-export" type="button" title="Download every poll's counts as a spreadsheet (CSV)">Export</button>
+            <button id="poll-export" type="button" title="Download every poll's counts (CSV), or everything with written answers (JSON)">Export</button>
           </span>
           <button id="draw" type="button" title="Draw with the mouse — a stylus always draws (D)">✎ Draw</button>
           <button id="laser-btn" type="button" title="Laser pointer (L)"><span style="color:#e5484d">●</span> Laser</button>
@@ -1437,6 +1477,7 @@
           // A poll (kind="poll"): the <ol> is the choices, A, B, C ... in order, and the
           // optional answer="B" names the right one. The letter is in the page source,
           // so a poll is a check for understanding, not a test.
+          if (g.type === 'short' || g.type === 'code') g.id = ref && ref.slide
           if (g.type === 'poll') {
             var ol = body && body.querySelector('ol')
             if (ol) g.choices = [].slice.call(ol.children).filter(function (li) { return li.tagName === 'LI' }).slice(0, 8).map(para)
@@ -1463,6 +1504,18 @@
             glueEl.classList.add('center')
             if (slide.kicker) parts.push('<div class="section-kicker">' + html(slide.kicker) + '</div>')
             parts.push('<div class="section-main">' + html(slide.title || '') + '</div>')
+          } else if (slide.type === 'short' || slide.type === 'code') {
+            glueEl.classList.add('top')
+            parts.push('<h2>' + html(slide.title || '') + '</h2>')
+            if (slide.body) parts.push('<p class="big">' + html(slide.body) + '</p>')
+            parts.push('<div class="resp" data-resp="' + esc(pollKey(slide)) + '" data-kind="' + slide.type + '">' +
+              '<div class="resp-entry"><textarea class="resp-input' + (slide.type === 'code' ? ' code' : '') + '" rows="' +
+              (slide.type === 'code' ? 9 : 3) + '" maxlength="' + (slide.type === 'code' ? 6000 : 400) +
+              '" spellcheck="false" aria-label="' + (slide.type === 'code' ? 'Paste your code here' : 'Type your answer here') +
+              '" placeholder="' + (slide.type === 'code' ? 'Paste your code here' : 'Type your answer here') + '"></textarea>' +
+              '<div class="resp-row"><button type="button" class="resp-send">Submit</button><span class="resp-status" role="status"></span></div></div>' +
+              '<div class="resp-priv"></div><div class="resp-view"></div></div>')
+            if (slide.note) parts.push('<p class="note">' + html(slide.note) + '</p>')
           } else if (slide.type === 'poll') {
             glueEl.classList.add('top')
             parts.push('<h2>' + html(slide.title || '') + '</h2>')
@@ -1504,6 +1557,7 @@
           }
           glueEl.innerHTML = parts.join('')
           if (slide.type === 'poll') pollRendered(slide)
+          if (slide.type === 'short' || slide.type === 'code') respRendered(slide)
         }
 
         function render() {
@@ -1557,6 +1611,7 @@
         }
         function pollStoreKey(key) { return 'engs20-vote:' + (pollSession ? pollSession.code : 'local') + ':' + key }
         function pollEl() { return glueEl.classList.contains('on') ? glueEl.querySelector('.poll') : null }
+        function respEl() { return glueEl.classList.contains('on') ? glueEl.querySelector('.resp') : null }
         function pollSlide() {
           var sl = deck && deck.slides && deck.slides[currentIndex() - 1]
           return sl
@@ -1615,34 +1670,46 @@
           pollPaint()
         }
 
-        // The bar: what the lead and the presenter see, on a poll slide.
+        // The bar: what the lead and the presenter see, on a poll or written-answer slide.
         function pollSyncBar() {
           var ctl = document.getElementById('poll-ctl')
           var priv = pollRole === 'lead' || pollRole === 'presenter'
-          var el = pollEl()
+          var el = pollEl(), rel = respEl()
           ctl.classList.toggle('on', priv && pollPriv)
           if (!priv || !pollPriv) return
-          var key = el && el.getAttribute('data-poll'), st = key ? pollSt(key) : null
-          document.getElementById('poll-count').style.display = el ? '' : 'none'
-          document.getElementById('poll-reveal').style.display = el ? '' : 'none'
-          document.getElementById('poll-reset').style.display = el ? '' : 'none'
-          if (st) {
+          var here = el || rel
+          var key = here && (here.getAttribute('data-poll') || here.getAttribute('data-resp')), st = key ? pollSt(key) : null
+          document.getElementById('poll-count').style.display = here ? '' : 'none'
+          document.getElementById('poll-reveal').style.display = here ? '' : 'none'
+          document.getElementById('poll-reset').style.display = here ? '' : 'none'
+          if (st && el) {
             var total = (st.tally && st.tally.total) || 0
             document.getElementById('poll-count').textContent = total + ' answered'
             document.getElementById('poll-reveal').textContent = st.shown ? 'Hide results' : 'Reveal'
+          } else if (st && rel) {
+            var isCode = rel.getAttribute('data-kind') === 'code'
+            document.getElementById('poll-count').textContent = (st.items || []).length + ' submitted'
+            document.getElementById('poll-reveal').textContent =
+              st.shared && st.shared.on ? 'Hide ' + (isCode ? 'submissions' : 'answers') : 'Show ' + (isCode ? 'submissions' : 'answers')
           }
         }
         function pollReveal() {
-          var el = pollEl()
-          if (!el || !pollSession || !pollPriv) return
-          var key = el.getAttribute('data-poll')
-          pollSession.send({ type: 'reveal', slide: key, on: !pollSt(key).shown })
+          var el = pollEl(), rel = respEl()
+          if (!pollSession || !pollPriv) return
+          if (el) {
+            var key = el.getAttribute('data-poll')
+            pollSession.send({ type: 'reveal', slide: key, on: !pollSt(key).shown })
+          } else if (rel) {
+            var rkey = rel.getAttribute('data-resp')
+            var on = !(pollSt(rkey).shared && pollSt(rkey).shared.on)
+            pollSession.send({ type: 'share', slide: rkey, on: on })
+          }
         }
         document.getElementById('poll-reveal').addEventListener('click', pollReveal)
         document.getElementById('poll-reset').addEventListener('click', function () {
-          var el = pollEl()
+          var el = pollEl() || respEl()
           if (el && pollSession && pollPriv && confirm('Clear all answers to this question?')) {
-            pollSession.send({ type: 'reset', slide: el.getAttribute('data-poll') })
+            pollSession.send({ type: 'reset', slide: el.getAttribute('data-poll') || el.getAttribute('data-resp') })
           }
         })
         document.getElementById('poll-export').addEventListener('click', function () {
@@ -1652,11 +1719,119 @@
           if ((e.key === 'v' || e.key === 'V') && !e.metaKey && !e.ctrlKey && !e.altKey &&
               !/^(INPUT|TEXTAREA)$/.test((e.target || {}).tagName || '')) pollReveal()
         })
+        /* Written answers (kind="short", kind="code"). A student types or pastes and submits;
+           the text goes anonymously to the session and nobody sees it until the instructor
+           shows the answers. The presenter (second device) sees the list as it grows and
+           can pick one; "Show answers" puts all of them in front of the whole class, with the
+           pick enlarged (and a Copy button for pasting code into the coding window). */
+        function respItemsHtml(container, items, pick, clickable, kind, onPick) {
+          container.textContent = ''
+          var list = document.createElement('div'); list.className = 'resp-list'
+          items.forEach(function (it) {
+            var card = document.createElement('div')
+            card.className = 'resp-card' + (kind === 'code' ? ' code' : '') + (clickable ? ' clickable' : '') + (pick === it.n ? ' picked' : '')
+            var n = document.createElement('span'); n.className = 'resp-n'; n.textContent = '#' + it.n + (pick === it.n ? ' (picked)' : '')
+            card.appendChild(n); card.appendChild(document.createTextNode(it.text))
+            if (clickable) card.addEventListener('click', function () { onPick(it.n) })
+            list.appendChild(card)
+          })
+          container.appendChild(list)
+        }
+        function respPick(key, n) { if (pollSession && pollPriv) pollSession.send({ type: 'pick', slide: key, n: n }) }
+        function respPaint() {
+          var el = respEl()
+          if (!el) return
+          var key = el.getAttribute('data-resp'), st = pollSt(key), kind = el.getAttribute('data-kind')
+          var shared = st.shared && st.shared.on ? st.shared : null
+          var entry = el.querySelector('.resp-entry'), priv = el.querySelector('.resp-priv'), view = el.querySelector('.resp-view')
+          var asker = pollRole === 'follow' || pollRole === null
+          entry.style.display = asker && !shared ? '' : 'none'
+          el.querySelector('.resp-status').textContent = !pollSession
+            ? 'Answers are collected when your instructor runs a class session.'
+            : (st.sent ? '✓ Submitted. You can change it and submit again until the answers are shown.' : '')
+          // The presenter's private list, before anything is shared.
+          priv.textContent = ''
+          if (pollRole === 'presenter' && pollPriv && !shared) {
+            var items = st.items || []
+            var lab = document.createElement('p'); lab.className = 'resp-label'
+            lab.textContent = items.length ? items.length + ' submitted (private). Click one to pick it.' : 'Nothing submitted yet.'
+            priv.appendChild(lab)
+            var holder = document.createElement('div'); priv.appendChild(holder)
+            respItemsHtml(holder, items, st.pick, true, kind, function (n) { respPick(key, n) })
+          } else if (pollRole === 'lead' && pollPriv && !shared) {
+            var l2 = document.createElement('p'); l2.className = 'resp-label'
+            l2.textContent = (st.items || []).length + ' submitted'
+            priv.appendChild(l2)
+          }
+          // What everyone sees once shared.
+          view.textContent = ''
+          if (shared) {
+            var clickable = (pollRole === 'lead' || pollRole === 'presenter') && pollPriv
+            var pick = shared.pick, byN = {}
+            shared.items.forEach(function (it) { byN[it.n] = it })
+            if (pick && byN[pick]) {
+              var chips = document.createElement('div'); chips.className = 'resp-chips'
+              var lbl = document.createElement('span'); lbl.className = 'resp-label'; lbl.textContent = 'Submission #' + pick + ' of ' + shared.items.length + ':'
+              chips.appendChild(lbl)
+              shared.items.forEach(function (it) {
+                var c = document.createElement('button'); c.type = 'button'
+                c.className = 'resp-chip' + (clickable ? ' clickable' : '') + (it.n === pick ? ' picked' : '')
+                c.textContent = it.n
+                c.setAttribute('aria-label', 'Submission ' + it.n + (it.n === pick ? ' (shown)' : ''))
+                if (clickable) c.addEventListener('click', function () { respPick(key, it.n) })
+                chips.appendChild(c)
+              })
+              var back = document.createElement('button'); back.type = 'button'; back.className = 'resp-chip' + (clickable ? ' clickable' : '')
+              back.textContent = 'All'
+              if (clickable) back.addEventListener('click', function () { respPick(key, 0) })
+              chips.appendChild(back)
+              var cp = document.createElement('button'); cp.type = 'button'; cp.className = 'resp-copy'; cp.textContent = 'Copy'
+              cp.addEventListener('click', function () {
+                try { navigator.clipboard.writeText(byN[pick].text).then(function () { cp.textContent = 'Copied' }, function () { cp.textContent = 'Copy failed' }) }
+                catch (err) { cp.textContent = 'Copy failed' }
+                setTimeout(function () { cp.textContent = 'Copy' }, 2000)
+              })
+              chips.appendChild(cp)
+              view.appendChild(chips)
+              var big = document.createElement(kind === 'code' ? 'pre' : 'p')
+              big.className = kind === 'code' ? 'resp-big' : 'resp-bigtext'
+              big.textContent = byN[pick].text
+              view.appendChild(big)
+            } else {
+              var l3 = document.createElement('p'); l3.className = 'resp-label'
+              l3.textContent = shared.items.length + ' submitted' + (clickable ? '. Click one to look at it closely.' : '.')
+              view.appendChild(l3)
+              var h = document.createElement('div'); view.appendChild(h)
+              respItemsHtml(h, shared.items, null, clickable, kind, function (n) { respPick(key, n) })
+            }
+          }
+          pollSyncBar()
+        }
+        function respRendered(slide) {
+          var key = pollKey(slide), st = pollSt(key)
+          var el = glueEl.querySelector('.resp')
+          var ta = el.querySelector('.resp-input')
+          if (!st.sent) { try { st.sent = localStorage.getItem(pollStoreKey(key)) || null } catch (e) {} }
+          if (st.sent) ta.value = st.sent
+          el.querySelector('.resp-send').addEventListener('click', function () {
+            var text = ta.value.replace(/\s+$/, '')
+            if (!text.trim()) { el.querySelector('.resp-status').textContent = 'Type or paste something first.'; return }
+            st.sent = text
+            try { localStorage.setItem(pollStoreKey(key), text) } catch (e) {}
+            if (pollSession) pollSession.send({ type: 'answer', slide: key, cid: pollCid, kind: slide.type, text: text })
+            respPaint()
+          })
+          respPaint()
+        }
+
         if (pollSession) {
           pollSession.on('state', function (m) {
             pollPriv = !!m.priv
             Object.keys(m.reveals || {}).forEach(function (k) { pollSt(k).shown = m.reveals[k] })
             Object.keys(m.tallies || {}).forEach(function (k) { pollSt(k).tally = m.tallies[k] })
+            Object.keys(m.shared || {}).forEach(function (k) { pollSt(k).shared = m.shared[k] })
+            Object.keys(m.answers || {}).forEach(function (k) { pollSt(k).items = m.answers[k] })
+            Object.keys(m.picks || {}).forEach(function (k) { pollSt(k).pick = m.picks[k] })
             // A reconnect may follow a dropped connection: say again what this student chose
             // (the server ignores a repeat), so the vote cannot be lost in between.
             if (pollRole === 'follow') {
@@ -1665,9 +1840,26 @@
                 var k = el.getAttribute('data-poll'), st = pollSt(k)
                 if (st.mine && !st.shown) pollSession.send({ type: 'vote', slide: k, cid: pollCid, choice: st.mine })
               }
+              var rel = respEl()
+              if (rel) {
+                var rk = rel.getAttribute('data-resp'), rs = pollSt(rk)
+                if (rs.sent && !(rs.shared && rs.shared.on)) pollSession.send({ type: 'answer', slide: rk, cid: pollCid, kind: rel.getAttribute('data-kind'), text: rs.sent })
+              }
             }
-            pollPaint()
+            pollPaint(); respPaint()
           })
+          pollSession.on('answer', function (m) {
+            var st = pollSt(m.slide), items = st.items || (st.items = [])
+            var found = false
+            items.forEach(function (it) { if (it.n === m.n) { it.text = m.text; found = true } })
+            if (!found) items.push({ n: m.n, text: m.text })
+            respPaint()
+          })
+          pollSession.on('shared', function (m) {
+            pollSt(m.slide).shared = m.on ? { on: true, items: m.items, pick: m.pick } : null
+            respPaint()
+          })
+          pollSession.on('pick', function (m) { pollSt(m.slide).pick = m.n; respPaint() })
           pollSession.on('tally', function (m) { pollSt(m.slide).tally = { counts: m.counts, total: m.total }; pollPaint() })
           pollSession.on('reveal', function (m) {
             pollSt(m.slide).shown = m.on ? { counts: m.counts, total: m.total } : null
@@ -1676,17 +1868,26 @@
           pollSession.on('reset', function (m) {
             pollState[m.slide] = { mine: null, tally: null, shown: null }
             try { localStorage.removeItem(pollStoreKey(m.slide)) } catch (e) {}
-            pollPaint()
+            var rel = respEl()
+            if (rel && rel.getAttribute('data-resp') === m.slide) rel.querySelector('.resp-input').value = ''
+            pollPaint(); respPaint()
           })
           pollSession.on('export', function (m) {
-            var rows = ['slide,choice,count']
-            Object.keys(m.slides || {}).sort().forEach(function (slide) {
-              var counts = m.slides[slide].counts
-              Object.keys(counts).sort().forEach(function (c) { rows.push(slide + ',' + c + ',' + counts[c]) })
-            })
             var a = document.createElement('a')
-            a.href = URL.createObjectURL(new Blob([rows.join('\n') + '\n'], { type: 'text/csv' }))
-            a.download = 'poll-results-' + pollSession.code + '.csv'
+            var hasAnswers = Object.keys(m.answers || {}).length > 0
+            if (hasAnswers) {
+              // Written answers do not fit a spreadsheet row (code has line breaks), so one JSON file holds everything.
+              a.href = URL.createObjectURL(new Blob([JSON.stringify({ session: pollSession.code, polls: m.slides, answers: m.answers }, null, 2)], { type: 'application/json' }))
+              a.download = 'responses-' + pollSession.code + '.json'
+            } else {
+              var rows = ['slide,choice,count']
+              Object.keys(m.slides || {}).sort().forEach(function (slide) {
+                var counts = m.slides[slide].counts
+                Object.keys(counts).sort().forEach(function (c) { rows.push(slide + ',' + c + ',' + counts[c]) })
+              })
+              a.href = URL.createObjectURL(new Blob([rows.join('\n') + '\n'], { type: 'text/csv' }))
+              a.download = 'poll-results-' + pollSession.code + '.csv'
+            }
             document.body.appendChild(a); a.click(); a.remove()
           })
         }
@@ -2295,6 +2496,9 @@
         document.getElementById('next').addEventListener('click', function () { go(currentIndex() + 1) })
         document.addEventListener('keydown', function (e) {
           if (e.metaKey || e.ctrlKey || e.altKey) return
+          // Typing in an answer box (short answer, pasted code) must not turn slides or toggle tools.
+          var typing = e.target
+          if (typing && (typing.tagName === 'TEXTAREA' || typing.tagName === 'INPUT' || typing.isContentEditable)) return
           if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(currentIndex() + 1) }
           else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(currentIndex() - 1) }
           else if (e.key === 'Home') { e.preventDefault(); go(1) }

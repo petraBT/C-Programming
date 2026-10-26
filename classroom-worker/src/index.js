@@ -4,6 +4,7 @@
 //   client -> server:
 //     {type: "hello", role: "lead"|"presenter"|"follow", key?}   first message after connect
 //     {type: "vote", slide, cid, choice}      a student's poll answer (anonymous)
+//     {type: "answer", slide, cid, kind, text}  a written answer (short answer or code), anonymous
 //     {type: "reveal"|"reset"|"export", ...}   instructor devices only (they say hello with the key)
 //     {type: "navigate", path: "/..."}         lead only: current book page
 //   server -> client:
@@ -159,6 +160,12 @@ const KEY_OK = /^[A-Za-z0-9]{8,64}$/
 const SLIDE_OK = /^[A-Za-z0-9_.:-]{1,120}$/
 const CID_OK = /^[A-Za-z0-9]{6,40}$/
 const CHOICE_OK = /^[A-H]$/
+// Written answers (short answer, pasted code). Anonymous like votes: an answer is
+// {n, text}, n being just its order of arrival on that slide. Students never see any
+// answer until the instructor shares them; then every student sees every answer.
+const MAX_TEXT = {short: 400, code: 6000}
+const MAX_ANSWERS = 150          // per slide
+const SHARE_BUDGET = 600000      // chars sent to everyone at once, comfortably under the 1 MiB frame limit
 
 export class ClassSession {
   constructor(state) {
@@ -169,6 +176,9 @@ export class ClassSession {
     this.key = null       // the instructor key: set by the first lead to say hello
     this.votes = {}       // slide -> {cid: choice}
     this.revealed = {}    // slide -> true
+    this.answers = {}     // slide -> {cid: {n, text}}
+    this.shared = {}      // slide -> true once the instructor has shown the answers to everyone
+    this.picks = {}       // slide -> n: the answer the instructor chose to look at
   }
 
   async load() {
@@ -177,6 +187,9 @@ export class ClassSession {
     this.key = (await this.state.storage.get('key')) ?? null
     this.votes = (await this.state.storage.get('votes')) ?? {}
     this.revealed = (await this.state.storage.get('revealed')) ?? {}
+    this.answers = (await this.state.storage.get('answers')) ?? {}
+    this.shared = (await this.state.storage.get('shared')) ?? {}
+    this.picks = (await this.state.storage.get('picks')) ?? {}
     this.loaded = true
   }
 
@@ -217,12 +230,34 @@ export class ClassSession {
   snapshot(meta) {
     const reveals = {}
     for (const slide of Object.keys(this.revealed)) reveals[slide] = this.tallyOf(slide)
-    const msg = {type: 'state', path: this.path, count: this.followCount(), priv: meta.priv, reveals}
+    const shared = {}
+    for (const slide of Object.keys(this.shared)) shared[slide] = this.sharedView(slide)
+    const msg = {type: 'state', path: this.path, count: this.followCount(), priv: meta.priv, reveals, shared}
     if (meta.priv) {
       msg.tallies = {}
       for (const slide of Object.keys(this.votes)) msg.tallies[slide] = this.tallyOf(slide)
+      msg.answers = {}
+      for (const slide of Object.keys(this.answers)) msg.answers[slide] = this.listOf(slide)
+      msg.picks = this.picks
     }
     return msg
+  }
+
+  // A slide's answers in arrival order: [{n, text}].
+  listOf(slide) {
+    return Object.values(this.answers[slide] || {}).sort((a, b) => a.n - b.n)
+  }
+
+  // What everybody sees once the answers are shared: the list (within a size budget) and the pick.
+  sharedView(slide) {
+    const items = []
+    let used = 0
+    for (const a of this.listOf(slide)) {
+      if (used + a.text.length > SHARE_BUDGET) break
+      used += a.text.length
+      items.push(a)
+    }
+    return {on: true, items, pick: this.picks[slide] ?? null}
   }
 
   async persist(what) {
@@ -230,6 +265,9 @@ export class ClassSession {
     await this.state.storage.setAlarm(Date.now() + POLL_TTL_MS)
     if (what === 'votes') await this.state.storage.put('votes', this.votes)
     if (what === 'revealed') await this.state.storage.put('revealed', this.revealed)
+    if (what === 'answers') await this.state.storage.put('answers', this.answers)
+    if (what === 'shared') await this.state.storage.put('shared', this.shared)
+    if (what === 'picks') await this.state.storage.put('picks', this.picks)
   }
 
   async alarm() {
@@ -308,6 +346,26 @@ export class ClassSession {
       return
     }
 
+    if (msg.type === 'answer') {
+      const {slide, cid, text, kind} = msg
+      const max = MAX_TEXT[kind]
+      if (!SLIDE_OK.test(slide || '') || !CID_OK.test(cid || '') || !max) return
+      if (typeof text !== 'string' || !text.trim() || text.length > max) return
+      if (this.shared[slide]) return   // closed once the answers are shown
+      const bucket = this.answers[slide] || (this.answers[slide] = {})
+      if (!(cid in bucket)) {
+        if (Object.keys(this.answers).length > MAX_SLIDES || Object.keys(bucket).length >= MAX_ANSWERS) return
+        const n = Object.values(bucket).reduce((m, a) => Math.max(m, a.n), 0) + 1
+        bucket[cid] = {n, text}
+      } else {
+        bucket[cid].text = text           // a resubmission keeps its place
+      }
+      this.persist('answers')
+      this.send(ws, {type: 'answered', slide})
+      this.toPriv({type: 'answer', slide, n: bucket[cid].n, text, total: Object.keys(bucket).length})
+      return
+    }
+
     // Everything below is for the instructor's devices only.
     if (!meta.priv) return
 
@@ -320,16 +378,38 @@ export class ClassSession {
       for (const sock of this.clients.keys()) {
         this.send(sock, {type: 'reveal', slide: msg.slide, on: !!msg.on, ...(msg.on ? t : {counts: {}, total: 0})})
       }
+    } else if (msg.type === 'share') {
+      if (!SLIDE_OK.test(msg.slide || '')) return
+      if (msg.on) this.shared[msg.slide] = true
+      else delete this.shared[msg.slide]
+      this.persist('shared')
+      const view = msg.on ? this.sharedView(msg.slide) : {on: false, items: [], pick: null}
+      for (const sock of this.clients.keys()) this.send(sock, {type: 'shared', slide: msg.slide, ...view})
+    } else if (msg.type === 'pick') {
+      if (!SLIDE_OK.test(msg.slide || '')) return
+      if (Number.isInteger(msg.n) && msg.n > 0) this.picks[msg.slide] = msg.n
+      else delete this.picks[msg.slide]
+      this.persist('picks')
+      if (this.shared[msg.slide]) {
+        for (const sock of this.clients.keys()) this.send(sock, {type: 'shared', slide: msg.slide, ...this.sharedView(msg.slide)})
+      } else {
+        this.toPriv({type: 'pick', slide: msg.slide, n: this.picks[msg.slide] ?? null})
+      }
     } else if (msg.type === 'reset') {
       if (!SLIDE_OK.test(msg.slide || '')) return
       delete this.votes[msg.slide]
       delete this.revealed[msg.slide]
-      this.persist('votes'); this.persist('revealed')
+      delete this.answers[msg.slide]
+      delete this.shared[msg.slide]
+      delete this.picks[msg.slide]
+      this.persist('votes'); this.persist('revealed'); this.persist('answers'); this.persist('shared'); this.persist('picks')
       for (const sock of this.clients.keys()) this.send(sock, {type: 'reset', slide: msg.slide})
     } else if (msg.type === 'export') {
       const slides = {}
       for (const slide of Object.keys(this.votes)) slides[slide] = this.tallyOf(slide)
-      this.send(ws, {type: 'export', slides})
+      const answers = {}
+      for (const slide of Object.keys(this.answers)) answers[slide] = this.listOf(slide)
+      this.send(ws, {type: 'export', slides, answers})
     }
   }
 
