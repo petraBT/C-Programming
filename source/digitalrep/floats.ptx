@@ -355,6 +355,9 @@
           <p>What happens when you similarly cast a float to an int? Will rounding occur?</p>
           <cmecode startPoint="engs20p_Ndivision3"/>
         </slide>
+        <slide xml:id="sl-w1c3-q-float2int" kind="short" title="Casting a float to an int">
+          <p>What happens when you cast a float to an int? Will rounding occur?</p>
+        </slide>
     </section>
 
     <section xml:id="floats-average">
@@ -375,6 +378,10 @@
             <cmecode startPoint="engs20p_NAGAverage" height="500"></cmecode>
         </statement>
         </activity>
+        <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <slide xml:id="sl-w1c3-q-average" kind="code" title="Your code: averaging integers">
+          <p>When you are done, please paste your code for the average here.</p>
+        </slide>
     </section>
 
     <section xml:id="floats-remainder">
@@ -399,6 +406,9 @@
         <slide xml:id="sl-w1c3-17-demo" title="Division Remainder">
           <p>Suppose you want to know the remainder of the division of one integer by another. Can we do this with our current programming knowledge?</p>
           <cmecode startPoint="engs20p_NRemainder"/>
+        </slide>
+        <slide xml:id="sl-w1c3-q-remainder" kind="code" title="Your line: remainder">
+          <p>Paste the one line of code you wrote to compute the remainder.</p>
         </slide>
     </section>
 

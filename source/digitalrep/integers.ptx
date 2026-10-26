@@ -112,17 +112,17 @@
           <p>As a team, find three interesting things you all have in common. Put those three things in the answer box below along with your team name.</p>
           <caption>The LFs will vote on the winning team!</caption>
         </slide>
-        <slide xml:id="sl-w1c3-04-prompt" kind="prompt" title="Practice">
+        <slide xml:id="sl-w1c3-04-prompt" kind="short" title="Practice">
           <p>Please convert the decimal number 177 to 8-bit binary.</p>
         </slide>
-        <slide xml:id="sl-w1c3-05-prompt" kind="prompt" title="Practice">
+        <slide xml:id="sl-w1c3-05-prompt" kind="short" title="Practice">
           <p>Please convert the decimal number 177 to base-3.</p>
         </slide>
-        <slide xml:id="sl-w1c3-06-prompt" kind="prompt" title="Practice: binary addition">
+        <slide xml:id="sl-w1c3-06-prompt" kind="short" title="Practice: binary addition">
           <p>Add the decimal numbers 177 and 23 in 8-bit binary.</p>
           <caption>To help you, here are the binary conversions: 177 → 10110001, 23 → 00010111</caption>
         </slide>
-        <slide xml:id="sl-w1c3-07-prompt" kind="prompt" title="Now try this one">
+        <slide xml:id="sl-w1c3-07-prompt" kind="short" title="Now try this one">
           <p>Now try 177 + 177 in 8-bit binary.</p>
           <caption>Recall that the binary representation of 177 is 10110001. Does your result make sense?</caption>
         </slide>
@@ -583,7 +583,7 @@
         <p>Another example: <c>0x57</c> means 5 * <m>16^1</m> + 7 * <m>16^0</m> = 87 in decimal</p>
 
         <!-- In-class slides for the deck player; hidden in the reading view. -->
-        <slide xml:id="sl-w1c3-08-prompt" kind="prompt" title="Hexadecimal numbers">
+        <slide xml:id="sl-w1c3-08-prompt" kind="short" title="Hexadecimal numbers">
           <p>Please convert the decimal number 177 to hexadecimal.</p>
         </slide>
         <slide xml:id="sl-w1c3-12-prompt" kind="prompt" title="Interpretation of Hexadecimal Shorthand for the different representations">
