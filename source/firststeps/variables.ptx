@@ -422,6 +422,26 @@ cash = 20;</code></program> </li>
   <p>The following three activities present erroneous code. Can you spot the error and fix it? Don't be afraid to play around and try out multiple solutions. You cannot break anything! Remember that you can always go back to the original problem by clicking on the <q>Start fresh</q> button.</p>
 
         <!-- In-class slides for the deck player; hidden in the reading view. -->
+        <!-- Poll demo: a multiple-choice question with a right answer, and one without (opinion).
+             Used by the POLLDEMO deck; delete both slides and assets/decks/POLLDEMO.json when done. -->
+        <slide xml:id="sl-polldemo-division" kind="poll" title="Predict" answer="B">
+          <p>What does <c>7 / 2</c> evaluate to in C when both numbers are <c>int</c>?</p>
+          <ol>
+            <li><c>3.5</c></li>
+            <li><c>3</c></li>
+            <li><c>4</c></li>
+            <li>It is a compile error</li>
+          </ol>
+        </slide>
+        <slide xml:id="sl-polldemo-confidence" kind="poll" title="How confident are you?">
+          <p>How confident do you feel about variables so far?</p>
+          <ol>
+            <li>Lost</li>
+            <li>Getting there</li>
+            <li>Comfortable</li>
+            <li>Could teach it</li>
+          </ol>
+        </slide>
         <slide xml:id="sl-w1c2-00-title" kind="title" title="Variables, input, char and float" subtitle="Week 1, Class 2"/>
         <slide xml:id="sl-w1c2-01-recap" kind="recap" title="Where we left off">
           <ul>

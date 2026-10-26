@@ -141,17 +141,32 @@
 
   var params = new URLSearchParams(location.search)
   var requested = params.get('classroom')
+  var presenterKey = params.get('presenter')
+  // A second device (a tablet, say) that the instructor joins as a PRESENTER: it follows the
+  // lead's slides like a student, but also sees the poll answers as they arrive and can
+  // reveal them. It proves itself with the key the lead's banner hands out, never with the
+  // session code alone, which students know.
+  var KEY_ALPHABET = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  function randomKey(n) {
+    var out = '', bytes = new Uint8Array(n)
+    ;(window.crypto || window.msCrypto).getRandomValues(bytes)
+    for (var i = 0; i < n; i++) out += KEY_ALPHABET[bytes[i] % KEY_ALPHABET.length]
+    return out
+  }
   if (requested) {
     var sess
     if (requested === 'start') {
       var code = ''
       for (var i = 0; i < 4; i++) code += CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)]
-      sess = {code: code, role: 'lead'}
+      sess = {code: code, role: 'lead', key: randomKey(20)}
+    } else if (presenterKey && /^[A-Za-z0-9]{8,64}$/.test(presenterKey)) {
+      sess = {code: requested.toUpperCase(), role: 'presenter', key: presenterKey}
     } else {
       sess = {code: requested.toUpperCase(), role: 'follow'}
     }
     sessionStorage.setItem(STORE_KEY, JSON.stringify(sess))
     params.delete('classroom')
+    params.delete('presenter')
     var qs = params.toString()
     history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash)
   }
@@ -167,6 +182,7 @@
   }
   if (!session || !/^[A-Z0-9]{4,8}$/.test(session.code || '')) return
   var isLead = session.role === 'lead'
+  var isPresenter = session.role === 'presenter'
 
   // --- banner ------------------------------------------------------------
 
@@ -219,6 +235,32 @@
     join.textContent = ' · students join at ' +
       location.origin + location.pathname + '?' + joinParams.toString()
     label.appendChild(join)
+    // The second-device link: opens this deck as a presenter (see above). It carries the
+    // key, so it is shown only as a button, never written on the screen, because the
+    // banner is on the projector.
+    var secondBtn = document.createElement('button')
+    secondBtn.type = 'button'
+    secondBtn.textContent = 'Copy second-device link'
+    secondBtn.title = 'Open this on your tablet or phone to see poll answers privately and reveal them'
+    secondBtn.style.cssText =
+      'font-size:12px;color:#ccc;background:transparent;border:1px solid #444;' +
+      'border-radius:4px;padding:4px 10px;cursor:pointer;'
+    secondBtn.addEventListener('click', function () {
+      var pp = new URLSearchParams(location.search)
+      pp.set('classroom', session.code)
+      pp.set('presenter', session.key)
+      var link = location.origin + location.pathname + '?' + pp.toString()
+      var done = function (ok) {
+        secondBtn.textContent = ok ? 'Copied - send it to your other device' : 'Copy failed: select it from the prompt'
+        if (!ok) window.prompt('Second-device link (keep it private):', link)
+        setTimeout(function () { secondBtn.textContent = 'Copy second-device link' }, 4000)
+      }
+      try { navigator.clipboard.writeText(link).then(function () { done(true) }, function () { done(false) }) }
+      catch (err) { done(false) }
+    })
+    banner.insertBefore(secondBtn, spacer)
+  } else if (isPresenter) {
+    label.textContent = 'Second device for class session ' + session.code + ' (private view)'
   } else {
     label.textContent = 'Following class session ' + session.code
   }
@@ -248,6 +290,7 @@
     sessionStorage.removeItem(STORE_KEY)
     try { ws && ws.close() } catch (e) {}
     banner.remove()
+    window.DeckSession = undefined
     document.body.style.paddingBottom = ''
     document.documentElement.style.removeProperty('--stage-inset-bottom')
   })
@@ -256,12 +299,41 @@
 
   // Local authoring servers have no Pages Functions - use the deployed
   // site's endpoint so the feature still works when testing on localhost.
+  var testOrigin = params.get('wsorigin')   // honoured on localhost only: a local worker for testing
   var wsOrigin = /^(localhost|127\.0\.0\.1)$/.test(location.hostname)
-    ? 'wss://cprog-client-preview.pages.dev'
+    ? (testOrigin && /^wss?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(testOrigin) ? testOrigin : 'wss://cprog-client-preview.pages.dev')
     : location.origin.replace(/^http/, 'ws')
 
   var ws = null
   var retryDelay = 1000
+
+  // --- the page's own line to the session (polls) -------------------------
+  // The deck player (a different script) shows poll slides and needs to vote, reveal and
+  // hear tallies, over this same socket. It gets window.DeckSession: send(obj) (queued
+  // until connected), and on(type, fn). Messages that describe the CURRENT state (the
+  // snapshot, tallies, reveals) are kept and replayed to a listener that registers late.
+  var outbox = []
+  var listeners = {}
+  var kept = {}
+  function deliver(msg) {
+    if (msg.type === 'state' || msg.type === 'tally' || msg.type === 'reveal' || msg.type === 'reset') {
+      var k = msg.type + ':' + (msg.slide || '')
+      if (msg.type === 'reset') { delete kept['tally:' + msg.slide]; delete kept['reveal:' + msg.slide] } else kept[k] = msg
+    }
+    ;(listeners[msg.type] || []).forEach(function (fn) { try { fn(msg) } catch (err) { console.error(err) } })
+  }
+  window.DeckSession = {
+    code: session.code,
+    role: session.role,
+    send: function (obj) {
+      if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj))
+      else outbox.push(obj)
+    },
+    on: function (type, fn) {
+      ;(listeners[type] = listeners[type] || []).push(fn)
+      Object.keys(kept).forEach(function (k) { if (kept[k].type === type) { try { fn(kept[k]) } catch (err) { console.error(err) } } })
+    }
+  }
 
   function currentPath() {
     // Includes the query string: the deck player identifies its slide deck by
@@ -286,8 +358,9 @@
     ws.onopen = function () {
       retryDelay = 1000
       setConnected(true)
-      ws.send(JSON.stringify({type: 'hello', role: session.role}))
+      ws.send(JSON.stringify({type: 'hello', role: session.role, key: session.key}))
       if (isLead) ws.send(JSON.stringify({type: 'navigate', path: currentPath()}))
+      while (outbox.length) ws.send(JSON.stringify(outbox.shift()))
     }
 
     ws.onmessage = function (e) {
@@ -296,6 +369,7 @@
       if (!isLead && (msg.type === 'navigate' || msg.type === 'state') && safePath(msg.path)) {
         if (msg.path !== currentPath()) location.href = msg.path
       }
+      deliver(msg)
       if (msg.type === 'count' || msg.type === 'state') {
         if (isLead) countEl.textContent = '· ' + msg.count + ' following'
       }

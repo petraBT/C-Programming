@@ -1,0 +1,19 @@
+{
+  "id": "POLLDEMO",
+  "title": "Week 0 — Poll demo (delete when done)",
+  "_comment": [
+    "Two sample poll slides for trying multiple-choice questions in a follow-me session. Delete this file and the two sl-polldemo-* slides in source/firststeps/variables.ptx when done."
+  ],
+  "slides": [
+    {
+      "type": "ref",
+      "page": "variables-errors.html",
+      "slide": "sl-polldemo-division"
+    },
+    {
+      "type": "ref",
+      "page": "variables-errors.html",
+      "slide": "sl-polldemo-confidence"
+    }
+  ]
+}

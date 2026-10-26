@@ -2,7 +2,9 @@
 // One Durable Object per session code; browsers connect over WebSocket.
 // Protocol (all JSON):
 //   client -> server:
-//     {type: "hello", role: "lead"|"follow"}   first message after connect
+//     {type: "hello", role: "lead"|"presenter"|"follow", key?}   first message after connect
+//     {type: "vote", slide, cid, choice}      a student's poll answer (anonymous)
+//     {type: "reveal"|"reset"|"export", ...}   instructor devices only (they say hello with the key)
 //     {type: "navigate", path: "/..."}         lead only: current book page
 //   server -> client:
 //     {type: "state", path, count}    on hello: current page + follower count
@@ -144,20 +146,45 @@ export class DeckBoard {
 
 const PATH_OK = /^\/(?!\/)/
 
+// --- polls (multiple choice) ------------------------------------------------
+// Students vote anonymously: a vote is {slide, cid, choice}, where cid is a random id
+// the student's own browser made up, so a student can change an answer and still count
+// once. Nothing else identifies a vote, and the votes are never sent to students: only
+// the instructor's devices (see below) see counts, and everyone sees them only after
+// a reveal. Everything is deleted POLL_TTL_MS after the last activity (an alarm).
+const POLL_TTL_MS = 14 * 24 * 3600 * 1000
+const MAX_SLIDES = 200
+const MAX_VOTERS = 3000
+const KEY_OK = /^[A-Za-z0-9]{8,64}$/
+const SLIDE_OK = /^[A-Za-z0-9_.:-]{1,120}$/
+const CID_OK = /^[A-Za-z0-9]{6,40}$/
+const CHOICE_OK = /^[A-H]$/
+
 export class ClassSession {
   constructor(state) {
     this.state = state
-    this.clients = new Map() // WebSocket -> {role}
+    this.clients = new Map() // WebSocket -> {role, priv}
     this.path = undefined // lazily loaded from storage; null = no page yet
+    this.loaded = false
+    this.key = null       // the instructor key: set by the first lead to say hello
+    this.votes = {}       // slide -> {cid: choice}
+    this.revealed = {}    // slide -> true
+  }
+
+  async load() {
+    if (this.loaded) return
+    this.path = (await this.state.storage.get('path')) ?? null
+    this.key = (await this.state.storage.get('key')) ?? null
+    this.votes = (await this.state.storage.get('votes')) ?? {}
+    this.revealed = (await this.state.storage.get('revealed')) ?? {}
+    this.loaded = true
   }
 
   async fetch(request) {
     if (request.headers.get('Upgrade') !== 'websocket') {
       return new Response('expected a websocket', {status: 426})
     }
-    if (this.path === undefined) {
-      this.path = (await this.state.storage.get('path')) ?? null
-    }
+    await this.load()
     const pair = new WebSocketPair()
     const [client, server] = Object.values(pair)
     this.accept(server)
@@ -166,13 +193,54 @@ export class ClassSession {
 
   accept(ws) {
     ws.accept()
-    this.clients.set(ws, {role: 'follow'})
+    this.clients.set(ws, {role: 'follow', priv: false})
     ws.addEventListener('message', e => this.onMessage(ws, e))
     const drop = () => {
       if (this.clients.delete(ws)) this.broadcastCount()
     }
     ws.addEventListener('close', drop)
     ws.addEventListener('error', drop)
+  }
+
+  // Counts for one slide: {A: n, B: n, ...} and the total.
+  tallyOf(slide) {
+    const counts = {}
+    let total = 0
+    for (const c of Object.values(this.votes[slide] || {})) {
+      counts[c] = (counts[c] || 0) + 1
+      total++
+    }
+    return {counts, total}
+  }
+
+  // Everything a device needs to catch up when it connects.
+  snapshot(meta) {
+    const reveals = {}
+    for (const slide of Object.keys(this.revealed)) reveals[slide] = this.tallyOf(slide)
+    const msg = {type: 'state', path: this.path, count: this.followCount(), priv: meta.priv, reveals}
+    if (meta.priv) {
+      msg.tallies = {}
+      for (const slide of Object.keys(this.votes)) msg.tallies[slide] = this.tallyOf(slide)
+    }
+    return msg
+  }
+
+  async persist(what) {
+    // Delete everything two weeks after the last thing that happened here.
+    await this.state.storage.setAlarm(Date.now() + POLL_TTL_MS)
+    if (what === 'votes') await this.state.storage.put('votes', this.votes)
+    if (what === 'revealed') await this.state.storage.put('revealed', this.revealed)
+  }
+
+  async alarm() {
+    for (const ws of this.clients.keys()) { try { ws.close() } catch {} }
+    this.clients.clear()
+    await this.state.storage.deleteAll()
+    this.loaded = false
+  }
+
+  toPriv(obj) {
+    for (const [sock, m] of this.clients) if (m.priv) this.send(sock, obj)
   }
 
   onMessage(ws, e) {
@@ -183,19 +251,85 @@ export class ClassSession {
       return
     }
     const meta = this.clients.get(ws)
-    if (!meta) return
+    if (!meta || !msg || typeof msg.type !== 'string') return
 
-    if (msg.type === 'hello' && (msg.role === 'lead' || msg.role === 'follow')) {
-      meta.role = msg.role
-      this.send(ws, {type: 'state', path: this.path, count: this.followCount()})
+    if (msg.type === 'hello') {
+      if (msg.role === 'follow') {
+        meta.role = 'follow'
+      } else if (msg.role === 'lead' || msg.role === 'presenter') {
+        const key = typeof msg.key === 'string' && KEY_OK.test(msg.key) ? msg.key : null
+        if (msg.role === 'lead' && !this.key && key) {
+          // The first lead to arrive with a key owns the session.
+          this.key = key
+          this.state.storage.put('key', key)
+        }
+        const keyed = !!key && key === this.key
+        if (msg.role === 'lead') {
+          // A lead with no key at all is an older page: it may still turn pages (as before)
+          // but sees no answers.
+          if (keyed || (!this.key && !key)) { meta.role = 'lead'; meta.priv = keyed }
+          else meta.role = 'follow'
+        } else if (keyed) {
+          meta.role = 'presenter'; meta.priv = true
+        } else {
+          meta.role = 'follow'
+        }
+      } else {
+        return
+      }
+      this.send(ws, this.snapshot(meta))
       this.broadcastCount()
-    } else if (msg.type === 'navigate' && meta.role === 'lead') {
+      return
+    }
+
+    if (msg.type === 'navigate' && meta.role === 'lead') {
       if (typeof msg.path !== 'string' || msg.path.length > 500 || !PATH_OK.test(msg.path)) return
       this.path = msg.path
       this.state.storage.put('path', msg.path)
       for (const [sock, m] of this.clients) {
-        if (m.role === 'follow') this.send(sock, {type: 'navigate', path: msg.path})
+        if (m.role !== 'lead') this.send(sock, {type: 'navigate', path: msg.path})
       }
+      return
+    }
+
+    if (msg.type === 'vote') {
+      const {slide, cid, choice} = msg
+      if (!SLIDE_OK.test(slide || '') || !CID_OK.test(cid || '') || !CHOICE_OK.test(choice || '')) return
+      if (this.revealed[slide]) return   // answers are closed once the results are shown
+      if (!this.votes[slide]) {
+        if (Object.keys(this.votes).length >= MAX_SLIDES) return
+        this.votes[slide] = {}
+      }
+      if (!(cid in this.votes[slide]) && Object.keys(this.votes[slide]).length >= MAX_VOTERS) return
+      this.votes[slide][cid] = choice
+      this.persist('votes')
+      this.send(ws, {type: 'voted', slide, choice})
+      this.toPriv({type: 'tally', slide, ...this.tallyOf(slide)})
+      return
+    }
+
+    // Everything below is for the instructor's devices only.
+    if (!meta.priv) return
+
+    if (msg.type === 'reveal') {
+      if (!SLIDE_OK.test(msg.slide || '')) return
+      if (msg.on) this.revealed[msg.slide] = true
+      else delete this.revealed[msg.slide]
+      this.persist('revealed')
+      const t = this.tallyOf(msg.slide)
+      for (const sock of this.clients.keys()) {
+        this.send(sock, {type: 'reveal', slide: msg.slide, on: !!msg.on, ...(msg.on ? t : {counts: {}, total: 0})})
+      }
+    } else if (msg.type === 'reset') {
+      if (!SLIDE_OK.test(msg.slide || '')) return
+      delete this.votes[msg.slide]
+      delete this.revealed[msg.slide]
+      this.persist('votes'); this.persist('revealed')
+      for (const sock of this.clients.keys()) this.send(sock, {type: 'reset', slide: msg.slide})
+    } else if (msg.type === 'export') {
+      const slides = {}
+      for (const slide of Object.keys(this.votes)) slides[slide] = this.tallyOf(slide)
+      this.send(ws, {type: 'export', slides})
     }
   }
 

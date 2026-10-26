@@ -288,6 +288,17 @@ Moving parts: `assets/classroom.js` (client) → `functions/session/[code].js`
 Object hosted by the `classroom-worker/` Worker (deployed separately:
 `cd classroom-worker && npx wrangler deploy`).
 
+### Polls (multiple choice) in follow-me sessions
+
+A poll is a slide: `<slide xml:id="sl-..." kind="poll" title="Predict" answer="B"><p>Question</p><ol><li>choice A</li><li>choice B</li></ol></slide>` (up to 8 choices; `answer` is optional, leave it off for an opinion question; the letter is in the page source, so a poll is a check for understanding, not a test). `assets/decks/POLLDEMO.json` has two samples to try; delete it and the two `sl-polldemo-*` slides when done.
+
+- **Students** (joined through the follow-me link) pick a choice. It is anonymous: the browser invents a random id so a student can change an answer and still count once. They see nothing of the class's answers until you reveal.
+- **You**: start the session as usual, then click **Copy second-device link** in the banner and open it on your tablet or phone. That device (the *presenter*) follows your slides and sees the live split privately. The projecting screen shows only "N answered". **Reveal** (or V) on either device shows the split and the right answer to everyone; students can no longer change answers. **Reset** clears one question. **Export** downloads a CSV of every poll's counts.
+- The second-device link carries a secret key, so only your devices can see answers or reveal; the session code students know cannot. Keep the link private.
+- Votes are kept on the session server for two weeks after the last activity, then deleted; Export first if you want them.
+- Without a session (a student on the deployed deck by themselves) a poll gives the right answer straight away.
+- Needs the worker redeployed (`cd classroom-worker && npx wrangler deploy`) as well as `./deploy-client-preview.sh`.
+
 **One-time activation** (not yet done as of this writing):
 
 1. Open the Cloudflare dashboard → Workers & Pages. Visiting the Workers

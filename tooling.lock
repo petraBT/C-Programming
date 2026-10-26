@@ -1,8 +1,8 @@
 {
  "source": "slide-tooling",
- "commit": "69bcef1cd14fb0c6cac566090dbe0ba64f9336bc",
+ "commit": "5d9e16d97717edbfd539839fc7ae7bfd4f89bdc0",
  "files": {
-  "assets/class.html": "2f364c661dc7cb4128d5285e7f2e64a8a8eab1a5757b5e536a0d9a4e91b2f988",
+  "assets/class.html": "e6e7507ad1188c30cc471aec92e8cde770502ec1a93098f2f6e155952ccc1c6b",
   "assets/deck.css": "110541eeb625bc6548cf9f7ce7a5a9df2c93ef977c54734836899325c5ac6a21",
   "assets/ptx-edit.js": "aa90a02ede43e2705efa1d7d45a61ed4a74bf71567cb3461aae5da0a87ac014d",
   "assets/ptx-review.js": "cb719caa9729fffdc5d48d5b4725d24795fa4abf254b8037359adc18a148790a",
@@ -28,7 +28,7 @@
   "scripts/review-server.py": "3dbda8484464369057ad0534fec3a5ae7273a08347fe91586b7feb2f13b358d1",
   "scripts/serve-no-cache.py": "4d5e9202b56d4e325ec0956541734852ce4e1b46ee745de43e65d3ffbef9016d",
   "scripts/slide_render.py": "f41194164df3cad3c378ca4b30d88de2f47743608e277c83fb6f8b5082f29826",
-  "xsl/slide-html.xsl": "895579d7a8b8ce3a83166fd153bb4f5b95017fc1bf3c29310c9b33081c7b3b29",
+  "xsl/slide-html.xsl": "4e37779dda0acc4c3770d9542cf550efddb33c23eb3f6bff13a2fdfe14f14fa1",
   "xsl/slide-latex.xsl": "50ce94307f778733da70103bde6a1cc8a03e18d1a5864777597efba9a9523411"
  }
 }

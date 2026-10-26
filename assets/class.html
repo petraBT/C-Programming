@@ -495,6 +495,30 @@
       /* Undo/Clear need existing ink (bar.inking); the pen tools — swatches and
          the eraser — show once drawing is plausible: a stylus has been seen,
          mouse drawing is armed, or the slide already has ink (bar.inkable). */
+      /* --- polls (kind="poll") --------------------------------------------- */
+      #glue .poll { display: flex; flex-direction: column; gap: 1.2cqmin; margin-top: 1cqmin; max-width: 92%; }
+      #glue .poll-choice {
+        position: relative; overflow: hidden; display: flex; align-items: center; gap: 2cqmin;
+        font: inherit; font-size: 3.4cqmin; text-align: left; color: #1a1a19; background: #fff;
+        border: 2px solid #c9c7be; border-radius: 1.2cqmin; padding: 1.4cqmin 2cqmin; cursor: pointer;
+      }
+      #glue .poll-choice:hover { border-color: #2158a8; }
+      #glue .poll-choice > * { position: relative; }
+      #glue .poll-letter { font-weight: 700; color: #2158a8; min-width: 1.6em; }
+      #glue .poll-text { flex: 1; }
+      #glue .poll-n { font-weight: 700; min-width: 2.2em; text-align: right; display: none; }
+      #glue .poll-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: #cfe0f6; transition: width .4s; }
+      #glue .poll.local-only .poll-choice { cursor: pointer; }
+      #glue .poll-choice.mine { border-color: #2158a8; box-shadow: inset 0 0 0 2px #2158a8; }
+      #glue .poll.shown .poll-choice, #glue .poll.private .poll-choice { cursor: default; }
+      #glue .poll.shown .poll-n, #glue .poll.private .poll-n { display: block; }
+      #glue .poll.private .poll-bar { background: #e6e3d6; }
+      #glue .poll-choice.right { border-color: #1a7f37; }
+      #glue .poll-choice.right .poll-bar { background: #c5e8cf; }
+      #glue .poll-choice.wrong.mine { border-color: #c92a2a; box-shadow: inset 0 0 0 2px #c92a2a; }
+      #poll-ctl { display: none; align-items: center; gap: 8px; }
+      #poll-ctl.on { display: inline-flex; }
+      #poll-count { color: #c3c2b7; white-space: nowrap; }
       #bar .ink-pen, #bar .ink-tool { display: none; }
       #bar.inkable .ink-pen { display: inline-block; }
       #bar.inking .ink-tool { display: inline-block; }
@@ -725,6 +749,12 @@
           <button id="erase" class="ink-pen" type="button" title="Eraser — drag over a mark to remove it (E)">Erase</button>
           <button id="undo" class="ink-tool" type="button" title="Undo last stroke">Undo</button>
           <button id="clear" class="ink-tool" type="button" title="Erase this slide's ink">Clear</button>
+          <span id="poll-ctl">
+            <span id="poll-count"></span>
+            <button id="poll-reveal" type="button" title="Show the results to everyone (V)">Reveal</button>
+            <button id="poll-reset" type="button" title="Clear the answers to this question">Reset</button>
+            <button id="poll-export" type="button" title="Download every poll's counts as a spreadsheet (CSV)">Export</button>
+          </span>
           <button id="draw" type="button" title="Draw with the mouse — a stylus always draws (D)">✎ Draw</button>
           <button id="laser-btn" type="button" title="Laser pointer (L)"><span style="color:#e5484d">●</span> Laser</button>
           <a id="pdf-btn" class="bar-btn">⤓ PDF</a>
@@ -1401,6 +1431,16 @@
             var cells = function (tr) { return [].slice.call(tr.children).map(function (c) { return straight(c.innerHTML.trim()) }) }
             if (rows.length > 1) g.table = { columns: cells(rows[0]), rows: rows.slice(1).map(function (tr) { return cells(tr)[0] }) }
           }
+          // A poll (kind="poll"): the <ol> is the choices, A, B, C ... in order, and the
+          // optional answer="B" names the right one. The letter is in the page source,
+          // so a poll is a check for understanding, not a test.
+          if (g.type === 'poll') {
+            var ol = body && body.querySelector('ol')
+            if (ol) g.choices = [].slice.call(ol.children).filter(function (li) { return li.tagName === 'LI' }).slice(0, 8).map(para)
+            var ans = block.getAttribute('data-deck-answer')
+            if (ans && /^[A-H]$/.test(ans)) g.answer = ans
+            g.id = ref && ref.slide
+          }
           var note = block.querySelector('.deck-slide-note')
           if (note) g.presenterNote = straight(note.textContent.trim())
           return g
@@ -1420,6 +1460,19 @@
             glueEl.classList.add('center')
             if (slide.kicker) parts.push('<div class="section-kicker">' + html(slide.kicker) + '</div>')
             parts.push('<div class="section-main">' + html(slide.title || '') + '</div>')
+          } else if (slide.type === 'poll') {
+            glueEl.classList.add('top')
+            parts.push('<h2>' + html(slide.title || '') + '</h2>')
+            if (slide.body) parts.push('<p class="big">' + html(slide.body) + '</p>')
+            parts.push('<div class="poll" data-poll="' + esc(pollKey(slide)) + '">' +
+              (slide.choices || []).map(function (c, i) {
+                var L = 'ABCDEFGH'.charAt(i)
+                return '<button type="button" class="poll-choice" data-c="' + L + '">' +
+                  '<span class="poll-bar"></span>' +
+                  '<span class="poll-letter">' + L + '</span><span class="poll-text">' + html(c) + '</span>' +
+                  '<span class="poll-n"></span></button>'
+              }).join('') + '</div>')
+            if (slide.note) parts.push('<p class="note">' + html(slide.note) + '</p>')
           } else {
             // agenda / recap / prompt: title + bullets and/or body + note
             if (slide.type === 'prompt') glueEl.classList.add('top')
@@ -1447,6 +1500,7 @@
             parts.push('<div class="presenter-note">' + html(slide.presenterNote) + '</div>')
           }
           glueEl.innerHTML = parts.join('')
+          if (slide.type === 'poll') pollRendered(slide)
         }
 
         function render() {
@@ -1461,6 +1515,167 @@
           if (!slide) return
           if (slide.type === 'ref') renderRef(slide)
           else renderGlue(slide)
+          pollSyncBar()
+        }
+
+        /* --- polls (kind="poll") -------------------------------------------
+           A multiple-choice question in the book source: <slide kind="poll" answer="B">
+           with a <p> question and an <ol> of choices. What happens depends on who is
+           looking and whether a class session is running (window.DeckSession, from the
+           course's session script, e.g. ENGS 20's classroom.js):
+             student (follows a session)  picks one; the pick is sent anonymously and
+                                          shows nothing else until the instructor reveals
+             lead (the projecting device) sees how MANY answered, never the split, and
+                                          has Reveal / Reset / Export
+             presenter (a second device)  also sees the live split, privately
+             no session                   picks and gets the right answer at once
+           Results reach students only on Reveal, so nobody follows the majority. */
+        var pollState = {}     // key -> {mine, tally, shown}
+        var pollSession = window.DeckSession || null
+        var pollRole = pollSession ? (pollSession.role === 'lead' || pollSession.role === 'presenter' ? pollSession.role : 'follow') : null
+        var pollPriv = false   // the server says this device holds the instructor key
+        var pollCidKey = 'engs20-poll-cid'
+        var pollCid = (function () {
+          try {
+            var c = localStorage.getItem(pollCidKey)
+            if (!c) {
+              var b = new Uint8Array(12); crypto.getRandomValues(b)
+              c = [].map.call(b, function (x) { return 'abcdefghijklmnopqrstuvwxyz0123456789'[x % 36] }).join('')
+              localStorage.setItem(pollCidKey, c)
+            }
+            return c
+          } catch (e) { return 'tmp' + Math.random().toString(36).slice(2, 12) }
+        })()
+        function pollKey(slide) {
+          return (deckId + ':' + (slide.id || slide.title || 'poll')).replace(/[^A-Za-z0-9_.:-]/g, '_').slice(0, 120)
+        }
+        function pollSt(key) {
+          return pollState[key] || (pollState[key] = { mine: null, tally: null, shown: null })
+        }
+        function pollStoreKey(key) { return 'engs20-vote:' + (pollSession ? pollSession.code : 'local') + ':' + key }
+        function pollEl() { return glueEl.classList.contains('on') ? glueEl.querySelector('.poll') : null }
+        function pollSlide() {
+          var sl = deck && deck.slides && deck.slides[currentIndex() - 1]
+          return sl
+        }
+        var pollAnswers = {}   // key -> right letter, remembered from the slide as it renders
+
+        function pollPaint() {
+          var el = pollEl()
+          if (!el) return
+          var key = el.getAttribute('data-poll'), st = pollSt(key)
+          var answer = pollAnswers[key]
+          var showCounts = st.shown || (pollRole === 'presenter' && pollPriv && st.tally)
+          var data = st.shown || st.tally || { counts: {}, total: 0 }
+          var local = !pollSession
+          // With no session there is nobody to reveal: show the right answer as soon as one is picked.
+          var judged = !!st.shown || (local && !!st.mine)
+          el.classList.toggle('shown', !!st.shown)
+          el.classList.toggle('private', !st.shown && !!showCounts)
+          ;[].forEach.call(el.querySelectorAll('.poll-choice'), function (b) {
+            var L = b.getAttribute('data-c'), n = (data.counts && data.counts[L]) || 0
+            b.classList.toggle('mine', st.mine === L)
+            b.classList.toggle('right', judged && !!answer && L === answer)
+            b.classList.toggle('wrong', judged && !!answer && L !== answer)
+            b.querySelector('.poll-n').textContent = showCounts ? n : ''
+            b.querySelector('.poll-bar').style.width = showCounts && data.total ? Math.round(100 * n / data.total) + '%' : '0'
+          })
+          pollSyncBar()
+        }
+
+        function pollRendered(slide) {
+          var key = pollKey(slide)
+          if (slide.answer) pollAnswers[key] = slide.answer
+          var st = pollSt(key)
+          if (!st.mine) {
+            try { st.mine = localStorage.getItem(pollStoreKey(key)) || null } catch (e) {}
+          }
+          var el = glueEl.querySelector('.poll')
+          el.addEventListener('click', function (ev) {
+            var b = ev.target.closest('.poll-choice')
+            if (!b || pollRole === 'lead' || pollRole === 'presenter' || st.shown) return
+            st.mine = b.getAttribute('data-c')
+            try { localStorage.setItem(pollStoreKey(key), st.mine) } catch (e) {}
+            if (pollSession) pollSession.send({ type: 'vote', slide: key, cid: pollCid, choice: st.mine })
+            pollPaint()
+          })
+          pollPaint()
+        }
+
+        // The bar: what the lead and the presenter see, on a poll slide.
+        function pollSyncBar() {
+          var ctl = document.getElementById('poll-ctl')
+          var priv = pollRole === 'lead' || pollRole === 'presenter'
+          var el = pollEl()
+          ctl.classList.toggle('on', priv && pollPriv)
+          if (!priv || !pollPriv) return
+          var key = el && el.getAttribute('data-poll'), st = key ? pollSt(key) : null
+          document.getElementById('poll-count').style.display = el ? '' : 'none'
+          document.getElementById('poll-reveal').style.display = el ? '' : 'none'
+          document.getElementById('poll-reset').style.display = el ? '' : 'none'
+          if (st) {
+            var total = (st.tally && st.tally.total) || 0
+            document.getElementById('poll-count').textContent = total + ' answered'
+            document.getElementById('poll-reveal').textContent = st.shown ? 'Hide results' : 'Reveal'
+          }
+        }
+        function pollReveal() {
+          var el = pollEl()
+          if (!el || !pollSession || !pollPriv) return
+          var key = el.getAttribute('data-poll')
+          pollSession.send({ type: 'reveal', slide: key, on: !pollSt(key).shown })
+        }
+        document.getElementById('poll-reveal').addEventListener('click', pollReveal)
+        document.getElementById('poll-reset').addEventListener('click', function () {
+          var el = pollEl()
+          if (el && pollSession && pollPriv && confirm('Clear all answers to this question?')) {
+            pollSession.send({ type: 'reset', slide: el.getAttribute('data-poll') })
+          }
+        })
+        document.getElementById('poll-export').addEventListener('click', function () {
+          if (pollSession && pollPriv) pollSession.send({ type: 'export' })
+        })
+        document.addEventListener('keydown', function (e) {
+          if ((e.key === 'v' || e.key === 'V') && !e.metaKey && !e.ctrlKey && !e.altKey &&
+              !/^(INPUT|TEXTAREA)$/.test((e.target || {}).tagName || '')) pollReveal()
+        })
+        if (pollSession) {
+          pollSession.on('state', function (m) {
+            pollPriv = !!m.priv
+            Object.keys(m.reveals || {}).forEach(function (k) { pollSt(k).shown = m.reveals[k] })
+            Object.keys(m.tallies || {}).forEach(function (k) { pollSt(k).tally = m.tallies[k] })
+            // A reconnect may follow a dropped connection: say again what this student chose
+            // (the server ignores a repeat), so the vote cannot be lost in between.
+            if (pollRole === 'follow') {
+              var el = pollEl()
+              if (el) {
+                var k = el.getAttribute('data-poll'), st = pollSt(k)
+                if (st.mine && !st.shown) pollSession.send({ type: 'vote', slide: k, cid: pollCid, choice: st.mine })
+              }
+            }
+            pollPaint()
+          })
+          pollSession.on('tally', function (m) { pollSt(m.slide).tally = { counts: m.counts, total: m.total }; pollPaint() })
+          pollSession.on('reveal', function (m) {
+            pollSt(m.slide).shown = m.on ? { counts: m.counts, total: m.total } : null
+            pollPaint()
+          })
+          pollSession.on('reset', function (m) {
+            pollState[m.slide] = { mine: null, tally: null, shown: null }
+            try { localStorage.removeItem(pollStoreKey(m.slide)) } catch (e) {}
+            pollPaint()
+          })
+          pollSession.on('export', function (m) {
+            var rows = ['slide,choice,count']
+            Object.keys(m.slides || {}).sort().forEach(function (slide) {
+              var counts = m.slides[slide].counts
+              Object.keys(counts).sort().forEach(function (c) { rows.push(slide + ',' + c + ',' + counts[c]) })
+            })
+            var a = document.createElement('a')
+            a.href = URL.createObjectURL(new Blob([rows.join('\n') + '\n'], { type: 'text/csv' }))
+            a.download = 'poll-results-' + pollSession.code + '.csv'
+            document.body.appendChild(a); a.click(); a.remove()
+          })
         }
 
         /* --- pen annotation ------------------------------------------------
