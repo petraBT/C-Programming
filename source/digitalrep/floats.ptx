@@ -407,7 +407,7 @@
           <p>Suppose you want to know the remainder of the division of one integer by another. Can we do this with our current programming knowledge?</p>
           <cmecode startPoint="engs20p_NRemainder"/>
         </slide>
-        <slide xml:id="sl-w1c3-q-remainder" kind="code" title="Your line: remainder">
+        <slide xml:id="sl-w1c3-q-remainder" kind="code" size="line" title="Your line: remainder">
           <p>Paste the one line of code you wrote to compute the remainder.</p>
         </slide>
     </section>

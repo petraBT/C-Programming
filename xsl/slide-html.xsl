@@ -167,7 +167,7 @@
                  bullets and body text are the slide's own <ul> and <p>. The
                  player turns these back into the same card it used to draw from
                  the deck JSON. -->
-            <xsl:for-each select="@kind|@kicker|@subtitle|@title|@answer">
+            <xsl:for-each select="@kind|@kicker|@subtitle|@title|@answer|@size">
                 <xsl:attribute name="data-deck-{local-name()}">
                     <xsl:value-of select="."/>
                 </xsl:attribute>

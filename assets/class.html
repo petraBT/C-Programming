@@ -564,6 +564,7 @@
       #ref .resp { margin-top: 2cqmin; }
       #ref .resp-ask { font-weight: 600; margin: 2cqmin 0 .6cqmin 0 !important; }
       #ref .resp-input { font-size: 2.4cqmin; }
+      :is(#glue, #ref) .resp-input[rows="1"] { white-space: pre; overflow: hidden; }
       #ref.resp-shared .ref-media, #ref.resp-shared .ref-body > :not(.resp-ask):not(.resp) { display: none; }
       #poll-ctl { display: none; align-items: center; gap: 8px; }
       #poll-ctl.on { display: inline-flex; }
@@ -1530,7 +1531,7 @@
           // A poll (kind="poll"): the <ol> is the choices, A, B, C ... in order, and the
           // optional answer="B" names the right one. The letter is in the page source,
           // so a poll is a check for understanding, not a test.
-          if (g.type === 'short' || g.type === 'code') g.id = ref && ref.slide
+          if (g.type === 'short' || g.type === 'code') { g.id = ref && ref.slide; if (block.getAttribute('data-deck-size') === 'line') g.size = 'line' }
           if (g.type === 'poll') {
             var ol = body && body.querySelector('ol')
             if (ol) g.choices = [].slice.call(ol.children).filter(function (li) { return li.tagName === 'LI' }).slice(0, 8).map(para)
@@ -1547,7 +1548,7 @@
           var code = slide.type === 'code'
           return '<div class="resp" data-resp="' + esc(pollKey(slide)) + '" data-kind="' + slide.type + '">' +
             '<div class="resp-entry"><textarea class="resp-input' + (code ? ' code' : '') + '" rows="' +
-            (code ? 9 : 3) + '" maxlength="' + (code ? 6000 : 400) +
+            (slide.size === 'line' ? 1 : code ? 9 : 3) + '" maxlength="' + (code ? 6000 : 400) +
             '" spellcheck="false" aria-label="' + (code ? 'Paste your code here' : 'Type your answer here') +
             '" placeholder="' + (code ? 'Paste your code here' : 'Type your answer here') + '"></textarea>' +
             '<div class="resp-row"><button type="button" class="resp-send">Submit</button><span class="resp-status" role="status"></span></div></div>' +
