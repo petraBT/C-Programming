@@ -65,6 +65,10 @@ pretext build web-client
 rm -rf "$STAGE_DIR"
 mkdir -p "$STAGE_DIR"
 cp -R output/web-client/. "$STAGE_DIR/"
+# ENGS 20 has no instructor-only slides, so the published decks ARE the student decks. This
+# stamps studentBuild on them (in the staged copy only, not in assets/ or output/web-client);
+# the player offers its PDF download only for a student build.
+python3 scripts/filter_student_decks.py "$STAGE_DIR"
 cp -R coding-window "$STAGE_DIR/"
 mkdir -p "$STAGE_DIR/CMeCodeDir"
 find CMeCodeDir -maxdepth 1 -name '*.c' -exec cp {} "$STAGE_DIR/CMeCodeDir/" \;
