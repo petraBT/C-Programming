@@ -269,7 +269,7 @@ book pages, and redeploy (§6).
 
 ## 8. In-class "follow me" sessions
 
-Every `web-client` page carries `assets/classroom.js` (wired via the
+Every `web-client` page carries `assets/classroom.js` (the shared session client, loaded with `assets/course.js` by `assets/session-loader.js` via the
 `html.js.extra` stringparam), inert unless a tab joins a session:
 
 - **Lead a session**: open any book page with `?classroom=start`. A bottom
@@ -309,6 +309,10 @@ A poll is a slide: `<slide xml:id="sl-..." kind="poll" title="Predict" answer="B
 4. **Copy** puts the picked code on the clipboard of the device you press it on: press it on the projecting laptop, then paste into the coding window. (Loading it straight into the coding window is not built.)
 5. **Export** downloads one JSON file (every poll's counts and every written answer) when there are written answers, otherwise a CSV of the polls. **Reset** clears one question.
 6. Samples: the POLLDEMO deck.
+
+### Testing a full class: Simulate
+
+Add `&simulate=50` to the address of the lead or presenter page (the deck URL; for the presenter, append it to the second-device link). A **Simulate 50** button then appears in the bar on any poll, short-answer or code slide: it connects 50 pretend students and has them answer the slide you are on. Click it again on the next slide to have them answer that one too. They are real session members for the two weeks (or until **Reset**); closing the tab drops them. Use it on the demo deck, not in a real class.
 
 **One-time activation** (not yet done as of this writing):
 

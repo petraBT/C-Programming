@@ -72,9 +72,10 @@
       <stringparam key="html.css.extra" value="external/deck.css external/_custom-styles.css"/>
       <stringparam key="deck.slides" value="render"/>
       <!-- The JS twin of html.css.extra: emitted as a <script src="..."> on every page.
-           assets/classroom.js is the in-class "follow me" session client - inert unless the
-           tab has joined a session via ?classroom=... (see that file's own comments). -->
-      <stringparam key="html.js.extra" value="external/classroom.js"/>
+           assets/classroom.js (shared slide tooling) is the in-class "follow me" session client - inert unless the
+           tab has joined a session via ?classroom=... (see that file's own comments). It reads
+           assets/course.js, so session-loader.js loads both. -->
+      <stringparam key="html.js.extra" value="external/session-loader.js"/>
     </target>
     <target name="web-edit">
       <!-- Authoring build: "web-client" (the in-browser coding environment, NOT

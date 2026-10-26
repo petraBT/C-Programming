@@ -145,6 +145,15 @@ export class DeckBoard {
   }
 }
 
+// Sites allowed to open a session: ENGS 20 (Cloudflare Pages, including preview deployments), ENGS 28
+// and the AI demo on their published address, and a local preview.
+const ORIGIN_OK = [
+  /^https:\/\/([a-z0-9-]+\.)?cprog-client-preview\.pages\.dev$/,
+  /^https:\/\/engs20book\.thayer\.dartmouth\.edu$/,
+  /^https:\/\/petrabt\.github\.io$/,
+  /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/,
+]
+
 const PATH_OK = /^\/(?!\/)/
 
 // --- polls (multiple choice) ------------------------------------------------
@@ -196,6 +205,14 @@ export class ClassSession {
   async fetch(request) {
     if (request.headers.get('Upgrade') !== 'websocket') {
       return new Response('expected a websocket', {status: 426})
+    }
+    // Only the course sites (and localhost, for authoring) may open a session. A browser always
+    // sends Origin on a WebSocket, so a page on some other site cannot use this server; a
+    // non-browser client sends none and is let through (nothing here is secret: the code is the
+    // only gate, and the instructor key guards everything private).
+    const origin = request.headers.get('Origin')
+    if (origin && !ORIGIN_OK.some(re => re.test(origin))) {
+      return new Response('origin not allowed', {status: 403})
     }
     await this.load()
     const pair = new WebSocketPair()

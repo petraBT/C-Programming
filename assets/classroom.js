@@ -1,22 +1,26 @@
-// In-class "follow me" mode - phase 1 of the classroom response system.
-// Loaded on every book page via the html.js.extra stringparam on the
-// web-client target (same mechanism as _custom-styles.css). Completely
-// inert for normal readers: it only does anything when this browser TAB is
+// In-class "follow me" mode and the line to the live session (polls, written answers).
+// Shared slide tooling: edit it in slide-tooling and sync, never in a book. Per-course
+// settings come from window.COURSE (assets/course.js), so a page that loads this must load
+// course.js first (the book's html.js.extra points at a two-line loader that does).
+//
+// Completely inert for normal readers: it only does anything when this browser TAB is
 // part of a class session.
 //
-// Instructor: open any book page with  ?classroom=start   -> becomes the
+// Instructor: open any book page or deck with  ?classroom=start   -> becomes the
 //   session lead, gets a short code + join link in a bottom banner. Every
 //   page they navigate to is broadcast to the session.
-// Students: open any book page with    ?classroom=<CODE>  -> banner appears
+// Students: open any book page or deck with    ?classroom=<CODE>  -> banner appears
 //   and their tab follows the instructor's navigation until they Leave (or
 //   close the tab - the session is per-tab, so a link opened in a NEW tab,
 //   like a popped-out coding window, is intentionally not dragged along).
+// Second device: the lead's banner has a "Copy second-device link" button; opened elsewhere
+//   (?classroom=<CODE>&presenter=<KEY>) it follows like a student but also sees poll answers
+//   privately and can reveal them (the deck player does that part; see window.DeckSession).
 //
-// Transport: WebSocket to /session/<CODE> on the book's own origin (a Pages
-// Function forwarding to a Durable Object - see functions/session/[code].js
-// and classroom-worker/). When the book is served locally for authoring
-// (localhost, no Pages Functions), it talks to the deployed site's endpoint
-// instead so the feature is still testable.
+// Transport: WebSocket to /session/<CODE>. Where to is COURSE.sessionOrigin ("wss://host"),
+// or the page's own origin when unset (ENGS 20: a Pages Function forwarding to the Durable
+// Object, functions/session/[code].js). On localhost, where there is no such function, it
+// uses COURSE.localSessionOrigin (or sessionOrigin) so the feature is still testable.
 //
 // Security note: the only power a lead has over followers is navigation, and
 // both the server and this client require the target to be a same-origin
@@ -25,117 +29,9 @@
 (function () {
   'use strict'
 
-  var STORE_KEY = 'engs20-classroom'
+  var COURSE_CFG = window.COURSE || {}
+  var STORE_KEY = 'classroom-session'
   var CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789' // no 0/O/1/I/L lookalikes
-
-  // --- projector mode ----------------------------------------------------
-
-  // "?deck=1" means this page is being shown as a slide inside the deck
-  // player (class.html), not read on its own. Strip the book's navigation
-  // chrome and scale type up for a projector. Injected here rather than put
-  // in _custom-styles.css so the whole deck feature stays in one file, and
-  // so a normal reader can never trip it.
-  //
-  // Runs before the session code below and returns nothing: a page can be
-  // both a deck slide and part of a live session, which is the normal case.
-  var deckParams = new URLSearchParams(location.search)
-  if (deckParams.get('deck') === '1') {
-    var focusId = deckParams.get('focus')
-    var deckCss = document.createElement('style')
-    deckCss.textContent = [
-      '#ptx-masthead, #ptx-navbar, #ptx-sidebar, #ptx-content-footer,',
-      '#ptx-page-footer, .ptx-banner { display: none !important; }',
-      '.ptx-page, .ptx-main, #ptx-content { margin: 0 !important; padding: 0 !important;',
-      '  max-width: none !important; width: 100% !important; }',
-      'body { font-size: 19px !important; }',
-      '#ptx-content { padding: 2.2rem 3rem !important; }',
-      // The book caps activity/figure widths for readability on a laptop;
-      // on a projector that just wastes the screen.
-      '#ptx-content > * { max-width: none !important; }',
-      // The book's theme follows prefers-color-scheme. On a projector that
-      // means the instructor's machine and each student's machine can render
-      // the SAME slide differently, and the coding window (always light)
-      // clashes with the dark variant. Pin deck mode to light so everyone in
-      // the room sees one thing.
-      ':root { color-scheme: light !important; }',
-      'html, body, .ptx-page, .ptx-main, #ptx-content { background: #fff !important; }',
-      // Headings on book slides pick up the deck player's blue, so a slide
-      // built from the book and one written in the deck file read as the same
-      // deck rather than two different documents.
-      '#ptx-content h1, #ptx-content h2, #ptx-content h3, #ptx-content h4,',
-      '#ptx-content .heading, #ptx-content .heading .title,',
-      '#ptx-content .para .heading, #ptx-content article > .heading {',
-      '  color: #256abf !important; }',
-    ].join('\n')
-    ;(document.head || document.documentElement).appendChild(deckCss)
-
-    // Three ways to narrow a slide - the book's sections are sized for
-    // reading, a projector wants one thing at a time:
-    //   ?focus=<id>       just that element (an xml:id from the source)
-    //   ?only=<selector>  just the elements matching a CSS selector
-    //   ?omit=<selector>  everything EXCEPT those elements
-    // "only"/"omit" exist because most activities carry no xml:id, but
-    // PreTeXt always classes them - so `only=.activity` / `omit=.activity`
-    // splits practice from theory on any page without editing the source.
-    //
-    // All of them work by hiding other elements, never by moving the kept
-    // one: relocating a subtree would tear out and re-insert the
-    // coding-window iframes inside it, reloading them and losing student work.
-    var onlySel = deckParams.get('only')
-    var omitSel = deckParams.get('omit')
-    if (focusId || onlySel || omitSel) {
-      var narrowSlide = function () {
-        var keep = []
-        if (focusId) {
-          var byId = document.getElementById(focusId)
-          if (byId) keep.push(byId)
-        }
-        if (onlySel) {
-          try {
-            keep = keep.concat([].slice.call(document.querySelectorAll(onlySel)))
-          } catch (e) { /* malformed selector: leave the page whole */ }
-        }
-        if (omitSel) {
-          try {
-            var drop = document.querySelectorAll(omitSel)
-            for (var d = 0; d < drop.length; d++) drop[d].style.display = 'none'
-          } catch (e) { /* malformed selector: leave the page whole */ }
-        }
-        if (keep.length === 0) return
-
-        // Everything on the path from a kept element up to <body> must stay
-        // visible; anything else at each of those levels is hidden.
-        var onPath = []
-        for (var k = 0; k < keep.length; k++) {
-          for (var n = keep[k]; n && n !== document.body; n = n.parentElement) {
-            if (onPath.indexOf(n) === -1) onPath.push(n)
-          }
-        }
-        for (var j = 0; j < onPath.length; j++) {
-          var parent = onPath[j].parentElement
-          if (!parent) continue
-          for (var s = 0; s < parent.children.length; s++) {
-            var child = parent.children[s]
-            if (onPath.indexOf(child) === -1) child.style.display = 'none'
-          }
-        }
-      }
-      // In the web-edit build this file is inserted dynamically by
-      // web-edit-loader.js (a script-created element, which does NOT block
-      // DOMContentLoaded), so it can run either before OR after that event. If
-      // it lost the race, addEventListener would wait for an event already gone
-      // and the slide would never narrow - the whole section, every activity,
-      // on each 'focus' slide, intermittently. So run now if the DOM is already
-      // parsed, and wait only if it genuinely isn't. (The deployed web-client
-      // build loads this as a parser-inserted footer script that always runs
-      // before the event, which is why this only bit the local authoring deck.)
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', narrowSlide)
-      } else {
-        narrowSlide()
-      }
-    }
-  }
 
   // --- join / start via URL parameter, then hide it from the URL ---------
 
@@ -297,12 +193,17 @@
 
   // --- websocket ---------------------------------------------------------
 
-  // Local authoring servers have no Pages Functions - use the deployed
-  // site's endpoint so the feature still works when testing on localhost.
-  var testOrigin = params.get('wsorigin')   // honoured on localhost only: a local worker for testing
-  var wsOrigin = /^(localhost|127\.0\.0\.1)$/.test(location.hostname)
-    ? (testOrigin && /^wss?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(testOrigin) ? testOrigin : 'wss://cprog-client-preview.pages.dev')
-    : location.origin.replace(/^http/, 'ws')
+  // Where the session server is. A deployed page uses COURSE.sessionOrigin if set, else its own
+  // origin (a doorway on the same site). A page on localhost has no doorway, so it uses the
+  // deployed server named in the course settings. ?wsorigin= (localhost pages only, and only to a
+  // localhost server) points it at a worker started with `wrangler dev`, for testing.
+  var testOrigin = params.get('wsorigin')
+  var isLocal = /^(localhost|127\.0\.0\.1)$/.test(location.hostname)
+  var wsOrigin = isLocal
+    ? (testOrigin && /^wss?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(testOrigin)
+        ? testOrigin
+        : (COURSE_CFG.sessionOrigin || COURSE_CFG.localSessionOrigin || location.origin.replace(/^http/, 'ws')))
+    : (COURSE_CFG.sessionOrigin || location.origin.replace(/^http/, 'ws'))
 
   var ws = null
   var retryDelay = 1000
@@ -328,6 +229,7 @@
   window.DeckSession = {
     code: session.code,
     role: session.role,
+    wsUrl: wsOrigin + '/session/' + session.code,
     send: function (obj) {
       if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(obj))
       else outbox.push(obj)

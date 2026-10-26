@@ -798,6 +798,7 @@
             <span id="poll-count"></span>
             <button id="poll-reveal" type="button" title="Show the results to everyone (V)">Reveal</button>
             <button id="poll-reset" type="button" title="Clear the answers to this question">Reset</button>
+            <button id="poll-sim" type="button" style="display:none" title="Test aid: pretend to be a class answering this slide">Simulate</button>
             <button id="poll-export" type="button" title="Download every poll's counts (CSV), or everything with written answers (JSON)">Export</button>
           </span>
           <button id="draw" type="button" title="Draw with the mouse — a stylus always draws (D)">✎ Draw</button>
@@ -1684,6 +1685,8 @@
           document.getElementById('poll-count').style.display = here ? '' : 'none'
           document.getElementById('poll-reveal').style.display = here ? '' : 'none'
           document.getElementById('poll-reset').style.display = here ? '' : 'none'
+          document.getElementById('poll-sim').style.display = here && simN ? '' : 'none'
+          if (simN && !simSockets.length) document.getElementById('poll-sim').textContent = 'Simulate ' + simN
           if (st && el) {
             var total = (st.tally && st.tally.total) || 0
             document.getElementById('poll-count').textContent = total + ' answered'
@@ -1826,6 +1829,64 @@
           })
           respPaint()
         }
+
+        /* Simulate a class (a test aid). Add &simulate=50 to a lead or presenter page and a
+           Simulate button appears on a poll or written-answer slide: it connects that many
+           pretend students to the session and has them answer the slide you are on, so you
+           can see a full class without fifty browsers. The pretend students are real session
+           members, so their answers are real data (two weeks, or Reset); closing the tab drops
+           them. They are anonymous like everyone else and say nothing about real students. */
+        var simN = params.has('simulate') ? Math.max(1, Math.min(100, parseInt(params.get('simulate'), 10) || 50)) : 0
+        var simSockets = []
+        var simRun = Math.random().toString(36).slice(2, 8).replace(/[^a-z0-9]/g, 'x')
+        var SIM_SHORT = ['Integer division drops the fraction.', 'Both operands are int, so C truncates.',
+          'Because 7 and 2 are both whole numbers the result is a whole number.', 'The decimal part is thrown away.',
+          'C rounds toward zero when dividing ints.', 'It does int division, not float division.',
+          'No floating point is involved so no .5', 'int / int gives an int', 'it truncates', 'the .5 is lost',
+          'I think it is because of the types.', 'Division of integers is integer division.']
+        var SIM_CODE = [
+          '#include <stdio.h>\n\nint main(void) {\n    printf("%d\\n", 17 % 5);\n    return 0;\n}',
+          '#include <stdio.h>\nint main(void)\n{\n    int a = 17, b = 5;\n    printf("%d\\n", a % b);\n    return 0;\n}',
+          '#include <stdio.h>\nint main(void) {\n    int r = 17 / 5;\n    printf("%d\\n", r);\n    return 0;\n}',
+          '#include <stdio.h>\nint main(void) {\n    printf("%d\\n", 17 - 5 * (17 / 5));\n    return 0;\n}',
+          '#include <stdio.h>\nint main(void) {\n    int rem = 17 % 5\n    printf("%d\\n", rem);\n    return 0;\n}']
+        function simPick(a) { return a[Math.floor(Math.random() * a.length)] }
+        function simAnswerCurrent() {
+          var el = pollEl(), rel = respEl()
+          simSockets.forEach(function (w, i) {
+            if (w.readyState !== 1) return
+            var cid = ('sim' + String(i).padStart(3, '0') + simRun).slice(0, 40)
+            if (el) {
+              var key = el.getAttribute('data-poll'), letters = 'ABCDEFGH'.slice(0, el.querySelectorAll('.poll-choice').length)
+              var right = pollAnswers[key]
+              var c = right && Math.random() < 0.55 ? right : letters.charAt(Math.floor(Math.random() * letters.length))
+              w.send(JSON.stringify({ type: 'vote', slide: key, cid: cid, choice: c }))
+            } else if (rel) {
+              var kind = rel.getAttribute('data-kind')
+              var text = kind === 'code' ? simPick(SIM_CODE) + (Math.random() < 0.3 ? '\n// ' + (i + 1) : '') : simPick(SIM_SHORT)
+              w.send(JSON.stringify({ type: 'answer', slide: rel.getAttribute('data-resp'), cid: cid, kind: kind, text: text }))
+            }
+          })
+        }
+        function simClick() {
+          if (!pollSession || !pollSession.wsUrl) return
+          var btn = document.getElementById('poll-sim')
+          if (simSockets.length) { simAnswerCurrent(); return }
+          btn.textContent = 'Connecting...'
+          var open = 0
+          for (var i = 0; i < simN; i++) {
+            ;(function () {
+              var w = new WebSocket(pollSession.wsUrl)
+              simSockets.push(w)
+              w.onopen = function () {
+                w.send(JSON.stringify({ type: 'hello', role: 'follow' }))
+                if (++open === simN) { btn.textContent = 'Simulate ' + simN; simAnswerCurrent() }
+              }
+            })()
+          }
+        }
+        document.getElementById('poll-sim').addEventListener('click', simClick)
+        window.addEventListener('beforeunload', function () { simSockets.forEach(function (w) { try { w.close() } catch (e) {} }) })
 
         if (pollSession) {
           pollSession.on('state', function (m) {
