@@ -513,6 +513,9 @@
       #glue .poll.shown .poll-choice, #glue .poll.private .poll-choice { cursor: default; }
       #glue .poll.shown .poll-n, #glue .poll.private .poll-n { display: block; }
       #glue .poll.private .poll-bar { background: #e6e3d6; }
+      #glue .poll-mark { font-size: 2.6cqmin; font-weight: 700; white-space: nowrap; color: #2158a8; }
+      #glue .poll-mark.ok { color: #1a7f37; }
+      #glue .poll-mark.no { color: #c92a2a; }
       #glue .poll-choice.right { border-color: #1a7f37; }
       #glue .poll-choice.right .poll-bar { background: #c5e8cf; }
       #glue .poll-choice.wrong.mine { border-color: #c92a2a; box-shadow: inset 0 0 0 2px #c92a2a; }
@@ -1470,7 +1473,7 @@
                 return '<button type="button" class="poll-choice" data-c="' + L + '">' +
                   '<span class="poll-bar"></span>' +
                   '<span class="poll-letter">' + L + '</span><span class="poll-text">' + html(c) + '</span>' +
-                  '<span class="poll-n"></span></button>'
+                  '<span class="poll-mark"></span><span class="poll-n"></span></button>'
               }).join('') + '</div>')
             if (slide.note) parts.push('<p class="note">' + html(slide.note) + '</p>')
           } else {
@@ -1577,6 +1580,16 @@
             b.classList.toggle('mine', st.mine === L)
             b.classList.toggle('right', judged && !!answer && L === answer)
             b.classList.toggle('wrong', judged && !!answer && L !== answer)
+            // Never colour alone: a symbol and words say the same thing, for anyone who
+            // cannot tell green from red and for a screen reader.
+            var isRight = judged && !!answer && L === answer
+            var isWrongPick = judged && !!answer && L !== answer && st.mine === L
+            var mark = b.querySelector('.poll-mark')
+            mark.textContent = isRight ? '\u2713 Correct' + (st.mine === L ? ' (your answer)' : '')
+              : isWrongPick ? '\u2717 Your answer'
+              : (st.mine === L ? '\u25CF Your answer' : '')
+            mark.className = 'poll-mark' + (isRight ? ' ok' : isWrongPick ? ' no' : '')
+            b.setAttribute('aria-pressed', st.mine === L ? 'true' : 'false')
             b.querySelector('.poll-n').textContent = showCounts ? n : ''
             b.querySelector('.poll-bar').style.width = showCounts && data.total ? Math.round(100 * n / data.total) + '%' : '0'
           })
