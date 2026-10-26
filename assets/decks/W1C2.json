@@ -41,14 +41,29 @@
     {
       "type": "ref",
       "page": "variables-errors.html",
+      "slide": "sl-w1c2-q-fixme1"
+    },
+    {
+      "type": "ref",
+      "page": "variables-errors.html",
       "slide": "activity-4-6-2-Fix_Me_2",
       "title": "Fix me too...!"
     },
     {
       "type": "ref",
       "page": "variables-errors.html",
+      "slide": "sl-w1c2-q-fixme2"
+    },
+    {
+      "type": "ref",
+      "page": "variables-errors.html",
       "slide": "activity-4-6-3-Fix_Me_3",
       "title": "Fix me three...!"
+    },
+    {
+      "type": "ref",
+      "page": "variables-errors.html",
+      "slide": "sl-w1c2-q-fixme3"
     },
     {
       "type": "ref",
@@ -60,6 +75,11 @@
       "page": "variables-loop-practice.html",
       "slide": "activity-4-7-1-Practice_Your_Loops",
       "title": "Practice your loops!"
+    },
+    {
+      "type": "ref",
+      "page": "variables-loop-practice.html",
+      "slide": "sl-w1c2-q-loops"
     },
     {
       "type": "ref",
@@ -84,6 +104,11 @@
     },
     {
       "type": "ref",
+      "page": "variables-user-input.html",
+      "slide": "sl-w1c2-q-adding"
+    },
+    {
+      "type": "ref",
       "page": "variables-char-datatype.html",
       "slide": "sl-w1c2-14-demo"
     },
@@ -92,6 +117,11 @@
       "page": "variables-char-datatype.html",
       "slide": "activity-4-9-1-printf_Practice",
       "title": "Your turn..."
+    },
+    {
+      "type": "ref",
+      "page": "variables-char-datatype.html",
+      "slide": "sl-w1c2-q-char"
     },
     {
       "type": "ref",
@@ -112,6 +142,11 @@
       "type": "ref",
       "page": "variables-division.html",
       "slide": "sl-w1c2-19-demo"
+    },
+    {
+      "type": "ref",
+      "page": "variables-division.html",
+      "slide": "sl-w1c2-q-notice"
     },
     {
       "type": "ref",

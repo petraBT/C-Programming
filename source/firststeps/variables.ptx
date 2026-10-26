@@ -457,7 +457,7 @@ cash = 20;</code></program> </li>
             <li>Comments: <c>/* ... */</c> across lines, <c>//</c> to end of line</li>
           </ul>
         </slide>
-        <slide xml:id="sl-w1c2-02-icebreaker" kind="prompt" title="Warm-up">
+        <slide xml:id="sl-w1c2-02-icebreaker" kind="short" title="Warm-up">
           <p>If you could use a time machine, would you travel to the future or to the past? When, and where would you go?</p>
         </slide>
         <slide xml:id="sl-w1c2-03-agenda" kind="agenda" title="Today">
@@ -470,9 +470,8 @@ cash = 20;</code></program> </li>
             <li>Division in C</li>
           </ul>
         </slide>
-        <slide xml:id="sl-w1c2-04-icebreaker" kind="prompt" title="Meet your team">
-          <p>Please go around and introduce yourselves: your name, your class year and (intended) major, and the best gift you've ever given or received.</p>
-          <caption>Then brainstorm a team name.</caption>
+        <slide xml:id="sl-w1c2-04-icebreaker" kind="short" title="Meet your team">
+          <p>Please go around and introduce yourselves: your name, your class year and (intended) major, and the best gift you've ever given or received. Then brainstorm a team name together and enter the name you chose below.</p>
         </slide>
         <slide xml:id="sl-w1c2-08-recap" kind="recap" title="What we learned">
           <ul>
@@ -481,6 +480,15 @@ cash = 20;</code></program> </li>
             <li>They are case sensitive</li>
             <li>Variables must be initialized BEFORE they are used</li>
           </ul>
+        </slide>
+        <slide xml:id="sl-w1c2-q-fixme1" kind="short" title="What was wrong?">
+          <p>What was wrong with the given code? Answer in a sentence or two.</p>
+        </slide>
+        <slide xml:id="sl-w1c2-q-fixme2" kind="short" title="What was wrong?">
+          <p>What was wrong with the given code this time?</p>
+        </slide>
+        <slide xml:id="sl-w1c2-q-fixme3" kind="short" title="What was wrong?">
+          <p>And this one: what was wrong with the given code?</p>
         </slide>
   <subsection>
     <title>Fix Me!</title>
@@ -580,6 +588,9 @@ cash = 20;</code></program> </li>
       <p>How could you easily change the output of this program, so that instead of each line reading <c>i x 7</c>, where <c>i</c> is that incrementing variable, it prints as <c>7 x i</c>? Or, what if you wanted to print a multiplication table for a different number, instead of 7? Try out some of these changes if you have time!</p>
     </statement>
   </investigation>
+        <slide xml:id="sl-w1c2-q-loops" kind="code" title="Your code: multiplication table">
+          <p>When you are done, please paste your code for the multiplication table here.</p>
+        </slide>
 </section>
 
 <section xml:id="variables-user-input">
@@ -626,6 +637,9 @@ cash = 20;</code></program> </li>
         <slide xml:id="sl-w1c2-12-demo" title="Back to the multiplication table">
           <p>Now we'll have the user input which multiplication table to print.</p>
           <cmecode startPoint="engs20p_NuserInput3"/>
+        </slide>
+        <slide xml:id="sl-w1c2-q-adding" kind="code" title="Your code: adding integers">
+          <p>When you are finished, please paste the code you added here.</p>
         </slide>
 </section>
 
@@ -689,6 +703,9 @@ cash = 20;</code></program> </li>
           <p>You can use <c>scanf()</c> to read a character from the user input:</p>
           <cmecode startPoint="engs20p_NscanChar"/>
         </slide>
+        <slide xml:id="sl-w1c2-q-char" kind="code" title="Your code: ENGS 20">
+          <p>When you are finished, please paste the code you added here.</p>
+        </slide>
 </section>
 
 <section xml:id="variables-float-datatype">
@@ -742,9 +759,11 @@ cash = 20;</code></program> </li>
           <p>Try to predict what the output of the following program will be — then run it.</p>
           <cmecode startPoint="engs20p_Ndivision1"/>
         </slide>
-        <slide xml:id="sl-w1c2-20-prompt" kind="prompt" title="Summary of division behaviour in C">
-          <p><c>5/2 = 2</c>    <c>5.0/2 = 2.5</c>    <c>5/2.0 = 2.5</c>    <c>5.0/2.0 = 2.5</c></p>
-          <caption>What is going on here?</caption>
+        <slide xml:id="sl-w1c2-20-prompt" kind="short" title="Summary of division behaviour in C">
+          <p><c>5/2 = 2</c>    <c>5.0/2 = 2.5</c>    <c>5/2.0 = 2.5</c>    <c>5.0/2.0 = 2.5</c>. What is going on here?</p>
+        </slide>
+        <slide xml:id="sl-w1c2-q-notice" kind="short" title="What do you notice?">
+          <p>Change the data types of some of the variables and run the program again. What do you notice?</p>
         </slide>
     <subsection>
       <title>Intro to Division in C</title>
