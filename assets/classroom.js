@@ -227,6 +227,17 @@
     document.body.appendChild(banner)
     // Keep the page's own bottom content reachable above the fixed bar.
     document.body.style.paddingBottom = '46px'
+    // On the deck player (assets/class.html) the stage is absolutely positioned, so padding
+    // does nothing and the fixed banner would sit on top of the player's own bar (draw, colours,
+    // eraser, undo, arrows). The player reserves --stage-inset-bottom for exactly this.
+    if (document.getElementById('stage')) {
+      var reserve = function () {
+        document.documentElement.style.setProperty('--stage-inset-bottom', banner.offsetHeight + 'px')
+      }
+      reserve()
+      if (window.ResizeObserver) new ResizeObserver(reserve).observe(banner)
+      else window.addEventListener('resize', reserve)
+    }
   }
   if (document.body) mountBanner()
   else document.addEventListener('DOMContentLoaded', mountBanner)
@@ -238,6 +249,7 @@
     try { ws && ws.close() } catch (e) {}
     banner.remove()
     document.body.style.paddingBottom = ''
+    document.documentElement.style.removeProperty('--stage-inset-bottom')
   })
 
   // --- websocket ---------------------------------------------------------

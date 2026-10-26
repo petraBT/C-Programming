@@ -25,14 +25,16 @@
         font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
         overflow: hidden;
       }
-      #stage-wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+      /* --stage-inset-bottom: room a course script reserves under the player (ENGS 20's
+         follow-me banner is fixed to the bottom of the window and would cover the bar). */
+      #stage-wrap { position: absolute; inset: 0 0 var(--stage-inset-bottom, 0px) 0; display: flex; align-items: center; justify-content: center; }
       /* Strict 16:9 box letterboxed into the room's projector; type is sized
          against the stage (cqmin), not the viewport, so a slide lays out the
          same on the projector and an iPad. */
       #stage {
         position: relative;
-        width: min(100vw, calc(100vh * 16 / 9));
-        height: min(100vh, calc(100vw * 9 / 16));
+        width: min(100vw, calc((100vh - var(--stage-inset-bottom, 0px)) * 16 / 9));
+        height: min(100vh - var(--stage-inset-bottom, 0px), calc(100vw * 9 / 16));
         background: #fff; overflow: hidden; container-type: size;
         -webkit-user-select: none; user-select: none;
         /* Pan (one finger scrolls a long code slide) but no pinch-zoom: a zoomed
