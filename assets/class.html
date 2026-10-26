@@ -1771,6 +1771,23 @@
           container.className = 'resp-scroll'     // ~50 answers do not fit one screen: the list scrolls
           container.appendChild(list)
         }
+        // Repainting rebuilds the list, which would snap it back to the top; remember where it was.
+        function respKeepScroll(container) {
+          var sc = container.querySelector('.resp-scroll')
+          return sc ? sc.scrollTop : 0
+        }
+        function respRestoreScroll(container, top) {
+          var sc = container.querySelector('.resp-scroll')
+          if (!sc) return
+          sc.scrollTop = top
+          // a card the instructor just picked must stay in sight
+          var card = sc.querySelector('.resp-card.picked')
+          if (card) {
+            var c0 = card.offsetTop - sc.offsetTop, c1 = c0 + card.offsetHeight
+            if (c0 < sc.scrollTop) sc.scrollTop = c0 - 8
+            else if (c1 > sc.scrollTop + sc.clientHeight) sc.scrollTop = c1 - sc.clientHeight + 8
+          }
+        }
         function respPick(key, n) { if (pollSession && pollPriv) pollSession.send({ type: 'pick', slide: key, n: n }) }
         function respPaint() {
           var el = respEl()
@@ -1783,6 +1800,8 @@
           el.querySelector('.resp-status').textContent = !pollSession
             ? 'Answers are collected when your instructor runs a class session.'
             : (st.sent ? '✓ Submitted. You can change it and submit again until the answers are shown.' : '')
+          var privTop = respKeepScroll(priv), viewTop = respKeepScroll(view), hadGrid = !!view.querySelector('.resp-scroll')
+          if (hadGrid) st.gridTop = viewTop
           // The presenter's private list, before anything is shared.
           priv.textContent = ''
           if (pollRole === 'presenter' && pollPriv && !shared) {
@@ -1839,6 +1858,9 @@
               respItemsHtml(h, shared.items, null, clickable, kind, function (n) { respPick(key, n) })
             }
           }
+          respRestoreScroll(priv, privTop)
+          // Back from one enlarged submission to the grid: return to where the grid was left.
+          respRestoreScroll(view, hadGrid ? viewTop : (st.gridTop || 0))
           pollSyncBar()
         }
         function respRendered(slide) {
