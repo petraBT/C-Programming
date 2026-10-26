@@ -538,12 +538,14 @@
       }
       #glue .resp-copy { color: #2158a8; background: #fff; border: 2px solid #2158a8; }
       #glue .resp-status { font-size: 2.4cqmin; color: #52514e; }
-      #glue .resp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(34cqmin, 1fr)); gap: 1.4cqmin; }
+      #glue .resp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(30cqmin, 1fr)); gap: 1.4cqmin; }
       #glue .resp-card {
         position: relative; text-align: left; font: inherit; font-size: 2.4cqmin; color: #1a1a19; background: #fff;
         border: 2px solid #c9c7be; border-radius: 1.2cqmin; padding: 1.2cqmin 1.6cqmin; max-height: 26cqmin; overflow: hidden;
         white-space: pre-wrap; word-break: break-word;
       }
+      #glue .resp-scroll { max-height: 60cqmin; overflow-y: auto; padding: .4cqmin; -webkit-user-select: text; user-select: text; }
+      #glue .resp-card:not(.code) { max-height: none; }
       #glue .resp-card.code { font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-size: 1.9cqmin; white-space: pre; word-break: normal; }
       #glue .resp-card.clickable { cursor: pointer; }
       #glue .resp-card.picked { border-color: #2158a8; box-shadow: inset 0 0 0 2px #2158a8; }
@@ -1732,9 +1734,10 @@
             card.className = 'resp-card' + (kind === 'code' ? ' code' : '') + (clickable ? ' clickable' : '') + (pick === it.n ? ' picked' : '')
             var n = document.createElement('span'); n.className = 'resp-n'; n.textContent = '#' + it.n + (pick === it.n ? ' (picked)' : '')
             card.appendChild(n); card.appendChild(document.createTextNode(it.text))
-            if (clickable) card.addEventListener('click', function () { onPick(it.n) })
+            if (clickable) card.addEventListener('click', function () { onPick(pick === it.n ? 0 : it.n) })   // click the picked one again to un-pick
             list.appendChild(card)
           })
+          container.className = 'resp-scroll'     // ~50 answers do not fit one screen: the list scrolls
           container.appendChild(list)
         }
         function respPick(key, n) { if (pollSession && pollPriv) pollSession.send({ type: 'pick', slide: key, n: n }) }
@@ -1754,7 +1757,7 @@
           if (pollRole === 'presenter' && pollPriv && !shared) {
             var items = st.items || []
             var lab = document.createElement('p'); lab.className = 'resp-label'
-            lab.textContent = items.length ? items.length + ' submitted (private). Click one to pick it.' : 'Nothing submitted yet.'
+            lab.textContent = items.length ? items.length + ' submitted (private). Click one to pick it, click it again to un-pick.' : 'Nothing submitted yet.'
             priv.appendChild(lab)
             var holder = document.createElement('div'); priv.appendChild(holder)
             respItemsHtml(holder, items, st.pick, true, kind, function (n) { respPick(key, n) })
@@ -1782,7 +1785,7 @@
                 chips.appendChild(c)
               })
               var back = document.createElement('button'); back.type = 'button'; back.className = 'resp-chip' + (clickable ? ' clickable' : '')
-              back.textContent = 'All'
+              back.textContent = 'Show all'
               if (clickable) back.addEventListener('click', function () { respPick(key, 0) })
               chips.appendChild(back)
               var cp = document.createElement('button'); cp.type = 'button'; cp.className = 'resp-copy'; cp.textContent = 'Copy'
