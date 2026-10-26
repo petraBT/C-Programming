@@ -314,6 +314,10 @@ A poll is a slide: `<slide xml:id="sl-..." kind="poll" title="Predict" answer="B
 
 Add `&simulate=50` to the address of the lead or presenter page (the deck URL; for the presenter, append it to the second-device link). A **Simulate 50** button then appears in the bar on any poll, short-answer or code slide: it connects 50 pretend students and has them answer the slide you are on. Click it again on the next slide to have them answer that one too. They are real session members for the two weeks (or until **Reset**); closing the tab drops them. Use it on the demo deck, not in a real class.
 
+### Students and the lead's slide
+
+In a session a student can go back but not ahead of the slide you are on (arrow keys, buttons, a typed slide number); a short message says why. You and a second device are never limited, and neither is anyone outside a session. It is a classroom control, not security: the slides are in the public deck file. To let students run free (a whole course, say), set `lockStudentsToLead: false` in `assets/course.js`; a per-slide or on-demand "let them roam" button is not built yet.
+
 **One-time activation** (not yet done as of this writing):
 
 1. Open the Cloudflare dashboard → Workers & Pages. Visiting the Workers

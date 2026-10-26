@@ -1,8 +1,8 @@
 {
  "source": "slide-tooling",
- "commit": "6a2040074bee4dbfdef2cf0490d6fe1c68d9f6a9",
+ "commit": "563e9167f181d0155aba3f6d4d29d09d9a3194df",
  "files": {
-  "assets/class.html": "ea305c9a8ff8f2bdc4a9e03566748215780c2f91c7dd8a5c14222504a77f7ded",
+  "assets/class.html": "b1fb8e98417c66d6f92adbab6f576757191b5be919cf36b629ae4c6048a932a4",
   "assets/classroom.js": "d3255f4f82a369cce6a8f4266dd6408e5a8a565472ce4189ebeafff61bf64c47",
   "assets/deck.css": "110541eeb625bc6548cf9f7ce7a5a9df2c93ef977c54734836899325c5ac6a21",
   "assets/ptx-edit.js": "aa90a02ede43e2705efa1d7d45a61ed4a74bf71567cb3461aae5da0a87ac014d",

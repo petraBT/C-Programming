@@ -859,15 +859,43 @@
           })
         }
 
+        /* In a class session a student may go back but not ahead of the slide the instructor is
+           on (the session tells every device where the lead is). It is a classroom control, not a
+           lock: the deck file is public. Off with COURSE.lockStudentsToLead = false. The lead and
+           a second-device presenter are never limited, nor is anyone outside a session. */
+        var leadAt = null       // the lead's slide in THIS deck, from the session; null = unknown
+        function studentLimit() {
+          var S = window.DeckSession
+          if (!S || S.role !== 'follow' || (window.COURSE || {}).lockStudentsToLead === false) return null
+          return leadAt
+        }
+        var lockHintEl = null, lockHintTimer = null
+        function lockHint() {
+          if (!lockHintEl) {
+            lockHintEl = document.createElement('div')
+            lockHintEl.setAttribute('role', 'status')
+            lockHintEl.style.cssText = 'position:absolute;left:50%;bottom:44px;transform:translateX(-50%);z-index:40;' +
+              'background:#1a1a19;color:#fff;font:14px system-ui,sans-serif;padding:8px 14px;border-radius:8px;opacity:.95;display:none'
+            lockHintEl.textContent = 'Your instructor hasn\u2019t reached that slide yet.'
+            document.getElementById('stage').appendChild(lockHintEl)
+          }
+          lockHintEl.style.display = 'block'
+          clearTimeout(lockHintTimer)
+          lockHintTimer = setTimeout(function () { lockHintEl.style.display = 'none' }, 2200)
+        }
         function currentIndex() {
           var n = parseInt(location.hash.replace('#', ''), 10)
           if (isNaN(n) || n < 1) n = 1
           if (deck && n > deck.slides.length) n = deck.slides.length
+          var lim = studentLimit()
+          if (lim && n > lim) n = lim
           return n
         }
         function go(n) {
           var max = deck ? deck.slides.length : 1
           n = Math.max(1, Math.min(max, n))
+          var lim = studentLimit()
+          if (lim && n > lim) { n = lim; lockHint() }
           if (n === currentIndex() && location.hash) { render(); return }
           location.hash = String(n)
         }
@@ -1888,7 +1916,15 @@
         document.getElementById('poll-sim').addEventListener('click', simClick)
         window.addEventListener('beforeunload', function () { simSockets.forEach(function (w) { try { w.close() } catch (e) {} }) })
 
+        function noteLead(m) {
+          if (typeof m.path !== 'string') return
+          var parts = m.path.split('#'), q = parts[0].split('?')[1] || ''
+          var h = parseInt(parts[1], 10)
+          if (new URLSearchParams(q).get('deck') === deckId && h >= 1) leadAt = h
+        }
         if (pollSession) {
+          pollSession.on('navigate', noteLead)
+          pollSession.on('state', noteLead)
           pollSession.on('state', function (m) {
             pollPriv = !!m.priv
             Object.keys(m.reveals || {}).forEach(function (k) { pollSt(k).shown = m.reveals[k] })
