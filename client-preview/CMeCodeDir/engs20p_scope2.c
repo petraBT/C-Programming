@@ -1,1 +1,0 @@
-/* Go ahead and write a program to try things out. */
