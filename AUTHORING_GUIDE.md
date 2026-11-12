@@ -89,11 +89,13 @@ appear as large untracked files, and binaries are permanent once committed.
 - **`starting-points-tool/`** — a small local Node server + browser UI for
   browsing, creating, and editing starting points in both of the above, and
   generating ready-to-paste Canvas embed HTML. See §5.
-- **Deployment target**: `cprog-client-preview.pages.dev` (Cloudflare
-  Pages) — the only host serving `web-client` + `coding-window/` +
-  `CMeCodeDir/` + `CanvasStartDir/` together with the COOP/COEP headers the
-  coding window needs for interactive stdin. `deploy-client-preview.sh`
-  publishes to it. See §6.
+- **Deployment target**: `engs20book.thayer.dartmouth.edu` (the Cloudflare
+  Pages project `engs20-book`) — the only host serving `web-client` +
+  `coding-window/` + `CMeCodeDir/` + `CanvasStartDir/` together with the
+  COOP/COEP headers the coding window needs for interactive stdin.
+  `deploy-client-preview.sh` publishes to it. See §6. The older project
+  `cprog-client-preview.pages.dev` still answers, but only with redirects to
+  this one, for Canvas pages embedded before the move (`redirect-stub/`).
 
 ## 2. Adding new content to the book
 
@@ -189,10 +191,11 @@ it back to disk; **"Close" discards without saving** — safe to open just to
 look and back out.
 
 The "Deployed site origin" field at the top (defaults to
-`https://cprog-client-preview.pages.dev`) is what gets baked into generated
-embed URLs — update it here (not in code) if the deploy target ever changes
-(see the redirect/custom-domain discussion in the conversation this file
-was written from).
+`https://engs20book.thayer.dartmouth.edu`) is what gets baked into generated
+embed URLs — update it here (not in code) if the deploy target ever changes.
+Embeds generated before November 2026 name `cprog-client-preview.pages.dev`
+instead; they still work, through the redirect stub, but regenerate them when
+you next touch the page.
 
 This tool never touches git (no add/commit/push) and never touches
 `source/**/*.ptx`.
