@@ -120,27 +120,42 @@ cp -R output/web-static/. "$STAGE_DIR/static/"
 # for everything else it hands the response straight back. So roughly 56 of those
 # 74 were invoking a Function purely to do nothing.
 #
-# Excluded below: bundles, images, starter sources and the coding-window payload,
-# none of which is ever a page needing isolation headers or an old address needing
-# a redirect. coding-window/index.html, linux.html and embed-generator.html stay
-# INCLUDED, so nothing loses its isolation. Static assets are free and unlimited
-# either way; only Function invocations count.
-cat > "$STAGE_DIR/_routes.json" <<'ROUTES'
-{
-  "version": 1,
-  "include": ["/*"],
-  "exclude": [
+# Generated from the staged tree rather than hand-listed, for the same reason
+# generate-middleware.py derives its allow-list from the build output: the two
+# must agree about external/, and a hand-maintained copy would not stay agreeing.
+#
+# external/class.html is the trap. The deck player frames the book pages that
+# embed coding windows, and cross-origin isolation only holds when EVERY frame
+# from the top down carries the headers -- so the player needs them too, even
+# though it embeds no coding window itself. Excluding /external/* wholesale takes
+# the player off the Function and the nested coding windows silently drop to the
+# non-interactive fallback. Confirmed on staging, 2026-11-12. So external/ is
+# excluded child by child, with class.html left in.
+python3 - "$STAGE_DIR" <<'ROUTES'
+import json, pathlib, sys
+
+stage = pathlib.Path(sys.argv[1])
+exclude = [
     "/_static/*",
-    "/external/*",
     "/CMeCodeDir/*",
     "/CanvasStartDir/*",
     "/static/_static/*",
     "/static/external/*",
     "/coding-window/assets/*",
     "/coding-window/starters/*",
-    "/coding-window/wccfiles.zip"
-  ]
-}
+    "/coding-window/wccfiles.zip",
+]
+for child in sorted((stage / "external").iterdir()):
+    if child.name == "class.html":
+        continue                      # the player: must keep running the Function
+    exclude.append(f"/external/{child.name}/*" if child.is_dir() else f"/external/{child.name}")
+
+routes = {"version": 1, "include": ["/*"], "exclude": exclude}
+# Cloudflare caps a _routes.json at 100 rules; fail loudly rather than have it
+# silently refuse the whole file at deploy time.
+assert len(routes["include"]) + len(exclude) <= 100, "too many routes rules"
+(stage / "_routes.json").write_text(json.dumps(routes, indent=2) + "\n")
+print(f"  _routes.json: {len(exclude)} excludes, external/class.html kept on the Function")
 ROUTES
 
 # A real 404. Without one Cloudflare quietly serves the FRONT PAGE for every
