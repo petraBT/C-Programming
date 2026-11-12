@@ -1,0 +1,5 @@
+# This project no longer serves the ENGS 20 book. Every address here is sent to
+# the book's own hostname, same path. Coding windows embedded in Canvas before
+# the move still point at this origin, both for the window itself and for the
+# ?src= starter file they load, so both have to keep resolving.
+/*  https://engs20book.thayer.dartmouth.edu/:splat  301
