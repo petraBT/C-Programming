@@ -75,21 +75,38 @@ function normalize(pathname) {{
 // to where that content lives now. They are HERE rather than in a _redirects
 // file because Cloudflare skips _redirects on any request that runs a Function,
 // and _routes.json keeps a Function on every path that is not a static asset.
-// Order matters: the longer /C-Programming/static prefix is tested first.
-// 301, and the rest of the path and any query string are carried across.
+// Order matters: the longer /C-Programming/static prefix is tested first. The
+// rest of the path and any query string are carried across.
+//
+// The last three point back AT petrabt.github.io, and those are the delicate
+// ones. Until the move, that host's user-site custom domain was this hostname,
+// which means GitHub answered every petrabt.github.io address with a 301 to
+// here - her project sites included, none of which were ever part of this book.
+// A browser caches a 301 for the life of the profile, so anyone who followed
+// such a link while the domain was set is still being sent here, and a plain
+// redirect back would bounce between their cached 301 and this one forever.
+// The ?gh query is what breaks that: a different URL is a different cache
+// entry, so the stale redirect does not apply to it. They go out as 302 so
+// they are not themselves cached, and they can come out once no browser in
+// circulation still holds the old 301 - which is to say, not for a long time.
+const BOUNCE = "gh";
 const REDIRECTS = [
-  ["/ENGS28", "https://engs28book.thayer.dartmouth.edu"],
-  ["/C-Programming/static", "/static"],
-  ["/C-Programming", ""],
-  ["/Matlab", "https://petrabt.github.io/Matlab"],
+  ["/ENGS28", "https://engs28book.thayer.dartmouth.edu", 301],
+  ["/C-Programming/static", "/static", 301],
+  ["/C-Programming", "", 301],
+  ["/Matlab", "https://petrabt.github.io/Matlab", 302],
+  ["/Education", "https://petrabt.github.io/Education", 302],
+  ["/ENGS28Guide", "https://petrabt.github.io/ENGS28Guide", 302],
 ];
 
 function redirectFor(url) {{
-  for (const [prefix, target] of REDIRECTS) {{
+  for (const [prefix, target, status] of REDIRECTS) {{
     if (url.pathname === prefix || url.pathname.startsWith(prefix + "/")) {{
       const rest = url.pathname.slice(prefix.length) || "/";
-      const to = target + rest;
-      return new URL(to, url).toString() + url.search;
+      const to = new URL(target + rest, url);
+      to.search = url.search;
+      if (status === 302) to.searchParams.set(BOUNCE, "1");
+      return [to.toString(), status];
     }}
   }}
   return null;
@@ -98,7 +115,7 @@ function redirectFor(url) {{
 export async function onRequest(context) {{
   const url = new URL(context.request.url);
   const moved = redirectFor(url);
-  if (moved) return Response.redirect(moved, 301);
+  if (moved) return Response.redirect(moved[0], moved[1]);
 
   const response = await context.next();
   const path = normalize(url.pathname);
