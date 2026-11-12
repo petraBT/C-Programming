@@ -39,7 +39,7 @@ SITE=output/web-client
 JOBS=1
 # Links in a printed slide are relative, so they were printed as links to the
 # throwaway server this script runs. They are rewritten to the published book.
-BASE_URL="https://cprog-client-preview.pages.dev"
+BASE_URL="https://engs20book.thayer.dartmouth.edu"
 
 DECKS=()
 for a in "$@"; do

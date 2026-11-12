@@ -50,13 +50,32 @@ set -e
 #        npx wrangler login
 #      (opens a browser to approve access - only needs doing once)
 #
-# Usage: ./deploy-client-preview.sh
+# Usage: ./deploy-client-preview.sh [--staging]
+#
+#   --staging   publish to staging.engs20-book.pages.dev instead of the live
+#               site, for trying a change nobody should see yet.
 
-PROJECT_NAME="cprog-client-preview"
+PROJECT_NAME="engs20-book"
 STAGE_DIR="output/cloudflare-client-preview"
+SITE="https://engs20book.thayer.dartmouth.edu"
+
+BRANCH=main
+TARGET_SITE="$SITE"
+for a in "$@"; do
+  case "$a" in
+    --staging) BRANCH=staging; TARGET_SITE="https://staging.$PROJECT_NAME.pages.dev" ;;
+    *) echo "unknown option: $a" >&2; exit 2 ;;
+  esac
+done
 
 pretext build web-client
 ./scripts/add-applets.sh output/web-client
+
+# The static version (every coding window rendered as a plain, copy-pasteable
+# code block) travels with the book now, under /static/, instead of living at
+# the old /C-Programming/static/ address on GitHub Pages. The middleware
+# redirects the old address here.
+pretext build web-static
 
 # coding-window/ and CMeCodeDir/ need to be siblings of the built pages, not
 # nested inside each other - matches the relative paths the XSL generates
@@ -90,6 +109,66 @@ if [ -f output/slide-pdfs/manifest.json ]; then
   cp output/slide-pdfs/*.pdf output/slide-pdfs/manifest.json "$STAGE_DIR/slides/pdf/"
 fi
 
+# The static version, under /static/.
+mkdir -p "$STAGE_DIR/static"
+cp -R output/web-static/. "$STAGE_DIR/static/"
+
+# Which addresses run a Pages Function. WITHOUT this file Cloudflare runs one on
+# EVERY request -- measured at 74 for a single cold page view of this book -- and
+# every one counts against the account's daily limit, which ENGS 28 shares. Yet
+# the middleware only sets headers for the allow-listed pages and coding-window/;
+# for everything else it hands the response straight back. So roughly 56 of those
+# 74 were invoking a Function purely to do nothing.
+#
+# Excluded below: bundles, images, starter sources and the coding-window payload,
+# none of which is ever a page needing isolation headers or an old address needing
+# a redirect. coding-window/index.html, linux.html and embed-generator.html stay
+# INCLUDED, so nothing loses its isolation. Static assets are free and unlimited
+# either way; only Function invocations count.
+cat > "$STAGE_DIR/_routes.json" <<'ROUTES'
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/_static/*",
+    "/external/*",
+    "/CMeCodeDir/*",
+    "/CanvasStartDir/*",
+    "/static/_static/*",
+    "/static/external/*",
+    "/coding-window/assets/*",
+    "/coding-window/starters/*",
+    "/coding-window/wccfiles.zip"
+  ]
+}
+ROUTES
+
+# A real 404. Without one Cloudflare quietly serves the FRONT PAGE for every
+# wrong address, so a mistyped link looks like it worked and a dead link in
+# Canvas is invisible until a student says so.
+cat > "$STAGE_DIR/404.html" <<'NOTFOUND'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found — ENGS 20</title>
+</head>
+<body style="font-family: system-ui, sans-serif; margin: 4em auto; max-width: 34em; line-height: 1.5; padding: 0 1em">
+<h1 style="font-size: 1.4em">That page is not here</h1>
+<p>The address may be mistyped, or it may be a link to an older version of this
+book, where the page had a different name.</p>
+<ul>
+<li><a href="/">The book</a> — start here and use the search box</li>
+<li><a href="/static/">The static version</a>, without the live coding windows</li>
+</ul>
+</body>
+</html>
+NOTFOUND
+
 python3 generate-middleware.py output/web-client functions/_middleware.js
 
-npx wrangler pages deploy "$STAGE_DIR" --project-name="$PROJECT_NAME"
+npx wrangler pages deploy "$STAGE_DIR" --project-name="$PROJECT_NAME" --branch="$BRANCH"
+
+echo ""
+echo "Deployed. $TARGET_SITE/"

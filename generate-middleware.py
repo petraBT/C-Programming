@@ -71,9 +71,37 @@ function normalize(pathname) {{
   return p;
 }}
 
+// Addresses this site answered for before the 2026 hosting move, each sent on
+// to where that content lives now. They are HERE rather than in a _redirects
+// file because Cloudflare skips _redirects on any request that runs a Function,
+// and _routes.json keeps a Function on every path that is not a static asset.
+// Order matters: the longer /C-Programming/static prefix is tested first.
+// 301, and the rest of the path and any query string are carried across.
+const REDIRECTS = [
+  ["/ENGS28", "https://engs28book.thayer.dartmouth.edu"],
+  ["/C-Programming/static", "/static"],
+  ["/C-Programming", ""],
+  ["/Matlab", "https://petrabt.github.io/Matlab"],
+];
+
+function redirectFor(url) {{
+  for (const [prefix, target] of REDIRECTS) {{
+    if (url.pathname === prefix || url.pathname.startsWith(prefix + "/")) {{
+      const rest = url.pathname.slice(prefix.length) || "/";
+      const to = target + rest;
+      return new URL(to, url).toString() + url.search;
+    }}
+  }}
+  return null;
+}}
+
 export async function onRequest(context) {{
+  const url = new URL(context.request.url);
+  const moved = redirectFor(url);
+  if (moved) return Response.redirect(moved, 301);
+
   const response = await context.next();
-  const path = normalize(new URL(context.request.url).pathname);
+  const path = normalize(url.pathname);
   if (!ISOLATED_PAGES.has(path) && !path.startsWith("coding-window/")) {{
     return response;
   }}
